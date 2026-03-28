@@ -1,0 +1,189 @@
+<!-- templates/documents.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EMERZHENT – Document Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Exo+2:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Paste the entire <style> block from your Pasted_Text_1771485996177.txt here */
+    /* For brevity in this response, assume it's included */
+    :root{--bg0:#050c18;--bg1:#08111e;--bg2:#0c1929;--bg3:#112038;--c1:#00c8ff;--c2:#00ff99;--c3:#ff6b35;--c4:#ffc400;--c5:#a78bfa;--border:rgba(0,200,255,.13);--border2:rgba(0,200,255,.35);--txt:#dff0fb;--txt2:#7aadcc;--txt3:#3d6a88;--sw:260px; --hh:62px;}
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%;overflow-x:hidden}
+    body{font-family:"Exo 2",sans-serif;background:var(--bg0);color:var(--txt);min-height:100vh;display:flex;flex-direction:column}
+    body::after{content:"";position:fixed;inset:0;background-image:linear-gradient(rgba(0,200,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,.018) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0}
+    #holoBg{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:580px;height:580px;opacity:.045;pointer-events:none;z-index:0;background:url("data:image/png;base64,...");filter:grayscale(100%) brightness(4) hue-rotate(180deg) saturate(3);animation:hpulse 7s ease-in-out infinite}
+    @keyframes hpulse{0%,100%{opacity:.045;transform:translate(-50%,-50%) scale(1)}50%{opacity:.075;transform:translate(-50%,-50%) scale(1.04)}}
+    header{position:fixed;top:0;left:0;right:0;height:var(--hh);z-index:200;background:rgba(5,12,24,.97);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;backdrop-filter:blur(14px)}
+    .h-logo{display:flex;align-items:center;gap:10px}
+    .h-brand .name{font-family:"Rajdhani",sans-serif;font-size:1.15rem;font-weight:700;letter-spacing:2px;color:var(--c1);text-shadow:0 0 18px rgba(0,200,255,.5)}
+    .h-brand .sub{font-size:.65rem;color:var(--txt3);letter-spacing:1.5px;text-transform:uppercase}
+    .btn-home{display:flex;align-items:center;gap:7px;padding:7px 15px;border-radius:6px;background:rgba(255,107,53,.1);border:1px solid rgba(255,107,53,.5);color:#ff6b35;font-family:"Rajdhani",sans-serif;font-size:.82rem;font-weight:700;letter-spacing:1px;text-decoration:none;animation:blink 1.6s ease-in-out infinite;transition:all .3s}
+    .layout{display:flex;padding-top:var(--hh);flex:1;position:relative;z-index:1}
+    .sidebar{position:fixed;top:var(--hh);left:0;bottom:0;width:var(--sw);background:rgba(8,17,30,.98);border-right:1px solid var(--border);overflow-y:auto;z-index:100;transition:transform .3s ease}
+    .main{margin-left:var(--sw);flex:1;padding:26px;min-height:calc(100vh - var(--hh) - 46px)}
+    .panel{display:none}
+    .panel.on{display:block;animation:fadein .35s ease}
+    .ph{display:flex;align-items:center;gap:14px;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+    .phi{width:50px;height:50px;border-radius:11px;background:rgba(0,200,255,.1);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;color:var(--c1);flex-shrink:0}
+    .pt{font-family:"Rajdhani",sans-serif;font-size:1.7rem;font-weight:700;letter-spacing:1px}
+    .pd{color:var(--txt3);font-size:.8rem;margin-top:2px}
+    [contenteditable]{outline:none;cursor:text;border-radius:4px;transition:background .2s}
+    [contenteditable]:focus{background:rgba(0,200,255,.1);box-shadow:inset 0 0 0 1px var(--c1)}
+    .mom-info{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:18px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .mom-info .fi label{font-size:.68rem;font-weight:700;color:var(--txt3);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px}
+    .mom-info .fi .fv{font-size:.85rem;color:var(--txt);white-space:pre-line;line-height:1.6}
+    .toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap}
+    .btn{display:flex;align-items:center;gap:7px;padding:8px 16px;border-radius:7px;font-family:"Rajdhani",sans-serif;font-size:.85rem;font-weight:600;letter-spacing:1px;cursor:pointer;transition:all .25s;white-space:nowrap}
+    .tw{border-radius:11px;overflow:hidden;border:1px solid var(--border);background:var(--bg2);position:relative}
+    .tw table{width:100%;border-collapse:collapse;position:relative;z-index:1}
+    .tw th{padding:11px 14px;background:rgba(0,200,255,.08);color:var(--c1);font-family:"Rajdhani",sans-serif;font-size:.75rem;letter-spacing:1.5px;font-weight:700;border-bottom:1px solid var(--border2);text-align:left;white-space:nowrap}
+    .tw td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:.83rem;color:var(--txt);vertical-align:middle}
+    footer{margin-left:var(--sw);background:rgba(5,12,24,.98);border-top:1px solid var(--border);padding:12px 26px;text-align:center;font-size:.75rem;color:var(--txt3);letter-spacing:.5px;position:relative;z-index:1}
+    footer span{color:var(--c1)}
+    @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main{margin-left:0;padding:14px}footer{margin-left:0}}
+  </style>
+</head>
+<body>
+  <div id="holoBg"></div>
+
+  <header>
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="btn-menu" onclick="toggleSidebar()"><i data-lucide="menu" style="width:22px;height:22px"></i></button>
+      <div class="h-logo">
+        <div class="h-brand">
+          <div class="name">EMERZHENT</div>
+          <div class="sub">Property Management Services LLP</div>
+        </div>
+      </div>
+    </div>
+    <div class="h-right">
+      <a href="{{ url_for('sln_terminus') }}" class="btn-home">
+        <i data-lucide="home" style="width:15px;height:15px"></i> BACK TO HOME
+      </a>
+    </div>
+  </header>
+
+  <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+  <div class="layout">
+    <nav class="sidebar" id="sidebar">
+      <div class="slabel">Core Documents</div>
+      <button class="nav on" onclick="go('mom',this)">
+        <i data-lucide="file-text" style="color:#00c8ff"></i><span>MOM</span>
+        <span class="nbadge">13</span>
+      </button>
+      <!-- Other nav items omitted for brevity -->
+    </nav>
+
+    <main class="main" id="main">
+      <!-- MOM Panel -->
+      <div class="panel on" id="panel-mom">
+        <div class="ph">
+          <div class="phi"><i data-lucide="file-text"></i></div>
+          <div>
+            <div class="pt">Minutes Of Meeting – MIS Review</div>
+            <div class="pd">Editable inline — click any cell to modify</div>
+          </div>
+        </div>
+        <div class="mom-info">
+          <div class="fi">
+            <label>📋 Reference Number</label>
+            <div class="fv" id="momRefNo" contenteditable="true">{{ mom.refNo }}</div>
+          </div>
+          <div class="fi">
+            <label>👥 Attendees</label>
+            <div class="fv" id="momAttendees" contenteditable="true">{{ mom.attendees | safe }}</div>
+          </div>
+        </div>
+        <div class="toolbar">
+          <div class="tbr">
+            <button class="btn btn-cyan" onclick="addMOMRow()"><i data-lucide="plus"></i> Add Row</button>
+            <button class="btn btn-green" onclick="saveMOM()"><i data-lucide="save"></i> Save</button>
+            <button class="btn btn-orange" onclick="exportCSV('momTbl','MOM_Records')"><i data-lucide="download"></i> Export CSV</button>
+          </div>
+        </div>
+        <div class="tw">
+          <table id="momTbl">
+            <thead><tr>
+              <th style="width:40px">#</th>
+              <th style="width:130px">📍 Site</th>
+              <th style="width:190px">📋 Topic</th>
+              <th>📝 Description</th>
+              <th style="width:220px">💬 Remarks</th>
+              <th style="width:36px">🗑</th>
+            </tr></thead>
+            <tbody id="momBody">
+              {% for item in mom.items %}
+              <tr>
+                <td style="text-align:center;color:var(--txt3);font-weight:600">{{ loop.index }}</td>
+                <td contenteditable="true" onblur="updateItem({{ loop.index0 }}, 'site', this.textContent)">{{ item.site }}</td>
+                <td contenteditable="true" onblur="updateItem({{ loop.index0 }}, 'topic', this.textContent)">{{ item.topic }}</td>
+                <td contenteditable="true" onblur="updateItem({{ loop.index0 }}, 'desc', this.textContent)" style="line-height:1.5">{{ item.desc }}</td>
+                <td contenteditable="true" onblur="updateItem({{ loop.index0 }}, 'rem', this.textContent)" style="line-height:1.5">{{ item.rem }}</td>
+                <td><button class="del-btn" onclick="delMOMRow({{ loop.index0 }})"><i data-lucide="trash-2"></i></button></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer>
+    <span>©</span> 2026 &nbsp;<span>Emerzhent Property Management Services LLP</span>&nbsp; — All Rights Reserved
+  </footer>
+
+  <script>
+    const MOM_DATA = {{ mom | tojson }};
+    let momRows = [...MOM_DATA.items];
+
+    function updateItem(index, field, value) {
+      if (momRows[index]) momRows[index][field] = value;
+    }
+
+    function delMOMRow(i) {
+      momRows.splice(i, 1);
+      renderMOM();
+    }
+
+    function addMOMRow() {
+      momRows.push({site: '', topic: '', desc: '', rem: ''});
+      renderMOM();
+    }
+
+    function saveMOM() {
+      fetch('/api/documents/mom', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          refNo: document.getElementById('momRefNo').textContent,
+          attendees: document.getElementById('momAttendees').textContent,
+          items: momRows
+        })
+      }).then(r => {
+        if (r.ok) alert('✅ Saved to server');
+        else alert('⚠️ Saved locally only');
+      }).catch(e => {
+        localStorage.setItem('mom_backup', JSON.stringify({refNo, attendees, items: momRows}));
+        alert('💾 Saved locally due to error');
+      });
+    }
+
+    function renderMOM() {
+      // Re-render table rows (optional for dynamic JS-only updates)
+    }
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('overlay').classList.toggle('open');
+    }
+  </script>
+  <script>lucide.createIcons();</script>
+<script src="/static/js/documents.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,102 @@
+[
+  {
+    "id": "OWT-0001",
+    "title": "water seepage in Regus snf fire water ?",
+    "location": "The District",
+    "description": "What is the status if water seepage in Regus snf fire water ? Do not wait until rainy season to fix",
+    "priority": "High",
+    "estimated_cost": "",
+    "identified_by": "Mr. Aravind Reddy",
+    "vendor": "",
+    "start_date": "2026-03-09",
+    "end_date": "",
+    "progress": 0,
+    "remarks": "",
+    "inspection": "No",
+    "current_stage": "GM Approval",
+    "status": "Active",
+    "type": "Cost Implication",
+    "daily_updates": [],
+    "history": [
+      {
+        "stage": "Issue Identification",
+        "action": "Work Created",
+        "by": "USER",
+        "timestamp": "2026-03-08T10:44:49.337481",
+        "notes": "What is the status if water seepage in Regus snf fire water ? Do not wait until rainy season to fix"
+      },
+      {
+        "stage": "GM Approval",
+        "action": "Stage set to: GM Approval",
+        "by": "USER",
+        "timestamp": "2026-03-08T10:47:53.916566",
+        "notes": ""
+      }
+    ],
+    "created_at": "2026-03-08T10:44:49.337481",
+    "updated_at": "2026-03-08T10:47:53.916492",
+    "created_by": "USER"
+  },
+  {
+    "id": "OWT-0002",
+    "title": "ADP\u2019s vendor for stack parking to dismantle etc.",
+    "location": "ONE WEST",
+    "description": "It has been over a month that notice was sent from Rimpy to ADP\u2019s vendor for stack parking to dismantle etc. What is the status? . Can we close this issue , cannot have broken or unused material in the parking area as per Vastu.",
+    "priority": "High",
+    "estimated_cost": "",
+    "identified_by": "Mr. Aravind Reddy",
+    "vendor": "",
+    "start_date": "2026-03-10",
+    "end_date": "2026-03-30",
+    "progress": 0,
+    "remarks": "",
+    "inspection": "Yes",
+    "current_stage": "Management Approval",
+    "status": "Active",
+    "type": "Cost Implication",
+    "daily_updates": [
+      {
+        "date": "2026-03-09",
+        "progress": 0,
+        "remarks": "Rimpy conveyed that we can go ahead dismantle the suspended car stacks and dispose the material dumped pertaining to Ms. Nagoorji ",
+        "delays": "",
+        "revised_timeline": "",
+        "by": "USER",
+        "timestamp": "2026-03-09T15:13:35.528989"
+      }
+    ],
+    "history": [
+      {
+        "stage": "Issue Identification",
+        "action": "Work Created",
+        "by": "USER",
+        "timestamp": "2026-03-08T10:55:34.410821",
+        "notes": "It has been over a month that notice was sent from Rimpy to ADP\u2019s vendor for stack parking to dismantle etc. What is the status? . Can we close this issue , cannot have broken or unused material in the parking area as per Vastu."
+      },
+      {
+        "stage": "GM Approval",
+        "action": "Stage set to: GM Approval",
+        "by": "USER",
+        "timestamp": "2026-03-08T12:34:03.235885",
+        "notes": ""
+      },
+      {
+        "stage": "Procurement / Finance Action",
+        "action": "Stage set to: Procurement / Finance Action",
+        "by": "USER",
+        "timestamp": "2026-03-08T15:33:06.094158",
+        "notes": ""
+      },
+      {
+        "stage": "Management Approval",
+        "action": "Stage set to: Management Approval",
+        "by": "USER",
+        "timestamp": "2026-03-09T15:09:24.748914",
+        "notes": ""
+      }
+    ],
+    "created_at": "2026-03-08T10:55:34.410821",
+    "updated_at": "2026-03-09T15:13:35.529033",
+    "created_by": "USER"
+  }
+]

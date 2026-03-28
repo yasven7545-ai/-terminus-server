@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VMS - Visitor & Vendor Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/fontsource-inter@5.0.0/index.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/fontsource-space-mono@5.0.0/index.css" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        .font-mono {
+            font-family: 'Space Mono', monospace;
+        }
+        .glass {
+            background: rgba(22, 27, 34, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(48, 54, 61, 0.5);
+        }
+        .gradient-border {
+            position: relative;
+            background: linear-gradient(135deg, #4361ee 0%, #3f37c9 100%);
+            padding: 1px;
+            border-radius: 12px;
+        }
+        .gradient-border > div {
+            background: #0d1117;
+            border-radius: 11px;
+        }
+        .status-pending {
+            background: rgba(210, 153, 34, 0.15);
+            color: #d29922;
+            border: 1px solid rgba(210, 153, 34, 0.4);
+        }
+        .status-approved {
+            background: rgba(63, 185, 80, 0.15);
+            color: #3fb950;
+            border: 1px solid rgba(63, 185, 80, 0.4);
+        }
+        .status-rejected {
+            background: rgba(248, 81, 73, 0.15);
+            color: #f85149;
+            border: 1px solid rgba(248, 81, 73, 0.4);
+        }
+        .status-checked-out {
+            background: rgba(88, 166, 255, 0.15);
+            color: #58a6ff;
+            border: 1px solid rgba(88, 166, 255, 0.4);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(67, 97, 238, 0.15);
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .sidebar-item {
+            transition: all 0.2s ease;
+        }
+        .sidebar-item:hover {
+            background: rgba(67, 97, 238, 0.1);
+        }
+        .sidebar-item.active {
+            background: rgba(67, 97, 238, 0.2);
+            border-left: 3px solid #4361ee;
+        }
+        .badge-glow {
+            box-shadow: 0 0 20px rgba(63, 185, 80, 0.3);
+        }
+        .input-glow:focus {
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            border-color: #4361ee;
+        }
+        .table-row-hover:hover {
+            background: rgba(67, 97, 238, 0.05);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d1117;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #30363d;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #484f58;
+        }
+    </style>
+</head>
+<body class="bg-[#0d1117] text-[#c9d1d9] min-h-screen">
+    <div id="app" class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 glass border-r border-[#30363d] flex flex-col">
+            <div class="p-6 border-b border-[#30363d]">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[#4361ee] to-[#3f37c9] flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-white text-lg">VMS</h1>
+                        <p class="text-xs text-[#8b949e] font-mono">Terminus Global</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
+                <div class="text-xs font-mono text-[#8b949e] uppercase tracking-wider mb-3 px-3">Main</div>
+                <a href="#" onclick="showSection('dashboard')" class="sidebar-item active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="#" onclick="showSection('visitor-register')" class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                    </svg>
+                    Register Visitor
+                </a>
+                <a href="#" onclick="showSection('visitor-list')" class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    Visitor List
+                </a>
+                
+                <div class="text-xs font-mono text-[#8b949e] uppercase tracking-wider mb-3 px-3 mt-6">Vendors</div>
+                <a href="#" onclick="showSection('vendor-register')" class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h2M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                    Register Vendor
+                </a>
+                <a href="#" onclick="showSection('vendor-list')" class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    Vendor List
+                </a>
+                
+                <div class="text-xs font-mono text-[#8b949e] uppercase tracking-wider mb-3 px-3 mt-6">Reports</div>
+                <a href="#" onclick="showSection('reports')" class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Reports
+                </a>
+                <a href="#" onclick="showSection('audit-logs')" class="sidebar-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                    </svg>
+                    Audit Logs
+                </a>
+            </nav>
+            
+            <div class="p-4 border-t border-[#30363d]">
+                <div class="flex items-center gap-3 px-3 py-2">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#3fb950] to-[#2ea043] flex items-center justify-center text-white text-sm font-bold">
+                        A
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-white">Admin User</p>
+                        <p class="text-xs text-[#8b949e]">Security Gate</p>
+                    </div>
+                    <button onclick="logout()" class="text-[#8b949e] hover:text-white">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto">
+            <!-- Header -->
+            <header class="glass border-b border-[#30363d] px-6 py-4 sticky top-0 z-10">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 id="page-title" class="text-xl font-bold text-white">Dashboard</h2>
+                        <p id="page-subtitle" class="text-sm text-[#8b949e] mt-1">Welcome to Visitor Management System</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="relative">
+                            <input type="text" placeholder="Search..." class="input-glow bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-2 text-sm w-64 focus:outline-none">
+                            <svg class="w-4 h-4 text-[#8b949e] absolute right-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </div>
+                        <button class="relative p-2 text-[#8b949e] hover:text-white">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                            </svg>
+                            <span class="absolute top-1 right-1 w-2 h-2 bg-[#f85149] rounded-full"></span>
+                        </button>
+                        <div class="text-right">
+                            <p id="current-time" class="text-sm font-mono text-white"></p>
+                            <p id="current-date" class="text-xs text-[#8b949e]"></p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Sections -->
+            <div class="p-6">
+                <!-- Dashboard Section -->
+                <section id="dashboard-section" class="section">
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                        <div class="gradient-border card-hover">
+                            <div class="p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="w-12 h-12 rounded-lg bg-[#4361ee]/20 flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-[#4361ee]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="text-xs font-mono text-[#3fb950]">+12%</span>
+                                </div>
+                                <h3 class="text-3xl font-bold text-white" id="stat-visitors">24</h3>
+                                <p class="text-sm text-[#8b949e] mt-1">Today's Visitors</p>
+                            </div>
+                        </div>
+                        
+                        <div class="gradient-border card-hover">
+                            <div class="p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="w-12 h-12 rounded-lg bg-[#3fb950]/20 flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-[#3fb950]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="text-xs font-mono text-[#3fb950]">+5%</span>
+                                </div>
+                                <h3 class="text-3xl font-bold text-white" id="stat-approved">18</h3>
+                                <p class="text-sm text-[#8b949e] mt-1">Checked In</p>
+                            </div>
+                        </div>
+                        
+                        <div class="gradient-border card-hover">
+                            <div class="p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="w-12 h-12 rounded-lg bg-[#d29922]/20 flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-[#d29922]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="text-xs font-mono text-[#d29922]">3 pending</span>
+                                </div>
+                                <h3 class="text-3xl font-bold text-white" id="stat-pending">6</h3>
+                                <p class="text-sm text-[#8b949e] mt-1">Awaiting Approval</p>
+                            </div>
+                        </div>
+                        
+                        <div class="gradient-border card-hover">
+                            <div class="p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="w-12 h-12 rounded-lg bg-[#f85149]/20 flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-[#f85149]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h2M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                        </svg>
+                                    </div>
+                                    <span class="text-xs font-mono text-[#f85149]">2 expiring</span>
+                                </div>
+                                <h3 class="text-3xl font-bold text-white" id="stat-vendors">12</h3>
+                                <p class="text-sm text-[#8b949e] mt-1">Active Vendors</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts & Recent Activity -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <div class="lg:col-span-2 gradient-border card-hover">
+                            <div class="p-6">
+                                <div class="flex items-center justify-between mb-6">
+                                    <h3 class="text-lg font-bold text-white">Visitor Analytics</h3>
+                                    <select class="bg-[#161b22] border border-[#30363d] rounded-lg px-3 py-1.5 text-sm">
+                                        <option>This Week</option>
+                                        <option>This Month</option>
+                                        <option>This Year</option>
+                                    </select>
+                                </div>
+                                <canvas id="visitorChart" height="200"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="gradient-border card-hover">
+                            <div class="p-6">
+                                <h3 class="text-lg font-bold text-white mb-6">Visit Distribution</h3>
+                                <canvas id="distributionChart" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Visitors Table -->
+                    <div class="gradient-border card-hover">
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-lg font-bold text-white">Recent Visitors</h3>
+                                <button onclick="exportReport()" class="px-4 py-2 bg-[#4361ee] hover:bg-[#3f37c9] text-white text-sm rounded-lg transition">
+                                    Export Report
+                                </button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr class="text-left border-b border-[#30363d]">
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Visitor</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Company</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Host</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Check-in</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Status</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-visitors-table">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Visitor Register Section -->
+                <section id="visitor-register-section" class="section hidden">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="gradient-border card-hover">
+                            <div class="p-8">
+                                <div class="flex items-center gap-4 mb-8">
+                                    <div class="w-14 h-14 rounded-xl bg-[#4361ee]/20 flex items-center justify-center">
+                                        <svg class="w-7 h-7 text-[#4361ee]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-bold text-white">Register New Visitor</h3>
+                                        <p class="text-sm text-[#8b949e]">Enter visitor details for check-in</p>
+                                    </div>
+                                </div>
+
+                                <form id="visitor-form" onsubmit="registerVisitor(event)" class="space-y-6">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label class="block text-sm font-medium text-[#c9d1d9] mb-2">Full Name *</label>
+                                            <input type="text" name="full_name" required class="input-glow w-full bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-3 focus:outline-none" placeholder="John Doe">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-[#c9d1d9] mb-2">Phone Number *</label>
+                                            <input type="tel" name="phone" required class="input-glow w-full bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-3 focus:outline-none" placeholder="+91 98765 43210">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-[#c9d1d9] mb-2">Email Address</label>
+                                            <input type="email" name="email" class="input-glow w-full bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-3 focus:outline-none" placeholder="john@example.com">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-[#c9d1d9] mb-2">Company *</label>
+                                            <input type="text" name="company" required class="input-glow w-full bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-3 focus:outline-none" placeholder="ABC Corporation">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-[#c9d1d9] mb-2">Person to Meet *</label>
+                                            <input type="text" name="host" required class="input-glow w-full bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-3 focus:outline-none" placeholder="Manager Name">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-[#c9d1d9] mb-2">Department</label>
+                                            <select name="department" class="input-glow w-full bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-3 focus:outline-none">
+                                                <option value="">Select Department</option>
+                                                <option value="Engineering">Engineering</option>
+                                                <option value="Operations">Operations</option>
+                                                <option value="Finance">Finance</option>
+                                                <option value="HR">Human Resources</option>
+                                                <option value="IT">Information Technology</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-medium text-[#c9d1d9] mb-2">Purpose of Visit *</label>
+                                        <textarea name="purpose" required rows="3" class="input-glow w-full bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-3 focus:outline-none" placeholder="Describe the purpose of visit..."></textarea>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label class="block text-sm font-medium text-[#c9d1d9] mb-2">ID Proof Type</label>
+                                            <select name="id_type" class="input-glow w-full bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-3 focus:outline-none">
+                                                <option value="">Select ID Type</option>
+                                                <option value="Aadhaar">Aadhaar Card</option>
+                                                <option value="PAN">PAN Card</option>
+                                                <option value="Passport">Passport</option>
+                                                <option value="Driving License">Driving License</option>
+                                                <option value="Voter ID">Voter ID</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-[#c9d1d9] mb-2">ID Number</label>
+                                            <input type="text" name="id_number" class="input-glow w-full bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-3 focus:outline-none" placeholder="ID Number">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-[#c9d1d9] mb-2">Upload ID Proof (Optional)</label>
+                                        <div class="border-2 border-dashed border-[#30363d] rounded-lg p-6 text-center hover:border-[#4361ee] transition cursor-pointer">
+                                            <svg class="w-10 h-10 text-[#8b949e] mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                            </svg>
+                                            <p class="text-sm text-[#8b949e]">Drag & drop or click to upload</p>
+                                            <p class="text-xs text-[#8b949e] mt-1">PDF, JPG, PNG (Max 5MB)</p>
+                                            <input type="file" name="id_proof" class="hidden" accept=".pdf,.jpg,.jpeg,.png">
+                                        </div>
+                                    </div>
+
+                                    <div class="flex gap-4 pt-4">
+                                        <button type="submit" class="flex-1 px-6 py-3 bg-[#4361ee] hover:bg-[#3f37c9] text-white font-medium rounded-lg transition">
+                                            Register & Check-in
+                                        </button>
+                                        <button type="button" onclick="showSection('dashboard')" class="px-6 py-3 bg-[#161b22] border border-[#30363d] hover:border-[#4361ee] text-white font-medium rounded-lg transition">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Visitor List Section -->
+                <section id="visitor-list-section" class="section hidden">
+                    <div class="gradient-border card-hover">
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center gap-4">
+                                    <h3 class="text-lg font-bold text-white">All Visitors</h3>
+                                    <div class="flex gap-2">
+                                        <button onclick="filterVisitors('all')" class="filter-btn active px-3 py-1.5 text-xs rounded-lg bg-[#4361ee] text-white">All</button>
+                                        <button onclick="filterVisitors('pending')" class="filter-btn px-3 py-1.5 text-xs rounded-lg bg-[#161b22] border border-[#30363d]">Pending</button>
+                                        <button onclick="filterVisitors('approved')" class="filter-btn px-3 py-1.5 text-xs rounded-lg bg-[#161b22] border border-[#30363d]">Checked In</button>
+                                        <button onclick="filterVisitors('checked-out')" class="filter-btn px-3 py-1.5 text-xs rounded-lg bg-[#161b22] border border-[#30363d]">Checked Out</button>
+                                    </div>
+                                </div>
+                                <div class="flex gap-3">
+                                    <input type="date" class="bg-[#161b22] border border-[#30363d] rounded-lg px-3 py-2 text-sm">
+                                    <button onclick="exportVisitors()" class="px-4 py-2 bg-[#161b22] border border-[#30363d] hover:border-[#4361ee] text-white text-sm rounded-lg transition">
+                                        Export CSV
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr class="text-left border-b border-[#30363d]">
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">ID</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Visitor</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Company</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Host</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Check-in</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Check-out</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Duration</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Status</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="visitor-list-table">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Vendor Register Section -->
+                <section id="vendor-register-section" class="section hidden">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="gradient-border card-hover">
+                            <div class="p-8">
+                                <div class="flex items-center gap-4 mb-8">
+                                    <div class="w-14 h-14 rounded-xl bg-[#f85149]/20 flex items-center justify-center">
+                                        <svg class="w-7 h-7 text-[#f85149]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h2M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-bold text-white">Register New Vendor</h3>
+                                        <p class="text-sm text-[#8b949e]">Enter vendor company details</p>
+                                    </div>
+                                </div>
+
+                                <form id="vendor-form" onsubmit="registerVendor(event)" class="space-y-6">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label class="block text-sm font-medium text-[#c9d1d9] mb-2">Company Name *</label>
+                                            <input type="text" name="company_name" required class="input-glow w-full bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-3 focus:outline-none" placeholder="ABC Services Pvt Ltd">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-[#c9d1d9] mb-2">Contact Person *</label>
+                                            <input type="text" name="contact_person" required class="input-glow w-full bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-3 focus:outline-none" placeholder="Contact Name">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-[#c9d1d9] mb-2">Phone Number *</label>
+                                            <input type="tel" name="phone" required class="input-glow w-full bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-3 focus:outline-none" placeholder="+91 98765 43210">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-[#c9d1d9] mb-2">Email Address *</label>
+                                            <input type="email" name="email" required class="input-glow w-full bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-3 focus:outline-none" placeholder="contact@company.com">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-[#c9d1d9] mb-2">Service Category *</label>
+                                            <select name="category" required class="input-glow w-full bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-3 focus:outline-none">
+                                                <option value="">Select Category</option>
+                                                <option value="HVAC">HVAC Maintenance</option>
+                                                <option value="Electrical">Electrical</option>
+                                                <option value="Plumbing">Plumbing</option>
+                                                <option value="Security">Security Services</option>
+                                                <option value="Cleaning">Housekeeping</option>
+                                                <option value="IT">IT Services</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-[#c9d1d9] mb-2">Access Level</label>
+                                            <select name="access_level" class="input-glow w-full bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-3 focus:outline-none">
+                                                <option value="basic">Basic (Lobby Only)</option>
+                                                <option value="standard">Standard (Common Areas)</option>
+                                                <option value="extended">Extended (Multiple Floors)</option>
+                                                <option value="full">Full Access</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label class="block text-sm font-medium text-[#c9d1d9] mb-2">Contract Start Date *</label>
+                                            <input type="date" name="contract_start" required class="input-glow w-full bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-3 focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-[#c9d1d9] mb-2">Contract End Date *</label>
+                                            <input type="date" name="contract_end" required class="input-glow w-full bg-[#161b22] border border-[#30363d] rounded-lg px-4 py-3 focus:outline-none">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-[#c9d1d9] mb-2">Documents</label>
+                                        <div class="border-2 border-dashed border-[#30363d] rounded-lg p-6">
+                                            <div class="space-y-3">
+                                                <div class="flex items-center gap-3">
+                                                    <input type="checkbox" name="documents[]" value="gst" class="w-4 h-4 rounded border-[#30363d] bg-[#161b22]">
+                                                    <label class="text-sm text-[#c9d1d9]">GST Certificate</label>
+                                                </div>
+                                                <div class="flex items-center gap-3">
+                                                    <input type="checkbox" name="documents[]" value="pan" class="w-4 h-4 rounded border-[#30363d] bg-[#161b22]">
+                                                    <label class="text-sm text-[#c9d1d9]">PAN Card</label>
+                                                </div>
+                                                <div class="flex items-center gap-3">
+                                                    <input type="checkbox" name="documents[]" value="insurance" class="w-4 h-4 rounded border-[#30363d] bg-[#161b22]">
+                                                    <label class="text-sm text-[#c9d1d9]">Insurance Certificate</label>
+                                                </div>
+                                                <div class="flex items-center gap-3">
+                                                    <input type="checkbox" name="documents[]" value="license" class="w-4 h-4 rounded border-[#30363d] bg-[#161b22]">
+                                                    <label class="text-sm text-[#c9d1d9]">Business License</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium text-[#c9d1d9] mb-2">Upload Documents</label>
+                                        <div class="border-2 border-dashed border-[#30363d] rounded-lg p-6 text-center hover:border-[#f85149] transition cursor-pointer">
+                                            <svg class="w-10 h-10 text-[#8b949e] mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                            </svg>
+                                            <p class="text-sm text-[#8b949e]">Drag & drop or click to upload</p>
+                                            <p class="text-xs text-[#8b949e] mt-1">PDF, DOC, JPG, PNG (Max 10MB each)</p>
+                                            <input type="file" name="documents_files" class="hidden" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                                        </div>
+                                    </div>
+
+                                    <div class="flex gap-4 pt-4">
+                                        <button type="submit" class="flex-1 px-6 py-3 bg-[#f85149] hover:bg-[#d63d3b] text-white font-medium rounded-lg transition">
+                                            Register Vendor
+                                        </button>
+                                        <button type="button" onclick="showSection('dashboard')" class="px-6 py-3 bg-[#161b22] border border-[#30363d] hover:border-[#f85149] text-white font-medium rounded-lg transition">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Vendor List Section -->
+                <section id="vendor-list-section" class="section hidden">
+                    <div class="gradient-border card-hover">
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center gap-4">
+                                    <h3 class="text-lg font-bold text-white">All Vendors</h3>
+                                    <div class="flex gap-2">
+                                        <button onclick="filterVendors('all')" class="vendor-filter-btn active px-3 py-1.5 text-xs rounded-lg bg-[#4361ee] text-white">All</button>
+                                        <button onclick="filterVendors('active')" class="vendor-filter-btn px-3 py-1.5 text-xs rounded-lg bg-[#161b22] border border-[#30363d]">Active</button>
+                                        <button onclick="filterVendors('expiring')" class="vendor-filter-btn px-3 py-1.5 text-xs rounded-lg bg-[#161b22] border border-[#30363d]">Expiring Soon</button>
+                                        <button onclick="filterVendors('expired')" class="vendor-filter-btn px-3 py-1.5 text-xs rounded-lg bg-[#161b22] border border-[#30363d]">Expired</button>
+                                    </div>
+                                </div>
+                                <button onclick="exportVendors()" class="px-4 py-2 bg-[#161b22] border border-[#30363d] hover:border-[#f85149] text-white text-sm rounded-lg transition">
+                                    Export CSV
+                                </button>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr class="text-left border-b border-[#30363d]">
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Company</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Contact</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Category</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Contract Period</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Days Left</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Status</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="vendor-list-table">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Reports Section -->
+                <section id="reports-section" class="section hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="gradient-border card-hover">
+                            <div class="p-6">
+                                <h3 class="text-lg font-bold text-white mb-6">Visitor Reports</h3>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between p-4 bg-[#161b22] rounded-lg">
+                                        <div>
+                                            <p class="font-medium text-white">Daily Visitor Report</p>
+                                            <p class="text-sm text-[#8b949e]">All visitors for selected date</p>
+                                        </div>
+                                        <button onclick="generateReport('daily-visitor')" class="px-4 py-2 bg-[#4361ee] hover:bg-[#3f37c9] text-white text-sm rounded-lg">Generate</button>
+                                    </div>
+                                    <div class="flex items-center justify-between p-4 bg-[#161b22] rounded-lg">
+                                        <div>
+                                            <p class="font-medium text-white">Weekly Summary</p>
+                                            <p class="text-sm text-[#8b949e]">Weekly visitor statistics</p>
+                                        </div>
+                                        <button onclick="generateReport('weekly-summary')" class="px-4 py-2 bg-[#4361ee] hover:bg-[#3f37c9] text-white text-sm rounded-lg">Generate</button>
+                                    </div>
+                                    <div class="flex items-center justify-between p-4 bg-[#161b22] rounded-lg">
+                                        <div>
+                                            <p class="font-medium text-white">Monthly Analytics</p>
+                                            <p class="text-sm text-[#8b949e]">Detailed monthly report</p>
+                                        </div>
+                                        <button onclick="generateReport('monthly-analytics')" class="px-4 py-2 bg-[#4361ee] hover:bg-[#3f37c9] text-white text-sm rounded-lg">Generate</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="gradient-border card-hover">
+                            <div class="p-6">
+                                <h3 class="text-lg font-bold text-white mb-6">Vendor Reports</h3>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between p-4 bg-[#161b22] rounded-lg">
+                                        <div>
+                                            <p class="font-medium text-white">Vendor Visit Report</p>
+                                            <p class="text-sm text-[#8b949e]">All vendor visits</p>
+                                        </div>
+                                        <button onclick="generateReport('vendor-visits')" class="px-4 py-2 bg-[#f85149] hover:bg-[#d63d3b] text-white text-sm rounded-lg">Generate</button>
+                                    </div>
+                                    <div class="flex items-center justify-between p-4 bg-[#161b22] rounded-lg">
+                                        <div>
+                                            <p class="font-medium text-white">Contract Expiry Alert</p>
+                                            <p class="text-sm text-[#8b949e]">Vendors with expiring contracts</p>
+                                        </div>
+                                        <button onclick="generateReport('contract-expiry')" class="px-4 py-2 bg-[#f85149] hover:bg-[#d63d3b] text-white text-sm rounded-lg">Generate</button>
+                                    </div>
+                                    <div class="flex items-center justify-between p-4 bg-[#161b22] rounded-lg">
+                                        <div>
+                                            <p class="font-medium text-white">Vendor Performance</p>
+                                            <p class="text-sm text-[#8b949e]">Service quality metrics</p>
+                                        </div>
+                                        <button onclick="generateReport('vendor-performance')" class="px-4 py-2 bg-[#f85149] hover:bg-[#d63d3b] text-white text-sm rounded-lg">Generate</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Audit Logs Section -->
+                <section id="audit-logs-section" class="section hidden">
+                    <div class="gradient-border card-hover">
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-lg font-bold text-white">System Audit Logs</h3>
+                                <div class="flex gap-3">
+                                    <input type="date" class="bg-[#161b22] border border-[#30363d] rounded-lg px-3 py-2 text-sm">
+                                    <button class="px-4 py-2 bg-[#161b22] border border-[#30363d] hover:border-[#4361ee] text-white text-sm rounded-lg transition">
+                                        Filter
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr class="text-left border-b border-[#30363d]">
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Timestamp</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">User</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Action</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">Entity</th>
+                                            <th class="pb-4 text-xs font-mono text-[#8b949e] uppercase tracking-wider">IP Address</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="audit-logs-table">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+        <div class="glass border border-[#30363d] rounded-lg px-6 py-4 flex items-center gap-3">
+            <div id="toast-icon" class="w-8 h-8 rounded-full flex items-center justify-center"></div>
+            <div>
+                <p id="toast-title" class="font-medium text-white"></p>
+                <p id="toast-message" class="text-sm text-[#8b949e]"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Badge Preview Modal -->
+    <div id="badge-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50">
+        <div class="glass border border-[#30363d] rounded-xl p-8 max-w-md w-full mx-4">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-white">Visitor Badge</h3>
+                <button onclick="closeBadgeModal()" class="text-[#8b949e] hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="badge-preview" class="bg-white rounded-lg p-6 text-center">
+                <!-- Badge content populated by JS -->
+            </div>
+            <div class="flex gap-4 mt-6">
+                <button onclick="printBadge()" class="flex-1 px-4 py-2 bg-[#4361ee] hover:bg-[#3f37c9] text-white rounded-lg">Print Badge</button>
+                <button onclick="closeBadgeModal()" class="flex-1 px-4 py-2 bg-[#161b22] border border-[#30363d] text-white rounded-lg">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== DATA STORE ====================
+        let visitors = [
+            { id: 'V001', name: 'John Smith', phone: '+91 98765 43210', email: 'john@abc.com', company: 'ABC Corp', host: 'Rajesh Kumar', department: 'Engineering', purpose: 'Business Meeting', checkin: '2026-02-15 09:30', checkout: null, status: 'approved', idType: 'Aadhaar' },
+            { id: 'V002', name: 'Sarah Johnson', phone: '+91 87654 32109', email: 'sarah@xyz.com', company: 'XYZ Ltd', host: 'Priya Sharma', department: 'Operations', purpose: 'Site Inspection', checkin: '2026-02-15 10:15', checkout: '2026-02-15 14:30', status: 'checked-out', idType: 'Passport' },
+            { id: 'V003', name: 'Michael Brown', phone: '+91 76543 21098', email: 'michael@tech.com', company: 'Tech Solutions', host: 'Amit Patel', department: 'IT', purpose: 'Technical Discussion', checkin: null, checkout: null, status: 'pending', idType: 'PAN' },
+            { id: 'V004', name: 'Emily Davis', phone: '+91 65432 10987', email: 'emily@consulting.com', company: 'Davis Consulting', host: 'Sneha Reddy', department: 'Finance', purpose: 'Financial Audit', checkin: '2026-02-15 11:00', checkout: null, status: 'approved', idType: 'Driving License' },
+            { id: 'V005', name: 'David Wilson', phone: '+91 54321 09876', email: 'david@services.com', company: 'Wilson Services', host: 'Vikram Singh', department: 'HR', purpose: 'Interview', checkin: '2026-02-15 14:00', checkout: null, status: 'approved', idType: 'Voter ID' }
+        ];
+
+        let vendors = [
+            { id: 'VEN001', company: 'SecureGuard Services', contact: 'Ramesh Gupta', phone: '+91 99887 76655', email: 'contact@secureguard.com', category: 'Security', contractStart: '2025-01-01', contractEnd: '2026-12-31', accessLevel: 'full', status: 'active' },
+            { id: 'VEN002', company: 'CleanPro Housekeeping', contact: 'Suresh Kumar', phone: '+91 88776 65544', email: 'info@cleanpro.com', category: 'Cleaning', contractStart: '2025-06-01', contractEnd: '2026-05-31', accessLevel: 'extended', status: 'active' },
+            { id: 'VEN003', company: 'TechFix IT Solutions', contact: 'Anita Desai', phone: '+91 77665 54433', email: 'support@techfix.com', category: 'IT', contractStart: '2024-03-01', contractEnd: '2026-02-28', accessLevel: 'full', status: 'expiring' },
+            { id: 'VEN004', company: 'PowerCare Electrical', contact: 'Manoj Verma', phone: '+91 66554 43322', email: 'service@powercare.com', category: 'Electrical', contractStart: '2024-01-01', contractEnd: '2026-01-01', accessLevel: 'standard', status: 'expired' },
+            { id: 'VEN005', company: 'CoolBreeze HVAC', contact: 'Pooja Nair', phone: '+91 55443 32211', email: 'info@coolbreeze.com', category: 'HVAC', contractStart: '2025-09-01', contractEnd: '2027-08-31', accessLevel: 'extended', status: 'active' }
+        ];
+
+        let auditLogs = [
+            { timestamp: '2026-02-15 09:30:15', user: 'Security Gate 1', action: 'Visitor Check-in', entity: 'V001 - John Smith', ip: '192.168.1.101' },
+            { timestamp: '2026-02-15 10:15:22', user: 'Security Gate 1', action: 'Visitor Check-in', entity: 'V002 - Sarah Johnson', ip: '192.168.1.101' },
+            { timestamp: '2026-02-15 11:00:45', user: 'Security Gate 2', action: 'Visitor Check-in', entity: 'V004 - Emily Davis', ip: '192.168.1.102' },
+            { timestamp: '2026-02-15 14:00:30', user: 'Security Gate 1', action: 'Visitor Check-in', entity: 'V005 - David Wilson', ip: '192.168.1.101' },
+            { timestamp: '2026-02-15 14:30:18', user: 'Security Gate 1', action: 'Visitor Check-out', entity: 'V002 - Sarah Johnson', ip: '192.168.1.101' },
+            { timestamp: '2026-02-15 08:45:00', user: 'Admin', action: 'Vendor Registered', entity: 'VEN005 - CoolBreeze HVAC', ip: '192.168.1.100' },
+            { timestamp: '2026-02-15 09:00:00', user: 'Admin', action: 'Report Generated', entity: 'Daily Visitor Report', ip: '192.168.1.100' }
+        ];
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+            renderDashboard();
+            renderVisitorList();
+            renderVendorList();
+            renderAuditLogs();
+            initCharts();
+        });
+
+        function updateDateTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        // ==================== NAVIGATION ====================
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            
+            const sectionMap = {
+                'dashboard': { title: 'Dashboard', subtitle: 'Welcome to Visitor Management System', section: 'dashboard-section' },
+                'visitor-register': { title: 'Register Visitor', subtitle: 'Enter visitor details for check-in', section: 'visitor-register-section' },
+                'visitor-list': { title: 'Visitor List', subtitle: 'Manage all visitor records', section: 'visitor-list-section' },
+                'vendor-register': { title: 'Register Vendor', subtitle: 'Enter vendor company details', section: 'vendor-register-section' },
+                'vendor-list': { title: 'Vendor List', subtitle: 'Manage all vendor contracts', section: 'vendor-list-section' },
+                'reports': { title: 'Reports', subtitle: 'Generate and export reports', section: 'reports-section' },
+                'audit-logs': { title: 'Audit Logs', subtitle: 'System activity logs', section: 'audit-logs-section' }
+            };
+
+            const config = sectionMap[section];
+            if (config) {
+                document.getElementById('page-title').textContent = config.title;
+                document.getElementById('page-subtitle').textContent = config.subtitle;
+                document.getElementById(config.section).classList.remove('hidden');
+            }
+
+            // Update sidebar active state
+            event?.target?.closest('.sidebar-item')?.classList.add('active');
+        }
+
+        // ==================== DASHBOARD ====================
+        function renderDashboard() {
+            const today = new Date().toISOString().split('T')[0];
+            const todayVisitors = visitors.filter(v => v.checkin?.startsWith(today));
+            const approved = visitors.filter(v => v.status === 'approved').length;
+            const pending = visitors.filter(v => v.status === 'pending').length;
+            
+            document.getElementById('stat-visitors').textContent = todayVisitors.length;
+            document.getElementById('stat-approved').textContent = approved;
+            document.getElementById('stat-pending').textContent = pending;
+            document.getElementById('stat-vendors').textContent = vendors.filter(v => v.status === 'active').length;
+
+            // Recent visitors table
+            const tbody = document.getElementById('recent-visitors-table');
+            tbody.innerHTML = visitors.slice(0, 5).map(v => `
+                <tr class="table-row-hover border-b border-[#30363d]">
+                    <td class="py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#4361ee] to-[#3f37c9] flex items-center justify-center text-white font-bold">
+                                ${v.name.charAt(0)}
+                            </div>
+                            <div>
+                                <p class="font-medium text-white">${v.name}</p>
+                                <p class="text-xs text-[#8b949e]">${v.id}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-4 text-[#c9d1d9]">${v.company}</td>
+                    <td class="py-4 text-[#c9d1d9]">${v.host}</td>
+                    <td class="py-4 font-mono text-sm text-[#8b949e]">${v.checkin || 'Pending'}</td>
+                    <td class="py-4">
+                        <span class="status-${v.status} px-3 py-1 rounded-full text-xs font-medium">
+                            ${v.status.replace('-', ' ').toUpperCase()}
+                        </span>
+                    </td>
+                    <td class="py-4">
+                        <div class="flex gap-2">
+                            ${v.status === 'pending' ? `
+                                <button onclick="approveVisitor('${v.id}')" class="p-1.5 text-[#3fb950] hover:bg-[#3fb950]/10 rounded">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                </button>
+                                <button onclick="rejectVisitor('${v.id}')" class="p-1.5 text-[#f85149] hover:bg-[#f85149]/10 rounded">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                </button>
+                            ` : ''}
+                            ${v.status === 'approved' ? `
+                                <button onclick="checkoutVisitor('${v.id}')" class="p-1.5 text-[#58a6ff] hover:bg-[#58a6ff]/10 rounded">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                                </button>
+                            ` : ''}
+                            <button onclick="viewVisitor('${v.id}')" class="p-1.5 text-[#8b949e] hover:bg-[#8b949e]/10 rounded">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ==================== VISITOR MANAGEMENT ====================
+        function registerVisitor(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            const newVisitor = {
+                id: 'V' + String(visitors.length + 1).padStart(3, '0'),
+                name: formData.get('full_name'),
+                phone: formData.get('phone'),
+                email: formData.get('email'),
+                company: formData.get('company'),
+                host: formData.get('host'),
+                department: formData.get('department'),
+                purpose: formData.get('purpose'),
+                idType: formData.get('id_type'),
+                checkin: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                checkout: null,
+                status: 'approved'
+            };
+            
+            visitors.unshift(newVisitor);
+            
+            // Add audit log
+            auditLogs.unshift({
+                timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+                user: 'Security Gate 1',
+                action: 'Visitor Check-in',
+                entity: `${newVisitor.id} - ${newVisitor.name}`,
+                ip: '192.168.1.101'
+            });
+
+            showToast('success', 'Visitor Registered', `${newVisitor.name} has been checked in successfully`);
+            form.reset();
+            showSection('dashboard');
+            renderDashboard();
+            renderVisitorList();
+            renderAuditLogs();
+            
+            // Show badge preview
+            setTimeout(() => showBadgeModal(newVisitor), 500);
+        }
+
+        function approveVisitor(id) {
+            const visitor = visitors.find(v => v.id === id);
+            if (visitor) {
+                visitor.status = 'approved';
+                visitor.checkin = new Date().toISOString().replace('T', ' ').substring(0, 16);
+                showToast('success', 'Visitor Approved', `${visitor.name} has been approved`);
+                renderDashboard();
+                renderVisitorList();
+            }
+        }
+
+        function rejectVisitor(id) {
+            const visitor = visitors.find(v => v.id === id);
+            if (visitor) {
+                visitor.status = 'rejected';
+                showToast('error', 'Visitor Rejected', `${visitor.name} has been rejected`);
+                renderDashboard();
+                renderVisitorList();
+            }
+        }
+
+        function checkoutVisitor(id) {
+            const visitor = visitors.find(v => v.id === id);
+            if (visitor) {
+                visitor.status = 'checked-out';
+                visitor.checkout = new Date().toISOString().replace('T', ' ').substring(0, 16);
+                
+                // Add audit log
+                auditLogs.unshift({
+                    timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+                    user: 'Security Gate 1',
+                    action: 'Visitor Check-out',
+                    entity: `${visitor.id} - ${visitor.name}`,
+                    ip: '192.168.1.101'
+                });
+                
+                showToast('success', 'Visitor Checked Out', `${visitor.name} has checked out`);
+                renderDashboard();
+                renderVisitorList();
+                renderAuditLogs();
+            }
+        }
+
+        function filterVisitors(status) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-[#4361ee]', 'text-white');
+                btn.classList.add('bg-[#161b22]', 'border', 'border-[#30363d]');
+            });
+            event.target.classList.remove('bg-[#161b22]', 'border', 'border-[#30363d]');
+            event.target.classList.add('active', 'bg-[#4361ee]', 'text-white');
+            
+            renderVisitorList(status);
+        }
+
+        function renderVisitorList(filter = 'all') {
+            const tbody = document.getElementById('visitor-list-table');
+            let filtered = visitors;
+            
+            if (filter !== 'all') {
+                filtered = visitors.filter(v => v.status === filter);
+            }
+            
+            tbody.innerHTML = filtered.map(v => {
+                const duration = v.checkout && v.checkin ? calculateDuration(v.checkin, v.checkout) : '-';
+                return `
+                    <tr class="table-row-hover border-b border-[#30363d]">
+                        <td class="py-4 font-mono text-sm text-[#58a6ff]">${v.id}</td>
+                        <td class="py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#4361ee] to-[#3f37c9] flex items-center justify-center text-white text-sm font-bold">
+                                    ${v.name.charAt(0)}
+                                </div>
+                                <div>
+                                    <p class="font-medium text-white">${v.name}</p>
+                                    <p class="text-xs text-[#8b949e]">${v.phone}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-4 text-[#c9d1d9]">${v.company}</td>
+                        <td class="py-4 text-[#c9d1d9]">${v.host}</td>
+                        <td class="py-4 font-mono text-sm text-[#8b949e]">${v.checkin || '-'}</td>
+                        <td class="py-4 font-mono text-sm text-[#8b949e]">${v.checkout || '-'}</td>
+                        <td class="py-4 font-mono text-sm text-[#8b949e]">${duration}</td>
+                        <td class="py-4">
+                            <span class="status-${v.status} px-3 py-1 rounded-full text-xs font-medium">
+                                ${v.status.replace('-', ' ').toUpperCase()}
+                            </span>
+                        </td>
+                        <td class="py-4">
+                            <div class="flex gap-2">
+                                ${v.status === 'approved' ? `
+                                    <button onclick="checkoutVisitor('${v.id}')" class="p-1.5 text-[#58a6ff] hover:bg-[#58a6ff]/10 rounded" title="Check Out">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                                    </button>
+                                ` : ''}
+                                <button onclick="viewVisitor('${v.id}')" class="p-1.5 text-[#8b949e] hover:bg-[#8b949e]/10 rounded" title="View">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function calculateDuration(checkin, checkout) {
+            const start = new Date(checkin);
+            const end = new Date(checkout);
+            const diff = Math.floor((end - start) / 60000); // minutes
+            const hours = Math.floor(diff / 60);
+            const mins = diff % 60;
+            return `${hours}h ${mins}m`;
+        }
+
+        // ==================== VENDOR MANAGEMENT ====================
+        function registerVendor(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            
+            const newVendor = {
+                id: 'VEN' + String(vendors.length + 1).padStart(3, '0'),
+                company: formData.get('company_name'),
+                contact: formData.get('contact_person'),
+                phone: formData.get('phone'),
+                email: formData.get('email'),
+                category: formData.get('category'),
+                contractStart: formData.get('contract_start'),
+                contractEnd: formData.get('contract_end'),
+                accessLevel: formData.get('access_level'),
+                status: 'active'
+            };
+            
+            vendors.unshift(newVendor);
+            
+            // Add audit log
+            auditLogs.unshift({
+                timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+                user: 'Admin',
+                action: 'Vendor Registered',
+                entity: `${newVendor.id} - ${newVendor.company}`,
+                ip: '192.168.1.100'
+            });
+
+            showToast('success', 'Vendor Registered', `${newVendor.company} has been registered`);
+            form.reset();
+            showSection('vendor-list');
+            renderVendorList();
+            renderAuditLogs();
+        }
+
+        function filterVendors(status) {
+            document.querySelectorAll('.vendor-filter-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-[#f85149]', 'text-white');
+                btn.classList.add('bg-[#161b22]', 'border', 'border-[#30363d]');
+            });
+            event.target.classList.remove('bg-[#161b22]', 'border', 'border-[#30363d]');
+            event.target.classList.add('active', 'bg-[#f85149]', 'text-white');
+            
+            renderVendorList(status);
+        }
+
+        function renderVendorList(filter = 'all') {
+            const tbody = document.getElementById('vendor-list-table');
+            let filtered = vendors;
+            
+            if (filter !== 'all') {
+                const today = new Date();
+                filtered = vendors.filter(v => {
+                    const endDate = new Date(v.contractEnd);
+                    const daysLeft = Math.floor((endDate - today) / (1000 * 60 * 60 * 24));
+                    
+                    if (filter === 'active') return v.status === 'active' && daysLeft > 30;
+                    if (filter === 'expiring') return daysLeft <= 30 && daysLeft > 0;
+                    if (filter === 'expired') return daysLeft <= 0 || v.status === 'expired';
+                    return true;
+                });
+            }
+            
+            tbody.innerHTML = filtered.map(v => {
+                const today = new Date();
+                const endDate = new Date(v.contractEnd);
+                const daysLeft = Math.floor((endDate - today) / (1000 * 60 * 60 * 24));
+                let statusClass = v.status === 'active' ? 'status-approved' : v.status === 'expiring' ? 'status-pending' : 'status-rejected';
+                let statusText = v.status === 'active' ? 'ACTIVE' : v.status === 'expiring' ? 'EXPIRING' : 'EXPIRED';
+                
+                return `
+                    <tr class="table-row-hover border-b border-[#30363d]">
+                        <td class="py-4">
+                            <div>
+                                <p class="font-medium text-white">${v.company}</p>
+                                <p class="text-xs text-[#8b949e]">${v.id}</p>
+                            </div>
+                        </td>
+                        <td class="py-4">
+                            <p class="text-[#c9d1d9]">${v.contact}</p>
+                            <p class="text-xs text-[#8b949e]">${v.phone}</p>
+                        </td>
+                        <td class="py-4"><span class="px-2 py-1 bg-[#161b22] rounded text-xs text-[#8b949e]">${v.category}</span></td>
+                        <td class="py-4 font-mono text-sm text-[#8b949e]">${v.contractStart} to ${v.contractEnd}</td>
+                        <td class="py-4 font-mono text-sm ${daysLeft <= 30 ? 'text-[#f85149]' : 'text-[#3fb950]'}">${daysLeft > 0 ? daysLeft + ' days' : 'Expired'}</td>
+                        <td class="py-4">
+                            <span class="${statusClass} px-3 py-1 rounded-full text-xs font-medium">${statusText}</span>
+                        </td>
+                        <td class="py-4">
+                            <div class="flex gap-2">
+                                <button onclick="viewVendor('${v.id}')" class="p-1.5 text-[#8b949e] hover:bg-[#8b949e]/10 rounded" title="View">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                </button>
+                                <button onclick="editVendor('${v.id}')" class="p-1.5 text-[#58a6ff] hover:bg-[#58a6ff]/10 rounded" title="Edit">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // ==================== AUDIT LOGS ====================
+        function renderAuditLogs() {
+            const tbody = document.getElementById('audit-logs-table');
+            tbody.innerHTML = auditLogs.map(log => `
+                <tr class="table-row-hover border-b border-[#30363d]">
+                    <td class="py-4 font-mono text-sm text-[#8b949e]">${log.timestamp}</td>
+                    <td class="py-4 text-[#c9d1d9]">${log.user}</td>
+                    <td class="py-4"><span class="px-2 py-1 bg-[#4361ee]/20 text-[#4361ee] rounded text-xs">${log.action}</span></td>
+                    <td class="py-4 text-[#c9d1d9]">${log.entity}</td>
+                    <td class="py-4 font-mono text-sm text-[#8b949e]">${log.ip}</td>
+                </tr>
+            `).join('');
+        }
+
+        // ==================== CHARTS ====================
+        function initCharts() {
+            // Visitor Analytics Chart
+            const ctx1 = document.getElementById('visitorChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Visitors',
+                        data: [18, 24, 22, 28, 24, 15, 12],
+                        borderColor: '#4361ee',
+                        backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(48, 54, 61, 0.5)' },
+                            ticks: { color: '#8b949e' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#8b949e' }
+                        }
+                    }
+                }
+            });
+
+            // Distribution Chart
+            const ctx2 = document.getElementById('distributionChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Business', 'Delivery', 'Interview', 'Meeting', 'Other'],
+                    datasets: [{
+                        data: [35, 25, 20, 15, 5],
+                        backgroundColor: ['#4361ee', '#3fb950', '#d29922', '#f85149', '#58a6ff'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#8b949e', padding: 15 }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ==================== BADGE MODAL ====================
+        function showBadgeModal(visitor) {
+            const modal = document.getElementById('badge-modal');
+            const preview = document.getElementById('badge-preview');
+            
+            preview.innerHTML = `
+                <div class="border-2 border-[#4361ee] rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-left">
+                            <p class="text-xs text-[#8b949e]">VISITOR BADGE</p>
+                            <p class="font-bold text-[#4361ee]">SLN TERMINUS</p>
+                        </div>
+                        <div class="w-16 h-16 bg-[#4361ee] rounded flex items-center justify-center text-white text-2xl font-bold">
+                            ${visitor.name.charAt(0)}
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-[#0d1117] mb-2">${visitor.name}</h3>
+                    <p class="text-sm text-[#8b949e] mb-4">${visitor.company}</p>
+                    <div class="grid grid-cols-2 gap-2 text-left text-sm mb-4">
+                        <div>
+                            <p class="text-xs text-[#8b949e]">Host</p>
+                            <p class="font-medium">${visitor.host}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-[#8b949e]">Valid Until</p>
+                            <p class="font-medium">6:00 PM</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-center">
+                        <div class="w-32 h-32 bg-[#0d1117] rounded flex items-center justify-center">
+                            <svg class="w-24 h-24 text-white" viewBox="0 0 100 100">
+                                <rect x="10" y="10" width="80" height="80" fill="white"/>
+                                <rect x="15" y="15" width="10" height="10" fill="black"/>
+                                <rect x="30" y="15" width="10" height="10" fill="black"/>
+                                <rect x="45" y="15" width="10" height="10" fill="black"/>
+                                <rect x="60" y="15" width="10" height="10" fill="black"/>
+                                <rect x="75" y="15" width="10" height="10" fill="black"/>
+                                <rect x="15" y="30" width="10" height="10" fill="black"/>
+                                <rect x="75" y="30" width="10" height="10" fill="black"/>
+                                <rect x="15" y="45" width="10" height="10" fill="black"/>
+                                <rect x="45" y="45" width="10" height="10" fill="black"/>
+                                <rect x="75" y="45" width="10" height="10" fill="black"/>
+                                <rect x="15" y="60" width="10" height="10" fill="black"/>
+                                <rect x="30" y="60" width="10" height="10" fill="black"/>
+                                <rect x="45" y="60" width="10" height="10" fill="black"/>
+                                <rect x="60" y="60" width="10" height="10" fill="black"/>
+                                <rect x="75" y="60" width="10" height="10" fill="black"/>
+                                <rect x="15" y="75" width="10" height="10" fill="black"/>
+                                <rect x="75" y="75" width="10" height="10" fill="black"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-xs text-[#8b949e] mt-4">${visitor.id} | ${new Date().toLocaleDateString()}</p>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeBadgeModal() {
+            const modal = document.getElementById('badge-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function printBadge() {
+            showToast('success', 'Printing', 'Badge sent to printer');
+            closeBadgeModal();
+        }
+
+        function viewVisitor(id) {
+            const visitor = visitors.find(v => v.id === id);
+            if (visitor) {
+                showBadgeModal(visitor);
+            }
+        }
+
+        function viewVendor(id) {
+            const vendor = vendors.find(v => v.id === id);
+            if (vendor) {
+                showToast('info', 'Vendor Details', `${vendor.company} - ${vendor.contact}`);
+            }
+        }
+
+        function editVendor(id) {
+            showToast('info', 'Edit Vendor', 'Vendor edit form would open here');
+        }
+
+        // ==================== REPORTS ====================
+        function generateReport(type) {
+            const reportNames = {
+                'daily-visitor': 'Daily Visitor Report',
+                'weekly-summary': 'Weekly Summary',
+                'monthly-analytics': 'Monthly Analytics',
+                'vendor-visits': 'Vendor Visit Report',
+                'contract-expiry': 'Contract Expiry Alert',
+                'vendor-performance': 'Vendor Performance'
+            };
+            
+            showToast('success', 'Report Generated', `${reportNames[type]} is being prepared`);
+            
+            // Add audit log
+            auditLogs.unshift({
+                timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+                user: 'Admin',
+                action: 'Report Generated',
+                entity: reportNames[type],
+                ip: '192.168.1.100'
+            });
+            
+            renderAuditLogs();
+        }
+
+        function exportReport() {
+            showToast('success', 'Export Started', 'Report is being downloaded');
+        }
+
+        function exportVisitors() {
+            showToast('success', 'Export Started', 'Visitor list is being downloaded as CSV');
+        }
+
+        function exportVendors() {
+            showToast('success', 'Export Started', 'Vendor list is being downloaded as CSV');
+        }
+
+        // ==================== TOAST NOTIFICATIONS ====================
+        function showToast(type, title, message) {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            const toastTitle = document.getElementById('toast-title');
+            const toastMessage = document.getElementById('toast-message');
+            
+            const icons = {
+                success: '<svg class="w-5 h-5 text-[#3fb950]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>',
+                error: '<svg class="w-5 h-5 text-[#f85149]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>',
+                info: '<svg class="w-5 h-5 text-[#58a6ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+            };
+            
+            icon.innerHTML = icons[type] || icons.info;
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function logout() {
+            showToast('info', 'Logging Out', 'Redirecting to login page...');
+            setTimeout(() => {
+                alert('Logout functionality would redirect to login page');
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
+

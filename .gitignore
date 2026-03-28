@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pyc
+*.db
+*.log
+instance/
+.env
+node_modules/
+uploads/
+backups/
+*.xlsx
+*.pdf

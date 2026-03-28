@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5"/>
+<title>SLN Terminus — Property Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<style>
+/* ═══════════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════════ */
+[data-theme="dark"] {
+  --bg:        #020b12;
+  --bg2:       #071520;
+  --surf:      #071520;
+  --surf2:     #0c1e2e;
+  --card:      #010810;
+  --bdr:       rgba(6,182,212,.12);
+  --bdr2:      rgba(6,182,212,.26);
+  --tx:        #b8dde8;
+  --tx2:       #daf0f7;
+  --tx3:       #4a7a8a;
+
+  --violet:    #2dd4bf;
+  --violet-g:  rgba(13,148,136,.14);
+  --cyan:      #06b6d4;
+  --cyan-g:    rgba(6,182,212,.12);
+  --emerald:   #10b981;
+  --em-g:      rgba(16,185,129,.12);
+  --amber:     #f59e0b;
+  --am-g:      rgba(245,158,11,.12);
+  --rose:      #ef4444;
+  --rose-g:    rgba(239,68,68,.12);
+  --sky:       #67e8f9;
+  --indigo:    #0d9488;
+  --orange:    #F47920;
+  --orange-g:  rgba(244,121,32,.14);
+  --pink:      #f472b6;
+  --teal:      #0d9488;
+  --teal2:     #0f766e;
+  --teal3:     #2dd4bf;
+  --tealglow:  rgba(13,148,136,.18);
+  --lime:      #a3e635;
+
+  --ga: linear-gradient(135deg,#0d9488,#06b6d4);
+  --gb: linear-gradient(135deg,#F47920,#f59e0b);
+  --gc: linear-gradient(135deg,#10b981,#06b6d4);
+  --gd: linear-gradient(135deg,#ef4444,#0d9488);
+
+  --sh:  0 8px 36px rgba(0,0,0,.70);
+  --sh2: 0 2px 24px rgba(0,0,0,.5);
+  --header-bg: #010810;
+}
+
+[data-theme="light"] {
+  --bg:        #f0fafa;
+  --bg2:       #e0f5f5;
+  --surf:      #ffffff;
+  --surf2:     #cdeeed;
+  --card:      #ffffff;
+  --bdr:       rgba(13,148,136,.14);
+  --bdr2:      rgba(13,148,136,.30);
+  --tx:        #0f2e35;
+  --tx2:       #07191e;
+  --tx3:       #3d7080;
+
+  --violet:    #0d9488;
+  --violet-g:  rgba(15,118,110,.1);
+  --cyan:      #0891b2;
+  --cyan-g:    rgba(8,145,178,.1);
+  --emerald:   #059669;
+  --em-g:      rgba(5,150,105,.1);
+  --amber:     #d97706;
+  --am-g:      rgba(217,119,6,.1);
+  --rose:      #e11d48;
+  --rose-g:    rgba(225,29,72,.1);
+  --sky:       #06b6d4;
+  --indigo:    #0f766e;
+  --orange:    #ea580c;
+  --orange-g:  rgba(234,88,12,.1);
+  --pink:      #db2777;
+  --teal:      #0d9488;
+  --teal2:     #115e59;
+  --teal3:     #0d9488;
+  --tealglow:  rgba(15,118,110,.10);
+  --lime:      #65a30d;
+
+  --ga: linear-gradient(135deg,#0f766e,#0891b2);
+  --gb: linear-gradient(135deg,#ea580c,#d97706);
+  --gc: linear-gradient(135deg,#059669,#0284c7);
+  --gd: linear-gradient(135deg,#e11d48,#0f766e);
+
+  --sh:  0 6px 28px rgba(0,0,0,.1);
+  --sh2: 0 2px 10px rgba(0,0,0,.07);
+  --header-bg: rgba(255,255,255,.95);
+}
+
+/* vars shared */
+:root {
+  --hh: 56px;
+  --sw: 244px;
+  --r:  12px;
+  --rsm: 8px;
+  --ease: cubic-bezier(.4,0,.2,1);
+  --bounce: cubic-bezier(.34,1.3,.64,1);
+}
+
+/* ─── RESET ─── */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:var(--bg); color:var(--tx);
+  min-height:100vh; overflow-x:hidden; line-height:1.6;
+  transition:background .35s,color .35s;
+}
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--bdr2); border-radius:4px; }
+::-webkit-scrollbar-thumb:hover { background:var(--tx3); }
+
+/* ═══════════════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════════════ */
+header {
+  position:fixed; top:0; left:0; right:0; height:var(--hh);
+  background:var(--header-bg);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid var(--bdr);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 18px; z-index:600;
+  box-shadow:var(--sh2);
+  transition:background .35s, border-color .35s;
+}
+
+/* logo */
+.logo-link {
+  display:flex; align-items:center; gap:10px;
+  text-decoration:none; flex-shrink:0;
+}
+.logo-box {
+  background:#000;
+  border:1px solid rgba(244,121,32,.4);
+  border-radius:9px; padding:4px 10px;
+  display:flex; align-items:center;
+  box-shadow:0 0 18px rgba(244,121,32,.2);
+  transition:box-shadow .3s;
+  flex-shrink:0;
+}
+.logo-box:hover { box-shadow:0 0 30px rgba(244,121,32,.4); }
+.logo-box img   { height:30px; width:auto; display:block; }
+.logo-text      { display:flex; flex-direction:column; gap:0; }
+.logo-name {
+  font-size:14px; font-weight:800; color:var(--tx);
+  letter-spacing:-.3px; line-height:1.1;
+}
+.logo-sub {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px; color:var(--tx2);
+  text-transform:uppercase; letter-spacing:1px;
+}
+
+/* right side of header */
+.hdr-right { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+
+/* clock pill */
+.clock-pill {
+  display:flex; align-items:center; gap:5px;
+  padding:4px 11px; border-radius:20px;
+  background:var(--surf2); border:1px solid var(--bdr);
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px; color:var(--cyan);
+  white-space:nowrap;
+}
+.clock-pill svg { width:11px; height:11px; flex-shrink:0; }
+
+/* live dot */
+.live-dot {
+  display:flex; align-items:center; gap:5px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; color:var(--emerald);
+}
+.pdot {
+  width:7px; height:7px; border-radius:50%;
+  background:var(--emerald); flex-shrink:0;
+  animation:pdot 2s ease-in-out infinite;
+}
+@keyframes pdot {
+  0%  { box-shadow:0 0 0 0 rgba(16,185,129,.8); }
+  70% { box-shadow:0 0 0 8px rgba(16,185,129,0); }
+  100%{ box-shadow:0 0 0 0 rgba(16,185,129,0); }
+}
+
+/* ─── THEME TOGGLE ─── */
+.theme-toggle {
+  display:flex; align-items:center; gap:6px;
+  padding:5px 10px; border-radius:20px;
+  background:var(--surf2); border:1px solid var(--bdr2);
+  cursor:pointer; user-select:none; flex-shrink:0;
+  transition:border-color .2s;
+}
+.theme-toggle:hover { border-color:var(--cyan); }
+.theme-toggle .t-icon { width:13px; height:13px; color:var(--tx2); flex-shrink:0; }
+.tt-track {
+  width:32px; height:18px; border-radius:9px;
+  background:var(--bdr2); position:relative; flex-shrink:0;
+  transition:background .25s;
+}
+[data-theme="light"] .tt-track { background:var(--teal); }
+.tt-thumb {
+  position:absolute; top:2px; left:2px;
+  width:14px; height:14px; border-radius:50%;
+  background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.3);
+  transition:transform .25s;
+}
+[data-theme="light"] .tt-thumb { transform:translateX(14px); }
+
+/* mobile hamburger */
+.burger {
+  display:none; align-items:center; justify-content:center;
+  width:36px; height:36px; border-radius:var(--rsm);
+  background:var(--surf2); border:1px solid var(--bdr2);
+  color:var(--tx2); cursor:pointer; transition:all .2s; flex-shrink:0;
+}
+.burger:hover { border-color:var(--cyan); color:var(--cyan); }
+.burger svg { width:16px; height:16px; }
+
+/* mobile FAB */
+.mobile-menu-btn {
+  display:none; align-items:center; justify-content:center;
+  width:36px; height:36px; border-radius:50%;
+  background:var(--ga); border:none;
+  cursor:pointer; flex-shrink:0;
+  box-shadow:0 4px 14px rgba(13,148,136,.45);
+  transition:transform .2s;
+}
+.mobile-menu-btn:hover { transform:scale(1.1); }
+.mobile-menu-btn i { width:16px; height:16px; color:#fff; }
+
+/* Back to Portal button */
+.btn-back-portal {
+  display:flex; align-items:center; gap:5px;
+  font-size:11px; font-weight:700; color:#FFD700;
+  text-decoration:none; padding:5px 13px;
+  border:1.5px solid #F47920; border-radius:20px;
+  background:transparent; cursor:pointer;
+  white-space:nowrap; flex-shrink:0;
+  animation:portal-gold-blink 1.7s ease-in-out infinite;
+  transition:background .2s;
+}
+.btn-back-portal:hover { background:rgba(244,121,32,.14); }
+.btn-back-portal svg { width:13px; height:13px; flex-shrink:0; }
+@keyframes portal-orange-blink {
+  0%,100% { border-color:#F47920; box-shadow:none; color:#F47920; }
+  50%     { border-color:#f59e0b; box-shadow:0 0 14px rgba(244,121,32,.55); color:#f59e0b; }
+}
+
+/* ═══════════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════════ */
+.sidebar {
+  position:fixed; top:var(--hh); left:0; bottom:0;
+  width:var(--sw);
+  background:var(--surf);
+  border-right:1px solid var(--bdr);
+  display:flex; flex-direction:column;
+  z-index:500; overflow:hidden;
+  transition:transform .3s var(--ease), background .35s, border-color .35s;
+}
+
+/* top strip */
+.sb-top {
+  padding:14px 13px 10px;
+  border-bottom:1px solid var(--bdr);
+  flex-shrink:0;
+}
+.sb-badge {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:4px 10px; border-radius:20px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:1px;
+  color:var(--orange); background:var(--orange-g);
+  border:1px solid rgba(244,121,32,.25);
+}
+.sb-role {
+  margin-top:7px; font-size:11px; color:var(--tx3);
+  font-family:'JetBrains Mono',monospace;
+}
+.sb-role span { color:var(--tx2); }
+
+/* nav scroll */
+.sb-scroll { flex:1; overflow-y:auto; padding:8px 10px 20px; }
+.nav-grp {
+  font-size:9px; font-weight:700; text-transform:uppercase;
+  letter-spacing:1.3px; color:var(--tx3); padding:10px 8px 4px;
+}
+
+/* nav buttons */
+.nav-btn, .nav-item {
+  display:flex; align-items:center; gap:10px;
+  width:100%; padding:9px 11px; border-radius:var(--rsm);
+  background:transparent; border:none;
+  color:var(--tx2); font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:12.5px; font-weight:500;
+  cursor:pointer; transition:all .15s; text-align:left; margin-bottom:1px;
+}
+.nav-btn i, .nav-item i {
+  width:15px; height:15px; flex-shrink:0;
+  opacity:.65; transition:opacity .15s, filter .15s, transform .2s;
+}
+.nav-btn:hover, .nav-item:hover {
+  background:rgba(13,148,136,.10); color:var(--tx2);
+}
+.nav-btn:hover i, .nav-item:hover i {
+  opacity:1; transform:scale(1.1);
+  filter:drop-shadow(0 0 5px currentColor);
+}
+/* per-module icon colors */
+.nav-btn[data-module="space_occupancy"] i { color:#f472b6; }
+.nav-btn[data-module="cam_billing"] i     { color:#818cf8; }
+.nav-btn[data-module="energy"] i          { color:#22d3ee; }
+<!--.nav-btn[data-module="mis_reports"] i     { color:#f59e0b; }-->
+.nav-item[data-module="kra"] i            { color:#10b981; }
+.nav-item[data-module="issues"] i         { color:#fb4d6d; }
+.nav-item[data-module="mms_dashboard"] i  { color:#a78bfa; }
+.nav-item[data-module="store_inventory"] i{ color:#34d399; }
+.nav-item[data-module="project_handover"] i{ color:#60a5fa; }
+.nav-item[data-module="work_track"] i     { color:#fb923c; }
+.nav-item[data-module="pm_daily"] i       { color:#0af0b0; }
+.nav-item[data-module="housekeeping"] i   { color:#06b6d4; }
+.nav-item[data-module="fire"] i           { color:#ef4444; }
+/* New live modules */
+.nav-item[data-module="sln_budget"] i     { color:#FFD700; }
+
+/* pulse pips */
+.nav-pip {
+  width:7px; height:7px; border-radius:50%;
+  margin-left:auto; flex-shrink:0;
+  animation:pdot 2s ease-in-out infinite;
+}
+
+/* sidebar footer */
+.sb-foot {
+  padding:10px 13px 14px;
+  border-top:1px solid var(--bdr); flex-shrink:0;
+}
+
+/* Docs Suite button */
+.docs-suite-btn {
+  display:flex; align-items:center; justify-content:center; gap:7px;
+  width:100%; padding:9px 12px; border-radius:var(--rsm);
+  background:var(--orange-g); border:1.5px solid var(--orange);
+  color:var(--orange); font-size:11.5px; font-weight:700;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  text-decoration:none; cursor:pointer;
+  letter-spacing:.4px; text-transform:uppercase;
+  margin-bottom:10px;
+  transition:all .25s var(--ease);
+  position:relative; overflow:hidden;
+}
+.docs-suite-btn svg { width:13px; height:13px; flex-shrink:0; }
+.docs-suite-btn:hover {
+  background:var(--orange); color:#000;
+  box-shadow:0 0 22px rgba(244,121,32,.55);
+  transform:translateY(-1px);
+}
+.docs-suite-blink { animation:ds-blink 1.4s ease-in-out infinite; }
+@keyframes ds-blink {
+  0%,100% { opacity:1; }
+  50%      { opacity:.3; }
+}
+.docs-suite-btn::after {
+  content:''; position:absolute; inset:-2px; border-radius:calc(var(--rsm) + 2px);
+  border:1.5px solid var(--orange); opacity:0;
+  animation:ds-ring 2s ease-in-out infinite;
+}
+@keyframes ds-ring {
+  0%   { opacity:.55; transform:scale(1); }
+  100% { opacity:0;   transform:scale(1.07); }
+}
+.sf-lbl { font-size:9px; text-transform:uppercase; letter-spacing:1px; color:var(--tx3); margin-bottom:8px; }
+.sf-row {
+  display:flex; align-items:center; justify-content:space-between;
+  font-size:11px; color:var(--tx2); margin-bottom:5px;
+}
+.sf-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.sd-ok   { background:var(--emerald); box-shadow:0 0 5px var(--emerald); }
+.sd-warn { background:var(--amber);   box-shadow:0 0 5px var(--amber); }
+.sf-label { display:flex; align-items:center; gap:6px; }
+
+/* sidebar overlay */
+.sb-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,.55); backdrop-filter:blur(4px); z-index:499;
+}
+.sb-overlay.show { display:block; }
+
+/* ═══════════════════════════════════════════════════
+   MAIN LAYOUT
+═══════════════════════════════════════════════════ */
+main {
+  margin-left:var(--sw); margin-top:var(--hh);
+  min-height:calc(100vh - var(--hh));
+  position:relative; transition:margin-left .3s;
+}
+
+/* ═══════════════════════════════════════════════════
+   HERO / IDLE STATE
+═══════════════════════════════════════════════════ */
+#idle-state {
+  display:flex; align-items:center; justify-content:center;
+  min-height:calc(100vh - var(--hh));
+  padding:32px 20px; position:relative; overflow:hidden;
+  background:transparent; border:none; box-shadow:none;
+  border-radius:0; margin:0;
+}
+
+/* mesh background */
+.hero-bg { position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+
+/* grid lines */
+.hg-grid {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(var(--bdr) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bdr) 1px, transparent 1px);
+  background-size:60px 60px; opacity:.04;
+}
+[data-theme="light"] .hg-grid { opacity:.09; }
+
+/* glowing orbs */
+.orb {
+  position:absolute; border-radius:50%;
+  filter:blur(80px); pointer-events:none;
+  animation:orb-move ease-in-out infinite alternate;
+}
+.orb-1 { width:480px;height:480px; background:radial-gradient(circle,rgba(13,148,136,.30),transparent 70%); top:-120px;left:-100px; animation-duration:16s; }
+.orb-2 { width:420px;height:420px; background:radial-gradient(circle,rgba(244,121,32,.20),transparent 70%); bottom:-100px;right:-80px; animation-duration:20s; animation-delay:-8s; }
+.orb-3 { width:360px;height:360px; background:radial-gradient(circle,rgba(6,182,212,.20),transparent 70%); top:35%;left:55%; animation-duration:24s; animation-delay:-14s; }
+.orb-4 { width:280px;height:280px; background:radial-gradient(circle,rgba(45,212,191,.18),transparent 70%); bottom:25%;left:12%; animation-duration:19s; animation-delay:-5s; }
+@keyframes orb-move {
+  0%  { transform:translate(0,0) scale(1); }
+  40% { transform:translate(30px,-18px) scale(1.06); }
+  100%{ transform:translate(-15px,24px) scale(.96); }
+}
+
+/* scan line */
+.scan { position:absolute; left:0; right:0; height:2px; z-index:1; pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(13,148,136,.45) 35%,rgba(6,182,212,.45) 65%,transparent);
+  animation:scan-anim 7s linear infinite;
+}
+@keyframes scan-anim {
+  0%  { top:0; opacity:0; }
+  5%  { opacity:1; }
+  95% { opacity:.5; }
+  100%{ top:100%; opacity:0; }
+}
+
+/* floating particles */
+.particles { position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+.pt {
+  position:absolute; border-radius:50%; opacity:0;
+  animation:pt-rise linear infinite;
+}
+@keyframes pt-rise {
+  0%  { transform:translateY(100vh) scale(0); opacity:0; }
+  8%  { opacity:.8; }
+  92% { opacity:.3; }
+  100%{ transform:translateY(-15vh) scale(1.2); opacity:0; }
+}
+
+/* ── HERO CARD ── */
+.hero-card {
+  position:relative; z-index:10;
+  background:var(--surf);
+  border:1px solid var(--bdr2);
+  border-radius:24px;
+  padding:50px 58px 44px;
+  max-width:700px; width:100%;
+  box-shadow:var(--sh), 0 0 0 1px rgba(255,255,255,.03);
+  animation:card-rise .9s var(--bounce) both;
+  text-align:center;
+}
+[data-theme="light"] .hero-card { box-shadow:var(--sh), 0 0 0 1px rgba(0,0,0,.04); }
+@keyframes card-rise {
+  from { opacity:0; transform:translateY(38px) scale(.97); }
+  to   { opacity:1; transform:none; }
+}
+
+/* logo inside hero — MUST always show */
+.hero-logo {
+  display:flex; justify-content:center; margin-bottom:28px;
+}
+.hero-logo-box {
+  background:#000;
+  border:1px solid rgba(244,121,32,.45);
+  border-radius:18px; padding:14px 26px;
+  display:inline-flex; align-items:center; justify-content:center;
+  box-shadow:0 0 50px rgba(244,121,32,.28), 0 0 0 1px rgba(244,121,32,.08);
+}
+.hero-logo-box img {
+  height:76px; width:auto;
+  filter:drop-shadow(0 0 22px rgba(244,121,32,.8));
+  animation:logo-float 4s ease-in-out infinite;
+}
+@keyframes logo-float {
+  0%,100%{ transform:translateY(0); }
+  50%    { transform:translateY(-11px); }
+}
+
+/* hero text */
+.hero-title {
+  font-size:clamp(1.8rem,4vw,2.9rem); font-weight:800;
+  line-height:1.12; letter-spacing:-1px;
+  color:var(--tx); margin-bottom:12px;
+}
+.hero-title .accent-a { color:var(--orange); }
+.hero-title .accent-b { color:var(--violet); }
+.hero-desc {
+  font-size:15px; color:var(--tx2); max-width:430px;
+  margin:0 auto 28px; line-height:1.7; font-weight:400;
+}
+
+/* stat strip */
+.hero-stats {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  border:1px solid var(--bdr); border-radius:var(--r);
+  overflow:hidden; margin-bottom:24px;
+}
+.hs { padding:14px 8px; text-align:center; border-right:1px solid var(--bdr); }
+.hs:last-child { border-right:none; }
+.hs-v {
+  font-family:'JetBrains Mono',monospace;
+  font-size:20px; font-weight:600; line-height:1;
+}
+.hs-l {
+  font-size:9px; text-transform:uppercase; letter-spacing:.8px;
+  color:var(--tx3); margin-top:4px;
+}
+
+/* module grid */
+.hero-mods {
+  display:grid; grid-template-columns:repeat(5,1fr);
+  gap:8px; margin-bottom:22px;
+}
+/* collapse gracefully when fewer tiles are visible */
+.hero-mods:not(:has(> .hm:nth-child(7))) { grid-template-columns:repeat(3,1fr); }
+.hm {
+  background:var(--surf2); border:1px solid var(--bdr);
+  border-radius:10px; padding:12px 8px;
+  display:flex; flex-direction:column; align-items:center; gap:5px;
+  cursor:pointer; transition:all .2s; text-decoration:none;
+  min-width:0;
+}
+.hm:hover { border-color:var(--bdr2); transform:translateY(-3px); box-shadow:var(--sh2); }
+.hm-emoji { font-size:20px; line-height:1; }
+.hm-lbl { font-size:10.5px; font-weight:600; color:var(--tx2); text-align:center; white-space:nowrap; }
+
+/* footer rule */
+.hero-rule {
+  display:flex; align-items:center; gap:10px;
+  font-size:10.5px; color:var(--tx3);
+  font-family:'JetBrains Mono',monospace;
+}
+.hero-rule::before,.hero-rule::after {
+  content:''; flex:1; height:1px; background:var(--bdr);
+}
+
+/* ═══════════════════════════════════════════════════
+   DATA SECTIONS
+═══════════════════════════════════════════════════ */
+.sections-wrap { padding:24px 28px 80px; }
+
+section {
+  background:var(--card); border:1px solid var(--bdr);
+  border-radius:var(--r); padding:26px;
+  margin-bottom:22px; display:none;
+  opacity:0; transform:translateY(14px);
+  transition:opacity .35s,transform .35s; box-shadow:var(--sh2);
+}
+section.active { display:block; opacity:1; transform:none; animation:sec-in .4s var(--ease) both; }
+@keyframes sec-in { from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;} }
+
+h2 {
+  font-size:18px; font-weight:700; margin:0 0 20px;
+  color:var(--tx); display:flex; align-items:center; gap:10px;
+}
+h2::before {
+  content:''; display:block; width:4px; height:20px;
+  background:var(--ga); border-radius:2px; flex-shrink:0;
+}
+h2 i { width:20px; height:20px; }
+
+table { width:100%; border-collapse:separate; border-spacing:0; display:block; overflow-x:auto; font-size:13px; }
+th {
+  padding:11px 14px; text-align:left; background:var(--surf);
+  color:var(--tx2); font-size:11px; text-transform:uppercase;
+  letter-spacing:.8px; font-weight:700;
+  border-bottom:1px solid var(--bdr2); white-space:nowrap;
+}
+td { padding:11px 14px; color:var(--tx); border-bottom:1px solid var(--bdr); vertical-align:top; }
+tr:last-child td { border-bottom:none; }
+tbody tr:hover td { background:var(--violet-g); }
+th:first-child { border-radius:8px 0 0 0; }
+th:last-child  { border-radius:0 8px 0 0; }
+
+.chart-container {
+  background:var(--surf2); border:1px solid var(--bdr);
+  border-radius:var(--r); padding:16px; margin-top:16px;
+  display:flex; justify-content:center;
+}
+
+/* ═══════════════════════════════════════════════════
+   MOBILE DRAWER
+═══════════════════════════════════════════════════ */
+.mobile-nav-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,.62);
+  z-index:998; opacity:0; visibility:hidden;
+  transition:all .3s; backdrop-filter:blur(4px);
+}
+.mobile-nav-overlay.active { opacity:1; visibility:visible; }
+
+.mobile-nav-container {
+  position:fixed; top:0; right:0; bottom:0; width:320px;
+  background:var(--surf); border-left:1px solid var(--bdr);
+  z-index:999; pointer-events:none; opacity:0; transform:translateX(100%);
+  transition:all .3s var(--ease); display:flex; flex-direction:column;
+  will-change:transform;
+}
+.mobile-nav-container.active { pointer-events:auto; opacity:1; transform:none; }
+.mobile-nav-content { display:flex; flex-direction:column; height:100%; overflow:hidden; }
+
+.mobile-nav-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 18px; border-bottom:1px solid var(--bdr); flex-shrink:0;
+}
+.mobile-nav-header h2 {
+  font-size:15px; font-weight:700; margin:0; color:var(--tx);
+}
+.mobile-nav-header h2::before { display:none; }
+.mobile-nav-close {
+  width:32px; height:32px; border-radius:var(--rsm);
+  background:var(--surf2); border:1px solid var(--bdr2);
+  color:var(--tx2); cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all .2s;
+}
+.mobile-nav-close:hover { border-color:var(--rose); color:var(--rose); }
+.mobile-nav-close i { width:15px; height:15px; }
+
+.status-bar {
+  display:flex; justify-content:space-between;
+  padding:10px 18px; background:var(--surf2);
+  border-bottom:1px solid var(--bdr);
+  font-size:12px; color:var(--tx2); flex-shrink:0;
+}
+.status-item { display:flex; align-items:center; gap:5px; }
+.status-item i { width:13px; height:13px; color:var(--cyan); }
+
+.mobile-nav-list {
+  flex:1; overflow-y:auto; padding:10px 13px; list-style:none;
+}
+.mobile-nav-list::-webkit-scrollbar { width:4px; }
+.mobile-nav-list::-webkit-scrollbar-thumb { background:var(--bdr2); border-radius:2px; }
+.mobile-nav-item { margin-bottom:4px; }
+.mobile-nav-button {
+  width:100%; display:flex; align-items:center; gap:12px;
+  padding:11px 13px; border-radius:9px;
+  background:var(--surf2); border:1px solid var(--bdr);
+  color:var(--tx2); cursor:pointer; transition:all .15s;
+  text-align:left; font-family:'Plus Jakarta Sans',sans-serif;
+}
+.mobile-nav-button:hover { background:var(--violet-g); border-color:var(--violet); color:var(--tx); }
+.mobile-nav-icon {
+  width:34px; height:34px; border-radius:9px;
+  background:var(--surf); border:1px solid var(--bdr2);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--cyan);
+}
+.mobile-nav-icon i { width:15px; height:15px; }
+.mobile-nav-text { flex:1; }
+.mobile-nav-title { font-size:13px; font-weight:600; color:var(--tx); display:block; line-height:1.2; }
+.mobile-nav-subtitle { font-size:11px; color:var(--tx2); display:block; margin-top:2px; }
+
+/* mobile docs suite button */
+.mobile-docs-btn-wrap {
+  padding:12px 13px; border-top:1px solid var(--bdr); flex-shrink:0;
+}
+.mobile-docs-suite-btn {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  width:100%; padding:11px 14px; border-radius:var(--rsm);
+  background:var(--orange-g); border:1.5px solid var(--orange);
+  color:var(--orange); font-size:12px; font-weight:700;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  text-decoration:none; cursor:pointer;
+  letter-spacing:.4px; text-transform:uppercase;
+  transition:all .25s var(--ease);
+  position:relative; overflow:hidden;
+}
+.mobile-docs-suite-btn svg { width:14px; height:14px; flex-shrink:0; }
+.mobile-docs-suite-btn:hover {
+  background:var(--orange); color:#000;
+  box-shadow:0 0 22px rgba(244,121,32,.55);
+}
+.mobile-docs-blink { animation:ds-blink 1.4s ease-in-out infinite; }
+.mobile-docs-suite-btn::after {
+  content:''; position:absolute; inset:-2px; border-radius:calc(var(--rsm) + 2px);
+  border:1.5px solid var(--orange); opacity:0;
+  animation:ds-ring 2s ease-in-out infinite;
+}
+
+/* mobile particle container (legacy compat) */
+.particle-container { position:absolute; inset:0; pointer-events:none; z-index:-1; overflow:hidden; }
+.particle {
+  position:absolute; border-radius:50%;
+  animation:float 3s ease-in-out infinite;
+}
+@keyframes float { 0%,100%{transform:translateY(0) translateX(0);opacity:.6;} 50%{transform:translateY(-20px) translateX(10px);opacity:.2;} }
+
+/* ═══════════════════════════════════════════════════
+   MODAL
+═══════════════════════════════════════════════════ */
+.modal {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,.75);
+  z-index:20000; align-items:center; justify-content:center;
+  backdrop-filter:blur(6px); padding:20px;
+}
+.modal-content {
+  background:var(--surf); border:1px solid var(--bdr2);
+  border-radius:18px; width:90%; max-width:640px;
+  padding:24px; box-shadow:0 32px 80px rgba(0,0,0,.6);
+  animation:modal-in .3s var(--bounce);
+}
+@keyframes modal-in { from{transform:translateY(40px);opacity:0;} to{transform:none;opacity:1;} }
+.modal-content h3 { font-size:16px; font-weight:700; color:var(--tx); margin-bottom:16px; }
+.close { font-size:22px; color:var(--tx2); cursor:pointer; }
+.close:hover { color:var(--rose); }
+
+/* TOAST */
+#uploadMsg {
+  position:fixed; top:calc(var(--hh) + 12px); right:18px;
+  z-index:99999; background:var(--surf); border:1px solid var(--bdr2);
+  color:var(--tx); padding:11px 18px; border-radius:10px;
+  box-shadow:var(--sh); transform:translateY(-14px); opacity:0;
+  transition:all .3s; pointer-events:none;
+  display:flex; align-items:center; gap:8px; font-size:13px; max-width:300px;
+}
+#uploadMsg.show { transform:none; opacity:1; }
+#uploadMsg i { width:15px; height:15px; }
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .sidebar { transform:translateX(-100%); box-shadow:none; }
+  .sidebar.open { transform:none; box-shadow:var(--sh); }
+  main { margin-left:0; }
+  .burger { display:flex; }
+  .mobile-menu-btn { display:flex; }
+  .logo-text { display:none; }
+  .live-dot span { display:none; }
+}
+@media (max-width: 560px) {
+  header { padding:0 12px; }
+  .clock-pill span { display:none; }
+  .hero-card { padding:32px 18px 28px; border-radius:18px; }
+  .hero-title { font-size:1.75rem; }
+  .hero-stats { grid-template-columns:repeat(2,1fr); }
+  .hero-mods  { grid-template-columns:repeat(3,1fr) !important; gap:7px; }
+  .sections-wrap { padding:14px 14px 60px; }
+  .theme-toggle .tt-track { display:block; }
+}
+@media (min-width: 901px) {
+  .mobile-menu-btn { display:none !important; }
+  .mobile-nav-container,.mobile-nav-overlay { display:none !important; }
+}
+
+/* ─── SIDEBAR BLINK COLORS PER MODULE ─── */
+@keyframes blink-pink   { 0%,100%{box-shadow:0 0 6px #f472b6;opacity:1;} 50%{box-shadow:0 0 14px #f472b6;opacity:.4;} }
+@keyframes blink-indigo { 0%,100%{box-shadow:0 0 6px #818cf8;opacity:1;} 50%{box-shadow:0 0 14px #818cf8;opacity:.4;} }
+@keyframes blink-cyan   { 0%,100%{box-shadow:0 0 6px #22d3ee;opacity:1;} 50%{box-shadow:0 0 14px #22d3ee;opacity:.4;} }
+@keyframes blink-amber  { 0%,100%{box-shadow:0 0 6px #f59e0b;opacity:1;} 50%{box-shadow:0 0 14px #f59e0b;opacity:.4;} }
+@keyframes blink-green  { 0%,100%{box-shadow:0 0 6px #10b981;opacity:1;} 50%{box-shadow:0 0 14px #10b981;opacity:.4;} }
+@keyframes blink-rose   { 0%,100%{box-shadow:0 0 6px #fb4d6d;opacity:1;} 50%{box-shadow:0 0 14px #fb4d6d;opacity:.4;} }
+@keyframes blink-violet { 0%,100%{box-shadow:0 0 6px #a78bfa;opacity:1;} 50%{box-shadow:0 0 14px #a78bfa;opacity:.4;} }
+@keyframes blink-teal   { 0%,100%{box-shadow:0 0 6px #34d399;opacity:1;} 50%{box-shadow:0 0 14px #34d399;opacity:.4;} }
+@keyframes blink-blue   { 0%,100%{box-shadow:0 0 6px #60a5fa;opacity:1;} 50%{box-shadow:0 0 14px #60a5fa;opacity:.4;} }
+@keyframes blink-orange { 0%,100%{box-shadow:0 0 6px #fb923c;opacity:1;} 50%{box-shadow:0 0 14px #fb923c;opacity:.4;} }
+@keyframes blink-mint   { 0%,100%{box-shadow:0 0 6px #0af0b0;opacity:1;} 50%{box-shadow:0 0 14px #0af0b0;opacity:.4;} }
+@keyframes blink-sky    { 0%,100%{box-shadow:0 0 6px #06b6d4;opacity:1;} 50%{box-shadow:0 0 14px #06b6d4;opacity:.4;} }
+@keyframes blink-red    { 0%,100%{box-shadow:0 0 6px #ef4444;opacity:1;} 50%{box-shadow:0 0 14px #ef4444;opacity:.4;} }
+@keyframes blink-fire   { 0%,100%{box-shadow:0 0 6px #ff6b35;opacity:1;} 50%{box-shadow:0 0 14px #ff6b35;opacity:.4;} }
+
+@keyframes blink-gold   { 0%,100%{box-shadow:0 0 6px #FFD700;opacity:1;} 50%{box-shadow:0 0 14px #FFD700;opacity:.4;} }
+@keyframes blink-lime   { 0%,100%{box-shadow:0 0 6px #a3e635;opacity:1;} 50%{box-shadow:0 0 14px #a3e635;opacity:.4;} }
+@keyframes blink-fuchsia{ 0%,100%{box-shadow:0 0 6px #d946ef;opacity:1;} 50%{box-shadow:0 0 14px #d946ef;opacity:.4;} }
+
+/* module-specific pip blink colors */
+.nav-btn[data-module="space_occupancy"] .nav-pip { background:#f472b6; animation:blink-pink   1.8s ease-in-out infinite; }
+.nav-btn[data-module="cam_billing"]     .nav-pip { background:#818cf8; animation:blink-indigo 2.0s ease-in-out infinite; }
+.nav-btn[data-module="energy"]          .nav-pip { background:#22d3ee; animation:blink-cyan   1.6s ease-in-out infinite; }
+<!--.nav-btn[data-module="mis_reports"]     .nav-pip { background:#f59e0b; animation:blink-amber  1.9s ease-in-out infinite; }-->
+.nav-item[data-module="kra"]            .nav-pip { background:#10b981; animation:blink-green  1.7s ease-in-out infinite; }
+.nav-item[data-module="issues"]         .nav-pip { background:#fb4d6d; animation:blink-rose   1.5s ease-in-out infinite; }
+.nav-item[data-module="mms_dashboard"]  .nav-pip { background:#a78bfa; animation:blink-violet 2.1s ease-in-out infinite; }
+.nav-item[data-module="store_inventory"].nav-pip { background:#34d399; animation:blink-teal   1.8s ease-in-out infinite; }
+.nav-item[data-module="project_handover"].nav-pip{ background:#60a5fa; animation:blink-blue   2.0s ease-in-out infinite; }
+.nav-item[data-module="work_track"]     .nav-pip { background:#fb923c; animation:blink-orange 1.6s ease-in-out infinite; }
+.nav-item[data-module="pm_daily"]       .nav-pip { background:#0af0b0; animation:blink-mint   1.4s ease-in-out infinite; }
+.nav-item[data-module="housekeeping"]   .nav-pip { background:#06b6d4; animation:blink-sky    1.7s ease-in-out infinite; }
+.nav-item[data-module="security"]       .nav-pip { background:#ef4444; animation:blink-red    1.3s ease-in-out infinite; }
+.nav-item[data-module="fire"]           .nav-pip { background:#ff6b35; animation:blink-fire   1.2s ease-in-out infinite; }
+/* New live module pips */
+.nav-item[data-module="sln_budget"]     .nav-pip { background:#FFD700; animation:blink-gold    1.8s ease-in-out infinite; }
+
+/* ensure nav-pip exists for ALL items — add default if missing */
+.nav-btn:not([data-module="space_occupancy"]):not([data-module="cam_billing"]):not([data-module="energy"]):not([data-module="mis_reports"]) .nav-pip,
+.nav-item:not([data-module="kra"]):not([data-module="issues"]):not([data-module="mms_dashboard"]):not([data-module="store_inventory"]):not([data-module="project_handover"]):not([data-module="work_track"]):not([data-module="pm_daily"]):not([data-module="housekeeping"]):not([data-module="security"]):not([data-module="fire"]) .nav-pip {
+  background:var(--cyan); animation:blink-cyan 2s ease-in-out infinite;
+}
+
+/* ─── QUICK ACCESS MODAL — PM, HK, Security, Fire distinct colors ─── */
+.hm[data-module="pm_daily"] {
+  border-color:rgba(10,240,176,.45) !important;
+  background:linear-gradient(135deg,rgba(10,240,176,.08),rgba(6,182,212,.05)) !important;
+  box-shadow:0 0 0 1px rgba(10,240,176,.15);
+}
+.hm[data-module="pm_daily"] .hm-lbl { color:#0af0b0 !important; font-weight:700; }
+.hm[data-module="pm_daily"]:hover { box-shadow:0 6px 24px rgba(10,240,176,.28),0 0 0 1px rgba(10,240,176,.4) !important; }
+
+.hm[data-module="housekeeping"] {
+  border-color:rgba(6,182,212,.45) !important;
+  background:linear-gradient(135deg,rgba(6,182,212,.09),rgba(34,211,238,.05)) !important;
+  box-shadow:0 0 0 1px rgba(6,182,212,.15);
+}
+.hm[data-module="housekeeping"] .hm-lbl { color:#06b6d4 !important; font-weight:700; }
+.hm[data-module="housekeeping"]:hover { box-shadow:0 6px 24px rgba(6,182,212,.28),0 0 0 1px rgba(6,182,212,.4) !important; }
+
+.hm[data-module="security"] {
+  border-color:rgba(239,68,68,.45) !important;
+  background:linear-gradient(135deg,rgba(239,68,68,.09),rgba(251,77,109,.05)) !important;
+  box-shadow:0 0 0 1px rgba(239,68,68,.18);
+}
+.hm[data-module="security"] .hm-lbl { color:#f87171 !important; font-weight:700; }
+.hm[data-module="security"]:hover { box-shadow:0 6px 24px rgba(239,68,68,.28),0 0 0 1px rgba(239,68,68,.4) !important; }
+
+.hm[data-module="fire"] {
+  border-color:rgba(255,107,53,.50) !important;
+  background:linear-gradient(135deg,rgba(255,107,53,.10),rgba(239,68,68,.06)) !important;
+  box-shadow:0 0 0 1px rgba(255,107,53,.18);
+  animation:fire-pulse 2s ease-in-out infinite;
+}
+.hm[data-module="fire"] .hm-lbl { color:#ff6b35 !important; font-weight:700; }
+.hm[data-module="fire"]:hover { box-shadow:0 6px 24px rgba(255,107,53,.35),0 0 0 1px rgba(255,107,53,.5) !important; }
+@keyframes fire-pulse {
+  0%,100% { box-shadow:0 0 0 1px rgba(255,107,53,.18); }
+  50%     { box-shadow:0 0 12px rgba(255,107,53,.40), 0 0 0 1px rgba(255,107,53,.4); }
+}
+
+/* ─── HEADER LOGO ─── */
+.logo-box img { height:34px !important; width:auto; max-width:180px; object-fit:contain; }
+.logo-box { background:transparent !important; border:none !important; box-shadow:none !important; padding:0 !important; }
+
+
+/* ─── ENHANCED MOBILE RESPONSIVENESS ─── */
+@media (max-width: 900px) {
+  main { margin-left:0 !important; }
+  .sections-wrap { padding:14px 12px 80px; }
+  .hero-card { padding:28px 16px 24px; }
+  .hero-stats { grid-template-columns:repeat(2,1fr); }
+  .hero-mods { grid-template-columns:repeat(4,1fr) !important; gap:6px; }
+  h2 { font-size:15px; }
+}
+@media (max-width: 480px) {
+  .hero-mods { grid-template-columns:repeat(3,1fr) !important; gap:6px; }
+  .logo-box img { height:28px !important; }
+  .clock-pill { padding:3px 8px; font-size:10px; }
+  .btn-back-portal { font-size:10px; padding:4px 10px; }
+  .hdr-right { gap:5px; }
+  .hero-title { font-size:1.5rem; }
+  .hero-desc { font-size:13px; }
+  .hs-v { font-size:16px; }
+  table { font-size:12px; }
+  th,td { padding:8px 10px; }
+}
+@media (max-width: 360px) {
+  .hero-mods { grid-template-columns:repeat(3,1fr) !important; }
+  .hm { padding:9px 5px; }
+  .hm-emoji { font-size:17px; }
+  .hm-lbl { font-size:9px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ HEADER ══════════════════ -->
+<header>
+  <div style="display:flex;align-items:center;gap:10px">
+    <!-- burger (mobile) -->
+    <button class="burger" id="burgerBtn" aria-label="Toggle sidebar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6"  x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    <!-- logo -->
+    <a href="{{ url_for('dashboard') }}" class="logo-link">
+      <div class="logo-box">
+        <img src="{{ url_for('static', filename='SLNT.jpeg') }}" style="height:36px;width:auto;max-width:200px;object-fit:contain;">
+      </div>
+      <div class="logo-text">
+        <div class="logo-name"></div>
+        <div class="logo-sub"></div>
+      </div>
+    </a>
+  </div>
+
+  <div class="hdr-right">
+    <!-- live clock -->
+    <div class="clock-pill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span id="currentTime" style="font-variant-numeric:tabular-nums">00:00:00</span>
+    </div>
+    <!-- live indicator -->
+    <div class="live-dot"><span class="pdot"></span><span>Live</span></div>
+
+    <!-- ── DARK / LIGHT TOGGLE (beside logo per request) ── -->
+    <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle dark / light mode">
+      <!-- sun -->
+      <svg class="t-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <div class="tt-track"><div class="tt-thumb"></div></div>
+      <!-- moon -->
+      <svg class="t-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </div>
+
+    <!-- Back to Portal -->
+    <a class="btn-back-portal" href="/dashboard" title="Back to Dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Portal
+    </a>
+
+    <!-- mobile fab -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open navigation">
+      <i data-lucide="menu"></i>
+    </button>
+  </div>
+</header>
+
+<!-- sidebar overlay (mobile) -->
+<div class="sb-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
+
+<!-- ══════════════════ SIDEBAR ══════════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-top">
+    <div class="sb-badge"></div>
+    <div class="sb-role">Role: <span id="sidebarRoleLabel">—</span></div>
+  </div>
+
+  <div class="sb-scroll">
+    <!-- ── GM Tasks Quick Access ── -->
+    <div class="nav-grp">Management</div>
+    <button class="nav-item" data-module="gm_tasks" onclick="window.location.href='/gm_tasks'" style="background:linear-gradient(135deg,rgba(255,215,0,.08),rgba(244,121,32,.06));border:1px solid rgba(255,215,0,.25);color:#FFD700;font-weight:600;margin-bottom:6px;">
+      <i data-lucide="clipboard-check" style="color:#FFD700;opacity:1;"></i><span>Senior Level MGMT</span>
+      <span class="nav-pip" style="background:#FFD700;box-shadow:0 0 8px #FFD700;animation:pdot 1.6s ease-in-out infinite;"></span>
+    </button>
+
+    <div class="nav-grp">Finance</div>
+
+    <button class="nav-btn" data-module="space_occupancy" onclick="window.location.href='/sln_occupancy'">
+      <i data-lucide="layout-dashboard"></i><span>Space Occupancy</span>
+    
+      <span class="nav-pip" style="background:#f472b6;box-shadow:0 0 8px #f472b6;"></span></button>
+    <button class="nav-btn" data-module="cam_billing" onclick="window.location.href='/cam_charges'">
+      <i data-lucide="coins"></i><span>CAM Billing</span>
+      <span class="nav-pip" style="background:#818cf8;box-shadow:0 0 8px #818cf8"></span>
+    </button>
+
+    <button class="nav-item" data-module="sln_budget" onclick="window.location.href='/sln_budget'" style="position:relative;background:linear-gradient(135deg,rgba(255,215,0,.08),rgba(244,121,32,.05));border:1px solid rgba(255,215,0,.22);">
+      <i data-lucide="bar-chart-2" style="color:#FFD700;opacity:1;"></i><span style="color:#FFD700;font-weight:600;">Budget Review</span>
+      <span class="nav-pip" style="background:#FFD700;box-shadow:0 0 10px #FFD700;animation:pdot 1.6s ease-in-out infinite;"></span>
+    </button>
+    
+
+    <div class="nav-grp">Reports</div>
+
+    <!--<button class="nav-btn" data-module="mis_reports" onclick="window.location.href='/mis'">
+      <i data-lucide="file-bar-chart"></i><span>MIS Reports</span>
+      <span class="nav-pip" style="background:#f59e0b;box-shadow:0 0 8px #f59e0b"></span>
+    </button>-->
+    <button class="nav-item" data-module="kra" onclick="window.location.href='/kra'">
+      <i data-lucide="target"></i><span>KRA</span>    
+      <span class="nav-pip" style="background:#10b981;box-shadow:0 0 8px #10b981;"></span></button>
+
+    <button class="nav-btn" data-module="energy" onclick="window.location.href='/energy'">
+      <i data-lucide="zap"></i><span>Energy Analysis</span>
+      <span class="nav-pip" style="background:#22d3ee;box-shadow:0 0 8px #22d3ee"></span>
+    </button>
+
+    <button class="nav-item" data-module="pm_daily" onclick="window.location.href='/sln/pm/daily'" style="position:relative;">
+      <i data-lucide="clipboard-list" style="color:#0af0b0;"></i><span>PM Daily Log</span>
+      <span class="nav-pip" style="background:#0af0b0;box-shadow:0 0 8px #0af0b0;animation:pdot 1.5s ease-in-out infinite;"></span>
+    </button>
+
+
+    <div class="nav-grp">Operations</div>
+
+    <button class="nav-item" data-module="mms_dashboard" onclick="window.location.href='/sln_mms_dashboard'">
+      <i data-lucide="activity"></i><span>MMS Dashboard</span>    
+      <span class="nav-pip" style="background:#a78bfa;box-shadow:0 0 8px #a78bfa;"></span></button>
+
+    <button class="nav-item" data-module="issues" onclick="window.location.href='/issues'">
+      <i data-lucide="alert-circle"></i><span>Daily Logs</span>    
+      <span class="nav-pip" style="background:#fb4d6d;box-shadow:0 0 8px #fb4d6d;"></span></button>
+
+    <button class="nav-item" data-module="store_inventory" onclick="window.location.href='/inventory_dashboard'">
+      <i data-lucide="package"></i><span>Store Inventory</span>
+    
+      <span class="nav-pip" style="background:#34d399;box-shadow:0 0 8px #34d399;"></span></button>
+    <button class="nav-item" data-module="project_handover" onclick="window.location.href='/project_handover_workspace'">
+      <i data-lucide="folder-kanban"></i><span>Project Handover</span>
+    
+      <span class="nav-pip" style="background:#60a5fa;box-shadow:0 0 8px #60a5fa;"></span></button>
+    <button class="nav-item" data-module="work_track" onclick="window.location.href='/sln_work_track'">
+      <i data-lucide="mail-check"></i><span>Work Track</span>    
+      <span class="nav-pip" style="background:#fb923c;box-shadow:0 0 8px #fb923c;"></span></button>
+
+
+    <button class="nav-item" data-module="housekeeping" onclick="window.location.href='/sln_hk/'" style="position:relative;">
+      <i data-lucide="sparkles" style="color:#06b6d4;"></i><span>Housekeeping</span>
+      <span class="nav-pip" style="background:#06b6d4;box-shadow:0 0 8px #06b6d4;animation:pdot 1.5s ease-in-out infinite;"></span>
+    </button>
+    <button class="nav-item" data-module="security" onclick="window.location.href='/sln_sec'" style="position:relative;">
+      <i data-lucide="shield-alert" style="color:#ef4444;"></i><span>Security</span>
+      <span class="nav-pip" style="background:#ef4444;box-shadow:0 0 8px #ef4444;animation:pdot 1.5s ease-in-out infinite;"></span>
+    </button>
+    <button class="nav-item" data-module="fire" onclick="window.location.href='/sln_fire/'" style="position:relative;">
+      <i data-lucide="flame" style="color:#ef4444;"></i><span>Fire</span>
+      <span class="nav-pip" style="background:#ef4444;box-shadow:0 0 8px #ef4444;animation:pdot 1.5s ease-in-out infinite;"></span>
+    </button>
+
+    <!-- ── Budget Review (single entry — full dashboard at /sln_budget) ── -->
+    <div class="nav-grp" style="margin-top:6px;">Finance</div>
+
+
+    <!-- ── Workforce & Resource Management ── -->
+    <div class="nav-grp" style="margin-top:6px;">Workforce</div>
+    <button class="nav-item" data-module="resource_mgmt" onclick="window.location.href='/sln_resource_mgmt'" style="position:relative;background:linear-gradient(135deg,rgba(6,182,212,.08),rgba(13,148,136,.05));border:1px solid rgba(6,182,212,.25);">
+      <i data-lucide="users" style="color:#06b6d4;opacity:1;"></i><span style="color:#06b6d4;font-weight:600;">Resource Mgmt</span>
+      <span class="nav-pip" style="background:#06b6d4;box-shadow:0 0 10px #06b6d4;animation:blink-cyan 1.8s ease-in-out infinite;"></span>
+    </button>
+  </div>
+
+  <!-- system status footer -->
+  <div class="sb-foot">
+    <!-- Maintenance & Vendor Governance Docs Suite button -->
+    <a class="docs-suite-btn" id="docsSuiteBtn" data-module="audit_documents" href="/mvgds" title="Maintenance & Vendor Governance Documentation Suite">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      <span class="docs-suite-blink">📋 Docs Suite</span>
+    </a>
+    <div class="sf-lbl">System Status</div>
+    <div class="sf-row">
+      <div class="sf-label"><span class="sf-dot sd-ok"></span>Portal</div>
+      <span style="color:var(--emerald);font-size:11px">Online</span>
+    </div>
+    <div class="sf-row">
+      <div class="sf-label"><span class="sf-dot sd-ok"></span>Database</div>
+      <span style="color:var(--emerald);font-size:11px">Connected</span>
+    </div>
+    <div class="sf-row">
+      <div class="sf-label"><span class="sf-dot sd-warn"></span>Hyderabad</div>
+      <span style="color:var(--tx2);font-size:11px">IST Zone</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ══════════════════ MAIN ══════════════════ -->
+<main id="mainContent">
+
+  <!-- ── HERO WELCOME SCREEN ── -->
+  <section id="idle-state" class="active" style="display:flex;flex-direction:column;align-items:center;justify-content:center;border:none;background:transparent;box-shadow:none;border-radius:0;margin:0;min-height:calc(100vh - var(--hh));padding:32px 20px;position:relative;overflow:hidden;">
+
+    <!-- animated background -->
+    <div class="hero-bg">
+      <div class="hg-grid"></div>
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+      <div class="orb orb-4"></div>
+      <div class="scan"></div>
+      <div class="particles" id="heroParticles"></div>
+    </div>
+
+    <!-- card -->
+    <div class="hero-card">
+
+      <!-- LOGO — always visible, floating animation -->
+      <div class="hero-logo">
+        <div class="hero-logo-box">
+          <img src="{{ url_for('static', filename='SLNT.jpeg') }}" style="height:76px;width:auto;">
+        </div>
+      </div>
+
+      <h1 class="hero-title">
+        Welcome <br>
+        <span class="accent-a"></span><span class="accent-b"></span>
+      </h1>
+
+      <p class="hero-desc">
+        Integrated facility management portal for space, energy, compliance and operations intelligence — Hyderabad.
+      </p>
+
+      <!-- stat strip -->
+      <div class="hero-stats">
+        <div class="hs"><div class="hs-v" style="color:var(--emerald)">638000</div><div class="hs-l">Total SFT</div></div>
+        <div class="hs"><div class="hs-v" style="color:var(--violet)">17+</div><div class="hs-l">Modules</div></div>
+        <div class="hs"><div class="hs-v" style="color:var(--amber)">Live</div><div class="hs-l">Data Sync</div></div>
+        <div class="hs"><div class="hs-v" style="color:var(--sky)">HYD</div><div class="hs-l">Location</div></div>
+      </div>
+
+      <!-- user welcome strip — populated by JS after profile fetch -->
+      <div id="heroUserStrip" style="display:none;align-items:center;justify-content:center;gap:10px;margin-bottom:18px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:30px;background:var(--surf2);border:1px solid var(--bdr2)">
+          <span id="heroUserAvatar" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;background:var(--ga);flex-shrink:0">👤</span>
+          <span style="font-size:12px;color:var(--tx2)">Welcome, </span>
+          <span id="heroUserName" style="font-size:13px;font-weight:800;color:var(--tx)">—</span>
+          <span style="width:1px;height:14px;background:var(--bdr2);display:inline-block"></span>
+          <span id="heroUserRole" style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:10px;background:var(--orange-g);color:var(--orange);border:1px solid rgba(244,121,32,.3)">—</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--emerald)">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--emerald);animation:pdot 2s ease-in-out infinite;flex-shrink:0;display:inline-block"></span>
+          <span id="heroModCount">— modules</span>
+        </div>
+      </div>
+
+      <!-- quick access — ALL modules, shown/hidden by role via JS -->
+      <div class="hero-mods" id="heroMods">
+        <!-- ── Operations & Management ── -->
+        <a class="hm" href="/gm_tasks" data-module="gm_tasks" style="border-color:rgba(255,215,0,.45);background:linear-gradient(135deg,rgba(255,215,0,.08),rgba(244,121,32,.06));animation:fire-pulse 2.2s ease-in-out infinite;"><div class="hm-emoji">📋</div><div class="hm-lbl" style="color:#FFD700;font-weight:700;">Sr. Level MGMT</div></a>
+        <a class="hm" href="/sln_occupancy"              data-module="space_occupancy"><div class="hm-emoji">🏢</div><div class="hm-lbl">Space</div></a>
+        <a class="hm" href="/energy"                     data-module="energy"         ><div class="hm-emoji">⚡</div><div class="hm-lbl">Energy</div></a>
+        <a class="hm" href="/cam_charges"                data-module="cam_billing"    ><div class="hm-emoji">💰</div><div class="hm-lbl">CAM</div></a>
+        <!--<a class="hm" href="/mis"                        data-module="mis_reports"    ><div class="hm-emoji">📊</div><div class="hm-lbl">MIS</div></a>-->
+        <a class="hm" href="/sln_mms_dashboard"          data-module="mms_dashboard"  ><div class="hm-emoji">⚙️</div><div class="hm-lbl">MMS</div></a>
+        <a class="hm" href="/kra"                        data-module="kra"            ><div class="hm-emoji">🎯</div><div class="hm-lbl">KRA</div></a>
+        <a class="hm" href="/issues"                     data-module="issues"         ><div class="hm-emoji">🚨</div><div class="hm-lbl">Daily Logs</div></a>
+        <a class="hm" href="/inventory_dashboard"        data-module="store_inventory"><div class="hm-emoji">📦</div><div class="hm-lbl">Inventory</div></a>
+        <a class="hm" href="/project_handover_workspace" data-module="project_handover"><div class="hm-emoji">📁</div><div class="hm-lbl">Handover</div></a>
+        <a class="hm" href="/sln_work_track"             data-module="work_track"     ><div class="hm-emoji">📋</div><div class="hm-lbl">Work Track</div></a>
+        <a class="hm" href="/sln/pm/daily"               data-module="pm_daily"       style="border-color:rgba(10,240,176,.35);background:rgba(10,240,176,.05);"><div class="hm-emoji">🗒️</div><div class="hm-lbl" style="color:#0af0b0;">PM Daily</div></a>
+        <a class="hm" href="/sln_hk/"                    data-module="housekeeping"   style="border-color:rgba(6,182,212,.35);background:rgba(6,182,212,.05);"><div class="hm-emoji">🧹</div><div class="hm-lbl" style="color:#06b6d4;">Housekeeping</div></a>
+        <a class="hm" href="/sln_sec"                    data-module="security"       style="border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.05);"><div class="hm-emoji">🔒</div><div class="hm-lbl" style="color:#ef4444;">Security</div></a>
+        <a class="hm" href="/sln_budget" 		 data-module="sln_budget"     style="border-color:rgba(6,182,212,.35);background:rgba(6,182,212,.05);"><div class="hm-emoji">💹</div><div class="hm-lbl" style="color:#06b6d4;">Budget</div></a>
+        <a class="hm" href="/sln_resource_mgmt" 	 data-module="resource_mgmt"  style="border-color:rgba(6,182,212,.45);background:rgba(6,182,212,.09);"><div class="hm-emoji">👥</div><div class="hm-lbl" style="color:#06b6d4;">Resource Mgmt</div></a>
+      </div>
+
+        <a class="hm" href="/sln_fire/"                  data-module="fire"           style="border-color:rgba(239,68,68,.45);background:rgba(239,68,68,.07);"><div class="hm-emoji">🔥</div><div class="hm-lbl" style="color:#ef4444;">Fire</div></a>
+
+      <div class="hero-rule" id="heroRule">Loading your workspace…</div>
+    </div>
+  </section>
+
+  <!-- ── DATA SECTIONS ── -->
+  <div class="sections-wrap">
+    
+
+    
+
+    
+
+    
+
+    
+
+    <section id="issues">
+      <h2><i data-lucide="alert-circle" style="color:var(--rose)"></i> Issues &amp; Observations</h2>
+      <div style="overflow-x:auto">
+        <table id="issuesTable"><thead><tr><th>Sl No</th><th>Department</th><th>Issue/Observation</th><th>Status</th><th>Remarks</th></tr></thead><tbody></tbody></table>
+      </div>
+    </section>
+
+    
+  </div>
+</main>
+
+<!-- ══════════════════ MOBILE DRAWER ══════════════════ -->
+<div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+<div class="mobile-nav-container" id="mobileNavContainer">
+  <div class="mobile-nav-content" id="mobileNavContent">
+    <div class="mobile-nav-header">
+      <h2>Navigation</h2>
+      <button class="mobile-nav-close" id="mobileNavClose" aria-label="Close">
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+    <div class="status-bar">
+      <div class="status-item"><i data-lucide="clock"></i><span id="currentTime">00:00:00</span></div>
+      <div class="status-item"><i data-lucide="map-pin"></i><span>Hyderabad</span></div>
+    </div>
+    <ul class="mobile-nav-list" id="mobileNavList"></ul>
+    <div class="mobile-docs-btn-wrap" id="mobileDocsBtnWrap">
+      <a class="mobile-docs-suite-btn" id="mobileDocsSuiteBtn" data-module="audit_documents" href="/mvgds" title="Maintenance & Vendor Governance Documentation Suite">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span class="mobile-docs-blink">📋 Docs Suite</span>
+      </a>
+    </div>
+    <div class="particle-container" id="particleContainer"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ VACANT MODAL ══════════════════ -->
+<div id="vacantModal" class="modal" role="dialog" aria-hidden="true">
+  <div class="modal-content">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3>Vacant Spaces</h3>
+      <span class="close">&times;</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table style="min-width:500px;font-size:13px">
+        <thead><tr><th>Unit</th><th style="text-align:right">Area (SFT)</th><th>Status</th><th>Lease Contact</th><th>CAM Status</th><th>Remarks</th></tr></thead>
+        <tbody id="vacantModalBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- toast -->
+<div id="uploadMsg" aria-live="polite"></div>
+
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT  (all original logic preserved)
+══════════════════════════════════════════ -->
+<script>
+/* ── theme ── */
+(function(){
+  try {
+    const saved = localStorage.getItem('sln_theme');
+    if (saved) document.documentElement.setAttribute('data-theme', saved);
+  } catch(e){}
+})();
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  try { localStorage.setItem('sln_theme', next); } catch(e){}
+}
+
+/* ── sidebar ── */
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sbOverlay').classList.remove('show');
+}
+document.getElementById('burgerBtn').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sbOverlay').classList.toggle('show');
+});
+
+/* ── hero particles ── */
+(function spawnParticles(){
+  const w = document.getElementById('heroParticles');
+  if (!w) return;
+  const colors = ['#8b7ef8','#F47920','#22d3ee','#10b981','#f59e0b','#fb4d6d','#818cf8','#f472b6'];
+  for (let i = 0; i < 34; i++) {
+    const el = document.createElement('div');
+    el.className = 'pt';
+    const sz = Math.random() * 5 + 3;
+    Object.assign(el.style, {
+      width: sz+'px', height: sz+'px',
+      left: Math.random()*100+'%',
+      background: colors[Math.floor(Math.random()*colors.length)],
+      animationDuration: (Math.random()*12+8)+'s',
+      animationDelay:    (Math.random()*10)+'s'
+    });
+    w.appendChild(el);
+  }
+})();
+
+/* ════════════════════════════════════════════
+   ORIGINAL JS — ALL FUNCTIONS KEPT INTACT
+════════════════════════════════════════════ */
+window.sheetCache = {};
+window.renderedSections = {};
+
+function showUploadMessage(msg, type = 'success') {
+  const box = document.getElementById('uploadMsg');
+  box.innerHTML = type === 'success'
+    ? `<i data-lucide="check-circle" style="color:var(--emerald)"></i> ${msg}`
+    : `<i data-lucide="alert-triangle" style="color:var(--rose)"></i> ${msg}`;
+  box.style.borderLeft = type === 'success' ? '4px solid var(--emerald)' : '4px solid var(--rose)';
+  lucide.createIcons();
+  box.classList.add('show');
+  setTimeout(() => box.classList.remove('show'), 3000);
+}
+
+function initCharts() {
+  try {
+    const sctx = document.getElementById('spaceChart').getContext('2d');
+    window.spaceChart = new Chart(sctx, {
+      type: 'bar',
+      data: {
+        labels: ['Total','Occupied','Vacant','Fit Out'],
+        datasets: [{ label:'Area (SQFT)', data:[0,0,0,0],
+          backgroundColor:['#6366f1','#10b981','#ef4444','#f59e0b'], borderRadius:6 }]
+      },
+      options: {
+        indexAxis:'y', responsive:true,
+        scales: {
+          x:{ grid:{color:'rgba(255,255,255,0.05)'}, ticks:{color:'#94a3b8',callback:v=>v.toLocaleString()+' SQFT'} },
+          y:{ grid:{display:false}, ticks:{color:'#e2e8f0'} }
+        },
+        plugins: {
+          legend:{display:false},
+          tooltip:{backgroundColor:'rgba(15,23,36,0.9)',titleColor:'#fff',bodyColor:'#cbd5e1',
+            callbacks:{label:ctx=>ctx.raw.toLocaleString()+' SQFT'}}
+        },
+        onClick:(evt,elements)=>{
+          if (!elements?.length) return;
+          if (elements[0].index===2) {
+            const modal = document.getElementById('vacantModal');
+            if (modal) modal.style.display='flex';
+          }
+        }
+      }
+    });
+    const ec = document.getElementById('electricChart');
+    if (ec) {
+      window.electricChart = new Chart(ec.getContext('2d'), {
+        type:'line',
+        data:{ labels:[], datasets:[{label:'KWH',data:[],borderColor:'#0ea5e9',backgroundColor:'rgba(14,165,233,0.2)',fill:true,tension:0.4}] },
+        options:{
+          responsive:true,
+          scales:{x:{grid:{color:'rgba(255,255,255,0.05)'}},y:{grid:{color:'rgba(255,255,255,0.05)'}}},
+          plugins:{legend:{labels:{color:'#94a3b8'}}}
+        }
+      });
+    }
+  } catch(err){ console.warn('initCharts error',err); }
+}
+
+function parseWorkbookToCache(wb) {
+  try {
+    wb.SheetNames.forEach(name => {
+      window.sheetCache[name] = XLSX.utils.sheet_to_json(wb.Sheets[name],{header:1,defval:''});
+    });
+  } catch(e){ console.warn('parse error',e); }
+}
+function handleWorkbook(arrayBuffer) {
+  try {
+    const wb = XLSX.read(arrayBuffer);
+    parseWorkbookToCache(wb);
+    showUploadMessage('Data loaded successfully','success');
+  } catch(err){ console.error(err); showUploadMessage('Failed to parse file','error'); }
+}
+async function fetchFromServer() {
+  try {
+    const resp = await fetch('/static/data/SLN_Terminus_Dashboard_Data.xlsx');
+    if (!resp.ok) throw new Error('server file not found');
+    handleWorkbook(await resp.arrayBuffer());
+  } catch(e){ console.error('fetchFromServer error',e); showUploadMessage('Server data unavailable. Please upload manually.','error'); }
+}
+async function loadExcelFromInput() {
+  const fi = document.getElementById('fileInput');
+  if (!fi?.files?.length){ showUploadMessage('Please select a file','error'); return; }
+  try { handleWorkbook(await fi.files[0].arrayBuffer()); }
+  catch(e){ console.error(e); showUploadMessage('Failed to read local file','error'); }
+}
+
+function renderSpace() {
+  if (window.renderedSections && window.renderedSections['space']) return;
+  const rows = window.sheetCache && window.sheetCache['Space_Occupancy'];
+  const table = document.getElementById('spaceTable');
+  if (!rows || rows.length <= 1) {
+    table.innerHTML = '<tr><td>No Space_Occupancy data found in workbook</td></tr>';
+    window.renderedSections = window.renderedSections || {};
+    window.renderedSections['space'] = true; return;
+  }
+  table.innerHTML = '';
+  const vals = [];
+  rows.slice(1).forEach(r => {
+    const label = r[0] || '';
+    const clean = parseFloat(String(r[1]||'').replace(/,/g,'')) || 0;
+    if (clean > 0 && label.trim() !== '') {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<th>${label}</th><td>${clean.toLocaleString()} SQFT</td>`;
+      table.appendChild(tr);
+    }
+    vals.push(clean);
+  });
+  while (vals.length < 4) vals.push(0);
+  if (window.spaceChart) { window.spaceChart.data.datasets[0].data = vals.slice(0,4); window.spaceChart.update(); }
+  const vacantBody = document.getElementById('vacantModalBody');
+  if (vacantBody) {
+    vacantBody.innerHTML = '';
+    rows.slice(1).forEach(r => {
+      const label = (r[0]||'').toString().toLowerCase();
+      if (label.includes('vacant')||label.includes('vacancy')) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${r[0]||''}</td><td style="text-align:right">${r[1]||''}</td><td>${r[2]||''}</td><td>${r[3]||''}</td><td>${r[4]||''}</td><td>${r[5]||''}</td>`;
+        vacantBody.appendChild(tr);
+      }
+    });
+  }
+  window.renderedSections = window.renderedSections || {};
+  window.renderedSections['space'] = true;
+}
+
+function renderDisputes() {
+  if (window.renderedSections['disputes']) return;
+  const rows = window.sheetCache['Disputes'];
+  const tbody = document.querySelector('#disputesTable tbody');
+  if (!tbody){ window.renderedSections['disputes']=true; return; }
+  if (!rows||rows.length<=1){ tbody.innerHTML='<tr><td colspan="4">No Disputes data</td></tr>'; window.renderedSections['disputes']=true; return; }
+  tbody.innerHTML='';
+  rows.slice(1).forEach(r=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${r[0]||''}</td><td>${r[1]||''}</td><td>${r[2]||''}</td><td>${r[3]||''}</td>`; tbody.appendChild(tr); });
+  window.renderedSections['disputes']=true;
+}
+function renderIdeas() {
+  if (window.renderedSections['ideas']) return;
+  const rows = window.sheetCache['Innovative_Ideas']||window.sheetCache['Issues_and_Observations'];
+  const tbody = document.querySelector('#ideasTable tbody');
+  if (!tbody){ window.renderedSections['ideas']=true; return; }
+  if (!rows||rows.length<=1){ tbody.innerHTML='<tr><td colspan="4">No Innovative Ideas data</td></tr>'; window.renderedSections['ideas']=true; return; }
+  tbody.innerHTML='';
+  rows.slice(1).forEach(r=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${r[0]||''}</td><td>${r[1]||''}</td><td>${r[2]||''}</td><td>${r[3]||''}</td>`; tbody.appendChild(tr); });
+  window.renderedSections['ideas']=true;
+}
+function renderWayForward() {
+  if (window.renderedSections['way']) return;
+  const rows = window.sheetCache['Way_Forward'];
+  const tbody = document.querySelector('#wayTable tbody');
+  if (!tbody){ window.renderedSections['way']=true; return; }
+  if (!rows||rows.length<=1){ tbody.innerHTML='<tr><td colspan="3">No Way_Forward data</td></tr>'; window.renderedSections['way']=true; return; }
+  tbody.innerHTML='';
+  rows.slice(1).forEach(r=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td style="text-align:center">${r[0]||''}</td><td>${r[1]||''}</td><td>${r[2]||''}</td>`; tbody.appendChild(tr); });
+  window.renderedSections['way']=true;
+}
+function renderIssues() {
+  if (window.renderedSections['issues']) return;
+  const rows = window.sheetCache['Issues_and_Observations'];
+  const tbody = document.querySelector('#issuesTable tbody');
+  if (!tbody){ window.renderedSections['issues']=true; return; }
+  if (!rows||rows.length<=1){ tbody.innerHTML='<tr><td colspan="5">No Issues_and_Observations data</td></tr>'; window.renderedSections['issues']=true; return; }
+  tbody.innerHTML='';
+  rows.slice(1).forEach(r=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td style="text-align:center">${r[0]||''}</td><td>${r[1]||''}</td><td>${r[2]||''}</td><td>${r[3]||''}</td><td>${r[4]||''}</td>`; tbody.appendChild(tr); });
+  window.renderedSections['issues']=true;
+}
+function renderElectricity() {
+  if (window.renderedSections['electricity']) return;
+  const rows = window.sheetCache['Electricity_Consumption'];
+  const table = document.getElementById('electricTable');
+  if (!table){ window.renderedSections['electricity']=true; return; }
+  if (!rows||rows.length<=1){ table.innerHTML='<tr><td>No Electricity_Consumption data</td></tr>'; window.renderedSections['electricity']=true; return; }
+  table.innerHTML='';
+  const map={};
+  rows.slice(1).forEach(r=>{ const tr=document.createElement('tr'); tr.innerHTML=`<th>${r[0]||''}</th><td>${r[1]||''}</td>`; table.appendChild(tr); if(r[0]) map[r[0].toString().toLowerCase()]=r[1]; });
+  const built  = parseFloat(String(map['built-up area consumption (kwh/sft)']||map['built-up area consumption']||map['built-up']||0).replace(/,/g,''))||0;
+  const occ    = parseFloat(String(map['occupied area (sft)']||map['occupied']||0).replace(/,/g,''))||0;
+  const leas   = parseFloat(String(map['leasable area energy consumption (units)']||map['leasable']||0).replace(/,/g,''))||0;
+  const common = parseFloat(String(map['common area consumption (kwh/sft)']||map['common']||0).replace(/,/g,''))||0;
+  if (window.electricChart) {
+    window.electricChart.data.labels=['Built-up','Occupied','Leasable','Common'];
+    window.electricChart.data.datasets[0].data=[built,occ,leas,common];
+    window.electricChart.update();
+  }
+  window.renderedSections['electricity']=true;
+}
+
+function handleSectionClick(sectionId) {
+  const idle = document.getElementById('idle-state');
+  if (idle){ idle.style.display='none'; idle.classList.remove('active'); }
+  document.querySelectorAll('main section').forEach(s=>{ s.classList.remove('active'); s.style.display='none'; });
+  const el = document.getElementById(sectionId);
+  if (el) {
+    el.style.display='block';
+    setTimeout(()=>{ el.classList.add('active'); el.scrollIntoView({behavior:'smooth',block:'start'}); },10);
+  }
+  if (Object.keys(window.sheetCache).length===0) {
+    showUploadMessage('Loading data...','success');
+    fetchFromServer().then(()=>{ setTimeout(()=>tryRenderForSection(sectionId),200); });
+    return;
+  }
+  tryRenderForSection(sectionId);
+}
+function tryRenderForSection(sectionId) {
+  switch(sectionId){
+    case 'space':       renderSpace();       break;
+    case 'disputes':    renderDisputes();    break;
+    case 'ideas':       renderIdeas();       break;
+    case 'way':         renderWayForward();  break;
+    case 'issues':      renderIssues();      break;
+    case 'electricity': renderElectricity(); break;
+    case 'cafm': if(typeof loadCafmData==='function') loadCafmData(window.sheetCache); break;
+    default:
+      const fn=window['render'+sectionId.charAt(0).toUpperCase()+sectionId.slice(1)];
+      if(typeof fn==='function') fn();
+  }
+}
+function loadCafmData(wbOrCache){ console.info('loadCafmData called (no-op placeholder).'); }
+
+/* live clock — defined first so mobile drawer IIFE can call it */
+function updateLiveTime(){
+  const timeElements = document.querySelectorAll('#currentTime');
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('en-GB', {hour12:false});
+  timeElements.forEach(el => { el.textContent = timeStr; });
+}
+updateLiveTime();
+setInterval(updateLiveTime, 1000);
+
+/* ── mobile drawer (fully preserved) ── */
+document.addEventListener('DOMContentLoaded', function(){
+  const mobileMenuBtn      = document.getElementById('mobileMenuBtn');
+  const mobileNavContainer = document.getElementById('mobileNavContainer');
+  const mobileNavContent   = document.getElementById('mobileNavContent');
+  const mobileNavClose     = document.getElementById('mobileNavClose');
+  const mobileNavOverlay   = document.getElementById('mobileNavOverlay');
+  const mobileNavList      = document.getElementById('mobileNavList');
+  const particleContainer  = document.getElementById('particleContainer');
+  if (!mobileMenuBtn||!mobileNavContainer||!mobileNavContent||!mobileNavClose||!mobileNavOverlay||!mobileNavList) return;
+
+  const navItems = [
+    {link:'/sln_occupancy',             icon:'layout-dashboard',title:'Space Occupancy',  subtitle:'Building utilization'},
+    {link:'/cam_charges',               icon:'coins',           title:'CAM Charges',       subtitle:'Financial tracking'},
+    {link:'/energy',                    icon:'zap',             title:'Energy Analysis',  subtitle:'Consumption reports'},
+    <!--{link:'/mis',                       icon:'file-bar-chart',  title:'MIS Reports',       subtitle:'Analytics dashboard'},-->
+    {link:'/kra',                       icon:'target',          title:'KRA',               subtitle:'Key metrics'},
+    {link:'/issues',                    icon:'alert-circle',    title:'Issues',            subtitle:'Observation log'},
+    {link:'/sln_mms_dashboard',             icon:'activity',        title:'MMS Dashboard',     subtitle:'Preventive maintenance'},
+    {link:'/inventory_dashboard',       icon:'package',         title:'Store Inventory',   subtitle:'Asset management'},
+    {link:'/project_handover_workspace',icon:'folder-kanban',   title:'Project Handover',  subtitle:'Documentation center'},
+    {link:'/sln_work_track',            icon:'mail-check',      title:'Daily Track',       subtitle:'Work Tracking'},
+    {link:'/sln/pm/daily',              icon:'clipboard-list',  title:'PM Daily Log',      subtitle:'Property management log'},
+    {link:'/sln_sec',                    icon:'shield-alert',    title:'Security',          subtitle:'Security operations'},
+    {link:'/sln_fire/',                  icon:'flame',           title:'Fire Fighting',     subtitle:'Fire system monitoring'},
+    {link:'/sln_budget',                icon:'bar-chart-2',     title:'Budget Review',     subtitle:'CAM financial dashboard'},
+    {link:'/sln_resource_mgmt',         icon:'users',           title:'Resource Mgmt',     subtitle:'Workforce & manpower control'},
+  ];
+
+  function createNavItems(){
+    mobileNavList.innerHTML='';
+    navItems.forEach(item=>{
+      const li=document.createElement('li'); li.className='mobile-nav-item';
+      const button=document.createElement('button'); button.className='mobile-nav-button';
+      if(item.target) button.setAttribute('data-target',item.target);
+      if(item.link)   button.setAttribute('data-link',item.link);
+      const iconDiv=document.createElement('div'); iconDiv.className='mobile-nav-icon';
+      iconDiv.innerHTML=`<i data-lucide="${item.icon}"></i>`;
+      const textDiv=document.createElement('div'); textDiv.className='mobile-nav-text';
+      const titleSpan=document.createElement('span'); titleSpan.className='mobile-nav-title'; titleSpan.textContent=item.title;
+      const subSpan=document.createElement('span'); subSpan.className='mobile-nav-subtitle'; subSpan.textContent=item.subtitle;
+      textDiv.appendChild(titleSpan); textDiv.appendChild(subSpan);
+      button.appendChild(iconDiv); button.appendChild(textDiv);
+      li.appendChild(button); mobileNavList.appendChild(li);
+    });
+    try{ lucide.createIcons(); }catch(e){}
+  }
+
+  function createParticles(){
+    if(!particleContainer) return;
+    particleContainer.innerHTML='';
+    for(let i=0;i<15;i++){
+      const p=document.createElement('div'); p.className='particle';
+      const sz=Math.random()*4+2;
+      p.style.width=sz+'px'; p.style.height=sz+'px';
+      p.style.left=Math.random()*100+'%'; p.style.top=Math.random()*100+'%';
+      const colors=['#6366f1','#0ea5e9','#f472b6','#34d399'];
+      p.style.background=colors[Math.floor(Math.random()*colors.length)];
+      p.style.animationDelay=Math.random()*5+'s';
+      p.style.animationDuration=(Math.random()*3+2)+'s';
+      particleContainer.appendChild(p);
+    }
+  }
+
+  createNavItems(); createParticles();
+
+  function openMobileNav(){  mobileNavOverlay.classList.add('active'); mobileNavContainer.classList.add('active'); document.body.style.overflow='hidden'; }
+  function closeMobileNav(){ mobileNavContainer.classList.remove('active'); mobileNavOverlay.classList.remove('active'); document.body.style.overflow=''; }
+
+  mobileMenuBtn.addEventListener('click', openMobileNav);
+  mobileNavClose.addEventListener('click', closeMobileNav);
+  mobileNavOverlay.addEventListener('click', closeMobileNav);
+  mobileNavList.addEventListener('click',function(e){
+    const button=e.target.closest('.mobile-nav-button');
+    if(!button) return;
+    closeMobileNav();
+    const idle=document.getElementById('idle-state');
+    if(idle) idle.style.display='none';
+    const target=button.getAttribute('data-target');
+    const link=button.getAttribute('data-link');
+    if(target){ handleSectionClick(target); return; }
+    if(link) window.location.href=link;
+  });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&mobileNavContainer.classList.contains('active')) closeMobileNav(); });
+});
+/* ── consolidated DOMContentLoaded ── */
+document.addEventListener('DOMContentLoaded', async function(){
+  /* lucide icons */
+  try{ lucide.createIcons(); }catch(e){ console.warn('lucide init failed',e); }
+
+  /* charts */
+  try{ initCharts(); }catch(e){ console.warn('initCharts failed',e); }
+
+  /* data fetch */
+  try{ await fetchFromServer(); }catch(e){ console.warn('Auto-load failed',e); }
+
+  /* modal close */
+  const vacantModal = document.getElementById('vacantModal');
+  const closeBtn = document.querySelector('.modal .close');
+  if(closeBtn) closeBtn.addEventListener('click', ()=>{ if(vacantModal) vacantModal.style.display='none'; });
+  window.addEventListener('click', e=>{ if(e.target===vacantModal) vacantModal.style.display='none'; });
+
+  /* ── role-based access + hero quick-access gating ── */
+  try{
+    const resp = await fetch('/api/user_profile');
+    if(!resp.ok){ window.location.href='/login'; return; }
+    const user = await resp.json();
+    const allowed = user.allowed_modules || [];
+    const role    = (user.role || '').toLowerCase();
+    const rolePretty = user.role || '—';
+    const username = user.username || user.user || '';
+
+    /* Full-access roles never get filtered */
+    const isFullAccess = ['admin','management','general manager','property manager'].includes(role);
+
+    /* ── 1. Sidebar & mobile nav buttons ── */
+    document.querySelectorAll(
+      '.sidebar button[data-module], .sidebar .nav-btn[data-module], .sidebar .nav-item[data-module]'
+    ).forEach(item => {
+      const mod = item.getAttribute('data-module') || '';
+      if(mod && !isFullAccess && !allowed.includes(mod)){
+        item.style.display = 'none';
+      }
+    });
+
+    /* ── 2. Quick-access hero tiles — SAME gating ── */
+    const heroTiles = document.querySelectorAll('#heroMods .hm[data-module]');
+    let visibleCount = 0;
+    heroTiles.forEach(tile => {
+      const mod = tile.getAttribute('data-module') || '';
+      if(mod && !isFullAccess && !allowed.includes(mod)){
+        tile.style.display = 'none';   /* hide, not remove — keeps grid flow clean */
+      } else {
+        visibleCount++;
+      }
+    });
+
+    /* ── 2b. Docs Suite button gating (audit_documents) ── */
+    const docsSuiteAllowed = isFullAccess || allowed.includes('audit_documents');
+    const docsSuiteBtn     = document.getElementById('docsSuiteBtn');
+    const mobileDocsBtnWrap = document.getElementById('mobileDocsBtnWrap');
+    if(docsSuiteBtn)      docsSuiteBtn.style.display      = docsSuiteAllowed ? '' : 'none';
+    if(mobileDocsBtnWrap) mobileDocsBtnWrap.style.display = docsSuiteAllowed ? '' : 'none';
+
+        /* ── 3. Adjust hero grid columns dynamically ── */
+    const heroMods = document.getElementById('heroMods');
+    if(heroMods){
+      if(visibleCount <= 3)       heroMods.style.gridTemplateColumns = 'repeat(3,1fr)';
+      else if(visibleCount <= 4)  heroMods.style.gridTemplateColumns = 'repeat(4,1fr)';
+      else if(visibleCount <= 6)  heroMods.style.gridTemplateColumns = 'repeat(3,1fr)';
+      else if(visibleCount <= 8)  heroMods.style.gridTemplateColumns = 'repeat(4,1fr)';
+      else                        heroMods.style.gridTemplateColumns = 'repeat(5,1fr)';
+    }
+
+    /* ── 4. Role badge colours ── */
+    const roleColors = {
+      'admin':            { bg:'rgba(244,121,32,.14)',  color:'#F47920',  border:'rgba(244,121,32,.35)' },
+      'management':       { bg:'rgba(139,126,248,.14)', color:'#8b7ef8',  border:'rgba(139,126,248,.35)' },
+      'general manager':  { bg:'rgba(139,126,248,.14)', color:'#8b7ef8',  border:'rgba(139,126,248,.35)' },
+      'property manager': { bg:'rgba(16,185,129,.14)',  color:'#10b981',  border:'rgba(16,185,129,.35)' },
+      'executive':        { bg:'rgba(34,211,238,.14)',  color:'#22d3ee',  border:'rgba(34,211,238,.35)' },
+      'supervisor':       { bg:'rgba(56,189,248,.14)',  color:'#38bdf8',  border:'rgba(56,189,248,.35)' },
+      'technician':       { bg:'rgba(245,158,11,.14)',  color:'#f59e0b',  border:'rgba(245,158,11,.35)' },
+    };
+    const rc = roleColors[role] || { bg:'rgba(244,121,32,.14)', color:'#F47920', border:'rgba(244,121,32,.35)' };
+
+    /* ── 5. Populate hero user strip ── */
+    const strip = document.getElementById('heroUserStrip');
+    if(strip){
+      strip.style.display = 'flex';
+      const nameEl = document.getElementById('heroUserName');
+      const roleEl = document.getElementById('heroUserRole');
+      const modCntEl = document.getElementById('heroModCount');
+      if(nameEl) nameEl.textContent = username || rolePretty;
+      if(roleEl){
+        roleEl.textContent = rolePretty;
+        roleEl.style.background = rc.bg;
+        roleEl.style.color      = rc.color;
+        roleEl.style.border     = '1px solid ' + rc.border;
+      }
+      if(modCntEl) modCntEl.textContent = visibleCount + ' module' + (visibleCount===1?'':'s') + ' accessible';
+    }
+
+    /* ── 6. Hero footer rule text ── */
+    const heroRule = document.getElementById('heroRule');
+    if(heroRule){
+      const msg = isFullAccess
+        ? 'Full access — all modules available'
+        : 'Select a module from the sidebar to begin';
+      heroRule.textContent = msg;
+    }
+
+    /* ── 7. Sidebar role label ── */
+    const roleLabel = document.getElementById('sidebarRoleLabel');
+    if(roleLabel) roleLabel.textContent = rolePretty;
+
+    /* ── 8. Admin-only controls ── */
+    if(!isFullAccess){
+      const uploadBar = document.querySelector('.uploadBar');
+      if(uploadBar) uploadBar.style.display='none';
+      document.querySelectorAll('.btn-edit,.btn-add,.admin-controls').forEach(el=>el.remove());
+    }
+
+    console.info('[Portal] User: ' + (username || '—') + ' | Role: ' + rolePretty + ' | Modules: ' + visibleCount);
+  }catch(e){ console.warn('Role-based access check failed:',e); }
+});
+</script>
+</body>
+</html>

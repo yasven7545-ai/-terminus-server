@@ -1,0 +1,44 @@
+[
+  {
+    "Name": "Full name of guard",
+    "Phone": "+91 XXXXXXXXXX",
+    "Shift": "Day / Night / Split",
+    "Zone Assignment": "Select zone from list",
+    "Status": "On Duty / Off Duty / Leave",
+    "ID Number": "Aadhaar / Badge No.",
+    "Joining Date": "DD-MM-YYYY",
+    "Emergency Contact": "Name & phone",
+    "Agency / Contractor": "Security agency name",
+    "Notes": "Additional info",
+    "id": "GUA-B586D627",
+    "imported_at": "2026-03-23 15:16:04"
+  },
+  {
+    "Name": "Full name of guard",
+    "Phone": "+91 XXXXXXXXXX",
+    "Shift": "Day / Night / Split",
+    "Zone Assignment": "Select zone from list",
+    "Status": "On Duty / Off Duty / Leave",
+    "ID Number": "Aadhaar / Badge No.",
+    "Joining Date": "DD-MM-YYYY",
+    "Emergency Contact": "Name & phone",
+    "Agency / Contractor": "Security agency name",
+    "Notes": "Additional info",
+    "id": "GUA-6B0B626A",
+    "imported_at": "2026-03-23 15:11:07"
+  },
+  {
+    "Name": "Full name of guard",
+    "Phone": "+91 XXXXXXXXXX",
+    "Shift": "Day / Night / Split",
+    "Zone Assignment": "Select zone from list",
+    "Status": "On Duty / Off Duty / Leave",
+    "ID Number": "Aadhaar / Badge No.",
+    "Joining Date": "DD-MM-YYYY",
+    "Emergency Contact": "Name & phone",
+    "Agency / Contractor": "Security agency name",
+    "Notes": "Additional info",
+    "id": "GUA-AA0E175C",
+    "imported_at": "2026-03-23 15:09:06"
+  }
+]

@@ -1,0 +1,174 @@
+{
+  "alarms": [],
+  "assets": [
+    {
+      "id": "fa1",
+      "zone": "Lobby & Atrium",
+      "type": "extinguisher",
+      "code": "EXT-001",
+      "capacity": "9L CO2",
+      "installed": "2022-01-15",
+      "last_inspected": "2024-11-10",
+      "next_due": "2025-05-10",
+      "status": "active",
+      "notes": ""
+    },
+    {
+      "id": "fa2",
+      "zone": "Lobby & Atrium",
+      "type": "extinguisher",
+      "code": "EXT-002",
+      "capacity": "6kg DCP",
+      "installed": "2022-01-15",
+      "last_inspected": "2024-11-10",
+      "next_due": "2025-05-10",
+      "status": "active",
+      "notes": ""
+    },
+    {
+      "id": "fa3",
+      "zone": "Basement Parking",
+      "type": "hydrant",
+      "code": "HYD-001",
+      "capacity": "65mm dia",
+      "installed": "2021-06-01",
+      "last_inspected": "2024-10-15",
+      "next_due": "2025-04-15",
+      "status": "active",
+      "notes": ""
+    },
+    {
+      "id": "fa4",
+      "zone": "Pump Room",
+      "type": "pump",
+      "code": "PMP-001",
+      "capacity": "1500 LPM",
+      "installed": "2021-06-01",
+      "last_inspected": "2024-12-01",
+      "next_due": "2025-06-01",
+      "status": "active",
+      "notes": ""
+    },
+    {
+      "id": "fa5",
+      "zone": "All Floors",
+      "type": "panel",
+      "code": "FACP-001",
+      "capacity": "8 Zone",
+      "installed": "2021-06-01",
+      "last_inspected": "2025-01-05",
+      "next_due": "2025-07-05",
+      "status": "active",
+      "notes": ""
+    },
+    {
+      "id": "fa6",
+      "zone": "Floors 1-3",
+      "type": "sprinkler",
+      "code": "SPR-001",
+      "capacity": "68°C",
+      "installed": "2021-06-01",
+      "last_inspected": "2024-09-20",
+      "next_due": "2025-03-20",
+      "status": "active",
+      "notes": ""
+    },
+    {
+      "id": "fa7",
+      "zone": "Server Room",
+      "type": "extinguisher",
+      "code": "EXT-003",
+      "capacity": "5kg CO2",
+      "installed": "2022-03-10",
+      "last_inspected": "2024-08-10",
+      "next_due": "2025-02-10",
+      "status": "expired",
+      "notes": "Refill pending"
+    },
+    {
+      "id": "fa8",
+      "zone": "Cafeteria",
+      "type": "hose_reel",
+      "code": "HR-001",
+      "capacity": "19mm dia",
+      "installed": "2021-06-01",
+      "last_inspected": "2024-11-20",
+      "next_due": "2025-05-20",
+      "status": "active",
+      "notes": ""
+    }
+  ],
+  "inspections": [],
+  "maintenance": [
+    {
+      "id": "fm1",
+      "asset_id": "fa4",
+      "asset": "Fire Pump PMP-001",
+      "task_type": "PM",
+      "scheduled": "2025-04-01",
+      "status": "pending",
+      "assigned_to": "Fire Vendor",
+      "notes": "Monthly pump test"
+    },
+    {
+      "id": "fm2",
+      "asset_id": "fa5",
+      "asset": "FACP Panel",
+      "task_type": "PM",
+      "scheduled": "2025-04-15",
+      "status": "pending",
+      "assigned_to": "Panel Vendor",
+      "notes": "Quarterly panel check"
+    }
+  ],
+  "incidents": [],
+  "drills": [
+    {
+      "id": "fd1",
+      "date": "2025-02-14",
+      "conducted_by": "Fire Safety Officer",
+      "duration_mins": 35,
+      "participants": 120,
+      "remarks": "Evacuation completed in 4 min 20 sec — satisfactory",
+      "performance": "good"
+    }
+  ],
+  "team": [
+    {
+      "id": "ft1",
+      "name": "Rajesh Varma",
+      "role": "warden",
+      "zone": "Floors 1-3",
+      "contact": "9876543210",
+      "status": "active"
+    },
+    {
+      "id": "ft2",
+      "name": "Sunita Rao",
+      "role": "warden",
+      "zone": "Floors 4-6",
+      "contact": "9876543211",
+      "status": "active"
+    },
+    {
+      "id": "ft3",
+      "name": "Mohammed Akbar",
+      "role": "responder",
+      "zone": "Basement",
+      "contact": "9876543212",
+      "status": "active"
+    },
+    {
+      "id": "ft4",
+      "name": "Priya Singh",
+      "role": "responder",
+      "zone": "Lobby",
+      "contact": "9876543213",
+      "status": "active"
+    }
+  ],
+  "meta": {
+    "last_updated": "2026-03-22T16:50:13.820665",
+    "property": "ONEWEST"
+  }
+}

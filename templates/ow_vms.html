@@ -1,0 +1,1927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ONEWEST · Visitor Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   ROOT VARIABLES & RESET
+═══════════════════════════════════════════════ */
+:root {
+  --gold:      #c8a96e;
+  --gold-lt:   #e8c98e;
+  --gold-dk:   #a07840;
+  --ink:       #0a0a0a;
+  --ink2:      #141414;
+  --ink3:      #1e1e1e;
+  --panel:     #1a1a1a;
+  --border:    rgba(200,169,110,.18);
+  --border2:   rgba(200,169,110,.35);
+  --txt:       #e8e0d0;
+  --txt2:      #9a9080;
+  --txt3:      #c0b8a8;
+  --green:     #2dd4a0;
+  --red:       #ff5f6b;
+  --amber:     #f59e0b;
+  --blue:      #60a5fa;
+  --purple:    #a78bfa;
+  --r:         8px;
+  --r2:        12px;
+  --shadow:    0 4px 24px rgba(0,0,0,.5);
+  --shadow2:   0 2px 12px rgba(0,0,0,.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--ink);color:var(--txt);min-height:100vh;overflow-x:hidden;font-size:14px}
+button{cursor:pointer;font-family:inherit}
+input,select,textarea{font-family:inherit}
+a{text-decoration:none;color:inherit}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--ink2)}
+::-webkit-scrollbar-thumb{background:var(--gold-dk);border-radius:3px}
+img{max-width:100%}
+
+/* ═══════════════════════════════════════════════
+   BLINK ANIMATION - BACK TO PORTAL
+═══════════════════════════════════════════════ */
+@keyframes blink-glow {
+  0%,100%{opacity:1;box-shadow:0 0 8px var(--gold),0 0 20px var(--gold-dk)}
+  50%{opacity:.6;box-shadow:0 0 3px var(--gold-dk)}
+}
+@keyframes pulse-ring {
+  0%{transform:scale(1);opacity:.8}
+  70%{transform:scale(1.15);opacity:0}
+  100%{transform:scale(1.15);opacity:0}
+}
+@keyframes fadeInDown {
+  from{opacity:0;transform:translateY(-12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes fadeInUp {
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+
+/* ═══════════════════════════════════════════════
+   BACK TO PORTAL BUTTON
+═══════════════════════════════════════════════ */
+#ow-back-portal {
+  position:fixed;top:14px;left:14px;z-index:9999;
+  display:flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,var(--gold-dk),var(--gold));
+  color:var(--ink);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;
+  letter-spacing:.8px;padding:8px 16px 8px 12px;border-radius:24px;border:none;
+  animation:blink-glow 2s ease-in-out infinite;
+  transition:transform .2s;text-transform:uppercase;
+}
+#ow-back-portal:hover{transform:scale(1.04);animation:none;box-shadow:0 0 24px var(--gold)}
+#ow-back-portal .bp-dot {
+  position:relative;width:8px;height:8px;border-radius:50%;background:var(--ink);flex-shrink:0;
+}
+#ow-back-portal .bp-dot::after {
+  content:'';position:absolute;inset:-3px;border-radius:50%;border:2px solid var(--ink);
+  animation:pulse-ring 1.5s ease-out infinite;
+}
+
+/* ═══════════════════════════════════════════════
+   HEADER / TOPBAR
+═══════════════════════════════════════════════ */
+#ow-header {
+  position:sticky;top:0;z-index:200;
+  background:linear-gradient(180deg,var(--ink) 0%,rgba(10,10,10,.95) 100%);
+  border-bottom:1px solid var(--border2);
+  backdrop-filter:blur(12px);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px 0 160px;height:60px;gap:12px;
+}
+.ow-logo {
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.ow-logo-mark {
+  width:36px;height:36px;background:linear-gradient(135deg,var(--gold-dk),var(--gold));
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;color:var(--ink);
+}
+.ow-logo-text {font-family:'Rajdhani',sans-serif;font-weight:700;font-size:18px;color:var(--gold);letter-spacing:1px}
+.ow-logo-sub {font-size:10px;color:var(--txt2);letter-spacing:2px;text-transform:uppercase;line-height:1}
+
+#ow-nav {display:flex;gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex:1}
+#ow-nav::-webkit-scrollbar{display:none}
+.ow-nav-btn {
+  display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:6px;border:none;
+  background:transparent;color:var(--txt2);font-size:12px;font-weight:500;
+  white-space:nowrap;transition:all .2s;letter-spacing:.4px;
+}
+.ow-nav-btn:hover{background:rgba(200,169,110,.08);color:var(--txt)}
+.ow-nav-btn.active{background:rgba(200,169,110,.12);color:var(--gold);border-bottom:2px solid var(--gold)}
+.ow-nav-btn .n-icon{font-size:14px}
+
+#ow-header-right {display:flex;align-items:center;gap:8px;flex-shrink:0}
+#ow-refresh-btn {
+  background:rgba(200,169,110,.1);border:1px solid var(--border);color:var(--gold);
+  padding:6px 10px;border-radius:6px;font-size:13px;transition:.2s;
+}
+#ow-refresh-btn:hover{background:rgba(200,169,110,.2)}
+#ow-user-badge {
+  display:flex;align-items:center;gap:6px;font-size:12px;color:var(--txt2);
+  background:var(--ink3);padding:4px 10px;border-radius:20px;border:1px solid var(--border);
+}
+#ow-user-badge .ub-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0}
+
+/* ═══════════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════════ */
+#ow-main {padding:20px;max-width:1400px;margin:0 auto;animation:fadeInUp .4s ease}
+
+/* ═══════════════════════════════════════════════
+   TABS / SECTIONS
+═══════════════════════════════════════════════ */
+.ow-section{display:none}
+.ow-section.active{display:block;animation:fadeInUp .3s ease}
+
+/* ═══════════════════════════════════════════════
+   STAT CARDS
+═══════════════════════════════════════════════ */
+.ow-stats-grid {
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:20px;
+}
+.ow-stat-card {
+  background:var(--panel);border:1px solid var(--border);border-radius:var(--r2);
+  padding:16px 14px;display:flex;flex-direction:column;gap:6px;position:relative;overflow:hidden;
+  transition:transform .2s,border-color .2s;
+}
+.ow-stat-card::before {
+  content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,169,110,.04),transparent);
+}
+.ow-stat-card:hover{transform:translateY(-2px);border-color:var(--border2)}
+.ow-stat-card .sc-val {
+  font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;line-height:1;color:var(--txt);
+}
+.ow-stat-card .sc-label {font-size:11px;color:var(--txt2);letter-spacing:.5px;text-transform:uppercase}
+.ow-stat-card .sc-icon {position:absolute;right:12px;top:12px;font-size:22px;opacity:.3}
+.ow-stat-card.s-green .sc-val{color:var(--green)}
+.ow-stat-card.s-red   .sc-val{color:var(--red)}
+.ow-stat-card.s-amber .sc-val{color:var(--amber)}
+.ow-stat-card.s-blue  .sc-val{color:var(--blue)}
+.ow-stat-card.s-gold  .sc-val{color:var(--gold)}
+.ow-stat-card.s-purple .sc-val{color:var(--purple)}
+
+/* ═══════════════════════════════════════════════
+   CARDS / PANELS
+═══════════════════════════════════════════════ */
+.ow-card {
+  background:var(--panel);border:1px solid var(--border);border-radius:var(--r2);padding:20px;
+  margin-bottom:16px;
+}
+.ow-card-head {
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;
+  padding-bottom:12px;border-bottom:1px solid var(--border);gap:10px;flex-wrap:wrap;
+}
+.ow-card-title {
+  font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:600;color:var(--gold);
+  letter-spacing:.8px;display:flex;align-items:center;gap:8px;
+}
+.ow-card-actions {display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* ═══════════════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════════════ */
+.ow-btn {
+  display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:6px;
+  border:none;font-size:13px;font-weight:500;transition:all .2s;letter-spacing:.3px;white-space:nowrap;
+}
+.ow-btn-primary  {background:linear-gradient(135deg,var(--gold-dk),var(--gold));color:var(--ink);font-weight:700}
+.ow-btn-primary:hover  {filter:brightness(1.1);transform:translateY(-1px)}
+.ow-btn-success  {background:rgba(45,212,160,.15);color:var(--green);border:1px solid rgba(45,212,160,.3)}
+.ow-btn-success:hover  {background:rgba(45,212,160,.25)}
+.ow-btn-danger   {background:rgba(255,95,107,.15);color:var(--red);border:1px solid rgba(255,95,107,.3)}
+.ow-btn-danger:hover   {background:rgba(255,95,107,.25)}
+.ow-btn-ghost    {background:transparent;color:var(--txt2);border:1px solid var(--border)}
+.ow-btn-ghost:hover    {border-color:var(--border2);color:var(--txt)}
+.ow-btn-amber    {background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.3)}
+.ow-btn-amber:hover    {background:rgba(245,158,11,.25)}
+.ow-btn-blue     {background:rgba(96,165,250,.15);color:var(--blue);border:1px solid rgba(96,165,250,.3)}
+.ow-btn-sm       {padding:5px 10px;font-size:12px}
+.ow-btn:disabled {opacity:.4;cursor:not-allowed}
+
+/* ═══════════════════════════════════════════════
+   FORMS
+═══════════════════════════════════════════════ */
+.ow-form-grid {display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.ow-form-full  {grid-column:1/-1}
+.ow-field {display:flex;flex-direction:column;gap:5px}
+.ow-label {font-size:11px;color:var(--txt2);letter-spacing:.6px;text-transform:uppercase;font-weight:500}
+.ow-input, .ow-select, .ow-textarea {
+  background:var(--ink3);border:1px solid var(--border);border-radius:6px;
+  color:var(--txt);padding:9px 12px;font-size:13px;transition:border-color .2s,box-shadow .2s;
+  width:100%;
+}
+.ow-input:focus,.ow-select:focus,.ow-textarea:focus {
+  outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,169,110,.12);
+}
+.ow-input::placeholder,.ow-textarea::placeholder{color:var(--txt2)}
+.ow-select option{background:var(--ink3);color:var(--txt)}
+.ow-textarea{resize:vertical;min-height:80px}
+.ow-form-actions{display:flex;gap:8px;flex-wrap:wrap;padding-top:8px;justify-content:flex-end}
+
+/* ═══════════════════════════════════════════════
+   FILTERS BAR
+═══════════════════════════════════════════════ */
+.ow-filters {
+  display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px;
+}
+.ow-filter-input {
+  background:var(--ink3);border:1px solid var(--border);border-radius:6px;
+  color:var(--txt);padding:7px 12px;font-size:12px;min-width:160px;
+}
+.ow-filter-input:focus{outline:none;border-color:var(--gold)}
+.ow-filter-sep{color:var(--border2);font-size:18px}
+
+/* ═══════════════════════════════════════════════
+   TABLE
+═══════════════════════════════════════════════ */
+.ow-table-wrap {overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r);border:1px solid var(--border)}
+table.ow-table {width:100%;border-collapse:collapse;font-size:13px;min-width:600px}
+.ow-table thead tr {background:rgba(200,169,110,.08)}
+.ow-table th {
+  padding:10px 14px;text-align:left;font-family:'Rajdhani',sans-serif;font-size:12px;
+  color:var(--gold);letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;font-weight:600;
+  border-bottom:1px solid var(--border2);
+}
+.ow-table td {
+  padding:11px 14px;border-bottom:1px solid var(--border);color:var(--txt3);vertical-align:middle;
+}
+.ow-table tr:last-child td{border-bottom:none}
+.ow-table tbody tr{transition:background .15s}
+.ow-table tbody tr:hover{background:rgba(200,169,110,.04)}
+.ow-table .td-actions{display:flex;gap:5px;flex-wrap:wrap}
+.ow-table .td-name{color:var(--txt);font-weight:500}
+.ow-table .td-id{font-size:11px;color:var(--txt2);font-family:monospace}
+
+/* ═══════════════════════════════════════════════
+   STATUS BADGES
+═══════════════════════════════════════════════ */
+.ow-badge {
+  display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;
+  letter-spacing:.4px;text-transform:capitalize;white-space:nowrap;
+}
+.badge-pending     {background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.3)}
+.badge-pre-approved{background:rgba(96,165,250,.15);color:var(--blue);border:1px solid rgba(96,165,250,.3)}
+.badge-approved    {background:rgba(45,212,160,.15);color:var(--green);border:1px solid rgba(45,212,160,.3)}
+.badge-checked-in  {background:rgba(45,212,160,.25);color:#1af5c0;border:1px solid rgba(45,212,160,.5)}
+.badge-checked-out {background:rgba(200,169,110,.12);color:var(--gold);border:1px solid var(--border2)}
+.badge-rejected    {background:rgba(255,95,107,.15);color:var(--red);border:1px solid rgba(255,95,107,.3)}
+.badge-blocked     {background:rgba(255,95,107,.25);color:#ff2030;border:1px solid rgba(255,95,107,.5)}
+.badge-sent        {background:rgba(45,212,160,.15);color:var(--green)}
+.badge-failed      {background:rgba(255,95,107,.15);color:var(--red)}
+.badge-skipped     {background:rgba(155,155,155,.1);color:var(--txt2)}
+.badge-email       {background:rgba(96,165,250,.12);color:var(--blue)}
+.badge-sms         {background:rgba(167,139,250,.12);color:var(--purple)}
+.badge-whatsapp    {background:rgba(37,211,102,.12);color:#25d366}
+
+/* ═══════════════════════════════════════════════
+   MODAL
+═══════════════════════════════════════════════ */
+.ow-modal-bg {
+  display:none;position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,.75);backdrop-filter:blur(4px);
+  align-items:center;justify-content:center;padding:16px;
+}
+.ow-modal-bg.open{display:flex;animation:fadeInDown .25s ease}
+.ow-modal {
+  background:var(--panel);border:1px solid var(--border2);border-radius:var(--r2);
+  width:100%;max-width:580px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow);
+  animation:fadeInDown .25s ease;
+}
+.ow-modal-lg{max-width:760px}
+.ow-modal-head {
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid var(--border);position:sticky;top:0;
+  background:var(--panel);z-index:1;
+}
+.ow-modal-head h3 {
+  font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:600;color:var(--gold);letter-spacing:.8px;
+}
+.ow-modal-close {
+  background:rgba(255,95,107,.1);border:1px solid rgba(255,95,107,.2);color:var(--red);
+  width:28px;height:28px;border-radius:6px;font-size:16px;display:flex;align-items:center;justify-content:center;
+  transition:.2s;
+}
+.ow-modal-close:hover{background:rgba(255,95,107,.25)}
+.ow-modal-body {padding:20px}
+.ow-modal-foot {
+  padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;
+}
+
+/* ═══════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════ */
+#ow-toast-area {
+  position:fixed;bottom:20px;right:20px;z-index:1000;
+  display:flex;flex-direction:column-reverse;gap:8px;
+}
+.ow-toast {
+  background:var(--ink3);border:1px solid var(--border2);border-radius:8px;
+  padding:12px 16px;font-size:13px;color:var(--txt);box-shadow:var(--shadow);
+  min-width:220px;max-width:340px;display:flex;align-items:center;gap:10px;
+  animation:fadeInUp .3s ease;transition:opacity .3s;
+}
+.ow-toast.t-success{border-color:rgba(45,212,160,.4);color:var(--green)}
+.ow-toast.t-error  {border-color:rgba(255,95,107,.4);color:var(--red)}
+.ow-toast.t-warning{border-color:rgba(245,158,11,.4);color:var(--amber)}
+
+/* ═══════════════════════════════════════════════
+   LOADING SPINNER
+═══════════════════════════════════════════════ */
+.ow-spinner {
+  width:20px;height:20px;border:2px solid var(--border2);border-top-color:var(--gold);
+  border-radius:50%;animation:spin .7s linear infinite;display:inline-block;flex-shrink:0;
+}
+.ow-loading-row td{text-align:center;padding:40px;color:var(--txt2)}
+.ow-empty-row  td{text-align:center;padding:40px;color:var(--txt2);font-style:italic}
+
+/* ═══════════════════════════════════════════════
+   PHOTO PREVIEW
+═══════════════════════════════════════════════ */
+.ow-photo {
+  width:40px;height:40px;border-radius:6px;object-fit:cover;
+  border:1px solid var(--border2);cursor:pointer;
+}
+.ow-photo-placeholder {
+  width:40px;height:40px;border-radius:6px;background:var(--ink3);border:1px dashed var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--txt2);
+}
+
+/* ═══════════════════════════════════════════════
+   INFO ROWS (visitor detail)
+═══════════════════════════════════════════════ */
+.ow-info-grid {display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ow-info-row {display:flex;flex-direction:column;gap:3px}
+.ow-info-label{font-size:10px;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px}
+.ow-info-val  {font-size:13px;color:var(--txt);font-weight:500}
+
+/* ═══════════════════════════════════════════════
+   NOTIFICATION CHANNELS
+═══════════════════════════════════════════════ */
+.ow-notif-channels{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.ow-notif-ch{
+  display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;
+  font-size:11px;font-weight:600;cursor:pointer;border:1px solid;transition:.2s;
+}
+.ow-notif-ch.ch-email {color:var(--blue);border-color:rgba(96,165,250,.3);background:rgba(96,165,250,.1)}
+.ow-notif-ch.ch-sms   {color:var(--purple);border-color:rgba(167,139,250,.3);background:rgba(167,139,250,.1)}
+.ow-notif-ch.ch-wa    {color:#25d366;border-color:rgba(37,211,102,.3);background:rgba(37,211,102,.1)}
+.ow-notif-ch:hover    {filter:brightness(1.2)}
+
+/* ═══════════════════════════════════════════════
+   LOG DISPLAY - FIX
+═══════════════════════════════════════════════ */
+.ow-log-list {display:flex;flex-direction:column;gap:6px}
+.ow-log-item {
+  background:var(--ink3);border:1px solid var(--border);border-radius:8px;
+  padding:10px 14px;display:grid;grid-template-columns:90px 70px 1fr auto;gap:8px;
+  align-items:start;font-size:12px;transition:border-color .2s;
+}
+.ow-log-item:hover{border-color:var(--border2)}
+.ow-log-ts  {color:var(--txt2);font-size:11px;font-family:monospace;line-height:1.4}
+.ow-log-ch  {display:flex;align-items:center}
+.ow-log-body{color:var(--txt3);line-height:1.4;word-break:break-word}
+.ow-log-stat{display:flex;justify-content:flex-end}
+.ow-log-detail{font-size:11px;color:var(--txt2);margin-top:3px;word-break:break-all}
+
+/* Audit log */
+.ow-audit-item {
+  background:var(--ink3);border:1px solid var(--border);border-radius:8px;
+  padding:10px 14px;display:grid;grid-template-columns:90px 100px 1fr;gap:8px;font-size:12px;margin-bottom:5px;
+}
+.ow-audit-ts   {color:var(--txt2);font-family:monospace;font-size:11px}
+.ow-audit-act  {font-family:'Rajdhani',sans-serif;font-weight:600;font-size:13px;color:var(--gold)}
+.ow-audit-detail{color:var(--txt3)}
+
+/* ═══════════════════════════════════════════════
+   DETAIL PANEL (visitor detail sidebar feel)
+═══════════════════════════════════════════════ */
+.ow-detail-wrap{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.ow-detail-section{margin-bottom:14px}
+.ow-detail-section h4 {
+  font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;color:var(--gold);
+  letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;
+  border-bottom:1px solid var(--border);
+}
+.ow-timeline{list-style:none;padding:0;position:relative}
+.ow-timeline::before{content:'';position:absolute;left:7px;top:0;bottom:0;width:1px;background:var(--border)}
+.ow-tl-item{padding:4px 0 4px 22px;position:relative;font-size:12px;color:var(--txt3)}
+.ow-tl-item::before{
+  content:'';position:absolute;left:2px;top:9px;width:11px;height:11px;
+  border-radius:50%;background:var(--ink3);border:2px solid var(--border2);
+}
+.ow-tl-item.tl-done::before{background:var(--green);border-color:var(--green)}
+.ow-tl-item.tl-current::before{background:var(--gold);border-color:var(--gold)}
+.ow-tl-item.tl-fail::before{background:var(--red);border-color:var(--red)}
+.ow-tl-time{font-size:10px;color:var(--txt2);margin-top:1px}
+
+/* ═══════════════════════════════════════════════
+   HOSTS GRID (card view)
+═══════════════════════════════════════════════ */
+.ow-hosts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.ow-host-card{
+  background:var(--ink3);border:1px solid var(--border);border-radius:var(--r2);
+  padding:16px;transition:transform .2s,border-color .2s;position:relative;overflow:hidden;
+}
+.ow-host-card:hover{transform:translateY(-2px);border-color:var(--border2)}
+.ow-host-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--gold-dk),var(--gold));opacity:.5;
+}
+.ow-host-card.inactive{opacity:.5}
+.ow-hc-name{font-weight:600;color:var(--txt);margin-bottom:4px;font-size:14px}
+.ow-hc-unit{font-size:11px;color:var(--gold);letter-spacing:.5px;margin-bottom:8px}
+.ow-hc-info{font-size:12px;color:var(--txt2);display:flex;flex-direction:column;gap:3px}
+.ow-hc-info span{display:flex;align-items:center;gap:5px}
+.ow-hc-actions{display:flex;gap:5px;margin-top:10px}
+.ow-hc-type{
+  position:absolute;top:12px;right:10px;font-size:10px;font-weight:600;
+  padding:2px 7px;border-radius:10px;letter-spacing:.4px;
+}
+.hct-tenant  {background:rgba(96,165,250,.15);color:var(--blue)}
+.hct-host    {background:rgba(200,169,110,.15);color:var(--gold)}
+.hct-security{background:rgba(45,212,160,.15);color:var(--green)}
+
+/* ═══════════════════════════════════════════════
+   PHOTO UPLOAD ZONE
+═══════════════════════════════════════════════ */
+.ow-upload-zone{
+  border:2px dashed var(--border2);border-radius:8px;padding:20px;text-align:center;
+  cursor:pointer;transition:.2s;color:var(--txt2);font-size:12px;
+}
+.ow-upload-zone:hover{border-color:var(--gold);color:var(--txt)}
+.ow-upload-zone.drag-over{border-color:var(--gold);background:rgba(200,169,110,.05)}
+
+/* ═══════════════════════════════════════════════
+   REPORT SECTION
+═══════════════════════════════════════════════ */
+.ow-report-bar{
+  height:8px;border-radius:4px;background:var(--border);overflow:hidden;margin-top:4px;
+}
+.ow-report-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold-dk),var(--gold));transition:width .5s ease}
+.ow-report-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:2px}
+.ow-report-row .rr-label{color:var(--txt2)}
+.ow-report-row .rr-val{color:var(--txt);font-weight:500}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════ */
+@media(max-width:768px){
+  #ow-header{padding:0 12px 0 12px;gap:8px}
+  #ow-back-portal{top:70px;left:12px;font-size:11px;padding:6px 12px 6px 10px}
+  .ow-logo-text{font-size:15px}
+  .ow-logo-sub{display:none}
+  #ow-nav .ow-nav-btn span.nav-label{display:none}
+  .ow-nav-btn{padding:6px 10px}
+  #ow-main{padding:12px}
+  .ow-stats-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+  .ow-stat-card .sc-val{font-size:26px}
+  .ow-form-grid{grid-template-columns:1fr}
+  .ow-detail-wrap{grid-template-columns:1fr}
+  .ow-info-grid{grid-template-columns:1fr}
+  .ow-log-item{grid-template-columns:1fr 1fr;grid-template-rows:auto auto}
+  .ow-log-body{grid-column:1/-1}
+  .ow-log-stat{grid-column:1/-1;justify-content:flex-start}
+  .ow-audit-item{grid-template-columns:1fr 1fr}
+  .ow-audit-detail{grid-column:1/-1}
+  .ow-hosts-grid{grid-template-columns:1fr 1fr}
+  .ow-table-wrap{font-size:12px}
+  .ow-modal{max-width:100%;margin:0}
+  .ow-modal-bg{padding:8px;align-items:flex-end}
+  .ow-modal{border-radius:var(--r2) var(--r2) 0 0;max-height:85vh}
+}
+@media(max-width:480px){
+  .ow-hosts-grid{grid-template-columns:1fr}
+  .ow-stats-grid{grid-template-columns:1fr 1fr}
+  #ow-header{height:52px}
+  .ow-logo-mark{width:28px;height:28px;font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ BACK TO PORTAL ═══════════════════════ -->
+<button id="ow-back-portal" onclick="window.location.href='/onewest'">
+  <span class="bp-dot"></span>
+  <span>← Portal</span>
+</button>
+
+<!-- ═══ HEADER ═══════════════════════════════ -->
+<header id="ow-header">
+  <div class="ow-logo">
+    <div class="ow-logo-mark">OW</div>
+    <div>
+      <div class="ow-logo-text">ONEWEST</div>
+      <div class="ow-logo-sub">Visitor Management</div>
+    </div>
+  </div>
+
+  <nav id="ow-nav">
+    <button class="ow-nav-btn active" data-tab="dashboard">
+      <span class="n-icon">📊</span><span class="nav-label">Dashboard</span>
+    </button>
+    <button class="ow-nav-btn" data-tab="walkin">
+      <span class="n-icon">🚶</span><span class="nav-label">Walk-In</span>
+    </button>
+    <button class="ow-nav-btn" data-tab="preregister">
+      <span class="n-icon">📋</span><span class="nav-label">Pre-Register</span>
+    </button>
+    <button class="ow-nav-btn" data-tab="visitors">
+      <span class="n-icon">👥</span><span class="nav-label">Visitors</span>
+    </button>
+    <button class="ow-nav-btn" data-tab="hosts">
+      <span class="n-icon">🏠</span><span class="nav-label">Hosts</span>
+    </button>
+    <button class="ow-nav-btn" data-tab="blacklist">
+      <span class="n-icon">🚫</span><span class="nav-label">Blacklist</span>
+    </button>
+    <button class="ow-nav-btn" data-tab="notifications">
+      <span class="n-icon">🔔</span><span class="nav-label">Notifications</span>
+    </button>
+    <button class="ow-nav-btn" data-tab="report">
+      <span class="n-icon">📈</span><span class="nav-label">Report</span>
+    </button>
+    <button class="ow-nav-btn" data-tab="audit">
+      <span class="n-icon">📜</span><span class="nav-label">Audit Log</span>
+    </button>
+  </nav>
+
+  <div id="ow-header-right">
+    <button class="ow-btn ow-btn-ghost ow-btn-sm" id="ow-refresh-btn" onclick="owVMS.refreshCurrent()">⟳</button>
+    <div id="ow-user-badge">
+      <span class="ub-dot"></span>
+      <span id="ow-user-label">Loading…</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ MAIN CONTENT ═════════════════════════ -->
+<main id="ow-main">
+
+  <!-- ─── DASHBOARD ──────────────────────── -->
+  <section class="ow-section active" id="tab-dashboard">
+    <div class="ow-stats-grid" id="ow-stats-grid">
+      <div class="ow-stat-card s-gold"><div class="sc-icon">📊</div><div class="sc-val" id="st-today">—</div><div class="sc-label">Today</div></div>
+      <div class="ow-stat-card s-green"><div class="sc-icon">🏢</div><div class="sc-val" id="st-onsite">—</div><div class="sc-label">On Site</div></div>
+      <div class="ow-stat-card s-amber"><div class="sc-icon">⏳</div><div class="sc-val" id="st-pending">—</div><div class="sc-label">Pending</div></div>
+      <div class="ow-stat-card s-blue"><div class="sc-icon">✅</div><div class="sc-val" id="st-preapproved">—</div><div class="sc-label">Pre-Approved</div></div>
+      <div class="ow-stat-card s-green"><div class="sc-icon">🚪</div><div class="sc-val" id="st-checkedin">—</div><div class="sc-label">Checked In</div></div>
+      <div class="ow-stat-card s-gold"><div class="sc-icon">🚶</div><div class="sc-val" id="st-checkedout">—</div><div class="sc-label">Checked Out</div></div>
+      <div class="ow-stat-card s-red"><div class="sc-icon">❌</div><div class="sc-val" id="st-rejected">—</div><div class="sc-label">Rejected</div></div>
+      <div class="ow-stat-card s-red"><div class="sc-icon">🚫</div><div class="sc-val" id="st-blacklisted">—</div><div class="sc-label">Blacklisted</div></div>
+      <div class="ow-stat-card"><div class="sc-icon">📅</div><div class="sc-val" id="st-alltime">—</div><div class="sc-label">All Time</div></div>
+    </div>
+
+    <div class="ow-card">
+      <div class="ow-card-head">
+        <div class="ow-card-title">🔴 On-Site Now</div>
+        <div class="ow-card-actions">
+          <button class="ow-btn ow-btn-ghost ow-btn-sm" onclick="owVMS.loadDashboard()">↻ Refresh</button>
+        </div>
+      </div>
+      <div class="ow-table-wrap">
+        <table class="ow-table">
+          <thead><tr>
+            <th>Visitor</th><th>Company</th><th>Host</th><th>Purpose</th>
+            <th>Checked In</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="dash-onsite-body">
+            <tr class="ow-loading-row"><td colspan="6"><span class="ow-spinner"></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="ow-card">
+      <div class="ow-card-head">
+        <div class="ow-card-title">⏳ Pending Approval</div>
+      </div>
+      <div class="ow-table-wrap">
+        <table class="ow-table">
+          <thead><tr>
+            <th>Visitor</th><th>Company</th><th>Host</th><th>Time</th><th>Gate</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="dash-pending-body">
+            <tr class="ow-loading-row"><td colspan="6"><span class="ow-spinner"></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── WALK-IN ───────────────────────── -->
+  <section class="ow-section" id="tab-walkin">
+    <div class="ow-card">
+      <div class="ow-card-head">
+        <div class="ow-card-title">🚶 Register Walk-In Visitor</div>
+      </div>
+      <div class="ow-form-grid" id="walkin-form">
+        <div class="ow-field">
+          <label class="ow-label">Full Name *</label>
+          <input class="ow-input" id="wi-name" placeholder="Visitor full name">
+        </div>
+        <div class="ow-field">
+          <label class="ow-label">Phone *</label>
+          <input class="ow-input" id="wi-phone" placeholder="+91XXXXXXXXXX">
+        </div>
+        <div class="ow-field">
+          <label class="ow-label">Company / Organisation</label>
+          <input class="ow-input" id="wi-company" placeholder="Company name">
+        </div>
+        <div class="ow-field">
+          <label class="ow-label">Email</label>
+          <input class="ow-input" id="wi-email" placeholder="visitor@email.com" type="email">
+        </div>
+        <div class="ow-field">
+          <label class="ow-label">Host / Tenant</label>
+          <select class="ow-select" id="wi-host">
+            <option value="">— Select Host —</option>
+          </select>
+        </div>
+        <div class="ow-field">
+          <label class="ow-label">Purpose of Visit</label>
+          <select class="ow-select" id="wi-purpose">
+            <option value="Meeting">Meeting</option>
+            <option value="Delivery">Delivery</option>
+            <option value="Contractor">Contractor / Service</option>
+            <option value="Interview">Interview</option>
+            <option value="Vendor">Vendor</option>
+            <option value="Personal">Personal</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="ow-field">
+          <label class="ow-label">Vehicle No.</label>
+          <input class="ow-input" id="wi-vehicle" placeholder="TS09AB1234">
+        </div>
+        <div class="ow-field">
+          <label class="ow-label">Gate</label>
+          <select class="ow-select" id="wi-gate">
+            <option value="Main Gate">Main Gate</option>
+            <option value="Side Gate">Side Gate</option>
+            <option value="Basement">Basement</option>
+            <option value="Loading Bay">Loading Bay</option>
+          </select>
+        </div>
+        <div class="ow-field ow-form-full">
+          <label class="ow-label">Visitor Photo</label>
+          <div class="ow-upload-zone" id="wi-photo-zone" onclick="document.getElementById('wi-photo-file').click()">
+            📷 Click to capture / upload photo (optional)
+            <input type="file" id="wi-photo-file" accept="image/*" capture="environment" style="display:none" onchange="owVMS.handleWiPhoto(this)">
+          </div>
+          <img id="wi-photo-preview" style="display:none;margin-top:8px;max-width:120px;border-radius:8px;border:1px solid var(--border2)">
+        </div>
+      </div>
+      <div class="ow-form-actions">
+        <button class="ow-btn ow-btn-ghost" onclick="owVMS.clearWalkIn()">Clear</button>
+        <button class="ow-btn ow-btn-primary" onclick="owVMS.submitWalkIn()">Register & Notify Host →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PRE-REGISTER ──────────────────── -->
+  <section class="ow-section" id="tab-preregister">
+    <div class="ow-card">
+      <div class="ow-card-head">
+        <div class="ow-card-title">📋 Pre-Register Visitor</div>
+        <div class="ow-card-actions">
+          <span style="font-size:12px;color:var(--txt2)">Host / Admin use only</span>
+        </div>
+      </div>
+      <div class="ow-form-grid">
+        <div class="ow-field">
+          <label class="ow-label">Full Name *</label>
+          <input class="ow-input" id="pr-name" placeholder="Visitor full name">
+        </div>
+        <div class="ow-field">
+          <label class="ow-label">Phone *</label>
+          <input class="ow-input" id="pr-phone" placeholder="+91XXXXXXXXXX">
+        </div>
+        <div class="ow-field">
+          <label class="ow-label">Company</label>
+          <input class="ow-input" id="pr-company" placeholder="Company name">
+        </div>
+        <div class="ow-field">
+          <label class="ow-label">Email</label>
+          <input class="ow-input" id="pr-email" placeholder="visitor@email.com" type="email">
+        </div>
+        <div class="ow-field">
+          <label class="ow-label">Host *</label>
+          <select class="ow-select" id="pr-host">
+            <option value="">— Select Host —</option>
+          </select>
+        </div>
+        <div class="ow-field">
+          <label class="ow-label">Visit Date *</label>
+          <input class="ow-input" id="pr-date" type="date">
+        </div>
+        <div class="ow-field">
+          <label class="ow-label">Visit Time</label>
+          <input class="ow-input" id="pr-time" type="time">
+        </div>
+        <div class="ow-field">
+          <label class="ow-label">Purpose</label>
+          <select class="ow-select" id="pr-purpose">
+            <option value="Meeting">Meeting</option>
+            <option value="Delivery">Delivery</option>
+            <option value="Contractor">Contractor / Service</option>
+            <option value="Interview">Interview</option>
+            <option value="Vendor">Vendor</option>
+            <option value="Personal">Personal</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="ow-field">
+          <label class="ow-label">Vehicle No.</label>
+          <input class="ow-input" id="pr-vehicle" placeholder="TS09AB1234">
+        </div>
+        <div class="ow-field">
+          <label class="ow-label">Gate</label>
+          <select class="ow-select" id="pr-gate">
+            <option value="Main Gate">Main Gate</option>
+            <option value="Side Gate">Side Gate</option>
+            <option value="Basement">Basement</option>
+            <option value="Loading Bay">Loading Bay</option>
+          </select>
+        </div>
+      </div>
+      <div class="ow-form-actions">
+        <button class="ow-btn ow-btn-ghost" onclick="owVMS.clearPreRegister()">Clear</button>
+        <button class="ow-btn ow-btn-primary" onclick="owVMS.submitPreRegister()">Pre-Register →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── ALL VISITORS ──────────────────── -->
+  <section class="ow-section" id="tab-visitors">
+    <div class="ow-card">
+      <div class="ow-card-head">
+        <div class="ow-card-title">👥 All Visitors</div>
+        <div class="ow-card-actions">
+          <span id="vis-count" style="font-size:12px;color:var(--txt2)">—</span>
+        </div>
+      </div>
+      <div class="ow-filters">
+        <input class="ow-filter-input" id="vis-search" placeholder="🔍 Search name / company / host…" oninput="owVMS.filterVisitors()">
+        <select class="ow-filter-input" id="vis-status" onchange="owVMS.filterVisitors()">
+          <option value="">All Statuses</option>
+          <option value="pending">Pending</option>
+          <option value="pre-approved">Pre-Approved</option>
+          <option value="approved">Approved</option>
+          <option value="checked-in">Checked In</option>
+          <option value="checked-out">Checked Out</option>
+          <option value="rejected">Rejected</option>
+          <option value="blocked">Blocked</option>
+        </select>
+        <input class="ow-filter-input" id="vis-date" type="date" onchange="owVMS.filterVisitors()" style="width:150px">
+        <button class="ow-btn ow-btn-ghost ow-btn-sm" onclick="owVMS.clearVisitorFilters()">✕ Clear</button>
+      </div>
+      <div class="ow-table-wrap">
+        <table class="ow-table">
+          <thead><tr>
+            <th>Photo</th><th>ID / Name</th><th>Phone</th><th>Company</th>
+            <th>Host</th><th>Purpose</th><th>Status</th><th>Date</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="visitors-tbody">
+            <tr class="ow-loading-row"><td colspan="9"><span class="ow-spinner"></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── HOSTS ─────────────────────────── -->
+  <section class="ow-section" id="tab-hosts">
+    <div class="ow-card">
+      <div class="ow-card-head">
+        <div class="ow-card-title">🏠 Hosts &amp; Tenants</div>
+        <div class="ow-card-actions">
+          <input class="ow-filter-input" id="host-search" placeholder="🔍 Search…" oninput="owVMS.loadHosts()" style="min-width:130px">
+          <button class="ow-btn ow-btn-primary" onclick="owVMS.openHostModal()">+ Add Host</button>
+        </div>
+      </div>
+      <div class="ow-hosts-grid" id="hosts-grid">
+        <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--txt2)">
+          <span class="ow-spinner"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── BLACKLIST ─────────────────────── -->
+  <section class="ow-section" id="tab-blacklist">
+    <div class="ow-card">
+      <div class="ow-card-head">
+        <div class="ow-card-title">🚫 Blacklist</div>
+        <div class="ow-card-actions">
+          <button class="ow-btn ow-btn-danger" onclick="owVMS.openBlacklistModal()">+ Add to Blacklist</button>
+        </div>
+      </div>
+      <div class="ow-table-wrap">
+        <table class="ow-table">
+          <thead><tr>
+            <th>Name</th><th>Phone</th><th>Reason</th><th>Added By</th><th>Date</th><th>Action</th>
+          </tr></thead>
+          <tbody id="blacklist-tbody">
+            <tr class="ow-loading-row"><td colspan="6"><span class="ow-spinner"></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── NOTIFICATIONS ─────────────────── -->
+  <section class="ow-section" id="tab-notifications">
+    <div class="ow-card">
+      <div class="ow-card-head">
+        <div class="ow-card-title">🔔 Notification Log</div>
+        <div class="ow-card-actions">
+          <select class="ow-filter-input" id="notif-ch-filter" onchange="owVMS.loadNotifications()" style="min-width:120px">
+            <option value="">All Channels</option>
+            <option value="EMAIL">Email</option>
+            <option value="SMS">SMS</option>
+            <option value="WHATSAPP">WhatsApp</option>
+          </select>
+          <select class="ow-filter-input" id="notif-st-filter" onchange="owVMS.loadNotifications()" style="min-width:110px">
+            <option value="">All Status</option>
+            <option value="sent">Sent</option>
+            <option value="failed">Failed</option>
+            <option value="skipped">Skipped</option>
+          </select>
+          <button class="ow-btn ow-btn-ghost ow-btn-sm" onclick="owVMS.openNotifTestModal()">🧪 Test</button>
+          <button class="ow-btn ow-btn-ghost ow-btn-sm" onclick="owVMS.loadNotifications()">↻</button>
+        </div>
+      </div>
+      <div id="notif-log-list" class="ow-log-list">
+        <div style="text-align:center;padding:40px;color:var(--txt2)"><span class="ow-spinner"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── REPORT ────────────────────────── -->
+  <section class="ow-section" id="tab-report">
+    <div class="ow-card">
+      <div class="ow-card-head">
+        <div class="ow-card-title">📈 Daily Report</div>
+        <div class="ow-card-actions">
+          <input class="ow-filter-input" id="report-date" type="date" onchange="owVMS.loadReport()" style="width:160px">
+        </div>
+      </div>
+      <div id="report-content">
+        <div style="text-align:center;padding:40px;color:var(--txt2)"><span class="ow-spinner"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── AUDIT LOG ─────────────────────── -->
+  <section class="ow-section" id="tab-audit">
+    <div class="ow-card">
+      <div class="ow-card-head">
+        <div class="ow-card-title">📜 Audit Log</div>
+        <div class="ow-card-actions">
+          <input class="ow-filter-input" id="audit-search" placeholder="🔍 Filter…" oninput="owVMS.filterAudit()" style="min-width:150px">
+          <button class="ow-btn ow-btn-ghost ow-btn-sm" onclick="owVMS.loadAudit()">↻</button>
+        </div>
+      </div>
+      <div id="audit-list">
+        <div style="text-align:center;padding:40px;color:var(--txt2)"><span class="ow-spinner"></span></div>
+      </div>
+    </div>
+  </section>
+
+</main><!-- /ow-main -->
+
+<!-- ═══ TOAST ════════════════════════════════ -->
+<div id="ow-toast-area"></div>
+
+<!-- ═══ MODAL — VISITOR DETAIL ═══════════════ -->
+<div class="ow-modal-bg" id="modal-visitor-detail">
+  <div class="ow-modal ow-modal-lg">
+    <div class="ow-modal-head">
+      <h3>Visitor Detail</h3>
+      <button class="ow-modal-close" onclick="owVMS.closeModal('modal-visitor-detail')">✕</button>
+    </div>
+    <div class="ow-modal-body" id="modal-visitor-body">
+      <span class="ow-spinner"></span>
+    </div>
+    <div class="ow-modal-foot" id="modal-visitor-foot"></div>
+  </div>
+</div>
+
+<!-- ═══ MODAL — HOST ADD/EDIT ════════════════ -->
+<div class="ow-modal-bg" id="modal-host">
+  <div class="ow-modal">
+    <div class="ow-modal-head">
+      <h3 id="modal-host-title">Add Host</h3>
+      <button class="ow-modal-close" onclick="owVMS.closeModal('modal-host')">✕</button>
+    </div>
+    <div class="ow-modal-body">
+      <input type="hidden" id="hm-id">
+      <div class="ow-form-grid">
+        <div class="ow-field"><label class="ow-label">Full Name *</label><input class="ow-input" id="hm-name" placeholder="Mr. John Doe"></div>
+        <div class="ow-field"><label class="ow-label">Unit *</label><input class="ow-input" id="hm-unit" placeholder="101"></div>
+        <div class="ow-field"><label class="ow-label">Floor</label><input class="ow-input" id="hm-floor" placeholder="1st Floor"></div>
+        <div class="ow-field"><label class="ow-label">Phone *</label><input class="ow-input" id="hm-phone" placeholder="+91XXXXXXXXXX"></div>
+        <div class="ow-field"><label class="ow-label">Email</label><input class="ow-input" id="hm-email" placeholder="host@email.com" type="email"></div>
+        <div class="ow-field"><label class="ow-label">WhatsApp No.</label><input class="ow-input" id="hm-whatsapp" placeholder="91XXXXXXXXXX (no +)"></div>
+        <div class="ow-field ow-form-full">
+          <label class="ow-label">CallMeBot API Key 
+            <a href="https://callmebot.com" target="_blank" style="color:var(--gold);font-size:10px;margin-left:6px">(How to get?)</a>
+          </label>
+          <input class="ow-input" id="hm-cmkey" placeholder="e.g. 1234567">
+          <small style="color:var(--txt2);font-size:11px;margin-top:4px;display:block">
+            Host must WhatsApp <strong style="color:var(--txt)">+34 644 66 49 44</strong> saying "I allow callmebot to send me messages" to receive their key.
+          </small>
+        </div>
+        <div class="ow-field"><label class="ow-label">Type</label>
+          <select class="ow-select" id="hm-type">
+            <option value="Tenant">Tenant</option>
+            <option value="Host">Host</option>
+            <option value="Security">Security</option>
+          </select>
+        </div>
+        <div class="ow-field"><label class="ow-label">Status</label>
+          <select class="ow-select" id="hm-active">
+            <option value="true">Active</option>
+            <option value="false">Inactive</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="ow-modal-foot">
+      <button class="ow-btn ow-btn-ghost" onclick="owVMS.closeModal('modal-host')">Cancel</button>
+      <button class="ow-btn ow-btn-primary" onclick="owVMS.saveHost()">Save Host</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL — BLACKLIST ADD ════════════════ -->
+<div class="ow-modal-bg" id="modal-blacklist">
+  <div class="ow-modal">
+    <div class="ow-modal-head">
+      <h3>Add to Blacklist</h3>
+      <button class="ow-modal-close" onclick="owVMS.closeModal('modal-blacklist')">✕</button>
+    </div>
+    <div class="ow-modal-body">
+      <div class="ow-form-grid">
+        <div class="ow-field"><label class="ow-label">Phone *</label><input class="ow-input" id="bl-phone" placeholder="+91XXXXXXXXXX"></div>
+        <div class="ow-field"><label class="ow-label">Name</label><input class="ow-input" id="bl-name" placeholder="Visitor name"></div>
+        <div class="ow-field ow-form-full"><label class="ow-label">Reason *</label><textarea class="ow-textarea" id="bl-reason" placeholder="Reason for blacklisting…"></textarea></div>
+      </div>
+    </div>
+    <div class="ow-modal-foot">
+      <button class="ow-btn ow-btn-ghost" onclick="owVMS.closeModal('modal-blacklist')">Cancel</button>
+      <button class="ow-btn ow-btn-danger" onclick="owVMS.saveBlacklist()">Blacklist</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL — NOTIFY TEST ══════════════════ -->
+<div class="ow-modal-bg" id="modal-notif-test">
+  <div class="ow-modal">
+    <div class="ow-modal-head">
+      <h3>🧪 Test Notification</h3>
+      <button class="ow-modal-close" onclick="owVMS.closeModal('modal-notif-test')">✕</button>
+    </div>
+    <div class="ow-modal-body">
+      <div class="ow-form-grid">
+        <div class="ow-field ow-form-full"><label class="ow-label">Phone Number *</label><input class="ow-input" id="nt-phone" placeholder="+91XXXXXXXXXX"></div>
+        <div class="ow-field ow-form-full"><label class="ow-label">Channel</label>
+          <select class="ow-select" id="nt-channel">
+            <option value="sms">SMS only</option>
+            <option value="whatsapp">WhatsApp only</option>
+            <option value="both">Both</option>
+          </select>
+        </div>
+        <div class="ow-field ow-form-full">
+          <label class="ow-label">CallMeBot API Key (for WhatsApp)</label>
+          <input class="ow-input" id="nt-cbkey" placeholder="optional — leave blank to use host key">
+        </div>
+      </div>
+      <div id="nt-result" style="margin-top:12px;display:none"></div>
+    </div>
+    <div class="ow-modal-foot">
+      <button class="ow-btn ow-btn-ghost" onclick="owVMS.closeModal('modal-notif-test')">Close</button>
+      <button class="ow-btn ow-btn-primary" onclick="owVMS.sendNotifTest()">Send Test</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL — REJECT REASON ═══════════════ -->
+<div class="ow-modal-bg" id="modal-reject">
+  <div class="ow-modal">
+    <div class="ow-modal-head">
+      <h3>Reject Entry</h3>
+      <button class="ow-modal-close" onclick="owVMS.closeModal('modal-reject')">✕</button>
+    </div>
+    <div class="ow-modal-body">
+      <input type="hidden" id="rej-vid">
+      <div class="ow-field">
+        <label class="ow-label">Reason for Rejection</label>
+        <textarea class="ow-textarea" id="rej-reason" placeholder="Enter reason (optional)…" style="min-height:100px"></textarea>
+      </div>
+    </div>
+    <div class="ow-modal-foot">
+      <button class="ow-btn ow-btn-ghost" onclick="owVMS.closeModal('modal-reject')">Cancel</button>
+      <button class="ow-btn ow-btn-danger" onclick="owVMS.confirmReject()">Reject Entry</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ JS ═══════════════════════════════════ -->
+<script>
+/* ─── API BASE ──────────────────────────── */
+const OW_API = '/ow_vms';
+
+/* ─── STATE ─────────────────────────────── */
+let _allVisitors = [];
+let _allAudit    = [];
+let _allNotif    = [];
+let _photoFile   = null;
+
+/* ─── MAIN VMS OBJECT ───────────────────── */
+const owVMS = {
+
+  /* ── Init ── */
+  init() {
+    this.setTodayDates();
+    this.loadUserBadge();
+    this.loadHostOptions();
+    this.loadDashboard();
+    // tab buttons
+    document.querySelectorAll('[data-tab]').forEach(btn => {
+      btn.addEventListener('click', () => this.switchTab(btn.dataset.tab));
+    });
+    // modal close on bg click
+    document.querySelectorAll('.ow-modal-bg').forEach(bg => {
+      bg.addEventListener('click', e => { if(e.target===bg) bg.classList.remove('open'); });
+    });
+    // auto-refresh every 60s
+    setInterval(() => this.refreshCurrent(), 60000);
+  },
+
+  setTodayDates() {
+    const today = new Date().toISOString().slice(0,10);
+    const rdi = document.getElementById('report-date');
+    if(rdi) rdi.value = today;
+    const prd = document.getElementById('pr-date');
+    if(prd) prd.value = today;
+  },
+
+  loadUserBadge() {
+    const el = document.getElementById('ow-user-label');
+    fetch(`${OW_API}/health`)
+      .then(r=>r.json()).then(d=>{
+        if(el) el.textContent = d.property || 'ONEWEST VMS';
+      }).catch(()=>{ if(el) el.textContent='ONEWEST VMS'; });
+  },
+
+  /* ── Tab Switch ── */
+  switchTab(tab) {
+    document.querySelectorAll('[data-tab]').forEach(b=>b.classList.remove('active'));
+    document.querySelector(`[data-tab="${tab}"]`)?.classList.add('active');
+    document.querySelectorAll('.ow-section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(`tab-${tab}`)?.classList.add('active');
+
+    switch(tab) {
+      case 'dashboard':     this.loadDashboard(); break;
+      case 'visitors':      this.loadVisitors(); break;
+      case 'hosts':         this.loadHosts(); break;
+      case 'blacklist':     this.loadBlacklist(); break;
+      case 'notifications': this.loadNotifications(); break;
+      case 'report':        this.loadReport(); break;
+      case 'audit':         this.loadAudit(); break;
+    }
+  },
+
+  refreshCurrent() {
+    const active = document.querySelector('[data-tab].active')?.dataset.tab;
+    if(active) this.switchTab(active);
+  },
+
+  /* ── Fetch Helper ── */
+  async apiFetch(path, opts={}) {
+    try {
+      const r = await fetch(OW_API + path, {
+        headers:{'Content-Type':'application/json',...(opts.headers||{})},
+        ...opts
+      });
+      const d = await r.json();
+      return d;
+    } catch(e) {
+      return {success:false, error: e.message};
+    }
+  },
+
+  /* ── Toast ── */
+  toast(msg, type='') {
+    const area = document.getElementById('ow-toast-area');
+    const t = document.createElement('div');
+    t.className = `ow-toast${type?' t-'+type:''}`;
+    const icons = {success:'✅',error:'❌',warning:'⚠️'};
+    t.innerHTML = `<span>${icons[type]||'💬'}</span><span>${msg}</span>`;
+    area.appendChild(t);
+    setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=>t.remove(),300); }, 3500);
+  },
+
+  /* ── Modal helpers ── */
+  openModal(id) { document.getElementById(id)?.classList.add('open'); },
+  closeModal(id) { document.getElementById(id)?.classList.remove('open'); },
+
+  /* ── Status Badge ── */
+  badge(status) {
+    const s = (status||'').toLowerCase().replace(' ','-');
+    return `<span class="ow-badge badge-${s}">${status||'—'}</span>`;
+  },
+
+  channelBadge(ch) {
+    const m = {EMAIL:'email',SMS:'sms',WHATSAPP:'whatsapp'};
+    const k = m[ch] || 'email';
+    return `<span class="ow-badge badge-${k}">${ch||'—'}</span>`;
+  },
+
+  statusBadge(st) {
+    return `<span class="ow-badge badge-${(st||'').toLowerCase()}">${st||'—'}</span>`;
+  },
+
+  fmtTs(ts) {
+    if(!ts) return '—';
+    try {
+      const d = new Date(ts);
+      return d.toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:true});
+    } catch{return ts}
+  },
+
+  fmtDate(d) {
+    if(!d) return '—';
+    try { return new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); }
+    catch{return d}
+  },
+
+  /* ═══════════════════════════════════════════
+     DASHBOARD
+  ═══════════════════════════════════════════ */
+  async loadDashboard() {
+    // Stats
+    const sd = await this.apiFetch('/api/stats');
+    if(sd.success && sd.stats) {
+      const s = sd.stats;
+      document.getElementById('st-today').textContent       = s.today_total ?? '—';
+      document.getElementById('st-onsite').textContent      = s.on_site ?? '—';
+      document.getElementById('st-pending').textContent     = s.pending ?? '—';
+      document.getElementById('st-preapproved').textContent = s.pre_approved ?? '—';
+      document.getElementById('st-checkedin').textContent   = s.checked_in ?? '—';
+      document.getElementById('st-checkedout').textContent  = s.checked_out ?? '—';
+      document.getElementById('st-rejected').textContent    = s.rejected ?? '—';
+      document.getElementById('st-blacklisted').textContent = s.blacklisted ?? '—';
+      document.getElementById('st-alltime').textContent     = s.all_time ?? '—';
+    }
+
+    // On-site
+    const os = await this.apiFetch('/api/visitors?status=checked-in');
+    const ob = document.getElementById('dash-onsite-body');
+    if(os.success) {
+      const list = os.visitors || [];
+      ob.innerHTML = list.length ? list.map(v=>`
+        <tr>
+          <td class="td-name">${this.escH(v.name)}</td>
+          <td>${this.escH(v.company||'—')}</td>
+          <td>${this.escH(v.host||'—')}</td>
+          <td>${this.escH(v.purpose||'—')}</td>
+          <td>${this.fmtTs(v.entry_time)}</td>
+          <td class="td-actions">
+            <button class="ow-btn ow-btn-amber ow-btn-sm" onclick="owVMS.checkout('${v.id}')">Check Out</button>
+            <button class="ow-btn ow-btn-ghost ow-btn-sm" onclick="owVMS.viewVisitor('${v.id}')">View</button>
+          </td>
+        </tr>`).join('')
+        : `<tr class="ow-empty-row"><td colspan="6">No visitors on site</td></tr>`;
+    } else {
+      ob.innerHTML = `<tr class="ow-empty-row"><td colspan="6">Failed to load</td></tr>`;
+    }
+
+    // Pending
+    const pd = await this.apiFetch('/api/visitors?status=pending');
+    const pb = document.getElementById('dash-pending-body');
+    if(pd.success) {
+      const list = pd.visitors || [];
+      pb.innerHTML = list.length ? list.map(v=>`
+        <tr>
+          <td class="td-name">${this.escH(v.name)}</td>
+          <td>${this.escH(v.company||'—')}</td>
+          <td>${this.escH(v.host||'—')}</td>
+          <td>${this.fmtTs(v.created_at)}</td>
+          <td>${this.escH(v.gate||'—')}</td>
+          <td class="td-actions">
+            <button class="ow-btn ow-btn-success ow-btn-sm" onclick="owVMS.approve('${v.id}')">✓ Approve</button>
+            <button class="ow-btn ow-btn-danger ow-btn-sm" onclick="owVMS.openReject('${v.id}')">✗ Reject</button>
+            <button class="ow-btn ow-btn-ghost ow-btn-sm" onclick="owVMS.viewVisitor('${v.id}')">View</button>
+          </td>
+        </tr>`).join('')
+        : `<tr class="ow-empty-row"><td colspan="6">No pending approvals</td></tr>`;
+    } else {
+      pb.innerHTML = `<tr class="ow-empty-row"><td colspan="6">Failed to load</td></tr>`;
+    }
+  },
+
+  /* ═══════════════════════════════════════════
+     WALK-IN
+  ═══════════════════════════════════════════ */
+  async loadHostOptions() {
+    const d = await this.apiFetch('/api/hosts');
+    if(d.success) {
+      const hosts = (d.hosts||[]).filter(h=>h.active);
+      ['wi-host','pr-host'].forEach(id=>{
+        const sel = document.getElementById(id);
+        if(!sel) return;
+        sel.innerHTML = '<option value="">— Select Host —</option>';
+        hosts.forEach(h=>{
+          const o = document.createElement('option');
+          o.value = h.name;
+          o.textContent = `${h.name} · Unit ${h.unit}`;
+          sel.appendChild(o);
+        });
+      });
+    }
+  },
+
+  handleWiPhoto(input) {
+    const file = input.files[0];
+    if(!file) return;
+    _photoFile = file;
+    const prev = document.getElementById('wi-photo-preview');
+    const zone = document.getElementById('wi-photo-zone');
+    const url = URL.createObjectURL(file);
+    prev.src = url;
+    prev.style.display = 'block';
+    zone.textContent = '✅ Photo selected — click to change';
+  },
+
+  async submitWalkIn() {
+    const name    = document.getElementById('wi-name').value.trim();
+    const phone   = document.getElementById('wi-phone').value.trim();
+    const company = document.getElementById('wi-company').value.trim();
+    const email   = document.getElementById('wi-email').value.trim();
+    const host    = document.getElementById('wi-host').value;
+    const purpose = document.getElementById('wi-purpose').value;
+    const vehicle = document.getElementById('wi-vehicle').value.trim();
+    const gate    = document.getElementById('wi-gate').value;
+
+    if(!name||!phone){ this.toast('Name and Phone are required','error'); return; }
+
+    const d = await this.apiFetch('/api/visitors/walk-in',{
+      method:'POST',
+      body:JSON.stringify({name,phone,company,email,host,purpose,vehicle_no:vehicle,gate})
+    });
+
+    if(d.success) {
+      this.toast(`${name} registered. Host notified.`,'success');
+      // upload photo if exists
+      if(_photoFile && d.visitor?.id) {
+        await this.uploadPhoto(d.visitor.id, _photoFile, 'photo');
+        _photoFile = null;
+      }
+      this.clearWalkIn();
+      this.loadDashboard();
+    } else {
+      this.toast(d.error||'Registration failed','error');
+    }
+  },
+
+  clearWalkIn() {
+    ['wi-name','wi-phone','wi-company','wi-email','wi-vehicle'].forEach(id=>{
+      const el = document.getElementById(id); if(el) el.value='';
+    });
+    document.getElementById('wi-host').value = '';
+    const prev = document.getElementById('wi-photo-preview');
+    if(prev){ prev.style.display='none'; prev.src=''; }
+    const zone = document.getElementById('wi-photo-zone');
+    if(zone) zone.textContent = '📷 Click to capture / upload photo (optional)';
+    _photoFile = null;
+  },
+
+  async uploadPhoto(vid, file, type='photo') {
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('type', type);
+    try {
+      const r = await fetch(`${OW_API}/api/visitors/${vid}/photo`, {method:'POST', body:fd});
+      return await r.json();
+    } catch(e){ return {success:false}; }
+  },
+
+  /* ═══════════════════════════════════════════
+     PRE-REGISTER
+  ═══════════════════════════════════════════ */
+  async submitPreRegister() {
+    const name    = document.getElementById('pr-name').value.trim();
+    const phone   = document.getElementById('pr-phone').value.trim();
+    const company = document.getElementById('pr-company').value.trim();
+    const email   = document.getElementById('pr-email').value.trim();
+    const host    = document.getElementById('pr-host').value;
+    const date    = document.getElementById('pr-date').value;
+    const time    = document.getElementById('pr-time').value;
+    const purpose = document.getElementById('pr-purpose').value;
+    const vehicle = document.getElementById('pr-vehicle').value.trim();
+    const gate    = document.getElementById('pr-gate').value;
+
+    if(!name||!phone||!date){ this.toast('Name, Phone and Visit Date required','error'); return; }
+
+    const d = await this.apiFetch('/api/visitors/pre-register',{
+      method:'POST',
+      body:JSON.stringify({name,phone,company,email,host,visit_date:date,visit_time:time,purpose,vehicle_no:vehicle,gate})
+    });
+
+    if(d.success) {
+      this.toast(`${name} pre-registered.`,'success');
+      this.clearPreRegister();
+    } else {
+      this.toast(d.error||'Pre-registration failed','error');
+    }
+  },
+
+  clearPreRegister() {
+    ['pr-name','pr-phone','pr-company','pr-email','pr-vehicle','pr-time'].forEach(id=>{
+      const el=document.getElementById(id); if(el)el.value='';
+    });
+    document.getElementById('pr-host').value='';
+    const today = new Date().toISOString().slice(0,10);
+    document.getElementById('pr-date').value = today;
+  },
+
+  /* ═══════════════════════════════════════════
+     VISITORS LIST
+  ═══════════════════════════════════════════ */
+  async loadVisitors() {
+    const tbody = document.getElementById('visitors-tbody');
+    tbody.innerHTML = `<tr class="ow-loading-row"><td colspan="9"><span class="ow-spinner"></span></td></tr>`;
+
+    const status = document.getElementById('vis-status').value;
+    const date   = document.getElementById('vis-date').value;
+    const q      = document.getElementById('vis-search').value.trim();
+
+    let url = '/api/visitors?';
+    if(status) url += `status=${encodeURIComponent(status)}&`;
+    if(date)   url += `date=${encodeURIComponent(date)}&`;
+    if(q)      url += `q=${encodeURIComponent(q)}&`;
+
+    const d = await this.apiFetch(url);
+    if(!d.success){
+      tbody.innerHTML=`<tr class="ow-empty-row"><td colspan="9">Failed to load visitors</td></tr>`;
+      return;
+    }
+    _allVisitors = d.visitors || [];
+    document.getElementById('vis-count').textContent = `${_allVisitors.length} visitors`;
+    this.renderVisitors(_allVisitors);
+  },
+
+  renderVisitors(list) {
+    const tbody = document.getElementById('visitors-tbody');
+    if(!list.length){
+      tbody.innerHTML=`<tr class="ow-empty-row"><td colspan="9">No visitors found</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = list.map(v=>`
+      <tr>
+        <td>
+          ${v.photo_url
+            ? `<img src="${v.photo_url}" class="ow-photo" onclick="owVMS.showPhoto('${v.photo_url}')" loading="lazy">`
+            : `<div class="ow-photo-placeholder">👤</div>`}
+        </td>
+        <td>
+          <div class="td-id">${this.escH(v.id)}</div>
+          <div class="td-name">${this.escH(v.name)}</div>
+          ${v.blacklisted?'<span style="color:var(--red);font-size:10px">🚫 BLACKLISTED</span>':''}
+        </td>
+        <td>${this.escH(v.phone||'—')}</td>
+        <td>${this.escH(v.company||'—')}</td>
+        <td>${this.escH(v.host||'—')}</td>
+        <td>${this.escH(v.purpose||'—')}</td>
+        <td>${this.badge(v.status)}</td>
+        <td>${this.escH(v.visit_date||'—')}</td>
+        <td class="td-actions">
+          ${this.visitorActions(v)}
+        </td>
+      </tr>`).join('');
+  },
+
+  visitorActions(v) {
+    let btns = `<button class="ow-btn ow-btn-ghost ow-btn-sm" onclick="owVMS.viewVisitor('${v.id}')">View</button>`;
+    if(v.status==='pending'){
+      btns += `<button class="ow-btn ow-btn-success ow-btn-sm" onclick="owVMS.approve('${v.id}')">✓</button>`;
+      btns += `<button class="ow-btn ow-btn-danger ow-btn-sm" onclick="owVMS.openReject('${v.id}')">✗</button>`;
+    }
+    if(v.status==='approved'||v.status==='pre-approved'){
+      btns += `<button class="ow-btn ow-btn-success ow-btn-sm" onclick="owVMS.checkin('${v.id}')">Check In</button>`;
+    }
+    if(v.status==='checked-in'){
+      btns += `<button class="ow-btn ow-btn-amber ow-btn-sm" onclick="owVMS.checkout('${v.id}')">Check Out</button>`;
+    }
+    if(!v.blacklisted){
+      btns += `<button class="ow-btn ow-btn-danger ow-btn-sm" onclick="owVMS.quickBlacklist('${v.id}','${this.escH(v.name)}','${this.escH(v.phone)}')">🚫</button>`;
+    }
+    return btns;
+  },
+
+  filterVisitors() { this.loadVisitors(); },
+  clearVisitorFilters() {
+    document.getElementById('vis-search').value='';
+    document.getElementById('vis-status').value='';
+    document.getElementById('vis-date').value='';
+    this.loadVisitors();
+  },
+
+  /* ── Visitor Actions ── */
+  async approve(vid) {
+    const d = await this.apiFetch(`/api/visitors/${vid}/approve`,{method:'POST'});
+    if(d.success){ this.toast('Visitor approved — notifications sent','success'); this.refreshCurrent(); }
+    else this.toast(d.error||'Approve failed','error');
+  },
+
+  openReject(vid) {
+    document.getElementById('rej-vid').value = vid;
+    document.getElementById('rej-reason').value = '';
+    this.openModal('modal-reject');
+  },
+
+  async confirmReject() {
+    const vid    = document.getElementById('rej-vid').value;
+    const reason = document.getElementById('rej-reason').value.trim() || 'Host rejected entry';
+    const d = await this.apiFetch(`/api/visitors/${vid}/reject`,{method:'POST',body:JSON.stringify({reason})});
+    if(d.success){ this.toast('Entry rejected','warning'); this.closeModal('modal-reject'); this.refreshCurrent(); }
+    else this.toast(d.error||'Reject failed','error');
+  },
+
+  async checkin(vid) {
+    const d = await this.apiFetch(`/api/visitors/${vid}/checkin`,{method:'POST'});
+    if(d.success){ this.toast('Visitor checked in','success'); this.refreshCurrent(); }
+    else this.toast(d.error||'Check-in failed','error');
+  },
+
+  async checkout(vid) {
+    const d = await this.apiFetch(`/api/visitors/${vid}/checkout`,{method:'POST'});
+    if(d.success){ this.toast('Visitor checked out','success'); this.refreshCurrent(); }
+    else this.toast(d.error||'Check-out failed','error');
+  },
+
+  /* ── Visitor Detail Modal ── */
+  async viewVisitor(vid) {
+    const body = document.getElementById('modal-visitor-body');
+    const foot = document.getElementById('modal-visitor-foot');
+    body.innerHTML = '<span class="ow-spinner"></span>';
+    foot.innerHTML = '';
+    this.openModal('modal-visitor-detail');
+
+    const d = await this.apiFetch(`/api/visitors?q=${vid}`);
+    let v = null;
+    if(d.success) v = (d.visitors||[]).find(x=>x.id===vid);
+    if(!v){
+      body.innerHTML = `<p style="color:var(--red)">Visitor not found</p>`;
+      return;
+    }
+
+    // Notification log for this visitor
+    const nd = await this.apiFetch(`/api/notifications?vid=${vid}`);
+    const notifs = nd.success ? (nd.log||[]) : [];
+
+    body.innerHTML = `
+      <div class="ow-detail-wrap">
+        <div>
+          <div class="ow-detail-section">
+            <h4>Visitor Info</h4>
+            <div class="ow-info-grid">
+              <div class="ow-info-row"><span class="ow-info-label">ID</span><span class="ow-info-val" style="font-family:monospace">${this.escH(v.id)}</span></div>
+              <div class="ow-info-row"><span class="ow-info-label">Status</span><span>${this.badge(v.status)}</span></div>
+              <div class="ow-info-row"><span class="ow-info-label">Name</span><span class="ow-info-val">${this.escH(v.name)}</span></div>
+              <div class="ow-info-row"><span class="ow-info-label">Phone</span><span class="ow-info-val">${this.escH(v.phone||'—')}</span></div>
+              <div class="ow-info-row"><span class="ow-info-label">Email</span><span class="ow-info-val">${this.escH(v.email||'—')}</span></div>
+              <div class="ow-info-row"><span class="ow-info-label">Company</span><span class="ow-info-val">${this.escH(v.company||'—')}</span></div>
+              <div class="ow-info-row"><span class="ow-info-label">Host</span><span class="ow-info-val">${this.escH(v.host||'—')}</span></div>
+              <div class="ow-info-row"><span class="ow-info-label">Purpose</span><span class="ow-info-val">${this.escH(v.purpose||'—')}</span></div>
+              <div class="ow-info-row"><span class="ow-info-label">Vehicle</span><span class="ow-info-val">${this.escH(v.vehicle_no||'—')}</span></div>
+              <div class="ow-info-row"><span class="ow-info-label">Gate</span><span class="ow-info-val">${this.escH(v.gate||'—')}</span></div>
+              <div class="ow-info-row"><span class="ow-info-label">Visit Date</span><span class="ow-info-val">${this.escH(v.visit_date||'—')}</span></div>
+              <div class="ow-info-row"><span class="ow-info-label">Visit Time</span><span class="ow-info-val">${this.escH(v.visit_time||'—')}</span></div>
+            </div>
+          </div>
+
+          <div class="ow-detail-section">
+            <h4>Timeline</h4>
+            <ul class="ow-timeline">
+              <li class="ow-tl-item tl-done">
+                Registered
+                <div class="ow-tl-time">${this.fmtTs(v.created_at)}</div>
+              </li>
+              <li class="ow-tl-item ${['approved','checked-in','checked-out'].includes(v.status)?'tl-done':v.status==='rejected'?'tl-fail':''}">
+                Approval
+                <div class="ow-tl-time">${v.approved_at?this.fmtTs(v.approved_at):v.rejected_at?`Rejected: ${this.fmtTs(v.rejected_at)}`:'Pending'}</div>
+                ${v.rejection_reason?`<div style="color:var(--red);font-size:11px">${this.escH(v.rejection_reason)}</div>`:''}
+              </li>
+              <li class="ow-tl-item ${v.entry_time?'tl-done':v.status==='checked-in'?'tl-current':''}">
+                Check In
+                <div class="ow-tl-time">${this.fmtTs(v.entry_time)||'—'}</div>
+              </li>
+              <li class="ow-tl-item ${v.exit_time?'tl-done':''}">
+                Check Out
+                <div class="ow-tl-time">${this.fmtTs(v.exit_time)||'—'}</div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div>
+          ${v.photo_url
+            ? `<div class="ow-detail-section"><h4>Photo</h4><img src="${v.photo_url}" style="max-width:100%;border-radius:8px;border:1px solid var(--border2)"></div>`
+            : ''}
+
+          <div class="ow-detail-section">
+            <h4>Notification Log (${notifs.length})</h4>
+            ${notifs.length
+              ? notifs.slice(0,8).map(n=>`
+                  <div style="display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px">
+                    <span>${this.channelBadge(n.channel)}</span>
+                    <span style="color:var(--txt2);flex:1">${this.escH(n.recipient||'—')}</span>
+                    ${this.statusBadge(n.status)}
+                    <span style="color:var(--txt2);font-size:10px">${this.fmtTs(n.ts)}</span>
+                  </div>`).join('')
+              : '<p style="color:var(--txt2);font-size:12px">No notifications yet</p>'}
+          </div>
+        </div>
+      </div>`;
+
+    // Footer action buttons based on status
+    let actions = `<button class="ow-btn ow-btn-ghost" onclick="owVMS.closeModal('modal-visitor-detail')">Close</button>`;
+    if(v.status==='pending'){
+      actions += `<button class="ow-btn ow-btn-success" onclick="owVMS.approve('${v.id}');owVMS.closeModal('modal-visitor-detail')">✓ Approve</button>`;
+      actions += `<button class="ow-btn ow-btn-danger" onclick="owVMS.closeModal('modal-visitor-detail');owVMS.openReject('${v.id}')">✗ Reject</button>`;
+    }
+    if(v.status==='approved'||v.status==='pre-approved'){
+      actions += `<button class="ow-btn ow-btn-success" onclick="owVMS.checkin('${v.id}');owVMS.closeModal('modal-visitor-detail')">Check In</button>`;
+    }
+    if(v.status==='checked-in'){
+      actions += `<button class="ow-btn ow-btn-amber" onclick="owVMS.checkout('${v.id}');owVMS.closeModal('modal-visitor-detail')">Check Out</button>`;
+    }
+    foot.innerHTML = actions;
+  },
+
+  showPhoto(url) {
+    const w = window.open('','_blank','width=600,height=600');
+    w.document.write(`<html><body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center;height:100vh"><img src="${url}" style="max-width:100%;max-height:100%;border-radius:8px"></body></html>`);
+  },
+
+  async quickBlacklist(vid, name, phone) {
+    const reason = prompt(`Blacklist reason for ${name}?`);
+    if(reason===null) return;
+    const d = await this.apiFetch('/api/blacklist/add',{method:'POST',body:JSON.stringify({phone,name,reason})});
+    if(d.success){ this.toast(`${name} blacklisted`,'warning'); this.refreshCurrent(); }
+    else this.toast(d.error||'Blacklist failed','error');
+  },
+
+  /* ═══════════════════════════════════════════
+     HOSTS
+  ═══════════════════════════════════════════ */
+  async loadHosts() {
+    const grid = document.getElementById('hosts-grid');
+    const q = document.getElementById('host-search').value.trim();
+    let url = '/api/hosts';
+    if(q) url += `?q=${encodeURIComponent(q)}`;
+    const d = await this.apiFetch(url);
+    if(!d.success){
+      grid.innerHTML='<p style="color:var(--txt2)">Failed to load hosts</p>';
+      return;
+    }
+    const hosts = d.hosts||[];
+    grid.innerHTML = hosts.length ? hosts.map(h=>`
+      <div class="ow-host-card ${h.active?'':'inactive'}">
+        <span class="ow-hc-type hct-${(h.type||'Tenant').toLowerCase()}">${h.type||'Tenant'}</span>
+        <div class="ow-hc-name">${this.escH(h.name)}</div>
+        <div class="ow-hc-unit">Unit ${this.escH(h.unit)} · ${this.escH(h.floor||'')} Floor</div>
+        <div class="ow-hc-info">
+          <span>📞 ${this.escH(h.phone||'—')}</span>
+          <span>✉️ ${this.escH(h.email||'—')}</span>
+          ${h.callmebot_apikey?'<span>💬 WhatsApp ✅</span>':'<span style="color:var(--amber)">💬 WA key missing</span>'}
+        </div>
+        <div class="ow-hc-actions">
+          <button class="ow-btn ow-btn-ghost ow-btn-sm" onclick="owVMS.editHost('${h.id}')">Edit</button>
+          <button class="ow-btn ow-btn-danger ow-btn-sm" onclick="owVMS.deleteHost('${h.id}','${this.escH(h.name)}')">Delete</button>
+        </div>
+      </div>`).join('')
+      : '<p style="color:var(--txt2);padding:20px">No hosts found</p>';
+  },
+
+  openHostModal(id) {
+    document.getElementById('modal-host-title').textContent = 'Add Host';
+    document.getElementById('hm-id').value = '';
+    ['hm-name','hm-unit','hm-floor','hm-phone','hm-email','hm-whatsapp','hm-cmkey'].forEach(i=>{
+      const el=document.getElementById(i); if(el) el.value='';
+    });
+    document.getElementById('hm-type').value  = 'Tenant';
+    document.getElementById('hm-active').value= 'true';
+    this.openModal('modal-host');
+  },
+
+  async editHost(hid) {
+    const d = await this.apiFetch('/api/hosts');
+    if(!d.success) return;
+    const h = (d.hosts||[]).find(x=>x.id===hid);
+    if(!h) return;
+    document.getElementById('modal-host-title').textContent = 'Edit Host';
+    document.getElementById('hm-id').value      = h.id;
+    document.getElementById('hm-name').value    = h.name||'';
+    document.getElementById('hm-unit').value    = h.unit||'';
+    document.getElementById('hm-floor').value   = h.floor||'';
+    document.getElementById('hm-phone').value   = h.phone||'';
+    document.getElementById('hm-email').value   = h.email||'';
+    document.getElementById('hm-whatsapp').value= h.whatsapp||'';
+    document.getElementById('hm-cmkey').value   = h.callmebot_apikey||'';
+    document.getElementById('hm-type').value    = h.type||'Tenant';
+    document.getElementById('hm-active').value  = String(h.active!==false);
+    this.openModal('modal-host');
+  },
+
+  async saveHost() {
+    const hid  = document.getElementById('hm-id').value;
+    const name = document.getElementById('hm-name').value.trim();
+    const phone= document.getElementById('hm-phone').value.trim();
+    if(!name||!phone){ this.toast('Name and Phone required','error'); return; }
+
+    const payload = {
+      name, phone,
+      unit:   document.getElementById('hm-unit').value.trim(),
+      floor:  document.getElementById('hm-floor').value.trim(),
+      email:  document.getElementById('hm-email').value.trim(),
+      whatsapp: document.getElementById('hm-whatsapp').value.trim(),
+      callmebot_apikey: document.getElementById('hm-cmkey').value.trim(),
+      type:   document.getElementById('hm-type').value,
+      active: document.getElementById('hm-active').value==='true'
+    };
+
+    let d;
+    if(hid) {
+      d = await this.apiFetch(`/api/hosts/${hid}`,{method:'PUT',body:JSON.stringify(payload)});
+    } else {
+      d = await this.apiFetch('/api/hosts/add',{method:'POST',body:JSON.stringify(payload)});
+    }
+
+    if(d.success){
+      this.toast(`Host ${hid?'updated':'added'}`,'success');
+      this.closeModal('modal-host');
+      this.loadHosts();
+      this.loadHostOptions();
+    } else {
+      this.toast(d.error||'Save failed','error');
+    }
+  },
+
+  async deleteHost(hid, name) {
+    if(!confirm(`Delete host "${name}"?`)) return;
+    const d = await this.apiFetch(`/api/hosts/${hid}`,{method:'DELETE'});
+    if(d.success){ this.toast('Host deleted','warning'); this.loadHosts(); this.loadHostOptions(); }
+    else this.toast(d.error||'Delete failed','error');
+  },
+
+  /* ═══════════════════════════════════════════
+     BLACKLIST
+  ═══════════════════════════════════════════ */
+  async loadBlacklist() {
+    const tbody = document.getElementById('blacklist-tbody');
+    tbody.innerHTML = `<tr class="ow-loading-row"><td colspan="6"><span class="ow-spinner"></span></td></tr>`;
+    const d = await this.apiFetch('/api/blacklist');
+    if(!d.success){ tbody.innerHTML=`<tr class="ow-empty-row"><td colspan="6">Failed to load</td></tr>`; return; }
+    const list = d.blacklist||[];
+    tbody.innerHTML = list.length ? list.map(b=>`
+      <tr>
+        <td class="td-name">${this.escH(b.name||'—')}</td>
+        <td>${this.escH(b.phone||'—')}</td>
+        <td>${this.escH(b.reason||'—')}</td>
+        <td>${this.escH(b.added_by||'—')}</td>
+        <td>${this.fmtTs(b.added_at)}</td>
+        <td><button class="ow-btn ow-btn-success ow-btn-sm" onclick="owVMS.removeBlacklist('${b.id}','${this.escH(b.name||'')}')">Remove</button></td>
+      </tr>`).join('')
+      : `<tr class="ow-empty-row"><td colspan="6">Blacklist is empty</td></tr>`;
+  },
+
+  openBlacklistModal() {
+    document.getElementById('bl-phone').value='';
+    document.getElementById('bl-name').value='';
+    document.getElementById('bl-reason').value='';
+    this.openModal('modal-blacklist');
+  },
+
+  async saveBlacklist() {
+    const phone  = document.getElementById('bl-phone').value.trim();
+    const name   = document.getElementById('bl-name').value.trim();
+    const reason = document.getElementById('bl-reason').value.trim();
+    if(!phone||!reason){ this.toast('Phone and Reason required','error'); return; }
+    const d = await this.apiFetch('/api/blacklist/add',{method:'POST',body:JSON.stringify({phone,name,reason})});
+    if(d.success){
+      this.toast('Added to blacklist','warning');
+      this.closeModal('modal-blacklist');
+      this.loadBlacklist();
+    } else {
+      this.toast(d.error||'Failed','error');
+    }
+  },
+
+  async removeBlacklist(bid, name) {
+    if(!confirm(`Remove "${name}" from blacklist?`)) return;
+    const d = await this.apiFetch(`/api/blacklist/remove/${bid}`,{method:'DELETE'});
+    if(d.success){ this.toast('Removed from blacklist','success'); this.loadBlacklist(); }
+    else this.toast(d.error||'Failed','error');
+  },
+
+  /* ═══════════════════════════════════════════
+     NOTIFICATIONS LOG  ← FIX: was not rendering
+  ═══════════════════════════════════════════ */
+  async loadNotifications() {
+    const container = document.getElementById('notif-log-list');
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--txt2)"><span class="ow-spinner"></span></div>';
+
+    const d = await this.apiFetch('/api/notifications');
+    if(!d.success){
+      container.innerHTML = `<div style="color:var(--red);padding:20px">Failed to load notification log: ${this.escH(d.error||'')}</div>`;
+      return;
+    }
+
+    let log = d.log || [];
+
+    // client-side filters
+    const chFilter = document.getElementById('notif-ch-filter')?.value || '';
+    const stFilter = document.getElementById('notif-st-filter')?.value || '';
+    if(chFilter) log = log.filter(n=>(n.channel||'').toUpperCase()===chFilter.toUpperCase());
+    if(stFilter) log = log.filter(n=>(n.status||'').toLowerCase()===stFilter.toLowerCase());
+
+    _allNotif = log;
+
+    if(!log.length){
+      container.innerHTML = '<div style="color:var(--txt2);padding:20px;text-align:center">No notification records found</div>';
+      return;
+    }
+
+    container.innerHTML = log.map(n=>`
+      <div class="ow-log-item">
+        <div class="ow-log-ts">${this.fmtTs(n.ts)}</div>
+        <div class="ow-log-ch">${this.channelBadge(n.channel)}</div>
+        <div class="ow-log-body">
+          <div><strong style="color:var(--txt)">${this.escH(n.recipient||'—')}</strong></div>
+          ${n.vid?`<div style="font-size:10px;color:var(--txt2);font-family:monospace">VID: ${this.escH(n.vid)}</div>`:''}
+          ${n.detail?`<div class="ow-log-detail">${this.escH(n.detail)}</div>`:''}
+        </div>
+        <div class="ow-log-stat">${this.statusBadge(n.status)}</div>
+      </div>`).join('');
+  },
+
+  /* ── Notification Test ── */
+  openNotifTestModal() {
+    document.getElementById('nt-phone').value='';
+    document.getElementById('nt-channel').value='sms';
+    document.getElementById('nt-cbkey').value='';
+    const r = document.getElementById('nt-result');
+    if(r){ r.style.display='none'; r.innerHTML=''; }
+    this.openModal('modal-notif-test');
+  },
+
+  async sendNotifTest() {
+    const phone   = document.getElementById('nt-phone').value.trim();
+    const channel = document.getElementById('nt-channel').value;
+    const cbkey   = document.getElementById('nt-cbkey').value.trim();
+    const result  = document.getElementById('nt-result');
+
+    if(!phone){ this.toast('Phone required','error'); return; }
+
+    result.style.display='block';
+    result.innerHTML='<span class="ow-spinner"></span> Sending…';
+
+    const d = await this.apiFetch('/api/notify-test',{
+      method:'POST',
+      body:JSON.stringify({phone,channel,callmebot_apikey:cbkey})
+    });
+
+    if(d.success){
+      result.innerHTML = `<div style="background:rgba(45,212,160,.1);border:1px solid rgba(45,212,160,.3);border-radius:8px;padding:12px;font-size:12px;color:var(--green)">
+        <strong>Test sent!</strong><br>
+        ${Object.entries(d.results||{}).map(([k,v])=>`<div style="margin-top:4px"><span style="text-transform:uppercase;color:var(--txt2)">${k}:</span> ${this.escH(v)}</div>`).join('')}
+      </div>`;
+    } else {
+      result.innerHTML = `<div style="background:rgba(255,95,107,.1);border:1px solid rgba(255,95,107,.3);border-radius:8px;padding:12px;font-size:12px;color:var(--red)">
+        Error: ${this.escH(d.error||'Test failed')}
+      </div>`;
+    }
+  },
+
+  /* ═══════════════════════════════════════════
+     REPORT
+  ═══════════════════════════════════════════ */
+  async loadReport() {
+    const date = document.getElementById('report-date').value || new Date().toISOString().slice(0,10);
+    const container = document.getElementById('report-content');
+    container.innerHTML = '<div style="text-align:center;padding:40px"><span class="ow-spinner"></span></div>';
+
+    const d = await this.apiFetch(`/api/report/daily?date=${date}`);
+    if(!d.success){ container.innerHTML='<p style="color:var(--red)">Failed to load report</p>'; return; }
+
+    const r = d.report;
+    const total = r.total || 1; // avoid div/0
+
+    const bars = [
+      ['Pre-Approved', r.pre_approved, 'var(--blue)'],
+      ['Approved',     r.approved,     'var(--green)'],
+      ['Checked In',   r.checked_in,   '#1af5c0'],
+      ['Checked Out',  r.checked_out,  'var(--gold)'],
+      ['Rejected',     r.rejected,     'var(--red)'],
+      ['Blocked',      r.blocked,      '#ff2030'],
+    ];
+
+    container.innerHTML = `
+      <div style="margin-bottom:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:var(--gold)">${r.total}</div>
+        <div style="color:var(--txt2);font-size:13px">Total visitors on<br><strong style="color:var(--txt)">${this.fmtDate(r.date)}</strong></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px">
+        ${bars.map(([label,val,color])=>`
+          <div style="background:var(--ink3);border:1px solid var(--border);border-radius:8px;padding:12px">
+            <div class="ow-report-row"><span class="rr-label">${label}</span><span class="rr-val" style="color:${color}">${val||0}</span></div>
+            <div class="ow-report-bar"><div class="ow-report-fill" style="width:${Math.round((val||0)/total*100)}%;background:${color}"></div></div>
+          </div>`).join('')}
+      </div>
+      ${r.visitors && r.visitors.length ? `
+      <div class="ow-table-wrap">
+        <table class="ow-table">
+          <thead><tr><th>Name</th><th>Company</th><th>Host</th><th>Purpose</th><th>Status</th><th>Gate</th><th>In</th><th>Out</th></tr></thead>
+          <tbody>
+            ${r.visitors.map(v=>`
+              <tr>
+                <td class="td-name">${this.escH(v.name)}</td>
+                <td>${this.escH(v.company||'—')}</td>
+                <td>${this.escH(v.host||'—')}</td>
+                <td>${this.escH(v.purpose||'—')}</td>
+                <td>${this.badge(v.status)}</td>
+                <td>${this.escH(v.gate||'—')}</td>
+                <td>${this.fmtTs(v.entry_time)}</td>
+                <td>${this.fmtTs(v.exit_time)}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>` : ''}`;
+  },
+
+  /* ═══════════════════════════════════════════
+     AUDIT LOG
+  ═══════════════════════════════════════════ */
+  async loadAudit() {
+    const container = document.getElementById('audit-list');
+    container.innerHTML = '<div style="text-align:center;padding:40px"><span class="ow-spinner"></span></div>';
+    const d = await this.apiFetch('/api/audit-log');
+    if(!d.success){ container.innerHTML='<p style="color:var(--red)">Failed to load audit log</p>'; return; }
+    _allAudit = d.log||[];
+    this.renderAudit(_allAudit);
+  },
+
+  filterAudit() {
+    const q = document.getElementById('audit-search').value.trim().toLowerCase();
+    const filtered = q ? _allAudit.filter(a=>
+      (a.action||'').toLowerCase().includes(q) ||
+      (a.detail||'').toLowerCase().includes(q) ||
+      (a.user||'').toLowerCase().includes(q)
+    ) : _allAudit;
+    this.renderAudit(filtered);
+  },
+
+  renderAudit(list) {
+    const container = document.getElementById('audit-list');
+    if(!list.length){ container.innerHTML='<p style="color:var(--txt2);padding:20px">No audit records</p>'; return; }
+    container.innerHTML = list.map(a=>`
+      <div class="ow-audit-item">
+        <div class="ow-audit-ts">${this.fmtTs(a.ts)}</div>
+        <div class="ow-audit-act">${this.escH(a.action||'—')}</div>
+        <div class="ow-audit-detail">${this.escH(a.detail||'—')} <span style="color:var(--txt2);font-size:11px">— ${this.escH(a.user||'system')}</span></div>
+      </div>`).join('');
+  },
+
+  /* ═══════════════════════════════════════════
+     UTILS
+  ═══════════════════════════════════════════ */
+  escH(str) {
+    if(str===null||str===undefined) return '';
+    return String(str)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
+};
+
+/* ── Boot ────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => owVMS.init());
+</script>
+</body>
+</html>

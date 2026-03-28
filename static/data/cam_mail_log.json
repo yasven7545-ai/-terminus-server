@@ -1,0 +1,472 @@
+[
+  {
+    "Invoice": "540/2024-25_yasven7545@gmail.com",
+    "Email": "yasven7545@gmail.com",
+    "LastSent": 1770040166267
+  },
+  {
+    "invoice": "540/2024-25",
+    "email": "yasven7545@gmail.com",
+    "sentAt": "2026-03-09T09:43:56.177392"
+  },
+  {
+    "invoice": "540/2024-25",
+    "email": "yasven7545@gmail.com",
+    "sentAt": "2026-03-09T14:31:10.257474"
+  },
+  {
+    "invoice": "1403/2025-26",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-10T13:45:49.331053",
+    "triggerType": "manual",
+    "daysOverdue": 0
+  },
+  {
+    "invoice": "1403/2025-26",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-11T09:00:03.850781",
+    "triggerType": "auto",
+    "daysOverdue": 411
+  },
+  {
+    "invoice": "1403/2025-26",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-12T09:00:03.945988",
+    "triggerType": "auto",
+    "daysOverdue": 412
+  },
+  {
+    "invoice": "1403/2025-26",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-13T09:00:04.888514",
+    "triggerType": "auto",
+    "daysOverdue": 413
+  },
+  {
+    "invoice": "1403/2025-26",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-14T09:00:04.265028",
+    "triggerType": "auto",
+    "daysOverdue": 414
+  },
+  {
+    "type": "daily",
+    "email": "engineering@terminus-global.com",
+    "sentAt": "2026-03-15T09:00:00.019330",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "kiran@terminus-global.com",
+    "sentAt": "2026-03-15T09:00:00.019330",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "maintenance.slnterminus@gmail.com",
+    "sentAt": "2026-03-15T09:00:00.019330",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-15T09:00:00.019330",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "yasven7545@gmail.com",
+    "sentAt": "2026-03-15T09:00:00.019330",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "engineering@terminus-global.com",
+    "sentAt": "2026-03-16T09:00:00.014429",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "kiran@terminus-global.com",
+    "sentAt": "2026-03-16T09:00:00.014429",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "maintenance.slnterminus@gmail.com",
+    "sentAt": "2026-03-16T09:00:00.014429",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-16T09:00:00.014429",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "yasven7545@gmail.com",
+    "sentAt": "2026-03-16T09:00:00.014429",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "engineering@terminus-global.com",
+    "sentAt": "2026-03-17T09:00:00.014252",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "kiran@terminus-global.com",
+    "sentAt": "2026-03-17T09:00:00.014252",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "maintenance.slnterminus@gmail.com",
+    "sentAt": "2026-03-17T09:00:00.014252",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-17T09:00:00.014252",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "yasven7545@gmail.com",
+    "sentAt": "2026-03-17T09:00:00.014252",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "engineering@terminus-global.com",
+    "sentAt": "2026-03-18T09:00:00.019136",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "kiran@terminus-global.com",
+    "sentAt": "2026-03-18T09:00:00.019136",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "maintenance.slnterminus@gmail.com",
+    "sentAt": "2026-03-18T09:00:00.019136",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-18T09:00:00.019136",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "yasven7545@gmail.com",
+    "sentAt": "2026-03-18T09:00:00.019136",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "engineering@terminus-global.com",
+    "sentAt": "2026-03-19T09:00:00.021222",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "kiran@terminus-global.com",
+    "sentAt": "2026-03-19T09:00:00.021222",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "maintenance.slnterminus@gmail.com",
+    "sentAt": "2026-03-19T09:00:00.021222",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-19T09:00:00.021222",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "yasven7545@gmail.com",
+    "sentAt": "2026-03-19T09:00:00.021222",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "engineering@terminus-global.com",
+    "sentAt": "2026-03-20T09:00:00.017921",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "kiran@terminus-global.com",
+    "sentAt": "2026-03-20T09:00:00.017921",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "maintenance.slnterminus@gmail.com",
+    "sentAt": "2026-03-20T09:00:00.017921",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-20T09:00:00.017921",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "yasven7545@gmail.com",
+    "sentAt": "2026-03-20T09:00:00.017921",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "engineering@terminus-global.com",
+    "sentAt": "2026-03-21T09:00:00.060010",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "kiran@terminus-global.com",
+    "sentAt": "2026-03-21T09:00:00.060010",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "maintenance.slnterminus@gmail.com",
+    "sentAt": "2026-03-21T09:00:00.060010",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-21T09:00:00.060010",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "yasven7545@gmail.com",
+    "sentAt": "2026-03-21T09:00:00.060010",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "engineering@terminus-global.com",
+    "sentAt": "2026-03-22T09:00:00.006748",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "kiran@terminus-global.com",
+    "sentAt": "2026-03-22T09:00:00.006748",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "maintenance.slnterminus@gmail.com",
+    "sentAt": "2026-03-22T09:00:00.006748",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-22T09:00:00.006748",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "yasven7545@gmail.com",
+    "sentAt": "2026-03-22T09:00:00.006748",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "engineering@terminus-global.com",
+    "sentAt": "2026-03-23T09:00:00.011366",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "kiran@terminus-global.com",
+    "sentAt": "2026-03-23T09:00:00.011366",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "maintenance.slnterminus@gmail.com",
+    "sentAt": "2026-03-23T09:00:00.011366",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-23T09:00:00.011366",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "yasven7545@gmail.com",
+    "sentAt": "2026-03-23T09:00:00.011366",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "engineering@terminus-global.com",
+    "sentAt": "2026-03-24T09:00:00.006136",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "kiran@terminus-global.com",
+    "sentAt": "2026-03-24T09:00:00.006136",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "maintenance.slnterminus@gmail.com",
+    "sentAt": "2026-03-24T09:00:00.006136",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-24T09:00:00.006136",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "yasven7545@gmail.com",
+    "sentAt": "2026-03-24T09:00:00.006136",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "engineering@terminus-global.com",
+    "sentAt": "2026-03-25T09:00:00.009449",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "kiran@terminus-global.com",
+    "sentAt": "2026-03-25T09:00:00.009449",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "maintenance.slnterminus@gmail.com",
+    "sentAt": "2026-03-25T09:00:00.009449",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-25T09:00:00.009449",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "yasven7545@gmail.com",
+    "sentAt": "2026-03-25T09:00:00.009449",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "engineering@terminus-global.com",
+    "sentAt": "2026-03-26T09:00:00.014085",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "kiran@terminus-global.com",
+    "sentAt": "2026-03-26T09:00:00.014085",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "maintenance.slnterminus@gmail.com",
+    "sentAt": "2026-03-26T09:00:00.014085",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-26T09:00:00.014085",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "yasven7545@gmail.com",
+    "sentAt": "2026-03-26T09:00:00.014085",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "engineering@terminus-global.com",
+    "sentAt": "2026-03-27T09:00:00.018788",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "kiran@terminus-global.com",
+    "sentAt": "2026-03-27T09:00:00.018788",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "maintenance.slnterminus@gmail.com",
+    "sentAt": "2026-03-27T09:00:00.018788",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-27T09:00:00.018788",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "yasven7545@gmail.com",
+    "sentAt": "2026-03-27T09:00:00.018788",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "engineering@terminus-global.com",
+    "sentAt": "2026-03-28T09:00:00.003306",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "kiran@terminus-global.com",
+    "sentAt": "2026-03-28T09:00:00.003306",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "maintenance.slnterminus@gmail.com",
+    "sentAt": "2026-03-28T09:00:00.003306",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "uniyash7545@gmail.com",
+    "sentAt": "2026-03-28T09:00:00.003306",
+    "reminders": 3
+  },
+  {
+    "type": "daily",
+    "email": "yasven7545@gmail.com",
+    "sentAt": "2026-03-28T09:00:00.003306",
+    "reminders": 3
+  }
+]

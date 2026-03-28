@@ -1,0 +1,194 @@
+[
+  {
+    "ts": "2026-03-02T16:01:14",
+    "vid": "W-20260302-4BDD07",
+    "channel": "EMAIL",
+    "recipient": "['yasven7545@gmail.com']",
+    "status": "sent",
+    "detail": "[ONEWEST VMS] Visitor Awaiting Approval — Venu"
+  },
+  {
+    "ts": "2026-03-02T16:20:48",
+    "vid": "W-20260302-4BDD07",
+    "channel": "SMS",
+    "recipient": "+91 7981397300",
+    "status": "skipped",
+    "detail": "No API key configured"
+  },
+  {
+    "ts": "2026-03-02T16:20:48",
+    "vid": "W-20260302-4BDD07",
+    "channel": "WHATSAPP",
+    "recipient": "917981397300",
+    "status": "skipped",
+    "detail": "No CallMeBot apikey — host must activate first"
+  },
+  {
+    "ts": "2026-03-02T16:20:51",
+    "vid": "W-20260302-4BDD07",
+    "channel": "EMAIL",
+    "recipient": "['yasven7545@gmail.com']",
+    "status": "sent",
+    "detail": "[ONEWEST VMS] Entry Approved — Venu"
+  },
+  {
+    "ts": "2026-03-02T16:49:24",
+    "vid": "TEST",
+    "channel": "SMS",
+    "recipient": "+917981397300",
+    "status": "failed",
+    "detail": "You need to complete one transaction of 100 INR or more before using API route."
+  },
+  {
+    "ts": "2026-03-02T16:49:24",
+    "vid": "TEST",
+    "channel": "WHATSAPP",
+    "recipient": "+917981397300",
+    "status": "failed",
+    "detail": "ERROR: apikey can not be <b>empty</b> or it has an <b>invalid format</b>\n"
+  },
+  {
+    "ts": "2026-03-02T16:49:37",
+    "vid": "TEST",
+    "channel": "SMS",
+    "recipient": "+917981397300",
+    "status": "failed",
+    "detail": "You need to complete one transaction of 100 INR or more before using API route."
+  },
+  {
+    "ts": "2026-03-02T16:52:27",
+    "vid": "TEST",
+    "channel": "SMS",
+    "recipient": "+917981397300",
+    "status": "failed",
+    "detail": "You need to complete one transaction of 100 INR or more before using API route."
+  },
+  {
+    "ts": "2026-03-02T17:01:42",
+    "vid": "TEST",
+    "channel": "SMS",
+    "recipient": "+917981397300",
+    "status": "failed",
+    "detail": "You need to complete one transaction of 100 INR or more before using API route."
+  },
+  {
+    "ts": "2026-03-03T12:56:37",
+    "vid": "V-20260303-1A75E3",
+    "channel": "SMS",
+    "recipient": "+919963570009",
+    "status": "skipped",
+    "detail": "No API key configured"
+  },
+  {
+    "ts": "2026-03-03T12:56:37",
+    "vid": "V-20260303-1A75E3",
+    "channel": "WHATSAPP",
+    "recipient": "+919963570009",
+    "status": "skipped",
+    "detail": "No CallMeBot apikey — host must activate first"
+  },
+  {
+    "ts": "2026-03-03T12:56:41",
+    "vid": "V-20260303-1A75E3",
+    "channel": "EMAIL",
+    "recipient": "['kiran@terminus-global.com']",
+    "status": "sent",
+    "detail": "[ONEWEST VMS] Visitor Checked In — Venu"
+  },
+  {
+    "ts": "2026-03-03T12:56:45",
+    "vid": "V-20260302-1A402A",
+    "channel": "SMS",
+    "recipient": "+917981397300",
+    "status": "skipped",
+    "detail": "No API key configured"
+  },
+  {
+    "ts": "2026-03-03T12:56:45",
+    "vid": "V-20260302-1A402A",
+    "channel": "WHATSAPP",
+    "recipient": "917981397300",
+    "status": "skipped",
+    "detail": "No CallMeBot apikey — host must activate first"
+  },
+  {
+    "ts": "2026-03-03T12:56:48",
+    "vid": "V-20260302-1A402A",
+    "channel": "EMAIL",
+    "recipient": "['yasven7545@gmail.com']",
+    "status": "sent",
+    "detail": "[ONEWEST VMS] Visitor Checked In — Venu"
+  },
+  {
+    "ts": "2026-03-03T15:47:20",
+    "vid": "V-20260303-1A75E3",
+    "channel": "SMS",
+    "recipient": "+919963570009",
+    "status": "skipped",
+    "detail": "No API key configured"
+  },
+  {
+    "ts": "2026-03-03T15:47:20",
+    "vid": "V-20260303-1A75E3",
+    "channel": "WHATSAPP",
+    "recipient": "+919963570009",
+    "status": "skipped",
+    "detail": "No CallMeBot apikey — host must activate first"
+  },
+  {
+    "ts": "2026-03-03T15:47:23",
+    "vid": "V-20260302-1A402A",
+    "channel": "SMS",
+    "recipient": "+917981397300",
+    "status": "skipped",
+    "detail": "No API key configured"
+  },
+  {
+    "ts": "2026-03-03T15:47:23",
+    "vid": "V-20260302-1A402A",
+    "channel": "WHATSAPP",
+    "recipient": "917981397300",
+    "status": "skipped",
+    "detail": "No CallMeBot apikey — host must activate first"
+  },
+  {
+    "ts": "2026-03-03T15:47:24",
+    "vid": "V-20260303-1A75E3",
+    "channel": "EMAIL",
+    "recipient": "['kiran@terminus-global.com']",
+    "status": "sent",
+    "detail": "[ONEWEST VMS] Visitor Checked Out — Venu"
+  },
+  {
+    "ts": "2026-03-03T15:47:28",
+    "vid": "V-20260302-1A402A",
+    "channel": "EMAIL",
+    "recipient": "['yasven7545@gmail.com']",
+    "status": "sent",
+    "detail": "[ONEWEST VMS] Visitor Checked Out — Venu"
+  },
+  {
+    "ts": "2026-03-04T10:43:15",
+    "vid": "W-20260304-A4130D",
+    "channel": "SMS",
+    "recipient": "+919963570009",
+    "status": "skipped",
+    "detail": "No API key configured"
+  },
+  {
+    "ts": "2026-03-04T10:43:15",
+    "vid": "W-20260304-A4130D",
+    "channel": "WHATSAPP",
+    "recipient": "+919963570009",
+    "status": "skipped",
+    "detail": "No CallMeBot apikey — host must activate first"
+  },
+  {
+    "ts": "2026-03-04T10:43:19",
+    "vid": "W-20260304-A4130D",
+    "channel": "EMAIL",
+    "recipient": "['kiran@terminus-global.com']",
+    "status": "sent",
+    "detail": "[ONEWEST VMS] Visitor Awaiting Approval — Mr. Vamshi"
+  }
+]

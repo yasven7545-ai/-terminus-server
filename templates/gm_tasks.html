@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5"/>
+<title>GM Tasks — SLN Terminus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+/* ═══════════════════════════════════════════════════
+   DESIGN TOKENS — matches sln_terminus theme
+═══════════════════════════════════════════════════ */
+[data-theme="dark"] {
+  --bg:        #020b12;
+  --bg2:       #071520;
+  --surf:      #071520;
+  --surf2:     #0c1e2e;
+  --card:      #010810;
+  --bdr:       rgba(6,182,212,.12);
+  --bdr2:      rgba(6,182,212,.26);
+  --tx:        #b8dde8;
+  --tx2:       #daf0f7;
+  --tx3:       #4a7a8a;
+  --violet:    #2dd4bf;
+  --cyan:      #06b6d4;
+  --emerald:   #10b981;
+  --amber:     #f59e0b;
+  --rose:      #ef4444;
+  --sky:       #67e8f9;
+  --orange:    #F47920;
+  --orange-g:  rgba(244,121,32,.14);
+  --teal:      #0d9488;
+  --ga: linear-gradient(135deg,#0d9488,#06b6d4);
+  --gb: linear-gradient(135deg,#F47920,#f59e0b);
+  --sh:  0 8px 36px rgba(0,0,0,.70);
+  --sh2: 0 2px 24px rgba(0,0,0,.5);
+  --header-bg: #010810;
+  --modal-bg:  rgba(0,0,0,.82);
+}
+[data-theme="light"] {
+  --bg:        #f0fafa;
+  --bg2:       #e0f5f5;
+  --surf:      #ffffff;
+  --surf2:     #cdeeed;
+  --card:      #ffffff;
+  --bdr:       rgba(13,148,136,.14);
+  --bdr2:      rgba(13,148,136,.30);
+  --tx:        #0f2e35;
+  --tx2:       #07191e;
+  --tx3:       #3d7080;
+  --violet:    #0d9488;
+  --cyan:      #0891b2;
+  --emerald:   #059669;
+  --amber:     #d97706;
+  --rose:      #e11d48;
+  --sky:       #06b6d4;
+  --orange:    #ea580c;
+  --orange-g:  rgba(234,88,12,.1);
+  --teal:      #0d9488;
+  --ga: linear-gradient(135deg,#0f766e,#0891b2);
+  --gb: linear-gradient(135deg,#ea580c,#d97706);
+  --sh:  0 6px 28px rgba(0,0,0,.1);
+  --sh2: 0 2px 10px rgba(0,0,0,.07);
+  --header-bg: rgba(255,255,255,.95);
+  --modal-bg:  rgba(0,0,0,.55);
+}
+:root {
+  --hh: 56px;
+  --sw: 244px;
+  --r:  12px;
+  --rsm: 8px;
+  --ease: cubic-bezier(.4,0,.2,1);
+  --bounce: cubic-bezier(.34,1.3,.64,1);
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:var(--bg); color:var(--tx);
+  min-height:100vh; overflow-x:hidden; line-height:1.6;
+  transition:background .35s,color .35s;
+}
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--bdr2); border-radius:4px; }
+
+/* ═══════ HEADER ═══════ */
+header {
+  position:fixed; top:0; left:0; right:0; height:var(--hh);
+  background:var(--header-bg);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid var(--bdr);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 18px; z-index:600;
+  box-shadow:var(--sh2);
+  transition:background .35s, border-color .35s;
+}
+.logo-link { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
+.logo-box { display:flex; align-items:center; padding:0; flex-shrink:0; }
+.logo-box img { height:34px; width:auto; max-width:180px; object-fit:contain; display:block; }
+.logo-text { display:flex; flex-direction:column; gap:0; }
+.logo-name { font-size:14px; font-weight:800; color:var(--tx); letter-spacing:-.3px; line-height:1.1; }
+.logo-sub  { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--tx2); text-transform:uppercase; letter-spacing:1px; }
+
+.hdr-right { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+
+/* clock pill */
+.clock-pill {
+  display:flex; align-items:center; gap:5px;
+  padding:4px 11px; border-radius:20px;
+  background:var(--surf2); border:1px solid var(--bdr);
+  font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--cyan); white-space:nowrap;
+}
+.clock-pill svg { width:11px; height:11px; flex-shrink:0; }
+
+/* live dot */
+.live-dot { display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--emerald); }
+.pdot { width:7px; height:7px; border-radius:50%; background:var(--emerald); flex-shrink:0; animation:pdot 2s ease-in-out infinite; }
+@keyframes pdot { 0%{box-shadow:0 0 0 0 rgba(16,185,129,.8);}70%{box-shadow:0 0 0 8px rgba(16,185,129,0);}100%{box-shadow:0 0 0 0 rgba(16,185,129,0);} }
+
+/* theme toggle */
+.theme-toggle {
+  display:flex; align-items:center; gap:6px; padding:5px 10px; border-radius:20px;
+  background:var(--surf2); border:1px solid var(--bdr2); cursor:pointer; user-select:none; flex-shrink:0; transition:border-color .2s;
+}
+.theme-toggle:hover { border-color:var(--cyan); }
+.theme-toggle .t-icon { width:13px; height:13px; color:var(--tx2); flex-shrink:0; }
+.tt-track { width:32px; height:18px; border-radius:9px; background:var(--bdr2); position:relative; flex-shrink:0; transition:background .25s; }
+[data-theme="light"] .tt-track { background:var(--teal); }
+.tt-thumb { position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.3); transition:transform .25s; }
+[data-theme="light"] .tt-thumb { transform:translateX(14px); }
+
+/* back to portal — gold blinking */
+.btn-back-portal {
+  display:flex; align-items:center; gap:5px;
+  font-size:11px; font-weight:700; color:#FFD700;
+  text-decoration:none; padding:5px 13px;
+  border:1.5px solid rgba(255,215,0,.6); border-radius:20px;
+  background:transparent; cursor:pointer; white-space:nowrap; flex-shrink:0;
+  animation:gold-blink 1.7s ease-in-out infinite;
+  transition:background .2s;
+}
+.btn-back-portal:hover { background:rgba(255,215,0,.10); }
+.btn-back-portal svg { width:13px; height:13px; flex-shrink:0; }
+@keyframes gold-blink {
+  0%,100% { border-color:rgba(255,215,0,.6); box-shadow:none; color:#FFD700; }
+  50%     { border-color:#FFD700; box-shadow:0 0 16px rgba(255,215,0,.55); color:#ffe866; }
+}
+
+/* hamburger */
+.burger {
+  display:none; align-items:center; justify-content:center;
+  width:36px; height:36px; border-radius:var(--rsm);
+  background:var(--surf2); border:1px solid var(--bdr2);
+  color:var(--tx2); cursor:pointer; transition:all .2s; flex-shrink:0;
+}
+.burger:hover { border-color:var(--cyan); color:var(--cyan); }
+.burger svg { width:16px; height:16px; }
+
+/* ═══════ SIDEBAR ═══════ */
+.sidebar {
+  position:fixed; top:var(--hh); left:0; bottom:0; width:var(--sw);
+  background:var(--surf); border-right:1px solid var(--bdr);
+  display:flex; flex-direction:column; z-index:500; overflow:hidden;
+  transition:transform .3s var(--ease), background .35s, border-color .35s;
+}
+.sb-top { padding:14px 13px 10px; border-bottom:1px solid var(--bdr); flex-shrink:0; }
+.sb-badge {
+  display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:20px;
+  font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:1px;
+  color:var(--orange); background:var(--orange-g); border:1px solid rgba(244,121,32,.25);
+}
+.sb-role { margin-top:7px; font-size:11px; color:var(--tx3); font-family:'JetBrains Mono',monospace; }
+.sb-role span { color:var(--tx2); }
+.sb-scroll { flex:1; overflow-y:auto; padding:8px 10px 20px; }
+.nav-grp { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.3px; color:var(--tx3); padding:10px 8px 4px; }
+.nav-btn, .nav-item {
+  display:flex; align-items:center; gap:10px; width:100%; padding:9px 11px; border-radius:var(--rsm);
+  background:transparent; border:none; color:var(--tx2); font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:12.5px; font-weight:500; cursor:pointer; transition:all .15s; text-align:left; margin-bottom:1px;
+}
+.nav-btn i, .nav-item i { width:15px; height:15px; flex-shrink:0; opacity:.65; transition:opacity .15s,filter .15s,transform .2s; }
+.nav-btn:hover,.nav-item:hover { background:rgba(13,148,136,.10); color:var(--tx2); }
+.nav-btn:hover i,.nav-item:hover i { opacity:1; transform:scale(1.1); filter:drop-shadow(0 0 5px currentColor); }
+.nav-btn.active-nav,.nav-item.active-nav { background:rgba(13,148,136,.15); border-left:2px solid var(--cyan); }
+.nav-pip { width:7px; height:7px; border-radius:50%; margin-left:auto; flex-shrink:0; }
+.sb-foot { padding:10px 13px 14px; border-top:1px solid var(--bdr); flex-shrink:0; }
+.sb-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); backdrop-filter:blur(4px); z-index:499; }
+.sb-overlay.show { display:block; }
+/* GM Tasks quick-access in sidebar */
+.gm-tasks-sidebar-btn {
+  display:flex; align-items:center; gap:7px; width:100%; padding:9px 11px; border-radius:var(--rsm);
+  background:linear-gradient(135deg,rgba(255,215,0,.08),rgba(244,121,32,.06));
+  border:1px solid rgba(255,215,0,.25); color:#FFD700;
+  font-family:'Plus Jakarta Sans',sans-serif; font-size:12.5px; font-weight:600;
+  cursor:pointer; transition:all .2s; text-align:left; margin-bottom:6px;
+}
+.gm-tasks-sidebar-btn i { width:15px; height:15px; color:#FFD700; flex-shrink:0; }
+.gm-tasks-sidebar-btn:hover { background:rgba(255,215,0,.14); border-color:#FFD700; box-shadow:0 0 18px rgba(255,215,0,.2); }
+.gm-pip { width:7px; height:7px; border-radius:50%; margin-left:auto; flex-shrink:0; background:#FFD700; animation:gold-blink-pip 1.6s ease-in-out infinite; }
+@keyframes gold-blink-pip { 0%,100%{box-shadow:0 0 4px #FFD700;opacity:1;}50%{box-shadow:0 0 12px #FFD700;opacity:.4;} }
+
+/* sf footer status */
+.sf-lbl { font-size:9px; text-transform:uppercase; letter-spacing:1px; color:var(--tx3); margin-bottom:8px; }
+.sf-row { display:flex; align-items:center; justify-content:space-between; font-size:11px; color:var(--tx2); margin-bottom:5px; }
+.sf-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.sd-ok   { background:var(--emerald); box-shadow:0 0 5px var(--emerald); }
+.sd-warn { background:var(--amber);   box-shadow:0 0 5px var(--amber); }
+.sf-label { display:flex; align-items:center; gap:6px; }
+
+/* ═══════ MAIN ═══════ */
+main { margin-left:var(--sw); margin-top:var(--hh); min-height:calc(100vh - var(--hh)); padding:28px 28px 80px; transition:margin-left .3s; }
+
+/* ═══════ PAGE HEADER ═══════ */
+.page-hdr {
+  display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:16px;
+  margin-bottom:24px;
+}
+.page-title-wrap { display:flex; flex-direction:column; gap:4px; }
+.page-title { font-size:clamp(1.3rem,3vw,1.8rem); font-weight:800; color:var(--tx2); display:flex; align-items:center; gap:12px; }
+.page-title .badge-gm {
+  font-size:10px; font-weight:700; padding:3px 10px; border-radius:20px;
+  background:linear-gradient(135deg,rgba(255,215,0,.15),rgba(244,121,32,.1));
+  border:1px solid rgba(255,215,0,.35); color:#FFD700; letter-spacing:.8px; text-transform:uppercase;
+  animation:gold-blink 2.2s ease-in-out infinite;
+}
+.page-sub { font-size:12px; color:var(--tx3); font-family:'JetBrains Mono',monospace; }
+.hdr-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+
+/* ═══════ STATS BAR ═══════ */
+.stats-bar { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:24px; }
+.stat-card {
+  background:var(--surf); border:1px solid var(--bdr); border-radius:var(--r);
+  padding:14px 16px; display:flex; flex-direction:column; gap:4px;
+  transition:border-color .2s, box-shadow .2s;
+}
+.stat-card:hover { border-color:var(--bdr2); box-shadow:var(--sh2); }
+.stat-val { font-family:'JetBrains Mono',monospace; font-size:22px; font-weight:700; line-height:1; }
+.stat-lbl { font-size:10px; color:var(--tx3); text-transform:uppercase; letter-spacing:.8px; }
+.stat-card.s-total .stat-val { color:var(--cyan); }
+.stat-card.s-open  .stat-val { color:var(--amber); }
+.stat-card.s-prog  .stat-val { color:var(--violet); }
+.stat-card.s-done  .stat-val { color:var(--emerald); }
+.stat-card.s-over  .stat-val { color:var(--rose); }
+
+/* ═══════ TOOLBAR ═══════ */
+.toolbar {
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  background:var(--surf); border:1px solid var(--bdr); border-radius:var(--r);
+  padding:12px 16px; margin-bottom:20px;
+}
+.toolbar-left { display:flex; align-items:center; gap:8px; flex:1; flex-wrap:wrap; min-width:0; }
+.toolbar-right { display:flex; align-items:center; gap:8px; flex-shrink:0; flex-wrap:wrap; }
+
+/* search */
+.search-box {
+  display:flex; align-items:center; gap:8px;
+  background:var(--bg2); border:1px solid var(--bdr2); border-radius:8px;
+  padding:7px 12px; min-width:200px; max-width:280px;
+}
+.search-box svg { width:14px; height:14px; color:var(--tx3); flex-shrink:0; }
+.search-box input { background:none; border:none; outline:none; color:var(--tx2); font-size:12.5px; width:100%; font-family:'Plus Jakarta Sans',sans-serif; }
+.search-box input::placeholder { color:var(--tx3); }
+
+/* filter chips */
+.filter-chip {
+  padding:5px 12px; border-radius:20px; border:1px solid var(--bdr2);
+  background:transparent; color:var(--tx3); font-size:11.5px; font-weight:500;
+  cursor:pointer; transition:all .18s; font-family:'Plus Jakarta Sans',sans-serif;
+  white-space:nowrap;
+}
+.filter-chip:hover { border-color:var(--cyan); color:var(--cyan); }
+.filter-chip.active { background:rgba(6,182,212,.12); border-color:var(--cyan); color:var(--cyan); }
+.filter-chip.fc-amber.active { background:rgba(245,158,11,.12); border-color:var(--amber); color:var(--amber); }
+.filter-chip.fc-green.active { background:rgba(16,185,129,.12); border-color:var(--emerald); color:var(--emerald); }
+.filter-chip.fc-rose.active  { background:rgba(239,68,68,.12);  border-color:var(--rose);    color:var(--rose); }
+
+/* select */
+.sel-filter {
+  background:var(--bg2); border:1px solid var(--bdr2); border-radius:8px;
+  color:var(--tx2); font-size:12px; padding:6px 10px; cursor:pointer; outline:none;
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+.sel-filter option { background:var(--bg2); color:var(--tx2); }
+
+/* buttons */
+.btn { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:var(--rsm); border:none; cursor:pointer; font-size:12.5px; font-weight:600; font-family:'Plus Jakarta Sans',sans-serif; transition:all .2s; white-space:nowrap; }
+.btn svg, .btn i { width:14px; height:14px; flex-shrink:0; }
+.btn-primary { background:var(--ga); color:#fff; }
+.btn-primary:hover { opacity:.85; box-shadow:0 4px 16px rgba(13,148,136,.45); }
+.btn-gold { background:linear-gradient(135deg,#FFD700,#F47920); color:#000; font-weight:700; }
+.btn-gold:hover { opacity:.9; box-shadow:0 4px 18px rgba(255,215,0,.45); }
+.btn-outline { background:transparent; border:1px solid var(--bdr2); color:var(--tx2); }
+.btn-outline:hover { border-color:var(--cyan); color:var(--cyan); }
+.btn-danger { background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.3); color:var(--rose); }
+.btn-danger:hover { background:rgba(239,68,68,.22); }
+.btn-sm { padding:5px 11px; font-size:11.5px; }
+
+/* ═══════ TABLE ═══════ */
+.table-wrap { background:var(--surf); border:1px solid var(--bdr); border-radius:var(--r); overflow:hidden; box-shadow:var(--sh2); }
+.table-head { display:flex; align-items:center; justify-content:space-between; padding:14px 18px; border-bottom:1px solid var(--bdr); }
+.table-title { font-size:13.5px; font-weight:700; color:var(--tx2); display:flex; align-items:center; gap:8px; }
+.table-count { font-family:'JetBrains Mono',monospace; font-size:10px; padding:2px 8px; border-radius:10px; background:var(--bg2); color:var(--cyan); border:1px solid var(--bdr2); }
+.table-overflow { overflow-x:auto; }
+table { width:100%; border-collapse:separate; border-spacing:0; font-size:13px; }
+thead th {
+  padding:11px 14px; text-align:left; font-size:10.5px; font-weight:700;
+  text-transform:uppercase; letter-spacing:.8px; color:var(--tx3);
+  background:var(--bg2); border-bottom:1px solid var(--bdr);
+  white-space:nowrap; position:sticky; top:0;
+}
+thead th:first-child { border-radius:0; }
+tbody tr { transition:background .15s; cursor:pointer; }
+tbody tr:hover { background:rgba(6,182,212,.05); }
+tbody tr.task-completed { opacity:.55; }
+tbody tr.task-completed td { text-decoration:line-through; }
+tbody td { padding:11px 14px; border-bottom:1px solid var(--bdr); color:var(--tx2); font-size:12.5px; vertical-align:middle; }
+tbody tr:last-child td { border-bottom:none; }
+
+/* site badge */
+.site-badge {
+  display:inline-flex; align-items:center; gap:5px; padding:3px 9px;
+  border-radius:10px; font-size:11px; font-weight:600; letter-spacing:.3px;
+  white-space:nowrap;
+}
+.site-slnt       { background:rgba(6,182,212,.12);   color:#22d3ee; border:1px solid rgba(6,182,212,.25); }
+.site-onewest    { background:rgba(139,92,246,.12);   color:#a78bfa; border:1px solid rgba(139,92,246,.25); }
+.site-district   { background:rgba(16,185,129,.12);   color:#34d399; border:1px solid rgba(16,185,129,.25); }
+.site-ogm        { background:rgba(244,121,32,.12);   color:#fb923c; border:1px solid rgba(244,121,32,.25); }
+.site-ninehills  { background:rgba(245,158,11,.12);   color:#fbbf24; border:1px solid rgba(245,158,11,.25); }
+.site-all        { background:rgba(255,215,0,.12);    color:#FFD700; border:1px solid rgba(255,215,0,.25); }
+
+/* status badge */
+.status-badge { display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:10px; font-size:11px; font-weight:600; white-space:nowrap; }
+.s-open        { background:rgba(245,158,11,.12);  color:var(--amber);   border:1px solid rgba(245,158,11,.3); }
+.s-in-progress { background:rgba(6,182,212,.12);   color:var(--cyan);    border:1px solid rgba(6,182,212,.3); }
+.s-completed   { background:rgba(16,185,129,.12);  color:var(--emerald); border:1px solid rgba(16,185,129,.3); }
+.s-overdue     { background:rgba(239,68,68,.12);   color:var(--rose);    border:1px solid rgba(239,68,68,.3); }
+.s-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; background:currentColor; }
+
+/* priority */
+.prio-badge { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:6px; font-size:10.5px; font-weight:600; }
+.p-high   { background:rgba(239,68,68,.12);  color:var(--rose);  border:1px solid rgba(239,68,68,.25); }
+.p-medium { background:rgba(245,158,11,.12); color:var(--amber); border:1px solid rgba(245,158,11,.25); }
+.p-low    { background:rgba(16,185,129,.12); color:var(--emerald); border:1px solid rgba(16,185,129,.25); }
+
+/* checkbox col */
+.task-check { width:18px; height:18px; border:2px solid var(--bdr2); border-radius:4px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; flex-shrink:0; }
+.task-check.checked { background:var(--emerald); border-color:var(--emerald); }
+.task-check.checked svg { color:#fff; display:block; }
+.task-check svg { display:none; width:12px; height:12px; }
+.check-cell { display:flex; align-items:center; }
+
+/* action col */
+.row-actions { display:flex; align-items:center; gap:5px; }
+
+/* ═══════ DESCRIPTION POPUP MODAL ═══════ */
+.desc-popup {
+  display:none; position:fixed; inset:0; background:var(--modal-bg);
+  z-index:9000; align-items:center; justify-content:center;
+  backdrop-filter:blur(8px); padding:20px;
+}
+.desc-popup.open { display:flex; }
+.desc-popup-box {
+  background:var(--surf); border:1px solid var(--bdr2);
+  border-radius:20px; width:100%; max-width:540px;
+  padding:28px; box-shadow:0 32px 80px rgba(0,0,0,.65);
+  animation:modal-in .3s var(--bounce);
+  position:relative;
+}
+@keyframes modal-in { from{transform:translateY(40px);opacity:0;}to{transform:none;opacity:1;} }
+.desc-popup-title { font-size:15px; font-weight:700; color:var(--tx2); margin-bottom:5px; display:flex; align-items:center; gap:8px; }
+.desc-popup-sub   { font-size:11px; color:var(--tx3); font-family:'JetBrains Mono',monospace; margin-bottom:16px; }
+.desc-textarea {
+  width:100%; min-height:120px; max-height:320px; resize:vertical;
+  background:var(--bg2); border:1px solid var(--bdr2); border-radius:var(--rsm);
+  color:var(--tx2); font-family:'Plus Jakarta Sans',sans-serif; font-size:13.5px; line-height:1.7;
+  padding:12px 14px; outline:none; transition:border-color .2s;
+}
+.desc-textarea:focus { border-color:var(--cyan); box-shadow:0 0 0 3px rgba(6,182,212,.1); }
+.desc-char { font-size:10px; color:var(--tx3); text-align:right; margin-top:4px; font-family:'JetBrains Mono',monospace; }
+.desc-actions { display:flex; align-items:center; justify-content:flex-end; gap:10px; margin-top:16px; }
+.popup-close-btn { position:absolute; top:16px; right:16px; background:var(--bg2); border:1px solid var(--bdr); border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--tx3); transition:all .2s; }
+.popup-close-btn:hover { color:var(--rose); border-color:var(--rose); }
+.popup-close-btn svg { width:14px; height:14px; }
+
+/* ═══════ ADD TASK MODAL ═══════ */
+.modal-overlay {
+  display:none; position:fixed; inset:0; background:var(--modal-bg);
+  z-index:8000; align-items:center; justify-content:center;
+  backdrop-filter:blur(8px); padding:20px;
+}
+.modal-overlay.open { display:flex; }
+.modal-box {
+  background:var(--surf); border:1px solid var(--bdr2); border-radius:20px;
+  width:100%; max-width:620px; max-height:90vh; overflow-y:auto;
+  padding:28px; box-shadow:0 32px 80px rgba(0,0,0,.65);
+  animation:modal-in .3s var(--bounce); position:relative;
+}
+.modal-title { font-size:16px; font-weight:700; color:var(--tx2); margin-bottom:4px; }
+.modal-sub   { font-size:11px; color:var(--tx3); font-family:'JetBrains Mono',monospace; margin-bottom:22px; }
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.form-grid.full { grid-template-columns:1fr; }
+.form-group { display:flex; flex-direction:column; gap:5px; }
+.form-group.span2 { grid-column:span 2; }
+label.f-lbl { font-size:11px; font-weight:600; color:var(--tx3); text-transform:uppercase; letter-spacing:.7px; }
+.f-input, .f-select, .f-textarea {
+  background:var(--bg2); border:1px solid var(--bdr2); border-radius:var(--rsm);
+  color:var(--tx2); font-family:'Plus Jakarta Sans',sans-serif; font-size:13px;
+  padding:9px 12px; outline:none; transition:border-color .2s;
+}
+.f-input:focus, .f-select:focus, .f-textarea:focus { border-color:var(--cyan); box-shadow:0 0 0 3px rgba(6,182,212,.1); }
+.f-select option { background:var(--bg2); }
+.f-textarea { min-height:90px; resize:vertical; line-height:1.6; cursor:text; }
+.f-textarea.desc-trigger { cursor:pointer; }
+.f-textarea.desc-trigger:hover { border-color:var(--cyan); }
+.modal-footer { display:flex; align-items:center; justify-content:flex-end; gap:10px; margin-top:22px; padding-top:16px; border-top:1px solid var(--bdr); }
+.modal-close-btn { position:absolute; top:16px; right:16px; background:var(--bg2); border:1px solid var(--bdr); border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--tx3); transition:all .2s; }
+.modal-close-btn:hover { color:var(--rose); border-color:var(--rose); }
+.modal-close-btn svg { width:14px; height:14px; }
+
+/* ═══════ TOAST ═══════ */
+#toast {
+  position:fixed; bottom:24px; right:24px; z-index:99999;
+  background:var(--surf); border:1px solid var(--bdr2); color:var(--tx2);
+  padding:12px 18px; border-radius:12px; box-shadow:var(--sh);
+  display:flex; align-items:center; gap:10px; font-size:13px;
+  transform:translateY(80px); opacity:0; transition:all .3s var(--ease);
+  pointer-events:none; max-width:320px;
+}
+#toast.show { transform:none; opacity:1; }
+#toast i { width:16px; height:16px; flex-shrink:0; }
+
+/* ═══════ MAIL SCHEDULER PANEL ═══════ */
+.scheduler-panel {
+  background:var(--surf); border:1px solid var(--bdr); border-radius:var(--r);
+  padding:18px 20px; margin-bottom:24px;
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+}
+.sp-icon { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,rgba(255,215,0,.2),rgba(244,121,32,.1)); border:1px solid rgba(255,215,0,.3); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.sp-icon svg { width:16px; height:16px; color:#FFD700; }
+.sp-info { flex:1; min-width:0; }
+.sp-title { font-size:13px; font-weight:700; color:var(--tx2); }
+.sp-sub   { font-size:11px; color:var(--tx3); font-family:'JetBrains Mono',monospace; }
+.sp-status { display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:600; }
+.sp-status .pdot { background:#FFD700; animation:gold-pip 2s ease-in-out infinite; }
+@keyframes gold-pip { 0%{box-shadow:0 0 0 0 rgba(255,215,0,.8);}70%{box-shadow:0 0 0 8px rgba(255,215,0,0);}100%{box-shadow:0 0 0 0 rgba(255,215,0,0);} }
+
+/* ═══════ AUTO REFRESH INDICATOR ═══════ */
+.refresh-bar {
+  display:flex; align-items:center; gap:8px;
+  font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--tx3);
+  margin-bottom:16px;
+}
+.refresh-progress { flex:1; max-width:120px; height:2px; background:var(--bdr); border-radius:2px; overflow:hidden; }
+.refresh-fill { height:100%; background:var(--ga); border-radius:2px; width:100%; transition:width 1s linear; }
+
+/* ═══════ EMPTY STATE ═══════ */
+.empty-state {
+  padding:60px 20px; text-align:center;
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+}
+.empty-state svg { width:48px; height:48px; color:var(--tx3); opacity:.4; }
+.empty-state p { color:var(--tx3); font-size:13px; }
+
+/* ═══════ RESPONSIVE ═══════ */
+@media (max-width:900px) {
+  .sidebar { transform:translateX(-100%); box-shadow:none; }
+  .sidebar.open { transform:none; box-shadow:var(--sh); }
+  main { margin-left:0; }
+  .burger { display:flex; }
+  .logo-text { display:none; }
+  .live-dot span { display:none; }
+  .stats-bar { grid-template-columns:repeat(3,1fr); }
+}
+@media (max-width:640px) {
+  main { padding:16px 14px 80px; }
+  header { padding:0 12px; }
+  .stats-bar { grid-template-columns:repeat(2,1fr); }
+  .form-grid { grid-template-columns:1fr !important; }
+  .form-group.span2 { grid-column:span 1; }
+  .page-hdr { flex-direction:column; }
+  .hdr-actions { width:100%; }
+  .toolbar { flex-direction:column; align-items:stretch; }
+  .search-box { max-width:100%; }
+  .clock-pill span { display:none; }
+  .btn-back-portal { font-size:10px; padding:4px 10px; }
+  .hdr-right { gap:5px; }
+  .table-overflow { font-size:11.5px; }
+  tbody td, thead th { padding:8px 10px; }
+}
+@media (max-width:420px) {
+  .stats-bar { grid-template-columns:1fr 1fr; }
+  .stat-val { font-size:18px; }
+}
+@media (min-width:901px) {
+  .burger { display:none !important; }
+}
+
+/* GM sidebar active state */
+.nav-item.sb-active, .gm-tasks-sidebar-btn.sb-active {
+  background:rgba(255,215,0,.10) !important;
+  border-left:2px solid #FFD700;
+  color:#FFD700 !important;
+}
+.nav-item.sb-site-active {
+  background:rgba(6,182,212,.12);
+  border-left:2px solid var(--cyan);
+}
+.nav-item.sb-prio-active {
+  background:rgba(6,182,212,.10);
+  border-left:2px solid var(--cyan);
+}
+
+/* ═══════ SCROLLBAR in modal ═══════ */
+.modal-box::-webkit-scrollbar { width:4px; }
+.modal-box::-webkit-scrollbar-thumb { background:var(--bdr2); border-radius:4px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ HEADER ══════════════════ -->
+<header>
+  <div style="display:flex;align-items:center;gap:10px">
+    <button class="burger" id="burgerBtn" aria-label="Toggle sidebar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    <a href="/dashboard" class="logo-link">
+      <div class="logo-box">
+        <img src="/static/SLNT.jpeg" alt="SLN Logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" style="height:34px;width:auto;">
+        <span style="display:none;width:34px;height:34px;align-items:center;justify-content:center;font-size:20px;">🏢</span>
+      </div>
+      <div class="logo-text">
+        <div class="logo-name">Sr.Level Mgmt</div>
+        <div class="logo-sub">SLN Terminus</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="hdr-right">
+    <!-- clock -->
+    <div class="clock-pill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span id="currentTime" style="font-variant-numeric:tabular-nums">00:00:00</span>
+    </div>
+    <!-- live -->
+    <div class="live-dot"><span class="pdot"></span><span>Live</span></div>
+    <!-- theme toggle -->
+    <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light / dark">
+      <svg class="t-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <div class="tt-track"><div class="tt-thumb"></div></div>
+      <svg class="t-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </div>
+    <!-- back to portal — gold blinking -->
+    <a class="btn-back-portal" href="/sln_terminus" title="Back to SLN Terminus Portal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Portal
+    </a>
+  </div>
+</header>
+
+<!-- sidebar overlay -->
+<div class="sb-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
+
+<!-- ══════════════════ SIDEBAR ══════════════════ -->
+<aside class="sidebar" id="sidebar">
+
+  <!-- ── Identity strip ── -->
+  <div class="sb-top">
+    <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px;">
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,rgba(255,215,0,.25),rgba(244,121,32,.18));border:1.5px solid rgba(255,215,0,.4);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </div>
+      <div>
+        <div style="font-size:12.5px;font-weight:700;color:var(--tx2)" id="sidebarUserName">Sr. Level Mgmt</div>
+        <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:#FFD700;letter-spacing:.6px;"> All Sites</div>
+      </div>
+    </div>
+    <!-- live task pulse -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:var(--rsm);background:linear-gradient(135deg,rgba(255,215,0,.07),rgba(244,121,32,.05));border:1px solid rgba(255,215,0,.2);">
+      <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--tx3);">
+        <span class="pdot" style="background:#FFD700;animation:gold-pip 2s ease-in-out infinite;flex-shrink:0;display:inline-block;"></span>
+        Tasks live
+      </div>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#FFD700;" id="sb-task-count">—</span>
+    </div>
+  </div>
+
+  <div class="sb-scroll">
+
+    <!-- ── GM TASK VIEWS ── -->
+    <div class="nav-grp">Task Views</div>
+
+    <button class="gm-tasks-sidebar-btn" id="view-all-btn" onclick="setFilter('all',null);highlightSbView('view-all-btn')">
+      <i data-lucide="list"></i><span>All Tasks</span>
+      <span class="gm-pip"></span>
+    </button>
+    <button class="nav-item" id="view-open-btn" onclick="setFilter('Open',null);highlightSbView('view-open-btn')" style="color:var(--amber);">
+      <i data-lucide="circle-dot" style="color:var(--amber);opacity:1;"></i><span>Open</span>
+      <span class="nav-pip" style="background:var(--amber);box-shadow:0 0 6px var(--amber);animation:pdot 1.9s ease-in-out infinite;"></span>
+    </button>
+    <button class="nav-item" id="view-prog-btn" onclick="setFilter('In Progress',null);highlightSbView('view-prog-btn')" style="color:var(--cyan);">
+      <i data-lucide="loader" style="color:var(--cyan);opacity:1;"></i><span>In Progress</span>
+      <span class="nav-pip" style="background:var(--cyan);box-shadow:0 0 6px var(--cyan);animation:pdot 1.6s ease-in-out infinite;"></span>
+    </button>
+    <button class="nav-item" id="view-over-btn" onclick="setFilter('Overdue',null);highlightSbView('view-over-btn')" style="color:var(--rose);">
+      <i data-lucide="alert-triangle" style="color:var(--rose);opacity:1;"></i><span>Overdue</span>
+      <span class="nav-pip" id="overdue-pip" style="background:var(--rose);box-shadow:0 0 6px var(--rose);animation:pdot 1.3s ease-in-out infinite;"></span>
+    </button>
+    <button class="nav-item" id="view-done-btn" onclick="setFilter('Completed',null);highlightSbView('view-done-btn')" style="color:var(--emerald);">
+      <i data-lucide="check-circle-2" style="color:var(--emerald);opacity:1;"></i><span>Completed</span>
+      <span class="nav-pip" style="background:var(--emerald);box-shadow:0 0 6px var(--emerald);animation:pdot 2s ease-in-out infinite;"></span>
+    </button>
+
+    <!-- ── SITE FILTER ── -->
+    <div class="nav-grp" style="margin-top:6px;">Sites</div>
+    <button class="nav-item sb-site-btn" id="site-all" onclick="setSiteFilter('',this)">
+      <i data-lucide="globe-2" style="color:var(--cyan);opacity:1;"></i><span>All Sites</span>
+      <span class="nav-pip" style="background:var(--cyan);box-shadow:0 0 6px var(--cyan);animation:pdot 2s ease-in-out infinite;"></span>
+    </button>
+    <button class="nav-item sb-site-btn" id="site-slnt" onclick="setSiteFilter('SLNT',this)">
+      <i data-lucide="building-2" style="color:#22d3ee;opacity:1;"></i><span>SLNT</span>
+      <span class="nav-pip" style="background:#22d3ee;box-shadow:0 0 6px #22d3ee;animation:pdot 1.8s ease-in-out infinite;"></span>
+    </button>
+    <button class="nav-item sb-site-btn" id="site-ow" onclick="setSiteFilter('ONEWEST',this)">
+      <i data-lucide="building-2" style="color:#a78bfa;opacity:1;"></i><span>ONEWEST</span>
+      <span class="nav-pip" style="background:#a78bfa;box-shadow:0 0 6px #a78bfa;animation:pdot 2.1s ease-in-out infinite;"></span>
+    </button>
+    <button class="nav-item sb-site-btn" id="site-td" onclick="setSiteFilter('The District',this)">
+      <i data-lucide="building-2" style="color:#34d399;opacity:1;"></i><span>The District</span>
+      <span class="nav-pip" style="background:#34d399;box-shadow:0 0 6px #34d399;animation:pdot 1.7s ease-in-out infinite;"></span>
+    </button>
+    <button class="nav-item sb-site-btn" id="site-ogm" onclick="setSiteFilter('OGM',this)">
+      <i data-lucide="building-2" style="color:#fb923c;opacity:1;"></i><span>OGM</span>
+      <span class="nav-pip" style="background:#fb923c;box-shadow:0 0 6px #fb923c;animation:pdot 1.6s ease-in-out infinite;"></span>
+    </button>
+    <button class="nav-item sb-site-btn" id="site-nh" onclick="setSiteFilter('Nine Hills',this)">
+      <i data-lucide="building-2" style="color:#fbbf24;opacity:1;"></i><span>Nine Hills</span>
+      <span class="nav-pip" style="background:#fbbf24;box-shadow:0 0 6px #fbbf24;animation:pdot 1.9s ease-in-out infinite;"></span>
+    </button>
+
+    <!-- ── GM QUICK TOOLS ── -->
+    <div class="nav-grp" style="margin-top:6px;">GM Tools</div>
+    <button class="nav-item" onclick="openAddModal()" style="color:var(--teal);">
+      <i data-lucide="plus-circle" style="color:var(--teal);opacity:1;"></i><span>New Task</span>
+    </button>
+    <button class="nav-item" onclick="exportTasks()" style="color:var(--violet);">
+      <i data-lucide="download" style="color:var(--violet);opacity:1;"></i><span>Export CSV</span>
+    </button>
+    <button class="nav-item" onclick="triggerMailNow()" style="color:#FFD700;">
+      <i data-lucide="send" style="color:#FFD700;opacity:1;"></i><span>Send Report Now</span>
+    </button>
+    <button class="nav-item" onclick="openMailConfig()" style="color:var(--tx3);">
+      <i data-lucide="mail-cog" style="color:var(--tx3);opacity:1;"></i><span>Email Settings</span>
+    </button>
+
+    <!-- ── PRIORITY QUICK FILTER ── -->
+    <div class="nav-grp" style="margin-top:6px;">Priority</div>
+    <button class="nav-item sb-prio-btn" id="prio-all" onclick="setPrioFilter('',this)">
+      <i data-lucide="layers" style="color:var(--tx3);opacity:1;"></i><span>All Priority</span>
+    </button>
+    <button class="nav-item sb-prio-btn" id="prio-high" onclick="setPrioFilter('High',this)">
+      <i data-lucide="arrow-up-circle" style="color:var(--rose);opacity:1;"></i><span>High</span>
+      <span class="nav-pip" style="background:var(--rose);box-shadow:0 0 6px var(--rose);animation:pdot 1.3s ease-in-out infinite;"></span>
+    </button>
+    <button class="nav-item sb-prio-btn" id="prio-med" onclick="setPrioFilter('Medium',this)">
+      <i data-lucide="minus-circle" style="color:var(--amber);opacity:1;"></i><span>Medium</span>
+      <span class="nav-pip" style="background:var(--amber);box-shadow:0 0 6px var(--amber);animation:pdot 1.9s ease-in-out infinite;"></span>
+    </button>
+    <button class="nav-item sb-prio-btn" id="prio-low" onclick="setPrioFilter('Low',this)">
+      <i data-lucide="arrow-down-circle" style="color:var(--emerald);opacity:1;"></i><span>Low</span>
+      <span class="nav-pip" style="background:var(--emerald);box-shadow:0 0 6px var(--emerald);animation:pdot 2s ease-in-out infinite;"></span>
+    </button>
+
+  </div>
+
+  <!-- ── Sidebar footer ── -->
+  <div class="sb-foot">
+    <!-- overdue alert banner -->
+    <div id="sb-overdue-alert" style="display:none;padding:8px 10px;border-radius:var(--rsm);background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--rose);">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span id="sb-overdue-count">0</span> overdue task(s)
+      </div>
+    </div>
+    <!-- last sync -->
+    <div class="sf-lbl">Last Sync</div>
+    <div class="sf-row">
+      <div class="sf-label"><span class="sf-dot sd-ok"></span>Data</div>
+      <span style="color:var(--emerald);font-size:11px;font-family:'JetBrains Mono',monospace;" id="sb-sync-time">—</span>
+    </div>
+    <div class="sf-row">
+      <div class="sf-label"><span class="sf-dot sd-ok"></span>Email</div>
+      <span style="color:#FFD700;font-size:11px;">09:00 AM daily</span>
+    </div>
+    <div class="sf-row">
+      <div class="sf-label"><span class="sf-dot sd-warn"></span>Zone</div>
+      <span style="color:var(--tx2);font-size:11px;">IST · Hyderabad</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ══════════════════ MAIN ══════════════════ -->
+<main id="mainContent">
+
+  <!-- Page Header -->
+  <div class="page-hdr">
+    <div class="page-title-wrap">
+      <div class="page-title">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" style="flex-shrink:0"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Sr. Level Management
+        <span class="badge-gm">Portal</span>
+      </div>
+      <div class="page-sub">Senior Level Management Task Tracker — All Sites · Auto-refresh every 30s</div>
+    </div>
+    <div class="hdr-actions">
+      <button class="btn btn-outline btn-sm" onclick="exportTasks()">
+        <i data-lucide="download"></i> Export
+      </button>
+      <button class="btn btn-gold" onclick="openAddModal()">
+        <i data-lucide="plus"></i> Add Task
+      </button>
+    </div>
+  </div>
+
+  <!-- Auto refresh bar -->
+  <div class="refresh-bar">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+    <span>Auto-refresh in</span>
+    <span id="refreshCountdown">30s</span>
+    <div class="refresh-progress"><div class="refresh-fill" id="refreshFill"></div></div>
+    <span id="lastRefreshed" style="margin-left:4px">Just now</span>
+  </div>
+
+  <!-- Mail Scheduler Panel -->
+  <div class="scheduler-panel">
+    <div class="sp-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    </div>
+    <div class="sp-info">
+      <div class="sp-title">Daily Email Report — 09:00 AM IST</div>
+      <div class="sp-sub">Sends updated task list to registered recipients every day at 9:00 AM · Auto-triggered</div>
+    </div>
+    <div class="sp-status">
+      <span class="pdot" style="background:#FFD700;"></span>
+      <span style="color:#FFD700;">Scheduled</span>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="triggerMailNow()">
+      <i data-lucide="send"></i> Send Now
+    </button>
+    <button class="btn btn-outline btn-sm" onclick="openMailConfig()">
+      <i data-lucide="settings"></i> Configure
+    </button>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-card s-total"><div class="stat-val" id="stat-total">0</div><div class="stat-lbl">Total Tasks</div></div>
+    <div class="stat-card s-open"><div class="stat-val" id="stat-open">0</div><div class="stat-lbl">Open</div></div>
+    <div class="stat-card s-prog"><div class="stat-val" id="stat-prog">0</div><div class="stat-lbl">In Progress</div></div>
+    <div class="stat-card s-done"><div class="stat-val" id="stat-done">0</div><div class="stat-lbl">Completed</div></div>
+    <div class="stat-card s-over"><div class="stat-val" id="stat-over">0</div><div class="stat-lbl">Overdue</div></div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="Search tasks, descriptions, assignees..." oninput="filterTasks()">
+      </div>
+      <button class="filter-chip active" data-filter="all" onclick="setFilter('all',this)">All</button>
+      <button class="filter-chip fc-amber" data-filter="Open" onclick="setFilter('Open',this)">Open</button>
+      <button class="filter-chip" data-filter="In Progress" onclick="setFilter('In Progress',this)" style="--chip-clr:var(--cyan)">In Progress</button>
+      <button class="filter-chip fc-green" data-filter="Completed" onclick="setFilter('Completed',this)">Completed</button>
+      <button class="filter-chip fc-rose" data-filter="Overdue" onclick="setFilter('Overdue',this)">Overdue</button>
+    </div>
+    <div class="toolbar-right">
+      <select class="sel-filter" id="siteFilter" onchange="filterTasks()">
+        <option value="">All Sites</option>
+        <option value="SLNT">SLNT</option>
+        <option value="ONEWEST">ONEWEST</option>
+        <option value="The District">The District</option>
+        <option value="OGM">OGM</option>
+        <option value="Nine Hills">Nine Hills</option>
+      </select>
+      <select class="sel-filter" id="priorityFilter" onchange="filterTasks()">
+        <option value="">All Priority</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <div class="table-head">
+      <div class="table-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        Task Register
+        <span class="table-count" id="taskCount">0 tasks</span>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="loadTasks()">
+        <i data-lucide="refresh-cw"></i> Refresh
+      </button>
+    </div>
+    <div class="table-overflow">
+      <table id="taskTable">
+        <thead>
+          <tr>
+            <th style="width:36px;"></th>
+            <th>S.No</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Site</th>
+            <th>Cost Implication</th>
+            <th>Assigned To</th>
+            <th>Status</th>
+            <th>Priority</th>
+            <th>Remarks</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="taskBody">
+          <tr><td colspan="11"><div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><p>No tasks yet. Click <strong>+ Add Task</strong> to get started.</p></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<!-- ══════════════════ ADD / EDIT TASK MODAL ══════════════════ -->
+<div class="modal-overlay" id="taskModal">
+  <div class="modal-box">
+    <button class="modal-close-btn" onclick="closeModal('taskModal')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal-title" id="modalTitle">Add New Task</div>
+    <div class="modal-sub" id="modalSub">Fill in the task details below. Click the description field for an expanded editor.</div>
+    <input type="hidden" id="editTaskId">
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="f-lbl">Date</label>
+        <input type="date" class="f-input" id="f-date">
+      </div>
+      <div class="form-group">
+        <label class="f-lbl">Site</label>
+        <select class="f-select" id="f-site">
+          <option value="">Select Site</option>
+          <option value="SLNT">SLNT</option>
+          <option value="ONEWEST">ONEWEST</option>
+          <option value="The District">The District</option>
+          <option value="OGM">OGM</option>
+          <option value="Nine Hills">Nine Hills</option>
+        </select>
+      </div>
+      <div class="form-group span2">
+        <label class="f-lbl">Description <span style="color:var(--cyan);font-size:10px;font-weight:400;">(click to expand editor)</span></label>
+        <textarea class="f-textarea desc-trigger" id="f-desc" rows="3" placeholder="Click here to open the description editor…" onclick="openDescPopup()" readonly></textarea>
+      </div>
+      <div class="form-group">
+        <label class="f-lbl">Cost Implication (₹)</label>
+        <input type="text" class="f-input" id="f-cost" placeholder="e.g. ₹25,000 or N/A">
+      </div>
+      <div class="form-group">
+        <label class="f-lbl">Assigned To</label>
+        <input type="text" class="f-input" id="f-assigned" placeholder="Name or team">
+      </div>
+      <div class="form-group">
+        <label class="f-lbl">Status</label>
+        <select class="f-select" id="f-status">
+          <option value="Open">Open</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+          <option value="Overdue">Overdue</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="f-lbl">Priority</label>
+        <select class="f-select" id="f-priority">
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+          <option value="Low">Low</option>
+        </select>
+      </div>
+      <div class="form-group span2">
+        <label class="f-lbl">Remarks</label>
+        <input type="text" class="f-input" id="f-remarks" placeholder="Additional notes or remarks">
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('taskModal')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveTask()">
+        <i data-lucide="save"></i> Save Task
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ DESCRIPTION POPUP ══════════════════ -->
+<div class="desc-popup" id="descPopup">
+  <div class="desc-popup-box">
+    <button class="popup-close-btn" onclick="closeDescPopup()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="desc-popup-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      Task Description Editor
+    </div>
+    <div class="desc-popup-sub">Type the full task description here. Supports multiline text.</div>
+    <textarea class="desc-textarea" id="descEditor" placeholder="Enter a detailed task description…" oninput="updateDescChar()"></textarea>
+    <div class="desc-char"><span id="descCharCount">0</span> characters</div>
+    <div class="desc-actions">
+      <button class="btn btn-outline" onclick="closeDescPopup()">Cancel</button>
+      <button class="btn btn-primary" onclick="applyDesc()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Apply
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ MAIL CONFIG MODAL ══════════════════ -->
+<div class="modal-overlay" id="mailConfigModal">
+  <div class="modal-box" style="max-width:480px;">
+    <button class="modal-close-btn" onclick="closeModal('mailConfigModal')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal-title">📧 Email Report Configuration</div>
+    <div class="modal-sub">Configure daily task summary emails at 09:00 AM IST</div>
+    <div class="form-grid full">
+      <div class="form-group">
+        <label class="f-lbl">Recipient Emails (comma-separated)</label>
+        <input type="text" class="f-input" id="mailRecipients" placeholder="gm@slnterminius.com, team@slnterminius.com">
+      </div>
+      <div class="form-group">
+        <label class="f-lbl">Send Time</label>
+        <input type="time" class="f-input" id="mailTime" value="09:00">
+      </div>
+      <div class="form-group">
+        <label class="f-lbl">Subject Line</label>
+        <input type="text" class="f-input" id="mailSubject" value="GM Tasks Daily Summary — SLN Terminus">
+      </div>
+      <div class="form-group">
+        <label class="f-lbl">Include</label>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2);cursor:pointer;"><input type="checkbox" id="inclOpen" checked style="accent-color:var(--amber);width:14px;height:14px;"> Open Tasks</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2);cursor:pointer;"><input type="checkbox" id="inclProg" checked style="accent-color:var(--cyan);width:14px;height:14px;"> In Progress Tasks</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2);cursor:pointer;"><input type="checkbox" id="inclOver" checked style="accent-color:var(--rose);width:14px;height:14px;"> Overdue Tasks</label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2);cursor:pointer;"><input type="checkbox" id="inclDone" style="accent-color:var(--emerald);width:14px;height:14px;"> Completed Tasks</label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('mailConfigModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveMailConfig()">
+        <i data-lucide="save"></i> Save Config
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast">
+  <i data-lucide="check-circle"></i>
+  <span id="toastMsg">Done!</span>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════ */
+let tasks = [];
+let activeFilter = 'all';
+let editingId   = null;
+let refreshTimer = 30;
+let refreshInterval;
+
+const STORAGE_KEY = 'gm_tasks_v2';
+const MAIL_KEY    = 'gm_mail_config_v1';
+
+/* ═══════════════════════════════════════════════
+   CLOCK
+═══════════════════════════════════════════════ */
+function updateClock(){
+  const now = new Date();
+  document.getElementById('currentTime').textContent =
+    now.toLocaleTimeString('en-IN',{hour12:false,timeZone:'Asia/Kolkata'});
+}
+setInterval(updateClock,1000); updateClock();
+
+/* ═══════════════════════════════════════════════
+   THEME
+═══════════════════════════════════════════════ */
+function toggleTheme(){
+  const html = document.documentElement;
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('gm_theme', next);
+}
+(function(){
+  const t = localStorage.getItem('gm_theme');
+  if(t) document.documentElement.setAttribute('data-theme', t);
+})();
+
+/* ═══════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════ */
+const burgerBtn  = document.getElementById('burgerBtn');
+const sidebar    = document.getElementById('sidebar');
+const sbOverlay  = document.getElementById('sbOverlay');
+function openSidebar(){  sidebar.classList.add('open');  sbOverlay.classList.add('show'); document.body.style.overflow='hidden'; }
+function closeSidebar(){ sidebar.classList.remove('open'); sbOverlay.classList.remove('show'); document.body.style.overflow=''; }
+burgerBtn.addEventListener('click', ()=>{ sidebar.classList.contains('open') ? closeSidebar() : openSidebar(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeSidebar(); });
+
+/* ═══════════════════════════════════════════════
+   LUCIDE
+═══════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded',()=>{ try{ lucide.createIcons(); }catch(e){} loadTasks(); initRefresh(); loadMailConfig(); scheduleDaily(); highlightSbView('view-all-btn'); document.getElementById('site-all')?.classList.add('sb-site-active'); document.getElementById('prio-all')?.classList.add('sb-prio-active'); });
+
+/* ═══════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════ */
+let toastTO;
+function showToast(msg, type='ok'){
+  const t = document.getElementById('toast');
+  const m = document.getElementById('toastMsg');
+  m.textContent = msg;
+  t.style.borderColor = type==='err' ? 'rgba(239,68,68,.4)' : type==='warn' ? 'rgba(245,158,11,.4)' : 'rgba(6,182,212,.35)';
+  t.classList.add('show');
+  clearTimeout(toastTO);
+  toastTO = setTimeout(()=>t.classList.remove('show'), 3500);
+  try{ lucide.createIcons(); }catch(e){}
+}
+
+/* ═══════════════════════════════════════════════
+   STORAGE / DATA LAYER
+   Syncs via localStorage (shared across tabs / systems on same origin)
+   + optional server sync via /api/gm_tasks
+═══════════════════════════════════════════════ */
+function saveTasks(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+  broadcastChange();
+  syncToServer();
+}
+
+function broadcastChange(){
+  /* BroadcastChannel — updates ALL open tabs on same origin instantly */
+  try{
+    const bc = new BroadcastChannel('gm_tasks');
+    bc.postMessage({type:'update', tasks});
+    bc.close();
+  }catch(e){}
+}
+
+/* Listen for changes from other tabs */
+try{
+  const bc = new BroadcastChannel('gm_tasks');
+  bc.onmessage = e =>{ if(e.data && e.data.type==='update'){ tasks = e.data.tasks; renderTable(); updateStats(); } };
+}catch(e){}
+
+/* Storage event (other origin tabs) */
+window.addEventListener('storage', e=>{ if(e.key===STORAGE_KEY && e.newValue){ tasks = JSON.parse(e.newValue); renderTable(); updateStats(); } });
+
+function loadTasks(){
+  /* Try server first */
+  fetch('/api/gm_tasks').then(r=>r.json()).then(data=>{
+    if(Array.isArray(data.tasks)) tasks = data.tasks;
+    else tasks = loadLocal();
+    renderTable(); updateStats();
+    setLastRefreshed();
+  }).catch(()=>{
+    tasks = loadLocal();
+    renderTable(); updateStats();
+    setLastRefreshed();
+  });
+}
+
+function loadLocal(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch(e){ return []; }
+}
+
+function syncToServer(){
+  fetch('/api/gm_tasks', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({tasks})
+  }).catch(()=>{});
+}
+
+function setLastRefreshed(){
+  const el = document.getElementById('lastRefreshed');
+  if(el) el.textContent = 'Updated ' + new Date().toLocaleTimeString('en-IN',{hour12:true,timeZone:'Asia/Kolkata'});
+}
+
+/* ═══════════════════════════════════════════════
+   AUTO-REFRESH (30s)
+═══════════════════════════════════════════════ */
+function initRefresh(){
+  refreshTimer = 30;
+  clearInterval(refreshInterval);
+  refreshInterval = setInterval(()=>{
+    refreshTimer--;
+    const fill = document.getElementById('refreshFill');
+    const cnt  = document.getElementById('refreshCountdown');
+    if(fill) fill.style.width = ((refreshTimer/30)*100) + '%';
+    if(cnt)  cnt.textContent  = refreshTimer + 's';
+    if(refreshTimer<=0){ loadTasks(); refreshTimer=30; }
+  },1000);
+}
+
+/* ═══════════════════════════════════════════════
+   RENDER TABLE
+═══════════════════════════════════════════════ */
+const SITE_CLASS = {'SLNT':'site-slnt','ONEWEST':'site-onewest','The District':'site-district','OGM':'site-ogm','Nine Hills':'site-ninehills'};
+const STATUS_CLASS = {'Open':'s-open','In Progress':'s-in-progress','Completed':'s-completed','Overdue':'s-overdue'};
+const PRIO_CLASS   = {'High':'p-high','Medium':'p-medium','Low':'p-low'};
+
+function getFiltered(){
+  const s    = document.getElementById('searchInput')?.value.toLowerCase()||'';
+  const site = activeSite || document.getElementById('siteFilter')?.value||'';
+  const prio = activePrio || document.getElementById('priorityFilter')?.value||'';
+  return tasks.filter(t=>{
+    const matchStatus = activeFilter==='all' || t.status===activeFilter;
+    const matchSearch = !s || [t.description,t.assignedTo,t.site,t.remarks].some(v=>(v||'').toLowerCase().includes(s));
+    const matchSite   = !site || t.site===site;
+    const matchPrio   = !prio || t.priority===prio;
+    return matchStatus && matchSearch && matchSite && matchPrio;
+  });
+}
+
+function renderTable(){
+  const tbody  = document.getElementById('taskBody');
+  const filtered = getFiltered();
+  document.getElementById('taskCount').textContent = filtered.length + ' task' + (filtered.length!==1?'s':'');
+  if(!filtered.length){
+    tbody.innerHTML='<tr><td colspan="11"><div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><p>No tasks match the current filter.</p></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map((t,i)=>{
+    const sc = STATUS_CLASS[t.status]||'s-open';
+    const pc = PRIO_CLASS[t.priority]||'p-medium';
+    const siteC = SITE_CLASS[t.site]||'site-all';
+    const completed = t.status==='Completed';
+    return `<tr class="${completed?'task-completed':''}" ondblclick="openEditModal('${t.id}')">
+      <td>
+        <div class="check-cell">
+          <div class="task-check ${completed?'checked':''}" onclick="toggleComplete('${t.id}',event)" title="${completed?'Mark open':'Mark complete'}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+        </div>
+      </td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx3)">${i+1}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11.5px;white-space:nowrap">${t.date||'—'}</td>
+      <td style="max-width:220px;">
+        <div style="font-weight:500;color:var(--tx2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escHtml(t.description||'')}">
+          ${escHtml(t.description||'—')}
+        </div>
+      </td>
+      <td><span class="site-badge ${siteC}">${t.site||'—'}</span></td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--tx3)">${escHtml(t.cost||'—')}</td>
+      <td style="font-size:12px;color:var(--tx2)">${escHtml(t.assignedTo||'—')}</td>
+      <td><span class="status-badge ${sc}"><span class="s-dot"></span>${t.status}</span></td>
+      <td><span class="prio-badge ${pc}">${t.priority||'Medium'}</span></td>
+      <td style="max-width:160px;font-size:12px;color:var(--tx3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escHtml(t.remarks||'')}">${escHtml(t.remarks||'—')}</td>
+      <td>
+        <div class="row-actions">
+          <button class="btn btn-outline btn-sm" onclick="openEditModal('${t.id}')" title="Edit">
+            <i data-lucide="pencil" style="width:12px;height:12px;"></i>
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="deleteTask('${t.id}')" title="Delete">
+            <i data-lucide="trash-2" style="width:12px;height:12px;"></i>
+          </button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  try{ lucide.createIcons(); }catch(e){}
+}
+
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function updateStats(){
+  document.getElementById('stat-total').textContent = tasks.length;
+  document.getElementById('stat-open').textContent  = tasks.filter(t=>t.status==='Open').length;
+  document.getElementById('stat-prog').textContent  = tasks.filter(t=>t.status==='In Progress').length;
+  document.getElementById('stat-done').textContent  = tasks.filter(t=>t.status==='Completed').length;
+  document.getElementById('stat-over').textContent  = tasks.filter(t=>t.status==='Overdue').length;
+  updateSidebarCounters();
+}
+
+/* ═══════════════════════════════════════════════
+   SIDEBAR HELPERS
+═══════════════════════════════════════════════ */
+function highlightSbView(btnId){
+  document.querySelectorAll('.nav-item,.gm-tasks-sidebar-btn').forEach(b=>{
+    b.classList.remove('sb-active');
+  });
+  const el = document.getElementById(btnId);
+  if(el) el.classList.add('sb-active');
+}
+
+let activeSite = '';
+let activePrio = '';
+
+function setSiteFilter(site, el){
+  activeSite = site;
+  document.querySelectorAll('.sb-site-btn').forEach(b=>b.classList.remove('sb-site-active'));
+  if(el) el.classList.add('sb-site-active');
+  const sel = document.getElementById('siteFilter');
+  if(sel){ sel.value = site; }
+  renderTable();
+}
+
+function setPrioFilter(prio, el){
+  activePrio = prio;
+  document.querySelectorAll('.sb-prio-btn').forEach(b=>b.classList.remove('sb-prio-active'));
+  if(el) el.classList.add('sb-prio-active');
+  const sel = document.getElementById('priorityFilter');
+  if(sel){ sel.value = prio; }
+  renderTable();
+}
+
+function updateSidebarCounters(){
+  const total  = tasks.length;
+  const overC  = tasks.filter(t=>t.status==='Overdue').length;
+
+  const sbCount = document.getElementById('sb-task-count');
+  if(sbCount) sbCount.textContent = total;
+
+  const sbOverAlert = document.getElementById('sb-overdue-alert');
+  const sbOverCount = document.getElementById('sb-overdue-count');
+  if(sbOverAlert){
+    sbOverAlert.style.display = overC > 0 ? 'block' : 'none';
+    if(sbOverCount) sbOverCount.textContent = overC;
+  }
+
+  const syncEl = document.getElementById('sb-sync-time');
+  if(syncEl) syncEl.textContent = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true,timeZone:'Asia/Kolkata'});
+}
+
+/* ═══════════════════════════════════════════════
+   FILTER (patched to honour sidebar site/prio)
+═══════════════════════════════════════════════ */
+function setFilter(f, el){
+  activeFilter = f;
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  if(el) el.classList.add('active');
+  const viewMap = {'all':'view-all-btn','Open':'view-open-btn','In Progress':'view-prog-btn','Overdue':'view-over-btn','Completed':'view-done-btn'};
+  if(viewMap[f]) highlightSbView(viewMap[f]);
+  renderTable();
+}
+function filterTasks(){ renderTable(); }
+
+/* ═══════════════════════════════════════════════
+   ADD / EDIT MODAL
+═══════════════════════════════════════════════ */
+function openAddModal(){
+  editingId = null;
+  document.getElementById('modalTitle').textContent = 'Add New Task';
+  document.getElementById('modalSub').textContent   = 'Fill in the task details. Click description to open the full editor.';
+  document.getElementById('editTaskId').value = '';
+  clearForm();
+  // set today's date
+  document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
+  openModal('taskModal');
+}
+
+function openEditModal(id){
+  const task = tasks.find(t=>t.id===id);
+  if(!task) return;
+  editingId = id;
+  document.getElementById('modalTitle').textContent = 'Edit Task';
+  document.getElementById('modalSub').textContent   = 'Update the task details below.';
+  document.getElementById('editTaskId').value = id;
+  document.getElementById('f-date').value     = task.date||'';
+  document.getElementById('f-site').value     = task.site||'';
+  document.getElementById('f-desc').value     = task.description||'';
+  document.getElementById('f-cost').value     = task.cost||'';
+  document.getElementById('f-assigned').value = task.assignedTo||'';
+  document.getElementById('f-status').value   = task.status||'Open';
+  document.getElementById('f-priority').value = task.priority||'Medium';
+  document.getElementById('f-remarks').value  = task.remarks||'';
+  openModal('taskModal');
+}
+
+function clearForm(){
+  ['f-date','f-site','f-desc','f-cost','f-assigned','f-status','f-priority','f-remarks'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.value = (id==='f-status')?'Open':(id==='f-priority')?'Medium':'';
+  });
+}
+
+function saveTask(){
+  const desc = document.getElementById('f-desc').value.trim();
+  if(!desc){ showToast('Description is required.','err'); return; }
+  const task = {
+    id:          editingId || 'task_' + Date.now(),
+    date:        document.getElementById('f-date').value,
+    site:        document.getElementById('f-site').value,
+    description: desc,
+    cost:        document.getElementById('f-cost').value,
+    assignedTo:  document.getElementById('f-assigned').value,
+    status:      document.getElementById('f-status').value,
+    priority:    document.getElementById('f-priority').value,
+    remarks:     document.getElementById('f-remarks').value,
+    updatedAt:   new Date().toISOString()
+  };
+  if(editingId){ const idx=tasks.findIndex(t=>t.id===editingId); if(idx>-1) tasks[idx]=task; }
+  else { tasks.unshift(task); }
+  saveTasks(); renderTable(); updateStats();
+  closeModal('taskModal');
+  showToast(editingId?'Task updated successfully!':'Task added successfully!');
+}
+
+/* ═══════════════════════════════════════════════
+   TOGGLE COMPLETE
+═══════════════════════════════════════════════ */
+function toggleComplete(id, e){
+  e.stopPropagation();
+  const t = tasks.find(t=>t.id===id);
+  if(!t) return;
+  t.status = t.status==='Completed'?'Open':'Completed';
+  t.updatedAt = new Date().toISOString();
+  saveTasks(); renderTable(); updateStats();
+  showToast(t.status==='Completed'?'Task marked as completed! ✓':'Task re-opened.');
+}
+
+/* ═══════════════════════════════════════════════
+   DELETE
+═══════════════════════════════════════════════ */
+function deleteTask(id){
+  if(!confirm('Delete this task?')) return;
+  tasks = tasks.filter(t=>t.id!==id);
+  saveTasks(); renderTable(); updateStats();
+  showToast('Task deleted.','warn');
+}
+
+/* ═══════════════════════════════════════════════
+   DESCRIPTION POPUP
+═══════════════════════════════════════════════ */
+function openDescPopup(){
+  const current = document.getElementById('f-desc').value;
+  document.getElementById('descEditor').value = current;
+  updateDescChar();
+  document.getElementById('descPopup').classList.add('open');
+  setTimeout(()=>document.getElementById('descEditor').focus(),200);
+}
+function closeDescPopup(){ document.getElementById('descPopup').classList.remove('open'); }
+function applyDesc(){
+  const val = document.getElementById('descEditor').value;
+  document.getElementById('f-desc').value = val;
+  closeDescPopup();
+}
+function updateDescChar(){
+  const l = document.getElementById('descEditor').value.length;
+  document.getElementById('descCharCount').textContent = l;
+}
+
+/* ═══════════════════════════════════════════════
+   MODAL OPEN / CLOSE
+═══════════════════════════════════════════════ */
+function openModal(id){ document.getElementById(id).classList.add('open'); document.body.style.overflow='hidden'; }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); document.body.style.overflow=''; }
+document.addEventListener('click', e=>{
+  ['taskModal','descPopup','mailConfigModal'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el && e.target===el){ closeModal(id); el.classList.remove('open'); document.body.style.overflow=''; }
+  });
+});
+
+/* ═══════════════════════════════════════════════
+   MAIL CONFIG
+═══════════════════════════════════════════════ */
+function loadMailConfig(){
+  try{
+    const cfg = JSON.parse(localStorage.getItem(MAIL_KEY)||'{}');
+    if(cfg.recipients) document.getElementById('mailRecipients').value = cfg.recipients;
+    if(cfg.time)       document.getElementById('mailTime').value       = cfg.time;
+    if(cfg.subject)    document.getElementById('mailSubject').value    = cfg.subject;
+  }catch(e){}
+}
+function saveMailConfig(){
+  const cfg = {
+    recipients: document.getElementById('mailRecipients').value,
+    time:       document.getElementById('mailTime').value,
+    subject:    document.getElementById('mailSubject').value,
+    inclOpen:   document.getElementById('inclOpen').checked,
+    inclProg:   document.getElementById('inclProg').checked,
+    inclOver:   document.getElementById('inclOver').checked,
+    inclDone:   document.getElementById('inclDone').checked
+  };
+  localStorage.setItem(MAIL_KEY, JSON.stringify(cfg));
+  fetch('/api/gm_mail_config',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(cfg)}).catch(()=>{});
+  closeModal('mailConfigModal');
+  showToast('Mail configuration saved!');
+}
+function openMailConfig(){
+  loadMailConfig();
+  openModal('mailConfigModal');
+  try{ lucide.createIcons(); }catch(e){}
+}
+
+/* ═══════════════════════════════════════════════
+   SEND MAIL NOW
+═══════════════════════════════════════════════ */
+function triggerMailNow(){
+  showToast('Sending email report…','ok');
+  fetch('/api/gm_tasks/send_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({tasks, manual:true})})
+    .then(r=>r.json())
+    .then(d=>showToast(d.message||'Email sent successfully!'))
+    .catch(()=>showToast('Email queued (server offline, will retry).','warn'));
+}
+
+/* ═══════════════════════════════════════════════
+   DAILY SCHEDULE — checks every minute if 09:00 AM
+═══════════════════════════════════════════════ */
+function scheduleDaily(){
+  setInterval(()=>{
+    const now = new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
+    if(now.getHours()===9 && now.getMinutes()===0){
+      const key = 'gm_last_mail_' + now.toDateString();
+      if(!sessionStorage.getItem(key)){
+        sessionStorage.setItem(key,'1');
+        triggerMailNow();
+      }
+    }
+  }, 60000);
+}
+
+/* ═══════════════════════════════════════════════
+   EXPORT CSV
+═══════════════════════════════════════════════ */
+function exportTasks(){
+  const headers = ['S.No','Date','Description','Site','Cost Implication','Assigned To','Status','Priority','Remarks'];
+  const rows = tasks.map((t,i)=>[i+1,t.date,`"${(t.description||'').replace(/"/g,'""')}"`,t.site,t.cost,t.assignedTo,t.status,t.priority,`"${(t.remarks||'').replace(/"/g,'""')}"`]);
+  const csv = [headers.join(','),...rows.map(r=>r.join(','))].join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='gm_tasks_'+new Date().toISOString().slice(0,10)+'.csv'; a.click();
+  showToast('Tasks exported as CSV!');
+}
+</script>
+</body>
+</html>

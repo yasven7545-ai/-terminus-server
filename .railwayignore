@@ -1,0 +1,14 @@
+venv/
+node_modules/
+__pycache__/
+*.pyc
+*.db
+*.log
+*.xlsx
+*.pdf
+backups/
+uploads/
+wkhtmltopdf/
+*.zip
+server\ -\ *.py
+server08*.py

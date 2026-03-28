@@ -1,0 +1,64 @@
+[
+  {
+    "id": "OBS-0001",
+    "title": "Cam Bills Collection Reminder",
+    "obs_date": "2026-03-01",
+    "location": "SLN Terminus",
+    "priority": "High",
+    "expected_date": "2026-03-25",
+    "description": "Kiran and Madhav, As you are aware the current CAM balance receivables is Rs 1.2 Cr. We cannot continue like this . Ideally it should never be above Rs 50 lakhs to run operations smoothly. Else, we are doing Vendor payments drawing on OD and paying interest. Please follow up on the payments diligently. Need funds immediately as we want to go ahead with painting etc",
+    "remarks": "Please take necessary action",
+    "inspection": "No",
+    "image_path": "",
+    "raised_by": "Management",
+    "raised_by_name": "",
+    "current_stage": "Work In Progress",
+    "pm_response": "Noted Sir",
+    "is_cost_implication": "No",
+    "gm_notes": "",
+    "approved_budget": "",
+    "vendor": "",
+    "final_cost": "",
+    "progress": 0,
+    "work_status": "",
+    "completion_date": "",
+    "status": "Active",
+    "history": [
+      {
+        "stage": "Observation Raised by GM/Management",
+        "action": "Observation Created",
+        "by": "admin",
+        "timestamp": "2026-03-08T14:53:49.399505",
+        "notes": "Kiran and Madhav, As you are aware the current CAM balance receivables is Rs 1.2 Cr. We cannot continue like this . Ideally it should never be above Rs 50 lakhs to run operations smoothly. Else, we are doing Vendor payments drawing on OD and paying interest. Please follow up on the payments diligently. Need funds immediately as we want to go ahead with painting etc"
+      },
+      {
+        "stage": "PM Review & Response",
+        "timestamp": "2026-03-08T15:16:44.039943",
+        "notes": "Advanced via dashboard"
+      },
+      {
+        "stage": "PM Review & Response",
+        "action": "PM Response Submitted",
+        "by": "admin",
+        "timestamp": "2026-03-08T23:39:08.585724",
+        "notes": "Noted Sir"
+      },
+      {
+        "stage": "Work In Progress",
+        "action": "GM/Mgmt Approved \u2014 Cost Implication: No",
+        "by": "admin",
+        "timestamp": "2026-03-08T23:40:50.296439",
+        "notes": ""
+      },
+      {
+        "stage": "Work In Progress",
+        "action": "GM/Mgmt Approved \u2014 Cost Implication: No",
+        "by": "admin",
+        "timestamp": "2026-03-08T23:40:53.399253",
+        "notes": ""
+      }
+    ],
+    "created_at": "2026-03-08T14:53:49.399505",
+    "updated_at": "2026-03-08T23:40:53.399253"
+  }
+]

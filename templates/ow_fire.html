@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OW Fire Fighting — ONEWEST</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════
+   ROOT — ONEWEST ULTRA THIN DARK NAVY THEME
+   (Distinct from SLN red — OW uses deep navy + fire accent)
+════════════════════════════════════════════════════ */
+:root{
+  --bg:        #06090f;
+  --bg2:       #0a0f1a;
+  --bg3:       #0e1520;
+  --panel:     #111a28;
+  --border:    #1a2a3d;
+  --border2:   #243650;
+  --fire:      #ff3d1f;
+  --fire2:     #ff6b3d;
+  --navy:      #1b4f72;
+  --navy2:     #2471a3;
+  --amber:     #f59e0b;
+  --gold:      #d4a843;
+  --gold2:     #ffd166;
+  --green:     #10b981;
+  --cyan:      #06b6d4;
+  --blue:      #3b82f6;
+  --purple:    #8b5cf6;
+  --red:       #ef4444;
+  --text:      #c5d8ee;
+  --text2:     #6a8faf;
+  --text3:     #3a5f80;
+  --mono:      'Share Tech Mono', monospace;
+  --head:      'Rajdhani', sans-serif;
+  --body:      'Exo 2', sans-serif;
+  --radius:    3px;
+  --sidebar-w: 222px;
+  --topbar-h:  46px;
+  --thin:      1px solid var(--border);
+  --glow-fire: 0 0 12px rgba(255,61,31,0.35);
+  --glow-gold: 0 0 10px rgba(212,168,67,0.4);
+  --glow-navy: 0 0 10px rgba(27,79,114,0.5);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:13px;overflow:hidden;height:100vh;display:flex;flex-direction:column}
+a{color:inherit;text-decoration:none}
+button{font-family:var(--body);cursor:pointer}
+input,select,textarea{font-family:var(--body)}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:var(--navy2)}
+
+/* ═══ TOPBAR ════════════════════════════════════════ */
+#topbar{
+  height:var(--topbar-h);background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 14px;gap:10px;z-index:200;flex-shrink:0;
+}
+#topbar .logo{
+  display:flex;align-items:center;gap:8px;
+  font-family:var(--head);font-weight:700;font-size:16px;letter-spacing:2px;
+  color:var(--fire);text-transform:uppercase;
+}
+#topbar .logo .fire-icon{font-size:18px;animation:ow-flicker 2.5s infinite}
+@keyframes ow-flicker{0%,100%{opacity:1}40%{opacity:.75}50%{opacity:.55}60%{opacity:.85}70%{opacity:.65}80%{opacity:1}}
+.module-label{
+  font-family:var(--head);font-size:11px;font-weight:500;
+  color:var(--text3);letter-spacing:3px;text-transform:uppercase;
+  border-left:var(--thin);padding-left:10px;
+}
+.ow-tag{
+  font-family:var(--mono);font-size:9px;letter-spacing:2px;
+  color:var(--navy2);background:rgba(27,79,114,0.15);
+  border:1px solid rgba(27,79,114,0.3);padding:2px 7px;border-radius:2px;
+}
+#topbar .spacer{flex:1}
+#live-clock{
+  font-family:var(--mono);font-size:11px;color:var(--cyan);
+  background:rgba(6,182,212,0.07);border:1px solid rgba(6,182,212,0.2);
+  padding:3px 9px;border-radius:var(--radius);letter-spacing:1px;
+}
+.theme-toggle{
+  background:var(--panel);border:var(--thin);color:var(--text2);
+  padding:4px 9px;border-radius:var(--radius);font-size:11px;transition:.2s;
+  display:flex;align-items:center;gap:4px;
+}
+.theme-toggle:hover{border-color:var(--amber);color:var(--amber)}
+.portal-btn{
+  font-family:var(--head);font-weight:700;font-size:12px;letter-spacing:2px;
+  background:transparent;border:1px solid var(--gold);color:var(--gold);
+  padding:4px 12px;border-radius:var(--radius);text-transform:uppercase;
+  animation:ow-pulse-gold 2s infinite;transition:.2s;
+}
+.portal-btn:hover{background:var(--gold);color:#000}
+@keyframes ow-pulse-gold{0%,100%{box-shadow:0 0 4px rgba(212,168,67,0.25)}50%{box-shadow:var(--glow-gold)}}
+#alarm-pulse{
+  width:8px;height:8px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 5px var(--green);animation:ow-heartbeat 2s infinite;display:none;
+}
+#alarm-pulse.active{display:block;background:var(--fire);box-shadow:var(--glow-fire);animation:ow-alarm-beat .5s infinite}
+@keyframes ow-alarm-beat{0%,100%{transform:scale(1)}50%{transform:scale(1.5);box-shadow:0 0 18px var(--fire)}}
+@keyframes ow-heartbeat{0%,100%{opacity:1}50%{opacity:.35}}
+#mob-menu-btn{display:none;background:none;border:none;color:var(--text2);font-size:18px;cursor:pointer;padding:4px 6px}
+
+/* ═══ LAYOUT ═════════════════════════════════════════ */
+#layout{display:flex;flex:1;overflow:hidden}
+
+/* ═══ SIDEBAR ════════════════════════════════════════ */
+#sidebar{
+  width:var(--sidebar-w);background:var(--bg2);border-right:var(--thin);
+  display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;transition:.3s;z-index:100;
+}
+#sidebar.collapsed{width:46px}
+#sidebar.collapsed .nav-label,#sidebar.collapsed .counter-badge,
+#sidebar.collapsed .sb-section{display:none}
+#sidebar.collapsed .nav-item{justify-content:center;padding:10px}
+#sidebar.collapsed .nav-item .nav-icon{margin:0}
+.sidebar-toggle{
+  padding:9px 12px;border-bottom:var(--thin);display:flex;align-items:center;
+  justify-content:flex-end;cursor:pointer;color:var(--text3);transition:.2s;
+}
+.sidebar-toggle:hover{color:var(--navy2)}
+.sidebar-toggle svg{width:16px;height:16px}
+.sb-section{
+  font-family:var(--head);font-size:9px;font-weight:700;letter-spacing:3px;
+  color:var(--text3);text-transform:uppercase;padding:10px 12px 4px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;
+  border-left:2px solid transparent;transition:.15s;color:var(--text2);
+}
+.nav-item:hover{background:rgba(255,61,31,0.06);color:var(--text);border-left-color:var(--fire2)}
+.nav-item.active{background:rgba(255,61,31,0.1);color:var(--fire2);border-left-color:var(--fire)}
+.nav-icon{font-size:15px;min-width:18px;text-align:center}
+.nav-label{font-family:var(--head);font-weight:500;font-size:13px;flex:1;white-space:nowrap}
+.counter-badge{
+  font-family:var(--mono);font-size:9px;
+  background:var(--fire);color:#fff;
+  padding:1px 5px;border-radius:10px;min-width:18px;text-align:center;
+}
+.counter-badge.warn{background:var(--amber)}
+.counter-badge.ok{background:var(--green)}
+.counter-badge.info{background:var(--cyan)}
+.counter-badge.navy{background:var(--navy)}
+.counter-badge.pulse{animation:ow-badge-pulse .9s infinite}
+@keyframes ow-badge-pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.sidebar-status{
+  margin-top:auto;padding:12px;border-top:var(--thin);
+  font-family:var(--mono);font-size:10px;color:var(--text3);
+}
+.status-row{display:flex;justify-content:space-between;margin-bottom:4px}
+.status-row span:last-child{color:var(--cyan)}
+
+/* ═══ CONTENT ════════════════════════════════════════ */
+#content{flex:1;overflow:auto;display:flex;flex-direction:column}
+.tab-pane{display:none;padding:14px;flex-direction:column;gap:12px;animation:ow-fadein .2s ease}
+.tab-pane.active{display:flex}
+@keyframes ow-fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ PANELS ═════════════════════════════════════════ */
+.panel{background:var(--panel);border:var(--thin);border-radius:var(--radius);overflow:hidden}
+.panel-head{
+  display:flex;align-items:center;gap:8px;padding:8px 12px;
+  border-bottom:var(--thin);background:rgba(255,255,255,0.018);
+}
+.panel-head h3{font-family:var(--head);font-weight:600;font-size:13px;letter-spacing:1px;color:var(--text);flex:1}
+.panel-body{padding:12px}
+
+/* ═══ KPI GRID ═══════════════════════════════════════ */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.kpi-card{
+  background:var(--panel);border:var(--thin);border-radius:var(--radius);
+  padding:10px 12px;cursor:pointer;transition:.15s;position:relative;overflow:hidden;
+}
+.kpi-card:hover{border-color:var(--fire2);transform:translateY(-1px)}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--kpi-accent,var(--fire))}
+.kpi-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text3);font-family:var(--head);font-weight:600}
+.kpi-value{font-family:var(--mono);font-size:24px;color:var(--kpi-accent,var(--fire));margin:4px 0 2px;line-height:1}
+.kpi-sub{font-size:9px;color:var(--text3)}
+
+/* ═══ TABLE ══════════════════════════════════════════ */
+.data-table{width:100%;border-collapse:collapse;font-size:12px}
+.data-table th{
+  font-family:var(--head);font-weight:600;font-size:10px;letter-spacing:2px;
+  color:var(--text3);text-transform:uppercase;padding:7px 10px;text-align:left;
+  border-bottom:var(--thin);white-space:nowrap;position:sticky;top:0;background:var(--panel);
+}
+.data-table td{
+  padding:7px 10px;border-bottom:1px solid rgba(26,42,61,0.5);
+  color:var(--text);vertical-align:middle;
+}
+.data-table tr:hover td{background:rgba(255,61,31,0.035)}
+.data-table tbody tr:last-child td{border-bottom:none}
+.tbl-wrap{overflow-x:auto;max-height:calc(100vh - 280px)}
+
+/* ═══ BADGES ═════════════════════════════════════════ */
+.badge{
+  display:inline-flex;align-items:center;gap:3px;
+  padding:2px 7px;border-radius:2px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.4px;white-space:nowrap;
+}
+.badge-active{background:rgba(16,185,129,0.14);color:var(--green);border:1px solid rgba(16,185,129,0.28)}
+.badge-faulty{background:rgba(239,68,68,0.14);color:var(--red);border:1px solid rgba(239,68,68,0.28)}
+.badge-expired{background:rgba(107,114,128,0.18);color:#6b7280;border:1px solid rgba(107,114,128,0.28)}
+.badge-fire{background:rgba(255,61,31,0.14);color:var(--fire2);border:1px solid rgba(255,61,31,0.28);animation:ow-badge-pulse .8s infinite}
+.badge-amber{background:rgba(245,158,11,0.14);color:var(--amber);border:1px solid rgba(245,158,11,0.28)}
+.badge-cyan{background:rgba(6,182,212,0.11);color:var(--cyan);border:1px solid rgba(6,182,212,0.22)}
+.badge-ok{background:rgba(16,185,129,0.11);color:var(--green);border:1px solid rgba(16,185,129,0.22)}
+.badge-blue{background:rgba(59,130,246,0.11);color:var(--blue);border:1px solid rgba(59,130,246,0.22)}
+.badge-navy{background:rgba(27,79,114,0.2);color:var(--navy2);border:1px solid rgba(27,79,114,0.35)}
+.badge-purple{background:rgba(139,92,246,0.11);color:var(--purple);border:1px solid rgba(139,92,246,0.22)}
+
+/* ═══ TOOLBAR ════════════════════════════════════════ */
+.toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.toolbar input[type=text],.toolbar select{
+  background:var(--bg3);border:var(--thin);color:var(--text);
+  padding:5px 9px;border-radius:var(--radius);font-size:12px;outline:none;transition:.15s;
+}
+.toolbar input[type=text]:focus,.toolbar select:focus{border-color:var(--fire);box-shadow:var(--glow-fire)}
+.toolbar .spacer{flex:1}
+.btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:var(--radius);
+  font-family:var(--head);font-weight:600;font-size:12px;letter-spacing:.5px;
+  border:1px solid;cursor:pointer;transition:.15s;white-space:nowrap;
+}
+.btn-fire{background:rgba(255,61,31,0.1);border-color:var(--fire);color:var(--fire2)}
+.btn-fire:hover{background:var(--fire);color:#fff;box-shadow:var(--glow-fire)}
+.btn-navy{background:rgba(27,79,114,0.15);border-color:var(--navy);color:var(--navy2)}
+.btn-navy:hover{background:var(--navy);color:#fff;box-shadow:var(--glow-navy)}
+.btn-ghost{background:transparent;border-color:var(--border2);color:var(--text2)}
+.btn-ghost:hover{border-color:var(--text);color:var(--text)}
+.btn-green{background:rgba(16,185,129,0.1);border-color:var(--green);color:var(--green)}
+.btn-green:hover{background:var(--green);color:#000}
+.btn-amber{background:rgba(245,158,11,0.1);border-color:var(--amber);color:var(--amber)}
+.btn-amber:hover{background:var(--amber);color:#000}
+.btn-sm{padding:3px 8px;font-size:11px}
+.btn-icon{padding:4px 7px}
+
+/* ═══ MODAL ══════════════════════════════════════════ */
+.modal-overlay{
+  display:none;position:fixed;inset:0;z-index:1000;
+  background:rgba(4,8,16,0.88);backdrop-filter:blur(4px);
+  align-items:center;justify-content:center;
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);
+  width:min(520px,95vw);max-height:90vh;overflow:hidden;
+  display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.75);
+}
+.modal-head{
+  display:flex;align-items:center;gap:8px;padding:12px 16px;
+  border-bottom:var(--thin);font-family:var(--head);font-weight:700;font-size:14px;letter-spacing:1px;
+}
+.modal-close{margin-left:auto;background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;transition:.15s;line-height:1}
+.modal-close:hover{color:var(--fire)}
+.modal-body{padding:16px;overflow-y:auto;flex:1}
+.modal-foot{padding:10px 16px;border-top:var(--thin);display:flex;gap:8px;justify-content:flex-end}
+.form-grid{display:grid;gap:10px}
+.form-grid.cols-2{grid-template-columns:1fr 1fr}
+.form-group label{
+  display:block;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--text3);font-family:var(--head);font-weight:600;margin-bottom:4px;
+}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;background:var(--bg3);border:var(--thin);color:var(--text);
+  padding:6px 9px;border-radius:var(--radius);font-size:12px;outline:none;transition:.15s;
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--fire);box-shadow:var(--glow-fire)}
+.form-group select option{background:var(--bg2)}
+.form-group textarea{resize:vertical;min-height:60px}
+.form-span-2{grid-column:span 2}
+
+/* ═══ OVERVIEW ELEMENTS ══════════════════════════════ */
+.alarm-ticker{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,61,31,0.07);border:1px solid rgba(255,61,31,0.22);
+  border-radius:var(--radius);padding:8px 12px;overflow:hidden;
+}
+.ticker-label{font-family:var(--head);font-size:10px;letter-spacing:2px;color:var(--fire);text-transform:uppercase;white-space:nowrap;font-weight:700}
+.ticker-content{font-family:var(--mono);font-size:11px;color:var(--fire2);flex:1;overflow:hidden;white-space:nowrap;animation:ow-scroll-x 16s linear infinite}
+@keyframes ow-scroll-x{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+.compliance-ring{position:relative;width:80px;height:80px;flex-shrink:0}
+.compliance-ring svg{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--border2);stroke-width:6}
+.ring-fg{fill:none;stroke:var(--green);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset 1s ease;stroke-dasharray:220;stroke-dashoffset:220}
+.ring-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;color:var(--green);flex-direction:column}
+.ring-text small{font-size:8px;color:var(--text3)}
+.zone-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:6px}
+.zone-card{background:var(--bg3);border:var(--thin);border-radius:var(--radius);padding:8px 10px;text-align:center;cursor:pointer;transition:.15s}
+.zone-card:hover{border-color:var(--navy2)}
+.zone-card.alarm{border-color:var(--fire);background:rgba(255,61,31,0.07);animation:ow-zone-pulse 1s infinite}
+.zone-card.clear{border-color:rgba(16,185,129,0.25)}
+@keyframes ow-zone-pulse{0%,100%{box-shadow:none}50%{box-shadow:var(--glow-fire)}}
+.zone-name{font-family:var(--head);font-size:11px;font-weight:600;color:var(--text);margin-bottom:4px}
+.zone-status{font-family:var(--mono);font-size:9px}
+.alarm-list{display:flex;flex-direction:column;gap:6px}
+.alarm-card{display:flex;align-items:center;gap:10px;background:var(--panel);border:var(--thin);border-radius:var(--radius);padding:9px 12px;transition:.15s}
+.alarm-card.critical{border-left:3px solid var(--fire);background:rgba(255,61,31,0.05)}
+.alarm-card.warning{border-left:3px solid var(--amber)}
+.alarm-card.info{border-left:3px solid var(--cyan)}
+.alarm-icon{font-size:18px;flex-shrink:0}
+.alarm-info{flex:1}
+.alarm-zone{font-family:var(--head);font-weight:600;font-size:13px;color:var(--text)}
+.alarm-meta{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:1px}
+.alarm-actions{display:flex;gap:5px}
+.checklist{display:flex;flex-direction:column;gap:5px}
+.check-item{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:var(--radius);background:var(--bg3);border:var(--thin);cursor:pointer;transition:.15s}
+.check-item:hover{border-color:var(--navy2)}
+.check-item input[type=checkbox]{accent-color:var(--fire);width:14px;height:14px}
+.check-item .check-label{flex:1;font-size:12px}
+.check-item .check-status{font-family:var(--mono);font-size:10px}
+.check-item.pass .check-status{color:var(--green)}
+.check-item.fail .check-status{color:var(--fire)}
+
+/* ═══ IO MODAL ═══════════════════════════════════════ */
+.io-tab-btn{
+  flex:1;padding:7px;font-family:var(--head);font-size:12px;font-weight:600;
+  border:none;background:var(--panel);color:var(--text2);cursor:pointer;letter-spacing:.5px;
+}
+.io-tab-btn.active{background:var(--fire);color:#fff}
+#upload-drop-zone{
+  border:2px dashed var(--border2);border-radius:var(--radius);
+  padding:24px;text-align:center;margin-top:10px;cursor:pointer;
+  transition:.2s;background:var(--bg3);
+}
+#upload-drop-zone:hover{border-color:var(--navy2)}
+
+/* ═══ MISC ═══════════════════════════════════════════ */
+.empty-state{text-align:center;padding:40px 20px;color:var(--text3);font-family:var(--head);font-size:12px;letter-spacing:1px}
+.empty-state .empty-icon{font-size:32px;margin-bottom:8px;opacity:.35}
+.row-actions{display:flex;gap:4px}
+.section-divider{display:flex;align-items:center;gap:8px;color:var(--text3);font-family:var(--head);font-size:10px;letter-spacing:2px;text-transform:uppercase;margin:4px 0}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.flex-row{display:flex;gap:10px;align-items:center}
+.flex-col{display:flex;flex-direction:column;gap:8px}
+.mt-8{margin-top:8px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.text-mono{font-family:var(--mono)}
+.text-fire{color:var(--fire2)}
+.text-green{color:var(--green)}
+.text-amber{color:var(--amber)}
+.text-cyan{color:var(--cyan)}
+.text-navy{color:var(--navy2)}
+.text-muted{color:var(--text3)}
+.fw700{font-weight:700}
+.fs-11{font-size:11px}
+.loading-dot::after{content:'...';animation:ow-dots 1.5s infinite}
+@keyframes ow-dots{0%{content:'.'}33%{content:'..'}66%{content:'...'}}
+.sev-critical{color:var(--fire);font-weight:700}
+.sev-high{color:var(--fire2)}
+.sev-medium{color:var(--amber)}
+.sev-low{color:var(--cyan)}
+#toast-container{position:fixed;bottom:16px;right:16px;z-index:2000;display:flex;flex-direction:column;gap:6px}
+.toast{
+  background:var(--panel);border:var(--thin);border-radius:var(--radius);
+  padding:10px 14px;font-size:12px;color:var(--text);
+  box-shadow:0 4px 20px rgba(0,0,0,.55);animation:ow-slideIn .25s ease;
+  max-width:280px;border-left:3px solid var(--fire);
+}
+.toast.success{border-left-color:var(--green)}
+.toast.warn{border-left-color:var(--amber)}
+@keyframes ow-slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* ═══ LIGHT THEME ════════════════════════════════════ */
+body.light{
+  --bg:#eff4fa;--bg2:#e4edf8;--bg3:#d8e6f4;
+  --panel:#fff;--border:#b8cfe8;--border2:#9ab8d4;
+  --text:#0d1b2a;--text2:#3a5f80;--text3:#6a8faf;
+}
+body.light .data-table th{background:var(--panel)}
+
+/* ═══ MOBILE ════════════════════════════════════════ */
+@media(max-width:768px){
+  #sidebar{position:fixed;top:var(--topbar-h);left:0;bottom:0;z-index:300;transform:translateX(-100%);transition:.25s ease}
+  #sidebar.mobile-open{transform:translateX(0)}
+  #sidebar.collapsed{width:222px}
+  #sidebar.collapsed .nav-label,#sidebar.collapsed .counter-badge,#sidebar.collapsed .sb-section{display:flex}
+  #sidebar.collapsed .nav-item{justify-content:flex-start;padding:8px 12px}
+  #sidebar.collapsed .nav-item .nav-icon{margin:0 8px 0 0}
+  #mob-overlay{display:none;position:fixed;inset:0;top:var(--topbar-h);z-index:299;background:rgba(0,0,0,.5)}
+  #mob-overlay.open{display:block}
+  #mob-menu-btn{display:flex}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .form-grid.cols-2{grid-template-columns:1fr}
+  .form-span-2{grid-column:span 1}
+  .tbl-wrap{max-height:calc(100vh - 200px)}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+}
+@media(min-width:769px){
+  #mob-menu-btn{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ TOPBAR ════════════════════════════ -->
+<div id="topbar">
+  <button id="mob-menu-btn" onclick="owFireToggleMobile()">☰</button>
+  <div class="logo">
+    <span class="fire-icon">🔥</span>
+    <span>OW</span>
+  </div>
+  <div class="module-label">Fire Fighting Command</div>
+  <div class="ow-tag">ONEWEST</div>
+  <div id="alarm-pulse" title="Active Alarms"></div>
+  <div class="spacer"></div>
+  <div id="live-clock">--:--:--</div>
+  <button class="theme-toggle" onclick="owFireToggleTheme()">🌙 <span id="theme-label">Dark</span></button>
+  <a href="/onewest" class="portal-btn">⬅ Portal</a>
+</div>
+
+<div id="mob-overlay" onclick="owFireCloseMobile()"></div>
+
+<!-- ═══════════════ LAYOUT ════════════════════════════ -->
+<div id="layout">
+
+<!-- ═══════════════ SIDEBAR ══════════════════════════ -->
+<div id="sidebar">
+  <div class="sidebar-toggle" onclick="owFireToggleSidebar()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/></svg>
+  </div>
+  <div class="sb-section">Navigation</div>
+  <div class="nav-item active" onclick="owFireShowTab('overview',this)">
+    <span class="nav-icon">🏠</span><span class="nav-label">Overview</span>
+  </div>
+  <div class="nav-item" onclick="owFireShowTab('alarms',this)">
+    <span class="nav-icon">🚨</span><span class="nav-label">Alarms</span>
+    <span class="counter-badge pulse" id="badge-alarms">0</span>
+  </div>
+  <div class="nav-item" onclick="owFireShowTab('equipment',this)">
+    <span class="nav-icon">🧯</span><span class="nav-label">Equipment</span>
+    <span class="counter-badge navy" id="badge-equipment">0</span>
+  </div>
+  <div class="nav-item" onclick="owFireShowTab('inspections',this)">
+    <span class="nav-icon">📋</span><span class="nav-label">Inspections</span>
+    <span class="counter-badge warn" id="badge-inspections">0</span>
+  </div>
+  <div class="nav-item" onclick="owFireShowTab('maintenance',this)">
+    <span class="nav-icon">🔧</span><span class="nav-label">Maintenance</span>
+    <span class="counter-badge warn" id="badge-maintenance">0</span>
+  </div>
+  <div class="nav-item" onclick="owFireShowTab('incidents',this)">
+    <span class="nav-icon">⚠️</span><span class="nav-label">Incidents</span>
+    <span class="counter-badge" id="badge-incidents">0</span>
+  </div>
+  <div class="nav-item" onclick="owFireShowTab('team',this)">
+    <span class="nav-icon">👥</span><span class="nav-label">Response Team</span>
+    <span class="counter-badge ok" id="badge-team">0</span>
+  </div>
+  <div class="nav-item" onclick="owFireShowTab('drills',this)">
+    <span class="nav-icon">🏃</span><span class="nav-label">Drills</span>
+    <span class="counter-badge info" id="badge-drills">0</span>
+  </div>
+  <div class="sb-section">Quick Tools</div>
+  <div class="nav-item" onclick="owFireOpenAlarmTrigger()">
+    <span class="nav-icon">🔔</span><span class="nav-label">Trigger Alarm</span>
+  </div>
+  <div class="nav-item" onclick="owFireOpenIO()">
+    <span class="nav-icon">📊</span><span class="nav-label">Export / Import</span>
+  </div>
+  <div class="sidebar-status">
+    <div class="status-row"><span>Property</span><span>ONEWEST</span></div>
+    <div class="status-row"><span>System</span><span id="ss-system">LIVE</span></div>
+    <div class="status-row"><span>Compliance</span><span id="ss-compliance">--%</span></div>
+    <div class="status-row"><span>Alarms</span><span id="ss-alarms">0</span></div>
+    <div class="status-row"><span>Refreshed</span><span id="ss-refresh">--</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════ CONTENT ═══════════════════════════ -->
+<div id="content">
+
+<!-- TAB: OVERVIEW -->
+<div id="tab-overview" class="tab-pane active">
+  <div class="alarm-ticker" id="alarm-ticker" style="display:none">
+    <span class="ticker-label">🚨 LIVE</span>
+    <span class="ticker-content" id="ticker-text"></span>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi-card" style="--kpi-accent:var(--fire)" onclick="owFireShowTab('alarms',null)">
+      <div class="kpi-label">Active Alarms</div>
+      <div class="kpi-value" id="kpi-alarms">0</div>
+      <div class="kpi-sub">click to view</div>
+    </div>
+    <div class="kpi-card" style="--kpi-accent:var(--navy2)" onclick="owFireShowTab('equipment',null)">
+      <div class="kpi-label">Equipment</div>
+      <div class="kpi-value" id="kpi-assets">0</div>
+      <div class="kpi-sub">total assets</div>
+    </div>
+    <div class="kpi-card" style="--kpi-accent:var(--red)" onclick="owFireShowTab('equipment',null);owFireFilterAssets('faulty')">
+      <div class="kpi-label">Faulty</div>
+      <div class="kpi-value" id="kpi-faulty">0</div>
+      <div class="kpi-sub">need attention</div>
+    </div>
+    <div class="kpi-card" style="--kpi-accent:var(--cyan)" onclick="owFireShowTab('maintenance',null)">
+      <div class="kpi-label">Pending PM</div>
+      <div class="kpi-value" id="kpi-maintenance">0</div>
+      <div class="kpi-sub">tasks</div>
+    </div>
+    <div class="kpi-card" style="--kpi-accent:var(--purple)" onclick="owFireShowTab('incidents',null)">
+      <div class="kpi-label">Open Incidents</div>
+      <div class="kpi-value" id="kpi-incidents">0</div>
+      <div class="kpi-sub">in progress</div>
+    </div>
+    <div class="kpi-card" style="--kpi-accent:var(--amber)" onclick="owFireShowTab('inspections',null)">
+      <div class="kpi-label">Failed Insp.</div>
+      <div class="kpi-value" id="kpi-failed-insp">0</div>
+      <div class="kpi-sub">require action</div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head"><span>⚡</span><h3>System Compliance</h3></div>
+      <div class="panel-body">
+        <div class="flex-row">
+          <div class="compliance-ring">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle class="ring-bg" cx="40" cy="40" r="35"/>
+              <circle class="ring-fg" id="compliance-ring" cx="40" cy="40" r="35"/>
+            </svg>
+            <div class="ring-text"><span id="compliance-pct">--%</span><small>COMPLIANCE</small></div>
+          </div>
+          <div class="flex-col" style="flex:1">
+            <div class="flex-row fs-11"><span class="text-muted">Active</span><span class="text-green fw700" id="ov-active">--</span></div>
+            <div class="flex-row fs-11"><span class="text-muted">Faulty</span><span class="text-fire fw700" id="ov-faulty">--</span></div>
+            <div class="flex-row fs-11"><span class="text-muted">Expired</span><span class="text-amber fw700" id="ov-expired">--</span></div>
+            <div class="flex-row fs-11"><span class="text-muted">Total</span><span class="fw700" id="ov-total">--</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><span>🗺️</span><h3>Zone Status — ONEWEST</h3></div>
+      <div class="panel-body">
+        <div class="zone-grid">
+          <div class="zone-card clear"><div class="zone-name">B1 Car Park</div><div class="zone-status text-green">● CLEAR</div></div>
+          <div class="zone-card clear"><div class="zone-name">GF Lobby</div><div class="zone-status text-green">● CLEAR</div></div>
+          <div class="zone-card clear"><div class="zone-name">Level 1</div><div class="zone-status text-green">● CLEAR</div></div>
+          <div class="zone-card clear"><div class="zone-name">Level 2</div><div class="zone-status text-green">● CLEAR</div></div>
+          <div class="zone-card clear"><div class="zone-name">Level 3</div><div class="zone-status text-green">● CLEAR</div></div>
+          <div class="zone-card clear"><div class="zone-name">Level 4</div><div class="zone-status text-green">● CLEAR</div></div>
+          <div class="zone-card clear"><div class="zone-name">Pump Room</div><div class="zone-status text-green">● CLEAR</div></div>
+          <div class="zone-card clear"><div class="zone-name">Server Room</div><div class="zone-status text-green">● CLEAR</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head"><span>🚨</span><h3>Recent Alarms</h3><button class="btn btn-fire btn-sm" onclick="owFireShowTab('alarms',null)">All</button></div>
+      <div class="panel-body" id="recent-alarms-list"><div class="empty-state"><div class="empty-icon">🔔</div>No recent alarms</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><span>⚠️</span><h3>Open Incidents</h3><button class="btn btn-fire btn-sm" onclick="owFireShowTab('incidents',null)">All</button></div>
+      <div class="panel-body" id="recent-incidents-list"><div class="empty-state"><div class="empty-icon">✅</div>No open incidents</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: ALARMS -->
+<div id="tab-alarms" class="tab-pane">
+  <div class="toolbar">
+    <select id="alarm-filter-status" onchange="owFireLoadAlarms()">
+      <option value="">All Status</option>
+      <option value="active">Active</option>
+      <option value="acknowledged">Acknowledged</option>
+      <option value="resolved">Resolved</option>
+      <option value="false_alarm">False Alarm</option>
+    </select>
+    <select id="alarm-filter-type" onchange="owFireLoadAlarms()">
+      <option value="">All Types</option>
+      <option value="smoke">Smoke</option>
+      <option value="heat">Heat</option>
+      <option value="manual">Manual</option>
+    </select>
+    <div class="spacer"></div>
+    <button class="btn btn-fire" onclick="owFireOpenModal('modal-alarm')">🚨 Log Alarm</button>
+    <button class="btn btn-ghost" onclick="owFireLoadAlarms()">↻ Refresh</button>
+  </div>
+  <div class="alarm-list" id="alarm-list-section"></div>
+</div>
+
+<!-- TAB: EQUIPMENT -->
+<div id="tab-equipment" class="tab-pane">
+  <div class="toolbar">
+    <input type="text" id="eq-search" placeholder="Search code, location…" oninput="owFireFilterEquipment()" style="width:180px">
+    <select id="eq-filter-type" onchange="owFireFilterEquipment()">
+      <option value="">All Types</option>
+      <option value="extinguisher">Extinguisher</option>
+      <option value="hydrant">Hydrant</option>
+      <option value="hose_reel">Hose Reel</option>
+      <option value="sprinkler">Sprinkler</option>
+      <option value="pump">Fire Pump</option>
+      <option value="panel">Fire Panel</option>
+    </select>
+    <select id="eq-filter-status" onchange="owFireFilterEquipment()">
+      <option value="">All Status</option>
+      <option value="active">Active</option>
+      <option value="faulty">Faulty</option>
+      <option value="expired">Expired</option>
+    </select>
+    <div class="spacer"></div>
+    <button class="btn btn-fire" onclick="owFireOpenModal('modal-asset')">＋ Add Asset</button>
+    <button class="btn btn-ghost btn-sm" onclick="owFireOpenIO('template')">📥 Template</button>
+    <button class="btn btn-ghost" onclick="owFireLoadAssets()">↻</button>
+  </div>
+  <div class="panel">
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Code</th><th>Type</th><th>Location/Zone</th><th>Capacity</th><th>Installed</th><th>Last Insp.</th><th>Next Due</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="assets-tbody"><tr><td colspan="9" class="empty-state">Loading<span class="loading-dot"></span></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: INSPECTIONS -->
+<div id="tab-inspections" class="tab-pane">
+  <div class="toolbar">
+    <select id="insp-filter-type" onchange="owFireLoadInspections()">
+      <option value="">All Types</option>
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+      <option value="monthly">Monthly</option>
+      <option value="annual">Annual</option>
+    </select>
+    <select id="insp-filter-status" onchange="owFireLoadInspections()">
+      <option value="">All Status</option>
+      <option value="ok">OK</option>
+      <option value="faulty">Faulty</option>
+    </select>
+    <div class="spacer"></div>
+    <button class="btn btn-fire" onclick="owFireOpenInspectionModal()">✔ New Inspection</button>
+    <button class="btn btn-ghost btn-sm" onclick="owFireOpenIO('template')">📥 Template</button>
+    <button class="btn btn-ghost" onclick="owFireLoadInspections()">↻</button>
+  </div>
+  <div class="panel">
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Date</th><th>Asset Code</th><th>Type</th><th>Location</th><th>Insp. Type</th><th>Inspected By</th><th>Status</th><th>Remarks</th></tr></thead>
+        <tbody id="insp-tbody"><tr><td colspan="8" class="empty-state">Loading<span class="loading-dot"></span></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: MAINTENANCE -->
+<div id="tab-maintenance" class="tab-pane">
+  <div class="toolbar">
+    <select id="maint-filter-status" onchange="owFireLoadMaintenance()">
+      <option value="">All Status</option>
+      <option value="Scheduled">Scheduled</option>
+      <option value="Overdue">Overdue</option>
+      <option value="Completed">Completed</option>
+      <option value="In Progress">In Progress</option>
+    </select>
+    <select id="maint-filter-type" onchange="owFireLoadMaintenance()">
+      <option value="">All Types</option>
+      <option value="PM">Preventive</option>
+      <option value="repair">Repair</option>
+    </select>
+    <div class="spacer"></div>
+    <button class="btn btn-fire" onclick="owFireOpenModal('modal-maint')">＋ Schedule Task</button>
+    <button class="btn btn-ghost btn-sm" onclick="owFireOpenIO('template')">📥 Template</button>
+    <button class="btn btn-ghost" onclick="owFireLoadMaintenance()">↻</button>
+  </div>
+  <div class="panel">
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Task Type</th><th>Asset Code</th><th>Description</th><th>Scheduled</th><th>Completed</th><th>Assigned To</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="maint-tbody"><tr><td colspan="8" class="empty-state">Loading<span class="loading-dot"></span></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: INCIDENTS -->
+<div id="tab-incidents" class="tab-pane">
+  <div class="toolbar">
+    <select id="inc-filter-sev" onchange="owFireLoadIncidents()">
+      <option value="">All Severity</option>
+      <option value="critical">Critical</option>
+      <option value="high">High</option>
+      <option value="medium">Medium</option>
+      <option value="low">Low</option>
+    </select>
+    <select id="inc-filter-status" onchange="owFireLoadIncidents()">
+      <option value="">All Status</option>
+      <option value="Open">Open</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Closed">Closed</option>
+    </select>
+    <div class="spacer"></div>
+    <button class="btn btn-fire" onclick="owFireOpenModal('modal-incident')">⚠ Log Incident</button>
+    <button class="btn btn-ghost btn-sm" onclick="owFireOpenIO('template')">📥 Template</button>
+    <button class="btn btn-ghost" onclick="owFireLoadIncidents()">↻</button>
+  </div>
+  <div class="panel">
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Date/Time</th><th>Zone</th><th>Severity</th><th>Description</th><th>Reported By</th><th>Evacuation</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="inc-tbody"><tr><td colspan="8" class="empty-state">Loading<span class="loading-dot"></span></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: TEAM -->
+<div id="tab-team" class="tab-pane">
+  <div class="toolbar">
+    <div class="spacer"></div>
+    <button class="btn btn-fire" onclick="owFireOpenModal('modal-team')">＋ Add Member</button>
+    <button class="btn btn-ghost" onclick="owFireLoadTeam()">↻</button>
+  </div>
+  <div class="panel">
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Name</th><th>Role</th><th>Zone</th><th>Contact</th><th>Actions</th></tr></thead>
+        <tbody id="team-tbody"><tr><td colspan="5" class="empty-state">Loading<span class="loading-dot"></span></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: DRILLS -->
+<div id="tab-drills" class="tab-pane">
+  <div class="toolbar">
+    <div class="spacer"></div>
+    <button class="btn btn-fire" onclick="owFireOpenModal('modal-drill')">＋ Schedule Drill</button>
+    <button class="btn btn-ghost btn-sm" onclick="owFireOpenIO('template')">📥 Template</button>
+    <button class="btn btn-ghost" onclick="owFireLoadDrills()">↻</button>
+  </div>
+  <div class="panel">
+    <div class="tbl-wrap">
+      <table class="data-table">
+        <thead><tr><th>Date</th><th>Type</th><th>Conducted By</th><th>Participants</th><th>Duration</th><th>Score</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="drills-tbody"><tr><td colspan="8" class="empty-state">Loading<span class="loading-dot"></span></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+</div><!-- /layout -->
+
+<!-- ═══════════════ MODALS ════════════════════════════ -->
+
+<!-- Alarm -->
+<div class="modal-overlay" id="modal-alarm">
+  <div class="modal">
+    <div class="modal-head"><span>🚨</span>Log Fire Alarm — ONEWEST<button class="modal-close" onclick="owFireCloseModal('modal-alarm')">✕</button></div>
+    <div class="modal-body"><div class="form-grid cols-2">
+      <div class="form-group"><label>Alarm Type</label><select id="a-type"><option value="smoke">Smoke</option><option value="heat">Heat</option><option value="manual">Manual (MCP)</option></select></div>
+      <div class="form-group"><label>Zone Name</label><input id="a-zone" placeholder="e.g. Level 3 East"/></div>
+      <div class="form-group"><label>Zone ID</label><input id="a-zone-id" placeholder="e.g. L3-E"/></div>
+      <div class="form-group"><label>Source Device</label><input id="a-device" placeholder="Device ID / Sensor"/></div>
+      <div class="form-group form-span-2"><label>Remarks</label><textarea id="a-remarks" rows="2"></textarea></div>
+    </div></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="owFireCloseModal('modal-alarm')">Cancel</button>
+      <button class="btn btn-fire" onclick="owFireSaveAlarm()">🚨 Trigger Alarm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Asset -->
+<div class="modal-overlay" id="modal-asset">
+  <div class="modal">
+    <div class="modal-head"><span>🧯</span>Add Fire Asset — ONEWEST<button class="modal-close" onclick="owFireCloseModal('modal-asset')">✕</button></div>
+    <div class="modal-body"><div class="form-grid cols-2">
+      <div class="form-group"><label>Asset Code</label><input id="eq-code" placeholder="e.g. OW-EXT-001"/></div>
+      <div class="form-group"><label>Asset Type</label><select id="eq-type"><option value="extinguisher">Extinguisher</option><option value="hydrant">Hydrant</option><option value="hose_reel">Hose Reel</option><option value="sprinkler">Sprinkler</option><option value="pump">Fire Pump</option><option value="panel">Fire Panel</option></select></div>
+      <div class="form-group"><label>Location</label><input id="eq-loc" placeholder="Building/Floor/Area"/></div>
+      <div class="form-group"><label>Zone ID</label><input id="eq-zone" placeholder="e.g. B1, GF, L1"/></div>
+      <div class="form-group"><label>Capacity/Size</label><input id="eq-cap" placeholder="e.g. 9kg, 4.5kg"/></div>
+      <div class="form-group"><label>Status</label><select id="eq-status"><option value="active">Active</option><option value="faulty">Faulty</option><option value="expired">Expired</option></select></div>
+      <div class="form-group"><label>Installation Date</label><input type="date" id="eq-install"/></div>
+      <div class="form-group"><label>Last Inspection</label><input type="date" id="eq-last-insp"/></div>
+      <div class="form-group"><label>Next Due Date</label><input type="date" id="eq-next-due"/></div>
+      <div class="form-group"><label>Remarks</label><input id="eq-remarks" placeholder="Optional notes"/></div>
+    </div></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="owFireCloseModal('modal-asset')">Cancel</button>
+      <button class="btn btn-fire" onclick="owFireSaveAsset()">Save Asset</button>
+    </div>
+  </div>
+</div>
+
+<!-- Inspection -->
+<div class="modal-overlay" id="modal-inspection">
+  <div class="modal">
+    <div class="modal-head"><span>📋</span>New Inspection — ONEWEST<button class="modal-close" onclick="owFireCloseModal('modal-inspection')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-grid cols-2">
+        <div class="form-group"><label>Asset Code</label><input id="insp-asset-code" placeholder="Asset Code"/></div>
+        <div class="form-group"><label>Asset Type</label><select id="insp-asset-type"><option value="extinguisher">Extinguisher</option><option value="hydrant">Hydrant</option><option value="hose_reel">Hose Reel</option><option value="sprinkler">Sprinkler</option><option value="pump">Pump</option><option value="panel">Panel</option></select></div>
+        <div class="form-group"><label>Location</label><input id="insp-loc" placeholder="Location"/></div>
+        <div class="form-group"><label>Inspection Type</label><select id="insp-type"><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="annual">Annual Certification</option></select></div>
+        <div class="form-group"><label>Inspected By</label><input id="insp-by" placeholder="Your name"/></div>
+        <div class="form-group"><label>Overall Status</label><select id="insp-status"><option value="ok">OK</option><option value="faulty">Faulty</option></select></div>
+      </div>
+      <div class="section-divider mt-8">Checklist</div>
+      <div class="checklist" id="modal-checklist"></div>
+      <div class="form-group mt-8"><label>Remarks</label><textarea id="insp-remarks" rows="2"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="owFireCloseModal('modal-inspection')">Cancel</button>
+      <button class="btn btn-fire" onclick="owFireSaveInspection()">Submit Inspection</button>
+    </div>
+  </div>
+</div>
+
+<!-- Maintenance -->
+<div class="modal-overlay" id="modal-maint">
+  <div class="modal">
+    <div class="modal-head"><span>🔧</span>Schedule Maintenance — ONEWEST<button class="modal-close" onclick="owFireCloseModal('modal-maint')">✕</button></div>
+    <div class="modal-body"><div class="form-grid cols-2">
+      <div class="form-group"><label>Asset Code</label><input id="m-code" placeholder="Asset Code"/></div>
+      <div class="form-group"><label>Asset Type</label><select id="m-atype"><option value="extinguisher">Extinguisher</option><option value="pump">Pump</option><option value="panel">Panel</option><option value="sprinkler">Sprinkler</option><option value="hydrant">Hydrant</option></select></div>
+      <div class="form-group"><label>Task Type</label><select id="m-type"><option value="PM">Preventive (PM)</option><option value="repair">Repair</option></select></div>
+      <div class="form-group"><label>Assigned To</label><input id="m-assign" placeholder="Technician name"/></div>
+      <div class="form-group"><label>Scheduled Date</label><input type="date" id="m-sched"/></div>
+      <div class="form-group"><label>Location</label><input id="m-loc" placeholder="Location"/></div>
+      <div class="form-group form-span-2"><label>Description</label><textarea id="m-desc" rows="2"></textarea></div>
+      <div class="form-group form-span-2"><label>Remarks</label><textarea id="m-remarks" rows="2"></textarea></div>
+    </div></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="owFireCloseModal('modal-maint')">Cancel</button>
+      <button class="btn btn-fire" onclick="owFireSaveMaintenance()">Schedule</button>
+    </div>
+  </div>
+</div>
+
+<!-- Incident -->
+<div class="modal-overlay" id="modal-incident">
+  <div class="modal">
+    <div class="modal-head"><span>⚠️</span>Log Incident — ONEWEST<button class="modal-close" onclick="owFireCloseModal('modal-incident')">✕</button></div>
+    <div class="modal-body"><div class="form-grid cols-2">
+      <div class="form-group"><label>Zone Name</label><input id="inc-zone" placeholder="Affected zone"/></div>
+      <div class="form-group"><label>Severity</label><select id="inc-sev"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option></select></div>
+      <div class="form-group"><label>Reported By</label><input id="inc-by" placeholder="Your name"/></div>
+      <div class="form-group"><label>Start Time</label><input type="datetime-local" id="inc-start"/></div>
+      <div class="form-group"><label>Evacuation?</label><select id="inc-evac"><option value="false">No</option><option value="true">Yes</option></select></div>
+      <div class="form-group"><label>Status</label><select id="inc-status"><option value="Open">Open</option><option value="In Progress">In Progress</option><option value="Closed">Closed</option></select></div>
+      <div class="form-group form-span-2"><label>Description</label><textarea id="inc-desc" rows="2"></textarea></div>
+      <div class="form-group form-span-2"><label>Actions Taken</label><textarea id="inc-actions" rows="2"></textarea></div>
+    </div></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="owFireCloseModal('modal-incident')">Cancel</button>
+      <button class="btn btn-fire" onclick="owFireSaveIncident()">Log Incident</button>
+    </div>
+  </div>
+</div>
+
+<!-- Team -->
+<div class="modal-overlay" id="modal-team">
+  <div class="modal">
+    <div class="modal-head"><span>👥</span>Add Team Member — ONEWEST<button class="modal-close" onclick="owFireCloseModal('modal-team')">✕</button></div>
+    <div class="modal-body"><div class="form-grid cols-2">
+      <div class="form-group form-span-2"><label>Full Name</label><input id="tm-name" placeholder="Name"/></div>
+      <div class="form-group"><label>Role</label><select id="tm-role"><option value="warden">Fire Warden</option><option value="responder">Responder</option><option value="first_aid">First Aid</option><option value="coordinator">Coordinator</option></select></div>
+      <div class="form-group"><label>Zone</label><input id="tm-zone" placeholder="Assigned zone"/></div>
+      <div class="form-group form-span-2"><label>Contact Number</label><input id="tm-contact" placeholder="+91 …"/></div>
+    </div></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="owFireCloseModal('modal-team')">Cancel</button>
+      <button class="btn btn-fire" onclick="owFireSaveTeamMember()">Add Member</button>
+    </div>
+  </div>
+</div>
+
+<!-- Drill -->
+<div class="modal-overlay" id="modal-drill">
+  <div class="modal">
+    <div class="modal-head"><span>🏃</span>Schedule Drill — ONEWEST<button class="modal-close" onclick="owFireCloseModal('modal-drill')">✕</button></div>
+    <div class="modal-body"><div class="form-grid cols-2">
+      <div class="form-group"><label>Date</label><input type="date" id="dr-date"/></div>
+      <div class="form-group"><label>Drill Type</label><select id="dr-type"><option value="evacuation">Evacuation</option><option value="fire_response">Fire Response</option><option value="first_aid">First Aid</option></select></div>
+      <div class="form-group"><label>Conducted By</label><input id="dr-by" placeholder="Name/Team"/></div>
+      <div class="form-group"><label>Expected Participants</label><input type="number" id="dr-participants" min="0"/></div>
+      <div class="form-group"><label>Duration (mins)</label><input id="dr-duration" placeholder="e.g. 30 mins"/></div>
+      <div class="form-group"><label>Score (0-100)</label><input type="number" id="dr-score" min="0" max="100" placeholder="After completion"/></div>
+      <div class="form-group"><label>Status</label><select id="dr-status"><option value="Scheduled">Scheduled</option><option value="Completed">Completed</option></select></div>
+      <div class="form-group"><label>Remarks</label><input id="dr-remarks" placeholder="Notes"/></div>
+    </div></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="owFireCloseModal('modal-drill')">Cancel</button>
+      <button class="btn btn-fire" onclick="owFireSaveDrill()">Save Drill</button>
+    </div>
+  </div>
+</div>
+
+<!-- IO: Export / Import / Template -->
+<div class="modal-overlay" id="modal-io">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-head"><span>📊</span>Data Import / Export — ONEWEST<button class="modal-close" onclick="owFireCloseModal('modal-io')">✕</button></div>
+    <div class="modal-body">
+      <div style="display:flex;gap:0;margin-bottom:14px;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+        <button class="io-tab-btn active" id="io-tab-export" onclick="owFireSwitchIOTab('export')">📤 Export PDF</button>
+        <button class="io-tab-btn" id="io-tab-template" onclick="owFireSwitchIOTab('template')">📥 Template</button>
+        <button class="io-tab-btn" id="io-tab-upload" onclick="owFireSwitchIOTab('upload')">⬆ Upload</button>
+      </div>
+      <!-- Export PDF -->
+      <div id="io-panel-export">
+        <div class="form-grid">
+          <div class="form-group"><label>Module to Export</label>
+            <select id="io-export-module"><option value="assets">Equipment</option><option value="alarms">Alarms</option><option value="inspections">Inspections</option><option value="maintenance">Maintenance</option><option value="incidents">Incidents</option><option value="drills">Drills</option></select></div>
+          <div class="form-group"><label>Report Title (optional)</label><input id="io-pdf-title" placeholder="e.g. Monthly Fire Safety Report — ONEWEST"/></div>
+          <div class="form-group"><label>Prepared By</label><input id="io-pdf-by" placeholder="Name / Designation"/></div>
+        </div>
+        <p style="font-size:10px;color:var(--text3);margin-top:8px">Exports live data as a print-ready PDF compliance report with ONEWEST branding.</p>
+      </div>
+      <!-- Template -->
+      <div id="io-panel-template" style="display:none">
+        <p style="font-size:12px;color:var(--text2);margin-bottom:10px">Download the <strong>ONEWEST Master Fire Template</strong> — 8-sheet workbook with dropdowns and sample data.</p>
+        <div style="background:var(--bg3);border:var(--thin);border-radius:var(--radius);padding:10px;font-size:11px;color:var(--text2)">
+          <div style="margin-bottom:3px">🧯 Equipment Register (12 cols)</div>
+          <div style="margin-bottom:3px">🚨 Alarm Log (11 cols)</div>
+          <div style="margin-bottom:3px">✅ Inspections + Checklist (14 cols)</div>
+          <div style="margin-bottom:3px">🔧 Maintenance Schedule (12 cols)</div>
+          <div style="margin-bottom:3px">⚠️ Incident Register (13 cols)</div>
+          <div style="margin-bottom:3px">👥 Response Team (9 cols)</div>
+          <div>🏃 Drills Log (11 cols)</div>
+        </div>
+      </div>
+      <!-- Upload -->
+      <div id="io-panel-upload" style="display:none">
+        <div class="form-grid">
+          <div class="form-group"><label>Import Into Module</label>
+            <select id="io-upload-module"><option value="assets">Equipment</option><option value="alarms">Alarms</option><option value="inspections">Inspections</option><option value="maintenance">Maintenance</option><option value="incidents">Incidents</option><option value="drills">Drills</option></select></div>
+        </div>
+        <div id="upload-drop-zone"
+          onclick="document.getElementById('io-file-input').click()"
+          ondragover="event.preventDefault();this.style.borderColor='var(--fire)'"
+          ondragleave="this.style.borderColor='var(--border2)'"
+          ondrop="owFireHandleDrop(event)">
+          <div style="font-size:28px;margin-bottom:6px">📂</div>
+          <div style="font-family:var(--head);font-size:13px;color:var(--text);font-weight:600">Drop .xlsx or .csv here</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:4px">or click to browse — max 5MB</div>
+          <input type="file" id="io-file-input" accept=".xlsx,.csv" style="display:none" onchange="owFireHandleFileSelect(event)"/>
+        </div>
+        <div id="io-upload-preview" style="display:none;margin-top:10px">
+          <div style="font-family:var(--head);font-size:11px;color:var(--green);font-weight:600;margin-bottom:6px" id="io-upload-filename">File ready</div>
+          <div style="max-height:140px;overflow:auto;border:var(--thin);border-radius:var(--radius)">
+            <table class="data-table" id="io-preview-table"><thead></thead><tbody></tbody></table>
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-top:5px" id="io-upload-count"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="owFireCloseModal('modal-io')">Cancel</button>
+      <button class="btn btn-fire" id="io-action-btn" onclick="owFireIOAction()">📄 Export PDF</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- ═══════════════ JAVASCRIPT ════════════════════════ -->
+<script>
+/* ── Config ── */
+const OW_FIRE_BASE = '/ow_fire';
+const OW_FIRE_CHECKLISTS = {
+  extinguisher:['Pressure gauge in green zone','Safety seal intact','No corrosion/damage','Accessible & unobstructed','Label/tag legible','Within expiry date'],
+  hydrant:     ['Valve operates freely','Hose in good condition','Water pressure adequate','No leaks at connections','Access unobstructed'],
+  hose_reel:   ['Hose unrolls freely','Nozzle working','Water flow adequate','Cabinet accessible','No kinks or cracks'],
+  sprinkler:   ['Heads unobstructed','No corrosion','Water supply open','Alarm valve functional','System pressure OK'],
+  pump:        ['Pump auto-start functional','Diesel level adequate','Control panel OK','Pressure readings normal','Coupling in good condition'],
+  panel:       ['No fault indicators','Battery backup charged','All zones reporting','Alarm sounder working','Event log checked'],
+};
+
+/* ── State ── */
+let _owFireAssets=[], _owFireAlarms=[], _owFireInsp=[], _owFireMaint=[], _owFireInc=[], _owFireTeam=[], _owFireDrills=[];
+let _owFireSidebarCollapsed=false;
+let _owFireTheme = localStorage.getItem('ow_fire_theme')||'dark';
+let _owFireIOTab='export';
+let _owUploadedRows=[], _owUploadedCols=[];
+
+/* ── Init ── */
+document.addEventListener('DOMContentLoaded',()=>{
+  owFireApplyTheme(_owFireTheme);
+  owFireStartClock();
+  owFireRefreshAll();
+  setInterval(owFireRefreshAll,60000);
+  const today=new Date().toISOString().split('T')[0];
+  ['eq-install','eq-last-insp','m-sched','dr-date'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=today;});
+  document.getElementById('inc-start').value=new Date().toISOString().slice(0,16);
+  // insp type change → rebuild checklist
+  document.addEventListener('change',e=>{ if(e.target.id==='insp-asset-type') owFireBuildChecklist(e.target.value); });
+});
+
+/* ── Clock ── */
+function owFireStartClock(){
+  const el=document.getElementById('live-clock');
+  function tick(){ el.textContent=new Date().toLocaleTimeString('en-IN',{hour12:false})+' IST'; }
+  tick(); setInterval(tick,1000);
+}
+
+/* ── Theme ── */
+function owFireToggleTheme(){
+  _owFireTheme=_owFireTheme==='dark'?'light':'dark';
+  localStorage.setItem('ow_fire_theme',_owFireTheme);
+  owFireApplyTheme(_owFireTheme);
+}
+function owFireApplyTheme(t){
+  document.body.classList.toggle('light',t==='light');
+  document.getElementById('theme-label').textContent=t==='dark'?'Dark':'Light';
+}
+
+/* ── Sidebar ── */
+function owFireToggleSidebar(){
+  _owFireSidebarCollapsed=!_owFireSidebarCollapsed;
+  const sb=document.getElementById('sidebar');
+  sb.classList.toggle('collapsed',_owFireSidebarCollapsed);
+  const svg=sb.querySelector('.sidebar-toggle svg');
+  svg.innerHTML=_owFireSidebarCollapsed?'<path d="M13 5l7 7-7 7M6 5l7 7-7 7"/>':'<path d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/>';
+}
+function owFireToggleMobile(){
+  document.getElementById('sidebar').classList.toggle('mobile-open');
+  document.getElementById('mob-overlay').classList.toggle('open');
+}
+function owFireCloseMobile(){
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('mob-overlay').classList.remove('open');
+}
+
+/* ── Tab nav ── */
+function owFireShowTab(name,el){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const pane=document.getElementById('tab-'+name);
+  if(pane)pane.classList.add('active');
+  if(el)el.classList.add('active');
+  const loaders={alarms:owFireLoadAlarms,equipment:owFireLoadAssets,inspections:owFireLoadInspections,maintenance:owFireLoadMaintenance,incidents:owFireLoadIncidents,team:owFireLoadTeam,drills:owFireLoadDrills};
+  if(loaders[name])loaders[name]();
+  owFireCloseMobile();
+}
+
+/* ── API ── */
+async function owFireAPI(path,method='GET',body=null){
+  const opts={method,headers:{'Content-Type':'application/json','X-Requested-With':'XMLHttpRequest'},credentials:'same-origin'};
+  if(body)opts.body=JSON.stringify(body);
+  let r;
+  try{r=await fetch(OW_FIRE_BASE+path,opts);}catch(e){throw new Error('Network error: '+e.message);}
+  const ct=r.headers.get('content-type')||'';
+  if(!ct.includes('application/json')){
+    if(r.status===401||r.redirected||r.url.includes('/login')){
+      owFireToast('Session expired — please log in again','warn');
+      setTimeout(()=>{window.location.href='/login';},1500);
+      throw new Error('Unauthenticated');
+    }
+    const text=await r.text();
+    try{return JSON.parse(text);}catch(_){console.warn('Non-JSON from',path);return Array.isArray(body)?[]:{};};
+  }
+  if(!r.ok){const err=await r.json().catch(()=>({}));throw new Error(err.error||`HTTP ${r.status}`);}
+  return r.json();
+}
+
+/* ── Refresh all ── */
+async function owFireRefreshAll(){
+  try{const d=await owFireAPI('/api/dashboard');if(d&&typeof d==='object'&&!Array.isArray(d))owFireUpdateDashboard(d);}
+  catch(e){console.warn('OW Fire dashboard error:',e.message);}
+  owFireLoadAlarms(); owFireLoadAssets();
+}
+
+/* ── Dashboard ── */
+function owFireUpdateDashboard(d){
+  owFireSetKPI('kpi-alarms',d.active_alarms);
+  owFireSetKPI('kpi-assets',d.total_assets);
+  owFireSetKPI('kpi-faulty',d.faulty_assets);
+  owFireSetKPI('kpi-maintenance',d.pending_maint);
+  owFireSetKPI('kpi-incidents',d.open_incidents);
+  owFireSetKPI('kpi-failed-insp',d.failed_inspections);
+  owFireSetBadge('badge-alarms',d.active_alarms,d.active_alarms>0?'pulse':'ok');
+  owFireSetBadge('badge-equipment',d.total_assets,'navy');
+  owFireSetBadge('badge-maintenance',d.pending_maint,'warn');
+  owFireSetBadge('badge-incidents',d.open_incidents,d.open_incidents>0?'':'ok');
+  owFireSetBadge('badge-inspections',d.failed_inspections,'warn');
+  const pct=d.compliance_pct||0;
+  owFireSetText('compliance-pct',pct+'%');
+  owFireSetText('ss-compliance',pct+'%');
+  owFireSetText('ss-alarms',d.active_alarms);
+  owFireSetText('ss-refresh',new Date().toLocaleTimeString('en-IN',{hour12:false}));
+  owFireSetText('ov-active',d.active_assets);
+  owFireSetText('ov-faulty',d.faulty_assets);
+  owFireSetText('ov-expired',d.expired_assets);
+  owFireSetText('ov-total',d.total_assets);
+  const ring=document.getElementById('compliance-ring');
+  const circ=2*Math.PI*35;
+  ring.style.strokeDasharray=circ;
+  ring.style.strokeDashoffset=circ-(circ*pct/100);
+  ring.style.stroke=pct>=80?'var(--green)':pct>=60?'var(--amber)':'var(--fire)';
+  const pulse=document.getElementById('alarm-pulse');
+  if(d.active_alarms>0){
+    pulse.classList.add('active');
+    const ticker=document.getElementById('alarm-ticker');
+    document.getElementById('ticker-text').textContent=d.active_alarms+' ACTIVE FIRE ALARM(S) — IMMEDIATE RESPONSE REQUIRED — ONEWEST';
+    ticker.style.display='flex';
+  }else{
+    pulse.classList.remove('active');
+    document.getElementById('alarm-ticker').style.display='none';
+  }
+}
+function owFireSetKPI(id,v){const el=document.getElementById(id);if(el)el.textContent=v??'--';}
+function owFireSetBadge(id,v,cls){const el=document.getElementById(id);if(!el)return;el.textContent=v;el.className='counter-badge '+(cls||'');}
+function owFireSetText(id,v){const el=document.getElementById(id);if(el)el.textContent=v??'--';}
+
+/* ── ALARMS ── */
+async function owFireLoadAlarms(){
+  const status=document.getElementById('alarm-filter-status')?.value||'';
+  const type=document.getElementById('alarm-filter-type')?.value||'';
+  try{
+    let data=await owFireAPI('/api/alarms');
+    _owFireAlarms=data;
+    let f=data;
+    if(status)f=f.filter(a=>a.status===status);
+    if(type)f=f.filter(a=>a.alarm_type===type);
+    const list=document.getElementById('alarm-list-section');
+    if(!list)return;
+    if(!f.length){list.innerHTML='<div class="empty-state"><div class="empty-icon">🔔</div>No alarms found</div>';return;}
+    list.innerHTML=f.map(a=>`
+      <div class="alarm-card ${a.status==='active'?'critical':a.status==='acknowledged'?'warning':'info'}">
+        <span class="alarm-icon">${a.alarm_type==='smoke'?'💨':a.alarm_type==='heat'?'🌡️':'🔴'}</span>
+        <div class="alarm-info">
+          <div class="alarm-zone">${owFireEsc(a.zone_name||'Unknown Zone')} <span class="text-muted fs-11">· ${owFireEsc((a.alarm_type||'').toUpperCase())}</span></div>
+          <div class="alarm-meta">${owFireFmtDt(a.triggered_at)} · ${a.source_device_id||'—'} · ${a.remarks||''}</div>
+        </div>
+        ${owFireStatusBadge(a.status)}
+        <div class="alarm-actions">
+          ${a.status==='active'?`<button class="btn btn-amber btn-sm" onclick="owFireAckAlarm('${a.id}')">Acknowledge</button>`:''}
+          ${!['resolved','false_alarm'].includes(a.status)?`<button class="btn btn-green btn-sm" onclick="owFireResolveAlarm('${a.id}')">Resolve</button>`:''}
+        </div>
+      </div>`).join('');
+    // Recent for overview
+    const recent=document.getElementById('recent-alarms-list');
+    if(recent){
+      const top=data.slice(0,5);
+      if(!top.length){recent.innerHTML='<div class="empty-state"><div class="empty-icon">🔔</div>No alarms</div>';}
+      else recent.innerHTML=top.map(a=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border)">
+        <span>${a.alarm_type==='smoke'?'💨':a.alarm_type==='heat'?'🌡️':'🔴'}</span>
+        <div style="flex:1"><div class="fs-11 fw700">${owFireEsc(a.zone_name||'—')}</div><div class="text-mono text-muted" style="font-size:10px">${owFireFmtDt(a.triggered_at)}</div></div>
+        ${owFireStatusBadge(a.status)}</div>`).join('');
+    }
+  }catch(e){console.error(e);}
+}
+async function owFireAckAlarm(id){
+  await owFireAPI(`/api/alarms/${id}/acknowledge`,'PATCH',{acknowledged_by:'Supervisor'});
+  owFireToast('Alarm acknowledged'); owFireLoadAlarms(); owFireRefreshAll();
+}
+async function owFireResolveAlarm(id){
+  const s=prompt('Resolve as: resolved / false_alarm','resolved');
+  if(!s)return;
+  await owFireAPI(`/api/alarms/${id}/resolve`,'PATCH',{status:s});
+  owFireToast('Alarm resolved','success'); owFireLoadAlarms(); owFireRefreshAll();
+}
+async function owFireSaveAlarm(){
+  await owFireAPI('/api/alarms/trigger','POST',{alarm_type:owFireVal('a-type'),zone_name:owFireVal('a-zone'),zone_id:owFireVal('a-zone-id'),source_device_id:owFireVal('a-device'),remarks:owFireVal('a-remarks')});
+  owFireCloseModal('modal-alarm');
+  owFireClearFields(['a-zone','a-zone-id','a-device','a-remarks']);
+  owFireToast('Alarm triggered!'); owFireLoadAlarms(); owFireRefreshAll();
+}
+
+/* ── ASSETS ── */
+async function owFireLoadAssets(){
+  try{
+    const data=await owFireAPI('/api/assets');
+    _owFireAssets=data;
+    owFireSetBadge('badge-equipment',data.length,'navy');
+    owFireRenderAssets(data);
+  }catch(e){console.error(e);}
+}
+function owFireFilterEquipment(){
+  const q=(document.getElementById('eq-search')?.value||'').toLowerCase();
+  const type=document.getElementById('eq-filter-type')?.value||'';
+  const status=document.getElementById('eq-filter-status')?.value||'';
+  let f=_owFireAssets;
+  if(q)f=f.filter(a=>(a.asset_code+a.location+a.zone_id).toLowerCase().includes(q));
+  if(type)f=f.filter(a=>a.asset_type===type);
+  if(status)f=f.filter(a=>a.status===status);
+  owFireRenderAssets(f);
+}
+function owFireFilterAssets(status){
+  owFireShowTab('equipment',null);
+  const el=document.getElementById('eq-filter-status');
+  if(el)el.value=status;
+  owFireFilterEquipment();
+}
+function owFireRenderAssets(data){
+  const tbody=document.getElementById('assets-tbody');
+  if(!tbody)return;
+  if(!data.length){tbody.innerHTML='<tr><td colspan="9"><div class="empty-state"><div class="empty-icon">🧯</div>No assets found</div></td></tr>';return;}
+  const ti={extinguisher:'🧯',hydrant:'🚒',hose_reel:'🌀',sprinkler:'💧',pump:'⚙️',panel:'🖥️'};
+  tbody.innerHTML=data.map(a=>`<tr>
+    <td class="text-mono">${owFireEsc(a.asset_code||'—')}</td>
+    <td>${ti[a.asset_type]||'📦'} ${owFireCap(a.asset_type||'')}</td>
+    <td>${owFireEsc(a.location||a.zone_id||'—')}</td>
+    <td class="text-mono">${owFireEsc(a.capacity||'—')}</td>
+    <td class="text-mono">${owFireFmtDate(a.installation_date)}</td>
+    <td class="text-mono">${owFireFmtDate(a.last_inspection_date)}</td>
+    <td class="text-mono ${owFireIsDue(a.next_due_date)?'text-fire':''}">${owFireFmtDate(a.next_due_date)}</td>
+    <td>${owFireAssetBadge(a.status)}</td>
+    <td><div class="row-actions">
+      <button class="btn btn-ghost btn-icon btn-sm" onclick="owFireInspectAsset('${a.id}','${owFireEsc(a.asset_code)}','${a.asset_type}','${owFireEsc(a.location)}')" title="Inspect">📋</button>
+      <button class="btn btn-amber btn-icon btn-sm" onclick="owFireEditAssetStatus('${a.id}')" title="Status">✏️</button>
+      <button class="btn btn-ghost btn-icon btn-sm" onclick="owFireDeleteAsset('${a.id}')" title="Delete">🗑</button>
+    </div></td></tr>`).join('');
+}
+function owFireIsDue(d){return d&&d<new Date().toISOString().split('T')[0];}
+function owFireInspectAsset(id,code,type,loc){
+  document.getElementById('insp-asset-code').value=code;
+  document.getElementById('insp-asset-type').value=type;
+  document.getElementById('insp-loc').value=loc;
+  owFireBuildChecklist(type);
+  owFireOpenModal('modal-inspection');
+  document.getElementById('modal-inspection').dataset.assetId=id;
+}
+function owFireEditAssetStatus(id){
+  const a=_owFireAssets.find(x=>x.id===id);if(!a)return;
+  const ns=prompt('New status (active/faulty/expired):',a.status);if(!ns)return;
+  owFireAPI(`/api/assets/${id}`,'PATCH',{status:ns}).then(()=>{owFireToast('Updated','success');owFireLoadAssets();owFireRefreshAll();});
+}
+async function owFireDeleteAsset(id){
+  if(!confirm('Delete this asset?'))return;
+  await owFireAPI(`/api/assets/${id}`,'DELETE');
+  owFireToast('Deleted'); owFireLoadAssets(); owFireRefreshAll();
+}
+async function owFireSaveAsset(){
+  const body={asset_code:owFireVal('eq-code'),asset_type:owFireVal('eq-type'),location:owFireVal('eq-loc'),zone_id:owFireVal('eq-zone'),capacity:owFireVal('eq-cap'),status:owFireVal('eq-status'),installation_date:owFireVal('eq-install'),last_inspection_date:owFireVal('eq-last-insp'),next_due_date:owFireVal('eq-next-due'),remarks:owFireVal('eq-remarks')};
+  await owFireAPI('/api/assets','POST',body);
+  owFireCloseModal('modal-asset');
+  owFireClearFields(['eq-code','eq-loc','eq-zone','eq-cap','eq-remarks']);
+  owFireToast('Asset added','success'); owFireLoadAssets(); owFireRefreshAll();
+}
+
+/* ── INSPECTIONS ── */
+function owFireBuildChecklist(type){
+  const items=OW_FIRE_CHECKLISTS[type]||OW_FIRE_CHECKLISTS.extinguisher;
+  document.getElementById('modal-checklist').innerHTML=items.map((item,i)=>`
+    <div class="check-item" id="ow-ci-${i}">
+      <input type="checkbox" id="ow-chk-${i}" onchange="owFireUpdateCheckItem(${i})">
+      <span class="check-label">${item}</span>
+      <span class="check-status" id="ow-cs-${i}">—</span>
+    </div>`).join('');
+}
+function owFireUpdateCheckItem(i){
+  const checked=document.getElementById('ow-chk-'+i).checked;
+  document.getElementById('ow-ci-'+i).classList.toggle('pass',checked);
+  document.getElementById('ow-ci-'+i).classList.toggle('fail',!checked);
+  document.getElementById('ow-cs-'+i).textContent=checked?'PASS':'FAIL';
+}
+function owFireOpenInspectionModal(){
+  owFireBuildChecklist('extinguisher');
+  owFireOpenModal('modal-inspection');
+  document.getElementById('modal-inspection').dataset.assetId='';
+}
+async function owFireSaveInspection(){
+  const checklist=[];
+  document.querySelectorAll('.check-item').forEach((ci,i)=>{
+    const chk=document.getElementById('ow-chk-'+i);
+    if(chk)checklist.push({item:ci.querySelector('.check-label').textContent,status:chk.checked?'pass':'fail'});
+  });
+  const body={asset_id:document.getElementById('modal-inspection').dataset.assetId||'',asset_code:owFireVal('insp-asset-code'),asset_type:owFireVal('insp-asset-type'),location:owFireVal('insp-loc'),inspected_by:owFireVal('insp-by'),inspection_type:owFireVal('insp-type'),status:owFireVal('insp-status'),checklist,remarks:owFireVal('insp-remarks')};
+  await owFireAPI('/api/inspections','POST',body);
+  owFireCloseModal('modal-inspection');
+  owFireToast('Inspection saved','success'); owFireLoadInspections(); owFireRefreshAll();
+}
+async function owFireLoadInspections(){
+  const type=document.getElementById('insp-filter-type')?.value||'';
+  const status=document.getElementById('insp-filter-status')?.value||'';
+  try{
+    let data=await owFireAPI('/api/inspections');
+    _owFireInsp=data;
+    if(type)data=data.filter(i=>i.inspection_type===type);
+    if(status)data=data.filter(i=>i.status===status);
+    owFireSetBadge('badge-inspections',_owFireInsp.filter(i=>i.status==='faulty').length,'warn');
+    const tbody=document.getElementById('insp-tbody');
+    if(!tbody)return;
+    if(!data.length){tbody.innerHTML='<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">📋</div>No inspections found</div></td></tr>';return;}
+    tbody.innerHTML=data.map(i=>`<tr>
+      <td class="text-mono">${owFireFmtDt(i.created_at)}</td>
+      <td class="text-mono">${owFireEsc(i.asset_code||'—')}</td>
+      <td>${owFireCap(i.asset_type||'—')}</td>
+      <td>${owFireEsc(i.location||'—')}</td>
+      <td><span class="badge badge-cyan">${owFireCap(i.inspection_type||'—')}</span></td>
+      <td>${owFireEsc(i.inspected_by||'—')}</td>
+      <td>${i.status==='ok'?'<span class="badge badge-ok">✔ OK</span>':'<span class="badge badge-faulty">✘ Faulty</span>'}</td>
+      <td class="text-muted">${owFireEsc(i.remarks||'—')}</td></tr>`).join('');
+  }catch(e){console.error(e);}
+}
+
+/* ── MAINTENANCE ── */
+async function owFireLoadMaintenance(){
+  const status=document.getElementById('maint-filter-status')?.value||'';
+  const type=document.getElementById('maint-filter-type')?.value||'';
+  try{
+    let data=await owFireAPI('/api/maintenance');
+    _owFireMaint=data;
+    if(status)data=data.filter(t=>t.status===status);
+    if(type)data=data.filter(t=>t.task_type===type);
+    owFireSetBadge('badge-maintenance',_owFireMaint.filter(t=>['Scheduled','Overdue'].includes(t.status)).length,'warn');
+    const tbody=document.getElementById('maint-tbody');
+    if(!tbody)return;
+    if(!data.length){tbody.innerHTML='<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">🔧</div>No tasks found</div></td></tr>';return;}
+    tbody.innerHTML=data.map(t=>`<tr>
+      <td><span class="badge ${t.task_type==='PM'?'badge-cyan':'badge-amber'}">${t.task_type}</span></td>
+      <td class="text-mono">${owFireEsc(t.asset_code||'—')}</td>
+      <td>${owFireEsc(t.description||'—')}</td>
+      <td class="text-mono ${owFireIsDue(t.scheduled_date)?'text-fire':''}">${owFireFmtDate(t.scheduled_date)}</td>
+      <td class="text-mono">${owFireFmtDate(t.completed_date)||'—'}</td>
+      <td>${owFireEsc(t.assigned_to||'—')}</td>
+      <td>${owFireMaintBadge(t.status)}</td>
+      <td><button class="btn btn-green btn-sm" onclick="owFireCompleteMaint('${t.id}')">✔ Done</button></td></tr>`).join('');
+  }catch(e){console.error(e);}
+}
+async function owFireCompleteMaint(id){
+  const today=new Date().toISOString().split('T')[0];
+  await owFireAPI(`/api/maintenance/${id}`,'PATCH',{status:'Completed',completed_date:today});
+  owFireToast('Task completed','success'); owFireLoadMaintenance();
+}
+async function owFireSaveMaintenance(){
+  const body={asset_code:owFireVal('m-code'),asset_type:owFireVal('m-atype'),task_type:owFireVal('m-type'),description:owFireVal('m-desc'),scheduled_date:owFireVal('m-sched'),assigned_to:owFireVal('m-assign'),location:owFireVal('m-loc'),remarks:owFireVal('m-remarks'),status:'Scheduled'};
+  await owFireAPI('/api/maintenance','POST',body);
+  owFireCloseModal('modal-maint');
+  owFireClearFields(['m-code','m-desc','m-assign','m-loc','m-remarks']);
+  owFireToast('Task scheduled','success'); owFireLoadMaintenance();
+}
+
+/* ── INCIDENTS ── */
+async function owFireLoadIncidents(){
+  const sev=document.getElementById('inc-filter-sev')?.value||'';
+  const status=document.getElementById('inc-filter-status')?.value||'';
+  try{
+    let data=await owFireAPI('/api/incidents');
+    _owFireInc=data;
+    if(sev)data=data.filter(i=>i.severity===sev);
+    if(status)data=data.filter(i=>i.status===status);
+    const open=_owFireInc.filter(i=>!['Closed','Resolved'].includes(i.status));
+    owFireSetBadge('badge-incidents',open.length,open.length>0?'':'ok');
+    const tbody=document.getElementById('inc-tbody');
+    if(!tbody)return;
+    if(!data.length){tbody.innerHTML='<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">✅</div>No incidents found</div></td></tr>';return;}
+    tbody.innerHTML=data.map(i=>`<tr>
+      <td class="text-mono">${owFireFmtDt(i.start_time)}</td>
+      <td>${owFireEsc(i.zone_name||'—')}</td>
+      <td><span class="sev-${i.severity||'low'}">${(i.severity||'—').toUpperCase()}</span></td>
+      <td>${owFireEsc(i.description||'—')}</td>
+      <td>${owFireEsc(i.reported_by||'—')}</td>
+      <td>${i.evacuation==='true'||i.evacuation===true?'<span class="badge badge-amber">YES</span>':'<span class="badge badge-ok">NO</span>'}</td>
+      <td>${owFireIncBadge(i.status)}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="owFireCloseIncident('${i.id}')">Close</button></td></tr>`).join('');
+    const ri=document.getElementById('recent-incidents-list');
+    if(ri){
+      const op=_owFireInc.filter(i=>!['Closed','Resolved'].includes(i.status)).slice(0,5);
+      if(!op.length)ri.innerHTML='<div class="empty-state"><div class="empty-icon">✅</div>No open incidents</div>';
+      else ri.innerHTML=op.map(i=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border)">
+        <span class="sev-${i.severity}">⚠</span>
+        <div style="flex:1"><div class="fs-11 fw700">${owFireEsc(i.zone_name||'—')}</div><div class="text-mono text-muted" style="font-size:10px">${owFireFmtDt(i.start_time)}</div></div>
+        <span class="sev-${i.severity} fs-11">${(i.severity||'').toUpperCase()}</span></div>`).join('');
+    }
+  }catch(e){console.error(e);}
+}
+async function owFireCloseIncident(id){
+  await owFireAPI(`/api/incidents/${id}`,'PATCH',{status:'Closed',end_time:new Date().toISOString()});
+  owFireToast('Incident closed','success'); owFireLoadIncidents(); owFireRefreshAll();
+}
+async function owFireSaveIncident(){
+  const body={zone_name:owFireVal('inc-zone'),severity:owFireVal('inc-sev'),reported_by:owFireVal('inc-by'),start_time:owFireVal('inc-start'),evacuation:owFireVal('inc-evac'),description:owFireVal('inc-desc'),actions_taken:owFireVal('inc-actions'),status:owFireVal('inc-status')};
+  await owFireAPI('/api/incidents','POST',body);
+  owFireCloseModal('modal-incident');
+  owFireClearFields(['inc-zone','inc-desc','inc-actions','inc-by']);
+  owFireToast('Incident logged','success'); owFireLoadIncidents(); owFireRefreshAll();
+}
+
+/* ── TEAM ── */
+async function owFireLoadTeam(){
+  try{
+    const data=await owFireAPI('/api/team');
+    _owFireTeam=data;
+    owFireSetBadge('badge-team',data.length,'ok');
+    const tbody=document.getElementById('team-tbody');
+    if(!tbody)return;
+    if(!data.length){tbody.innerHTML='<tr><td colspan="5"><div class="empty-state"><div class="empty-icon">👥</div>No team members</div></td></tr>';return;}
+    const ri={warden:'🦺',responder:'🧑‍🚒',first_aid:'🩺',coordinator:'📡'};
+    tbody.innerHTML=data.map(m=>`<tr>
+      <td>${owFireEsc(m.name||'—')}</td>
+      <td>${ri[m.role]||'👤'} ${owFireCap(m.role||'—')}</td>
+      <td>${owFireEsc(m.zone||'—')}</td>
+      <td class="text-mono">${owFireEsc(m.contact_number||'—')}</td>
+      <td><button class="btn btn-ghost btn-icon btn-sm" onclick="owFireDeleteTeam('${m.id}')" title="Remove">🗑</button></td></tr>`).join('');
+  }catch(e){console.error(e);}
+}
+async function owFireSaveTeamMember(){
+  await owFireAPI('/api/team','POST',{name:owFireVal('tm-name'),role:owFireVal('tm-role'),zone:owFireVal('tm-zone'),contact_number:owFireVal('tm-contact')});
+  owFireCloseModal('modal-team');
+  owFireClearFields(['tm-name','tm-zone','tm-contact']);
+  owFireToast('Member added','success'); owFireLoadTeam();
+}
+async function owFireDeleteTeam(id){
+  if(!confirm('Remove this member?'))return;
+  await owFireAPI(`/api/team/${id}`,'DELETE');
+  owFireToast('Removed'); owFireLoadTeam();
+}
+
+/* ── DRILLS ── */
+async function owFireLoadDrills(){
+  try{
+    const data=await owFireAPI('/api/drills');
+    _owFireDrills=data;
+    owFireSetBadge('badge-drills',data.length,'info');
+    const tbody=document.getElementById('drills-tbody');
+    if(!tbody)return;
+    if(!data.length){tbody.innerHTML='<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">🏃</div>No drills scheduled</div></td></tr>';return;}
+    tbody.innerHTML=data.map(d=>`<tr>
+      <td class="text-mono">${owFireFmtDate(d.date)}</td>
+      <td>${owFireCap((d.drill_type||'').replace('_',' '))}</td>
+      <td>${owFireEsc(d.conducted_by||'—')}</td>
+      <td class="text-mono">${d.participants||'—'}</td>
+      <td class="text-mono">${d.duration||'—'}</td>
+      <td class="text-mono ${d.score>=80?'text-green':d.score>=60?'text-amber':'text-fire'}">${d.score||'—'}</td>
+      <td>${owFireDrillBadge(d.status)}</td>
+      <td><button class="btn btn-green btn-sm" onclick="owFireCompleteDrill('${d.id}')">✔ Done</button></td></tr>`).join('');
+  }catch(e){console.error(e);}
+}
+async function owFireSaveDrill(){
+  const body={date:owFireVal('dr-date'),drill_type:owFireVal('dr-type'),conducted_by:owFireVal('dr-by'),participants:parseInt(owFireVal('dr-participants'))||0,duration:owFireVal('dr-duration'),score:owFireVal('dr-score'),status:owFireVal('dr-status'),remarks:owFireVal('dr-remarks')};
+  await owFireAPI('/api/drills','POST',body);
+  owFireCloseModal('modal-drill');
+  owFireClearFields(['dr-by','dr-duration','dr-score','dr-remarks']);
+  owFireToast('Drill saved','success'); owFireLoadDrills();
+}
+async function owFireCompleteDrill(id){
+  const score=prompt('Enter drill score (0-100):','');
+  const body={status:'Completed'};if(score)body.score=score;
+  await owFireAPI(`/api/drills/${id}`,'PATCH',body);
+  owFireToast('Drill completed','success'); owFireLoadDrills();
+}
+
+/* ═══ IO: EXPORT / TEMPLATE / UPLOAD ═══════════════════ */
+function owFireOpenIO(tab){openModal('modal-io');if(tab)owFireSwitchIOTab(tab);}
+function owFireOpenAlarmTrigger(){owFireOpenModal('modal-alarm');}
+
+function owFireSwitchIOTab(tab){
+  _owFireIOTab=tab;
+  ['export','template','upload'].forEach(t=>{
+    const panel=document.getElementById('io-panel-'+t);
+    const btn=document.getElementById('io-tab-'+t);
+    if(panel)panel.style.display=t===tab?'block':'none';
+    if(btn){btn.classList.toggle('active',t===tab);}
+  });
+  const ab=document.getElementById('io-action-btn');
+  if(tab==='export'){ab.textContent='📄 Export PDF';ab.className='btn btn-fire';}
+  if(tab==='template'){ab.textContent='📥 Download Template';ab.className='btn btn-green';}
+  if(tab==='upload'){ab.textContent='⬆ Import Data';ab.className='btn btn-amber';}
+}
+function owFireIOAction(){
+  if(_owFireIOTab==='export')owFireExportPDF();
+  if(_owFireIOTab==='template')owFireDownloadTemplate();
+  if(_owFireIOTab==='upload')owFireImportData();
+}
+
+/* PDF export */
+async function owFireExportPDF(){
+  const mod=document.getElementById('io-export-module')?.value||'assets';
+  const title=document.getElementById('io-pdf-title')?.value||'';
+  const prepBy=document.getElementById('io-pdf-by')?.value||'';
+  owFireToast('Generating PDF…');
+  let rows=[],cols=[];
+  try{const d=await owFireAPI(`/api/export/${mod}`);rows=d.rows||[];cols=d.columns||[];}
+  catch(e){owFireToast('Failed to fetch data','warn');return;}
+  const LABELS={assets:'Equipment Register',alarms:'Fire Alarm Log',inspections:'Inspection Register',maintenance:'Maintenance Schedule',incidents:'Incident Register',drills:'Drill Log'};
+  const modLabel=LABELS[mod]||mod;
+  const reportTitle=title||`ONEWEST Fire — ${modLabel}`;
+  const now=new Date().toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'});
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"/>
+  <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;font-size:10px;color:#0d1b2a;padding:16px}
+  .header{background:#0d1b2a;color:#fff;padding:14px 20px;margin-bottom:14px;border-radius:4px}
+  .header h1{font-size:16px;letter-spacing:1px;font-weight:700}.header .meta{font-size:10px;opacity:.82;margin-top:4px}
+  .subhdr{display:flex;gap:20px;margin-bottom:12px;padding:8px 12px;background:#f2f4f8;border-radius:4px;font-size:9.5px}
+  table{width:100%;border-collapse:collapse;table-layout:auto}
+  thead tr{background:#1b4f72!important}thead th{color:#fff;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:6px;border:1px solid #0d1b2a;text-align:left;white-space:nowrap}
+  tbody tr:nth-child(even){background:#f5f8fc}td{padding:4px 6px;border:1px solid #dde4ee;font-size:9.5px;word-break:break-word}
+  .footer{margin-top:16px;font-size:8.5px;color:#aaa;text-align:right;border-top:1px solid #eee;padding-top:8px}
+  .empty{text-align:center;padding:30px;color:#aaa;font-size:12px}
+  @media print{body{padding:8px}@page{size:A4 landscape;margin:12mm}}</style></head><body>
+  <div class="header"><h1>🔥 ONEWEST — Fire Fighting Module</h1>
+  <div class="meta">${reportTitle}  ·  Generated: ${now}${prepBy?' · By: '+prepBy:''}</div></div>
+  <div class="subhdr"><span><b>Module:</b> ${modLabel}</span><span><b>Records:</b> ${rows.length}</span><span><b>Property:</b> ONEWEST</span><span><b>Date:</b> ${now}</span></div>
+  ${rows.length?`<table><thead><tr><th>#</th>${cols.map(c=>`<th>${c.replace(/_/g,' ').toUpperCase()}</th>`).join('')}</tr></thead><tbody>
+  ${rows.map((r,i)=>`<tr style="background:${i%2===0?'#fff':'#f5f8fc'}"><td style="text-align:center;color:#888;font-size:9px">${i+1}</td>${cols.map(c=>`<td>${owFireEsc(String(r[c]||''))}</td>`).join('')}</tr>`).join('')}</tbody></table>`:
+  '<div class="empty">No data found for this module.</div>'}
+  <div class="footer">ONEWEST Fire Fighting Management System · Confidential · ${now}</div></body></html>`;
+  const win=window.open('','_blank','width=1100,height=800');
+  win.document.write(html);win.document.close();
+  win.onload=()=>{win.focus();win.print();};
+  owFireCloseModal('modal-io');
+  owFireToast(`PDF ready — ${rows.length} records`,'success');
+}
+
+/* Template download */
+function owFireDownloadTemplate(){
+  const a=document.createElement('a');
+  a.href='/ow_fire/template/download';
+  a.download='OW_Fire_Master_Template.xlsx';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  owFireCloseModal('modal-io');
+  owFireToast('Template downloading…','success');
+}
+
+/* File upload */
+function owFireHandleDrop(e){
+  e.preventDefault();
+  document.getElementById('upload-drop-zone').style.borderColor='var(--border2)';
+  const file=e.dataTransfer?.files?.[0];if(file)owFireProcessFile(file);
+}
+function owFireHandleFileSelect(e){const file=e.target.files?.[0];if(file)owFireProcessFile(file);}
+function owFireProcessFile(file){
+  if(file.size>5*1024*1024){owFireToast('File too large (max 5MB)','warn');return;}
+  const ext=file.name.split('.').pop().toLowerCase();
+  if(!['xlsx','csv'].includes(ext)){owFireToast('Only .xlsx or .csv accepted','warn');return;}
+  document.getElementById('io-upload-filename').textContent=`✔ ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+  if(ext==='csv'){const r=new FileReader();r.onload=e=>owFireParseCSV(e.target.result);r.readAsText(file);}
+  else{
+    const r=new FileReader();
+    r.onload=e=>{
+      try{
+        if(typeof XLSX!=='undefined'){
+          const wb=XLSX.read(e.target.result,{type:'array'});
+          const mod=document.getElementById('io-upload-module')?.value||'assets';
+          const sm={assets:'Equipment',alarms:'Alarms',inspections:'Inspections',maintenance:'Maintenance',incidents:'Incidents',drills:'Drills'};
+          const sn=sm[mod]||wb.SheetNames[0];
+          const ws=wb.Sheets[sn]||wb.Sheets[wb.SheetNames[0]];
+          const data=XLSX.utils.sheet_to_json(ws,{header:1});
+          const hi=data.findIndex(r=>r&&r.length>2&&r[0]&&String(r[0]).trim()!=='');
+          if(hi>=0){
+            const headers=data[hi].map(h=>String(h||'').replace(/\n/g,' ').trim());
+            const rows=data.slice(hi+1).filter(r=>r&&r.some(v=>v!==undefined&&v!==''));
+            _owUploadedCols=headers;
+            _owUploadedRows=rows.map(r=>{const obj={};headers.forEach((h,i)=>obj[h]=r[i]!==undefined?String(r[i]):'');return obj;});
+            owFireShowUploadPreview();
+          }else owFireToast('Could not find data headers in sheet','warn');
+        }else owFireToast('XLSX library not loaded — use CSV format','warn');
+      }catch(err){owFireToast('Could not read XLSX: '+err.message,'warn');}
+    };r.readAsArrayBuffer(file);
+  }
+}
+function owFireParseCSV(text){
+  const lines=text.trim().split('\n').filter(l=>l.trim());if(lines.length<2){owFireToast('File empty','warn');return;}
+  const parse=line=>line.split(',').map(v=>v.replace(/^"|"$/g,'').trim());
+  _owUploadedCols=parse(lines[0]);
+  _owUploadedRows=lines.slice(1).filter(l=>l.trim()).map(l=>{const vals=parse(l);const obj={};_owUploadedCols.forEach((c,i)=>obj[c]=vals[i]||'');return obj;});
+  owFireShowUploadPreview();
+}
+function owFireShowUploadPreview(){
+  const preview=document.getElementById('io-upload-preview');
+  const table=document.getElementById('io-preview-table');
+  if(!preview||!table)return;
+  preview.style.display='block';
+  const dc=_owUploadedCols.slice(0,6);
+  table.querySelector('thead').innerHTML=`<tr>${dc.map(c=>`<th>${owFireEsc(c)}</th>`).join('')}${_owUploadedCols.length>6?'<th>…</th>':''}</tr>`;
+  table.querySelector('tbody').innerHTML=_owUploadedRows.slice(0,5).map(r=>`<tr>${dc.map(c=>`<td>${owFireEsc(String(r[c]||'').slice(0,40))}</td>`).join('')}${_owUploadedCols.length>6?'<td>…</td>':''}</tr>`).join('');
+  document.getElementById('io-upload-count').textContent=`${Math.min(5,_owUploadedRows.length)} of ${_owUploadedRows.length} rows · ${_owUploadedCols.length} columns`;
+}
+async function owFireImportData(){
+  if(!_owUploadedRows.length){owFireToast('No data to import — upload a file first','warn');return;}
+  const mod=document.getElementById('io-upload-module')?.value||'assets';
+  const EP={assets:'/api/assets',alarms:'/api/alarms/trigger',inspections:'/api/inspections',maintenance:'/api/maintenance',incidents:'/api/incidents',drills:'/api/drills'};
+  const colMap={
+    assets:[['asset_code','code'],['asset_type','type'],['location','location'],['zone_id','zone'],['capacity','capacity'],['status','status'],['remarks','remark'],['installation_date','install'],['last_inspection_date','last'],['next_due_date','next','due']],
+    alarms:[['zone_name','zone'],['alarm_type','type'],['source_device_id','device'],['remarks','remark']],
+    inspections:[['asset_code','code'],['asset_type','type'],['location','location'],['inspected_by','by'],['inspection_type','insp'],['status','status'],['remarks','remark']],
+    maintenance:[['asset_code','code'],['task_type','task','type'],['description','desc'],['scheduled_date','sched'],['assigned_to','assign'],['location','location'],['remarks','remark']],
+    incidents:[['zone_name','zone'],['severity','sev'],['reported_by','by'],['description','desc'],['actions_taken','action'],['status','status']],
+    drills:[['date','date'],['drill_type','type'],['conducted_by','by'],['participants','participant'],['duration','duration'],['score','score'],['status','status'],['remarks','remark']],
+  };
+  function mapRow(row){
+    const out={};const keys=Object.keys(row);
+    (colMap[mod]||[]).forEach(([field,...aliases])=>{
+      const found=keys.find(k=>aliases.some(a=>k.toLowerCase().includes(a)));
+      if(found)out[field]=row[found]||'';
+    });return out;
+  }
+  let ok=0,fail=0;
+  owFireToast(`Importing ${_owUploadedRows.length} records…`);
+  for(const row of _owUploadedRows){
+    try{await owFireAPI(EP[mod],'POST',mapRow(row));ok++;}
+    catch(e){fail++;}
+    await new Promise(r=>setTimeout(r,50));
+  }
+  owFireToast(`Import complete — ${ok} added, ${fail} failed`,ok>0?'success':'warn');
+  owFireCloseModal('modal-io');
+  _owUploadedRows=[];_owUploadedCols=[];
+  document.getElementById('io-upload-preview').style.display='none';
+  document.getElementById('io-file-input').value='';
+  owFireRefreshAll();
+}
+
+/* ═══ Modal helpers ═══ */
+function owFireOpenModal(id){document.getElementById(id).classList.add('open');}
+function owFireCloseModal(id){document.getElementById(id).classList.remove('open');}
+function openModal(id){owFireOpenModal(id);}
+document.addEventListener('click',e=>{if(e.target.classList.contains('modal-overlay'))e.target.classList.remove('open');});
+
+/* ═══ Toast ═══ */
+function owFireToast(msg,type=''){
+  const tc=document.getElementById('toast-container');
+  const t=document.createElement('div');t.className='toast '+type;t.textContent=msg;
+  tc.appendChild(t);setTimeout(()=>t.remove(),3500);
+}
+
+/* ═══ Formatters ═══ */
+function owFireFmtDate(d){if(!d)return'—';try{return new Date(d).toLocaleDateString('en-IN');}catch{return d;}}
+function owFireFmtDt(d){if(!d)return'—';try{return new Date(d).toLocaleString('en-IN',{dateStyle:'short',timeStyle:'short'});}catch{return d;}}
+function owFireEsc(s){return String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function owFireCap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
+function owFireVal(id){const el=document.getElementById(id);return el?(el.value||''):'';}
+function owFireClearFields(ids){ids.forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});}
+
+/* ═══ Status badges ═══ */
+function owFireStatusBadge(s){const m={active:'badge-fire',acknowledged:'badge-amber',resolved:'badge-ok',false_alarm:'badge-cyan'};return`<span class="badge ${m[s]||'badge-cyan'}">${owFireEsc((s||'—').toUpperCase())}</span>`;}
+function owFireAssetBadge(s){const m={active:'badge-active',faulty:'badge-faulty',expired:'badge-expired'};return`<span class="badge ${m[s]||'badge-cyan'}">${owFireEsc((s||'—').toUpperCase())}</span>`;}
+function owFireMaintBadge(s){const m={Scheduled:'badge-cyan',Overdue:'badge-faulty',Completed:'badge-ok','In Progress':'badge-amber'};return`<span class="badge ${m[s]||'badge-cyan'}">${owFireEsc(s||'—')}</span>`;}
+function owFireDrillBadge(s){return s==='Completed'?'<span class="badge badge-ok">Completed</span>':'<span class="badge badge-amber">Scheduled</span>';}
+function owFireIncBadge(s){const m={Open:'badge-fire','In Progress':'badge-amber',Closed:'badge-ok',Resolved:'badge-ok'};return`<span class="badge ${m[s]||'badge-cyan'}">${owFireEsc(s||'—')}</span>`;}
+</script>
+</body>
+</html>

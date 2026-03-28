@@ -1,0 +1,53 @@
+[
+  {
+    "Plate Number": "TS 09 AB 1234",
+    "Vehicle Type": "Car/Truck/Motorcycle...",
+    "Driver Name": "Full name",
+    "Driver Phone": "+91 XXXXXXXXXX",
+    "Driver ID No.": "DL / Aadhaar",
+    "Purpose": "Delivery / Visit / Work",
+    "Owner / Company": "Owner or org",
+    "Parking Zone": "Select zone",
+    "Status": "Inside / Exited",
+    "Entry Date": "DD-MM-YYYY",
+    "Entry Time": "HH:MM",
+    "Exit Time": "HH:MM",
+    "Remarks": "Notes",
+    "id": "VEH-D671B141",
+    "imported_at": "2026-03-23 15:16:04"
+  },
+  {
+    "Plate Number": "TS 09 AB 1234",
+    "Vehicle Type": "Car/Truck/Motorcycle...",
+    "Driver Name": "Full name",
+    "Driver Phone": "+91 XXXXXXXXXX",
+    "Driver ID No.": "DL / Aadhaar",
+    "Purpose": "Delivery / Visit / Work",
+    "Owner / Company": "Owner or org",
+    "Parking Zone": "Select zone",
+    "Status": "Inside / Exited",
+    "Entry Date": "DD-MM-YYYY",
+    "Entry Time": "HH:MM",
+    "Exit Time": "HH:MM",
+    "Remarks": "Notes",
+    "id": "VEH-2279EAAD",
+    "imported_at": "2026-03-23 15:11:07"
+  },
+  {
+    "Plate Number": "TS 09 AB 1234",
+    "Vehicle Type": "Car/Truck/Motorcycle...",
+    "Driver Name": "Full name",
+    "Driver Phone": "+91 XXXXXXXXXX",
+    "Driver ID No.": "DL / Aadhaar",
+    "Purpose": "Delivery / Visit / Work",
+    "Owner / Company": "Owner or org",
+    "Parking Zone": "Select zone",
+    "Status": "Inside / Exited",
+    "Entry Date": "DD-MM-YYYY",
+    "Entry Time": "HH:MM",
+    "Exit Time": "HH:MM",
+    "Remarks": "Notes",
+    "id": "VEH-7976127B",
+    "imported_at": "2026-03-23 15:09:06"
+  }
+]

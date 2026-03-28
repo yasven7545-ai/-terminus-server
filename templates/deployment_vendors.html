@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Deployment by Vendors — Final (Hybrid PDF)</title>
+
+<!-- libs -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+<style>
+:root{
+  --bg: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --font: 'Inter', "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+* {
+      box-sizing: border-box;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    }
+  body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      overflow-x: hidden;
+    }
+
+ header {
+      background: #1e293b;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      border-radius: 12px;
+      margin: 10px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      animation: fadeInDown 0.4s ease-out;
+    }
+
+.sidebar {
+      width: 180px;
+      background: #1e293b;
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 10;
+      padding: 20px 0;
+      border-right: 1px solid var(--border);
+      overflow: auto;
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+      z-index: 5;
+    }
+.sidebar button,.sidebar-btn{width: 100%;
+      text-align: left;
+      padding: 12px 20px;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 8px;
+      margin: 4px 0;
+      transition: all 0.2s ease;
+}
+.sidebar button:hover,.sidebar-btn:hover { background: #334155;
+      color: white;
+      transform: translateX(4px);
+
+}
+
+
+.sidebar button.active,
+.sidebar-btn.active {
+      background: var(--accent);
+      color: white;
+
+    }
+
+.sidebar-btn{display:flex;gap:8px;align-items:center}
+main{ margin-left: 200px;
+      padding: 20px;
+}
+.box{ background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      animation: fadeInUp 0.5s ease-out;
+      transition: transform 0.2s, box-shadow 0.2s;
+}
+h2,h3{margin: 0 0 16px 0;
+      font-weight: 600;
+      color: white;
+}
+table{width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+}
+
+h2 {
+      font-size: 1.5rem;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+
+
+th,td{ padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--text);
+}
+
+th{ color: #93c5fd;
+      font-size: 15px;
+      text-align: left;
+      font-weight: 600;
+      background: rgba(59, 130, 246, 0.08);
+}
+
+ tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover {
+      background: rgba(59, 130, 246, 0.08);
+    }
+
+#vendorChart{ width: 100% !important;
+      height: 360px !important;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+.filters{display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+}
+select{padding: 8px 12px;
+      border-radius: 8px;
+      background: #1e293b;
+      color: white;
+      border: 1px solid var(--border);
+      min-width: 160px;
+      font-size: 14px;
+      transition: all 0.2s;
+
+select:hover, select:focus {
+      border-color: var(--accent);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+    }
+
+
+}
+@keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+.status-completed { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .status-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    .status-failed { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+
+ .icon {
+      font-size: 18px;
+      opacity: 0.8;
+    }
+
+
+
+/* PDF helper (inactive by default) */
+body.pdf-temp *{ body.pdf-temp * {
+      color: #000 !important;
+      background: #fff !important;
+      border-color: #ddd !important;
+}
+</style>
+</head>
+<body>
+
+<header><h2>🚚Deployment by Vendors</h2></header>
+
+<div class="sidebar">
+  <button onclick="location.href='/'">Dashboard</button>
+  <button onclick="location.href='/'" class="sidebar-btn">
+  <span class="icon">📊</span> Dashboard</button>
+
+  <button onclick="location.href='/deployment_vendors'" style="background:#1e293b;color:white">🚚 Deployment by Vendors</button>
+
+  <!-- This is the single PDF button the system uses -->
+  <button id="btnPDF" class="sidebar-btn">📄 Download PDF Report</button>
+
+  <button onclick="location.href='/sln_terminus'" style="margin-top:8px">← Back</button>
+</div>
+
+<main>
+  <div class="box">
+    <h3>🔍 Filters</h3>
+    <div class="filters">
+      <select id="vendorFilter"><option value="">All Vendors</option></select>
+      <select id="statusFilter"><option value="">All Status</option></select>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>📋 Deployment Table</h3>
+    <table id="deployTable"><thead>
+        <tr>
+          <th>Vendor</th>
+          <th>Project</th>
+          <th>Status</th>
+          <th>Deployed At</th>
+          <th>Duration</th>
+        </tr>
+        
+      </thead>
+</table>
+  </div>
+
+  <div class="box">
+     <h3>📈 Deployment Summary Chart</h3>
+
+    <canvas id="vendorChart"></canvas>
+  </div>
+</main>
+
+  
+<script>
+/* ------------------------------
+  Globals preserved for logic
+   - headersGlobal, rowsGlobal store data for PDF table export
+   - vendorChart is Chart.js object
+--------------------------------*/
+let headersGlobal = [];
+let rowsGlobal = [];
+let vendorChart = null;
+
+/* ------------- Data load & UI (unchanged logic) ------------- */
+window.onload = () => {
+  fetch('/static/data/SLN_Terminus_Dashboard_Data.xlsx', { cache:'no-store' })
+    .then(r => r.arrayBuffer())
+    .then(buf => {
+      const wb = XLSX.read(buf, { type:'array' });
+      loadDeployment(wb);
+    })
+    .catch(err => console.error('Excel load error:', err));
+};
+
+function loadDeployment(wb){
+  const sh = wb.Sheets["Deployment_Vendors"];
+  if(!sh){ console.error("Sheet Missing: Deployment_Vendors"); return; }
+
+  const json = XLSX.utils.sheet_to_json(sh, { header:1 });
+  const headers = json[0] || [];
+  const rows = json.slice(1);
+
+  headersGlobal = headers;
+  rowsGlobal = rows;
+
+  const vendorFilter = document.getElementById('vendorFilter');
+  const statusFilter = document.getElementById('statusFilter');
+
+  // populate dropdowns
+  rows.forEach(r => {
+    if (r[0] && ![...vendorFilter.options].some(o => o.value === r[0])) {
+      vendorFilter.innerHTML += `<option value="${r[0]}">${r[0]}</option>`;
+    }
+    if (r[3] && ![...statusFilter.options].some(o => o.value === r[3])) {
+      statusFilter.innerHTML += `<option value="${r[3]}">${r[3]}</option>`;
+    }
+  });
+
+  vendorFilter.onchange = statusFilter.onchange = () => renderTableAndChart();
+
+  function renderTableAndChart(){
+    const vendorVal = vendorFilter.value;
+    const statusVal = statusFilter.value;
+
+    const filtered = rows.filter(r => 
+      (!vendorVal || r[0] === vendorVal) &&
+      (!statusVal || r[3] === statusVal)
+    );
+
+    renderTable(filtered, headers);
+    renderChart(filtered);
+    // update rowsGlobal for PDF (so PDF exports current view)
+    rowsGlobal = filtered;
+    headersGlobal = headers;
+  }
+
+  // initial render
+  vendorFilter.value = '';
+  statusFilter.value = '';
+  renderTableAndChart();
+}
+
+function renderTable(rows, headers){
+  const t = document.getElementById("deployTable");
+  t.innerHTML = '';
+  let th = "<tr>";
+  headers.forEach(h => th += `<th>${h}</th>`);
+  th += "</tr>";
+  t.innerHTML = th;
+
+  rows.forEach(r => {
+    let tr = "<tr>";
+    headers.forEach((_,i) => { tr += `<td>${ (r[i] != null ? r[i] : '') }</td>`; });
+    tr += "</tr>";
+    t.innerHTML += tr;
+  });
+}
+
+function renderChart(rows){
+  const ctx = document.getElementById('vendorChart');
+  if (vendorChart) try{ vendorChart.destroy(); }catch(e){}
+
+  const vendors = {};
+  rows.forEach(r => {
+    const v = r[0] || 'Unknown';
+    const c = Number(r[2]) || 0;
+    vendors[v] = (vendors[v]||0) + c;
+  });
+
+  const labels = Object.keys(vendors);
+  const data = Object.values(vendors);
+
+  vendorChart = new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets: [{ label: 'Total Deployment Count', data, backgroundColor:'#3b82f6' }] },
+    options: {
+      plugins: {
+        legend: { labels: { color: 'white' } },
+        tooltip: { titleColor: 'white', bodyColor: 'white', backgroundColor: 'rgba(15,15,15,0.85)' }
+      },
+      scales: {
+        x: { ticks: { color: 'white' }, grid: { color:'rgba(255,255,255,0.06)' } },
+        y: { ticks: { color: 'white' }, grid: { color:'rgba(255,255,255,0.06)' } }
+      }
+    }
+  });
+}
+
+/* -------------------------
+  Helper: ensure chart finished drawing
+   - small double RAF trick to let Chart.js paint axes/labels
+-------------------------*/
+function waitForChartPaint() {
+  return new Promise(resolve => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(resolve);
+    });
+  });
+}
+
+/* -------------------------
+  PDF EXPORT (HYBRID)
+  - Table: jsPDF-AutoTable (text)
+  - Chart: canvas image snapshot (after forcing chart redraw)
+  - No UI theme changes, no flicker
+-------------------------*/
+document.getElementById('btnPDF').addEventListener('click', async () => {
+  try{
+    const { jsPDF } = window.jspdf;
+
+    // 1) Force charts to update & wait to paint (ensures labels/ticks are present)
+    if (vendorChart) {
+      try { vendorChart.resize(); vendorChart.update(); } catch(e){}
+    }
+    await waitForChartPaint();
+
+    // 2) Prepare PDF and add header
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 12;
+    let cursorY = 15;
+
+    pdf.setFont('Helvetica','bold'); pdf.setFontSize(18);
+    pdf.text('Deployment by Vendors', pageWidth/2, cursorY, { align: 'center' });
+
+    cursorY += 7;
+    pdf.setFont('Helvetica','normal'); pdf.setFontSize(10);
+    pdf.text('Automated Report — Generated from Dashboard', pageWidth/2, cursorY, { align: 'center' });
+
+    cursorY += 7;
+    pdf.setFontSize(9);
+    pdf.text('Date: ' + new Date().toLocaleString(), margin, cursorY);
+
+    cursorY += 8;
+
+    // 3) Add table using autotable (uses headersGlobal & rowsGlobal)
+    // Convert headersGlobal and rowsGlobal into autotable friendly arrays
+    const head = [ headersGlobal.map(h => (h==null?'':String(h)) ) ];
+    const body = rowsGlobal.map(r => headersGlobal.map((_,i)=> (r[i] != null ? String(r[i]) : '')) );
+
+    // If there's a lot of rows autotable will handle page breaks automatically
+    pdf.autoTable({
+      startY: cursorY,
+      head: head,
+      body: body,
+      styles: { fontSize: 9, textColor: 20 },
+      headStyles: { fillColor: [59,130,246], halign: 'left' },
+      alternateRowStyles: { fillColor: [250,250,250] },
+      margin: { left: margin, right: margin },
+      theme: 'striped',
+      didDrawPage: function (data) {
+        // optional: leave space for header on first page (already handled)
+      }
+    });
+
+    // Get position after table
+    let afterTableY = pdf.lastAutoTable ? pdf.lastAutoTable.finalY + 8 : cursorY + 8;
+    if (afterTableY + 60 > pageHeight - margin) {
+      pdf.addPage();
+      afterTableY = margin;
+    }
+
+    // 4) Capture chart as image (use chart's canvas dataURL). Ensure it's fully drawn.
+    // If vendorChart is null, skip chart image gracefully
+    if (vendorChart && vendorChart.canvas) {
+      // Ensure final paint (double RAF)
+      await waitForChartPaint();
+
+      // Use original canvas toDataURL (includes axes/labels if update() has finished)
+      const chartCanvas = vendorChart.canvas;
+      const chartImgData = chartCanvas.toDataURL('image/png');
+
+      // compute image size to fit width
+      const imgWidthMM = pageWidth - margin * 2;
+      // Convert canvas px -> mm for height calculation
+      // px -> inch -> mm: px / (96 * dpr) * 25.4
+      const dpr = window.devicePixelRatio || 1;
+      const pxToMm = px => (px / (96 * dpr)) * 25.4;
+      const imgHeightMM = pxToMm(chartCanvas.height) * (imgWidthMM / pxToMm(chartCanvas.width));
+
+      // if not enough space, add new page
+      if (afterTableY + imgHeightMM > pageHeight - margin) {
+        pdf.addPage();
+        afterTableY = margin;
+      }
+
+      pdf.addImage(chartImgData, 'PNG', margin, afterTableY, imgWidthMM, imgHeightMM);
+    }
+
+    // 5) Save file
+    pdf.save('Deployment_By_Vendors_Report.pdf');
+
+  }catch(err){
+    console.error('PDF export failed', err);
+    alert('PDF export failed — check console for details.');
+  }
+});
+</script>
+
+</body>
+</html>

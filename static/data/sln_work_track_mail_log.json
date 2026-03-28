@@ -1,0 +1,329 @@
+[
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|Observation Raised by GM/Management",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-08T14:53:53.616767"
+  },
+  {
+    "work_id": "SLT-0001",
+    "stage": "EMERGENCY",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-08T14:56:54.712915"
+  },
+  {
+    "work_id": "SLT-0001",
+    "stage": "",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-08T15:15:50.845816"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|EMERGENCY",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-08T15:16:05.086456"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|PM Review & Response",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-08T15:16:47.426086"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|PM Review & Response",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-08T23:39:12.600243"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|Work In Progress",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-08T23:40:55.002630"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|Work In Progress",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-08T23:40:56.838882"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-09T08:00:04.049924"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-10T08:00:04.249587"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-11T08:00:04.401917"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-12T08:00:04.541966"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-13T08:00:06.393908"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-14T08:00:04.171889"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-15T08:00:05.313897"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-16T08:00:04.109638"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-17T08:00:04.665606"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-18T08:00:04.266928"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-19T08:00:04.500555"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-20T08:00:04.987306"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-21T08:00:04.621726"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-22T08:00:04.270204"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-23T08:00:04.592159"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-24T08:00:05.173877"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-25T08:00:05.604226"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-26T08:00:06.478722"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-27T08:00:06.752160"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-28T08:00:06.118108"
+  }
+]

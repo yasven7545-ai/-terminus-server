@@ -1,0 +1,108 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Escalation Dashboard - Export</title>
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+<style>
+body{{font-family:Arial,Helvetica,sans-serif;margin:18px;background:#f6f8fb}}
+.container{{max-width:1100px;margin:auto}}
+textarea, input{{width:100%;padding:8px;border-radius:6px;border:1px solid #ccc}}
+button{{padding:8px 12px;border-radius:6px;background:#0b66a3;color:#fff;border:0;cursor:pointer}}
+.table-wrap{{max-height:300px;overflow:auto;background:#fff;border:1px solid #e8eef5;border-radius:6px;padding:8px}}
+table{{width:100%;border-collapse:collapse}}
+th,td{{padding:6px;border-bottom:1px solid #eee;text-align:left;font-size:13px}}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>Export Issues & WorkOrders (client-side)</h2>
+<p>Use this page to generate an exportable workbook with Issues, WorkOrders and AuditTrail sheets. It will include formulas for CurrentLevel and SLA columns. Paste JSON for issues and workorders or use sample data below.</p>
+
+<label>Issues JSON</label>
+<textarea id="issuesJson" rows="8"></textarea>
+
+<label>WorkOrders JSON</label>
+<textarea id="woJson" rows="6"></textarea>
+
+<label>AuditTrail JSON</label>
+<textarea id="auditJson" rows="4"></textarea>
+
+<div style="margin-top:8px">
+<button onclick="exportWorkbook()">Export Workbook (.xlsx)</button>
+<button onclick="loadSample()">Load Sample Data</button>
+</div>
+
+<script>
+const SAMPLE_ISSUES = [{"IssueID": "ISSUE-001", "WorkOrderID": "WO-20251115-001", "Title": "AC not cooling", "Description": "AC on 5th floor", "RaisedBy": "John", "RaisedDate": "2025-11-10", "SupervisorDeadline": "2025-11-12", "ExecutiveEscalationDate": "2025-11-12", "ManagerEscalationDate": "2025-11-14", "Status": "Open", "ClosedDate": ""}, {"IssueID": "ISSUE-002", "WorkOrderID": "WO-20251115-002", "Title": "Water leakage", "Description": "Leak near pump", "RaisedBy": "Alice", "RaisedDate": "2025-11-14", "SupervisorDeadline": "2025-11-16", "ExecutiveEscalationDate": "2025-11-16", "ManagerEscalationDate": "2025-11-18", "Status": "Open", "ClosedDate": ""}];
+const SAMPLE_WO = [{"WorkOrderID": "WO-20251115-001", "IssueID": "ISSUE-001", "Title": "AC not cooling", "RaisedDate": "2025-11-15", "TechnicianAssigned": "", "Status": "Open", "ClosedDate": ""}];
+const SAMPLE_AUDIT = [{"IssueID": "ISSUE-003", "Event": "Closed", "By": "Sanjay", "When": "2025-11-15", "Comment": "Fixed"}];
+
+function todayISO(d=new Date()){{ const z = new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10); return z; }}
+
+function loadSample(){{
+  document.getElementById('issuesJson').value = JSON.stringify(SAMPLE_ISSUES, null, 2);
+  document.getElementById('woJson').value = JSON.stringify(SAMPLE_WO, null, 2);
+  document.getElementById('auditJson').value = JSON.stringify(SAMPLE_AUDIT, null, 2);
+}}
+
+function exportWorkbook(){{
+  let issues = [];
+  let wo = [];
+  let audit = [];
+  try{{ issues = JSON.parse(document.getElementById('issuesJson').value || '[]'); }}catch(e){{ alert('Invalid issues JSON'); return; }}
+  try{{ wo = JSON.parse(document.getElementById('woJson').value || '[]'); }}catch(e){{ alert('Invalid workorders JSON'); return; }}
+  try{{ audit = JSON.parse(document.getElementById('auditJson').value || '[]'); }}catch(e){{ alert('Invalid audit JSON'); return; }}
+
+  // Prepare Issues sheet rows with column order matching server workbook
+  const issRows = issues.map(i=>({{
+    IssueID: i.IssueID || '',
+    WorkOrderID: i.WorkOrderID || '',
+    Title: i.Title || '',
+    Description: i.Description || '',
+    RaisedBy: i.RaisedBy || '',
+    RaisedDate: i.RaisedDate || '',
+    SupervisorDeadline: i.SupervisorDeadline || '',
+    ExecutiveEscalationDate: i.ExecutiveEscalationDate || '',
+    ManagerEscalationDate: i.ManagerEscalationDate || '',
+    Status: i.Status || '',
+    CurrentLevel: '', // Excel formula cell can compute this when opened in Excel
+    ClosedDate: i.ClosedDate || '',
+    DaysOpen: '',
+    DaysInCurrentLevel: '',
+    Overdue: ''
+  }}));
+
+  const wb = XLSX.utils.book_new();
+  const ws1 = XLSX.utils.json_to_sheet(issRows, {dateNF:'yyyy-mm-dd'});
+  XLSX.utils.book_append_sheet(wb, ws1, 'Issues');
+  const ws2 = XLSX.utils.json_to_sheet(wo || []);
+  XLSX.utils.book_append_sheet(wb, ws2, 'WorkOrders');
+  const ws3 = XLSX.utils.json_to_sheet(audit || []);
+  XLSX.utils.book_append_sheet(wb, ws3, 'AuditTrail');
+
+  // add formulas in CurrentLevel (col K) for each row
+  const range = XLSX.utils.decode_range(ws1['!ref']);
+  for(let R = range.s.r + 1; R <= range.e.r; ++R){{
+    const excelRow = R + 1;
+    const formula = `IF(J${{excelRow}}="Closed","Closed",IF(TODAY()<=G${{excelRow}},"Supervisor",IF(TODAY()<=I${{excelRow}},"Executive","Manager")))`;
+    const cell_ref = XLSX.utils.encode_cell({c:10, r:R}); // K column
+    ws1[cell_ref] = {{ t: 's', f: formula }};
+    // DaysOpen (M) index 12
+    const cell_m = XLSX.utils.encode_cell({c:12, r:R});
+    ws1[cell_m] = {{ t:'s', f: `IF(F${{excelRow}}="","",TODAY()-F${{excelRow}})` }};
+    // DaysInCurrentLevel (N) index 13
+    const cell_n = XLSX.utils.encode_cell({c:13, r:R});
+    ws1[cell_n] = {{ t:'s', f: `IF(J${{excelRow}}="Closed","",IF(K${{excelRow}}="Supervisor",TODAY()-F${{excelRow}},IF(K${{excelRow}}="Executive",TODAY()-G${{excelRow}},TODAY()-I${{excelRow}})))` }};
+    // Overdue (O) index 14
+    const cell_o = XLSX.utils.encode_cell({c:14, r:R});
+    ws1[cell_o] = {{ t:'s', f: `IF(J${{excelRow}}="Closed","No",IF(AND(K${{excelRow}}="Supervisor",TODAY()>G${{excelRow}}),"Yes",IF(AND(K${{excelRow}}="Executive",TODAY()>I${{excelRow}}),"Yes",IF(AND(K${{excelRow}}="Manager",TODAY()>I${{excelRow}}),"Yes","No"))))` }};
+  }}
+
+  XLSX.writeFile(wb, 'escalation_export_' + (new Date()).toISOString().slice(0,10) + '.xlsx');
+}}
+</script>
+</div>
+</body>
+</html>

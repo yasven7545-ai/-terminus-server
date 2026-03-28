@@ -1,0 +1,47 @@
+[
+  {
+    "id": "OGM_FIRE_1774254819352",
+    "asset_id": "",
+    "asset_code": "",
+    "asset_type": "",
+    "location": "",
+    "task_type": "Total",
+    "description": "Scheduled",
+    "scheduled_date": "",
+    "completed_date": "",
+    "status": "Scheduled",
+    "assigned_to": "",
+    "remarks": "",
+    "created_at": "2026-03-23T14:03:39.352635"
+  },
+  {
+    "id": "OGM_FIRE_1774254819223",
+    "asset_id": "",
+    "asset_code": "OGM-PNL-GF-001",
+    "asset_type": "",
+    "location": "Security Room",
+    "task_type": "repair",
+    "description": "Replace Zone 3 module",
+    "scheduled_date": "25-Mar-2025",
+    "completed_date": "",
+    "status": "Scheduled",
+    "assigned_to": "Honeywell Tech",
+    "remarks": "Zone restored",
+    "created_at": "2026-03-23T14:03:39.223647"
+  },
+  {
+    "id": "OGM_FIRE_1774254819102",
+    "asset_id": "",
+    "asset_code": "OGM-PMP-BR-001",
+    "asset_type": "",
+    "location": "Pump Room",
+    "task_type": "PM",
+    "description": "Quarterly PM \u2014 lubrication",
+    "scheduled_date": "30-Mar-2025",
+    "completed_date": "",
+    "status": "Scheduled",
+    "assigned_to": "Kirloskar AMC",
+    "remarks": "6-month cycle",
+    "created_at": "2026-03-23T14:03:39.102505"
+  }
+]

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Work Orders Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background: #0a0d11;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0 4px;
+        }
+        #wo-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        .wo-item {
+            background: #181c20;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .wo-item span {
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🛠️ Work Orders Dashboard</h1>
+        <div>
+            <button onclick="window.history.back()">Back to PPM</button>
+            <button id="btnExportPDF">Export Monthly Report (PDF)</button>
+        </div>
+    </div>
+
+    <div style="display:flex; justify-content:center; align-items:center; gap:12px; margin-bottom:20px;">
+        <button id="btnPrevMonth">◀</button>
+        <h2 id="monthTitle" style="margin:0;">Loading...</h2>
+        <button id="btnNextMonth">▶</button>
+    </div>
+
+    <div id="wo-list-container">
+        <ul id="wo-list">
+            </ul>
+    </div>
+</div>
+
+<script>
+    // Global function to get elements by ID
+    function id(x) { return document.getElementById(x); }
+    window.API = "/api/workorders";
+    
+    window.CURRENT_YEAR = new Date().getFullYear();
+    window.CURRENT_MONTH = new Date().getMonth(); // 0 (Jan) to 11 (Dec)
+</script>
+<script src="/static/js/workorders_dashboard.js?v=1"></script>
+
+</body>
+</html>

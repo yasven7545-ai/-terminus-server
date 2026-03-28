@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5"/>
+<title>SLN Terminus — Workforce & Resource Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+<style>
+/* ═══════════════════════════════════════════════════
+   DESIGN TOKENS — matches sln_terminus theme exactly
+═══════════════════════════════════════════════════ */
+[data-theme="dark"] {
+  --bg:#020b12; --bg2:#071520; --surf:#071520; --surf2:#0c1e2e;
+  --card:#010810; --bdr:rgba(6,182,212,.12); --bdr2:rgba(6,182,212,.26);
+  --tx:#b8dde8; --tx2:#daf0f7; --tx3:#4a7a8a;
+  --violet:#2dd4bf; --violet-g:rgba(13,148,136,.14);
+  --cyan:#06b6d4; --cyan-g:rgba(6,182,212,.12);
+  --emerald:#10b981; --em-g:rgba(16,185,129,.12);
+  --amber:#f59e0b; --am-g:rgba(245,158,11,.12);
+  --rose:#ef4444; --rose-g:rgba(239,68,68,.12);
+  --sky:#67e8f9; --indigo:#0d9488;
+  --orange:#F47920; --orange-g:rgba(244,121,32,.14);
+  --pink:#f472b6; --teal:#0d9488; --teal2:#0f766e; --teal3:#2dd4bf;
+  --tealglow:rgba(13,148,136,.18); --lime:#a3e635;
+  --ga:linear-gradient(135deg,#0d9488,#06b6d4);
+  --gb:linear-gradient(135deg,#F47920,#f59e0b);
+  --gc:linear-gradient(135deg,#10b981,#06b6d4);
+  --gd:linear-gradient(135deg,#ef4444,#0d9488);
+  --sh:0 8px 36px rgba(0,0,0,.70); --sh2:0 2px 24px rgba(0,0,0,.5);
+  --header-bg:#010810;
+}
+[data-theme="light"] {
+  --bg:#f0fafa; --bg2:#e0f5f5; --surf:#ffffff; --surf2:#cdeeed;
+  --card:#ffffff; --bdr:rgba(13,148,136,.14); --bdr2:rgba(13,148,136,.30);
+  --tx:#0f2e35; --tx2:#07191e; --tx3:#3d7080;
+  --violet:#0d9488; --violet-g:rgba(15,118,110,.1);
+  --cyan:#0891b2; --cyan-g:rgba(8,145,178,.1);
+  --emerald:#059669; --em-g:rgba(5,150,105,.1);
+  --amber:#d97706; --am-g:rgba(217,119,6,.1);
+  --rose:#e11d48; --rose-g:rgba(225,29,72,.1);
+  --sky:#06b6d4; --indigo:#0f766e;
+  --orange:#ea580c; --orange-g:rgba(234,88,12,.1);
+  --pink:#db2777; --teal:#0d9488; --teal2:#115e59; --teal3:#0d9488;
+  --tealglow:rgba(15,118,110,.10); --lime:#65a30d;
+  --ga:linear-gradient(135deg,#0f766e,#0891b2);
+  --gb:linear-gradient(135deg,#ea580c,#d97706);
+  --gc:linear-gradient(135deg,#059669,#0284c7);
+  --gd:linear-gradient(135deg,#e11d48,#0f766e);
+  --sh:0 6px 28px rgba(0,0,0,.1); --sh2:0 2px 10px rgba(0,0,0,.07);
+  --header-bg:rgba(255,255,255,.95);
+}
+:root { --hh:56px; --sw:244px; --r:12px; --rsm:8px; --ease:cubic-bezier(.4,0,.2,1); --bounce:cubic-bezier(.34,1.3,.64,1); }
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior:smooth; }
+body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:var(--tx); min-height:100vh; overflow-x:hidden; line-height:1.6; transition:background .35s,color .35s; }
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--bdr2); border-radius:4px; }
+
+/* ─── HEADER ─── */
+header {
+  position:fixed; top:0; left:0; right:0; height:var(--hh);
+  background:var(--header-bg); backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid var(--bdr);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 18px; z-index:600; box-shadow:var(--sh2);
+  transition:background .35s,border-color .35s;
+}
+.logo-link { display:flex; align-items:center; gap:10px; text-decoration:none; flex-shrink:0; }
+.logo-box { background:transparent; border:none; box-shadow:none; padding:0; display:flex; align-items:center; }
+.logo-box img { height:34px; width:auto; max-width:180px; object-fit:contain; }
+.logo-text { display:flex; flex-direction:column; gap:0; }
+.logo-name { font-size:14px; font-weight:800; color:var(--tx); letter-spacing:-.3px; line-height:1.1; }
+.logo-sub { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--tx2); text-transform:uppercase; letter-spacing:1px; }
+.hdr-right { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+
+/* clock pill */
+.clock-pill { display:flex; align-items:center; gap:5px; padding:4px 11px; border-radius:20px; background:var(--surf2); border:1px solid var(--bdr); font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--cyan); white-space:nowrap; }
+.clock-pill svg { width:11px; height:11px; flex-shrink:0; }
+
+/* live dot */
+.live-dot { display:flex; align-items:center; gap:5px; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--emerald); }
+.pdot { width:7px; height:7px; border-radius:50%; background:var(--emerald); flex-shrink:0; animation:pdot 2s ease-in-out infinite; }
+@keyframes pdot { 0%{box-shadow:0 0 0 0 rgba(16,185,129,.8);} 70%{box-shadow:0 0 0 8px rgba(16,185,129,0);} 100%{box-shadow:0 0 0 0 rgba(16,185,129,0);} }
+
+/* theme toggle */
+.theme-toggle { display:flex; align-items:center; gap:6px; padding:5px 10px; border-radius:20px; background:var(--surf2); border:1px solid var(--bdr2); cursor:pointer; user-select:none; flex-shrink:0; transition:border-color .2s; }
+.theme-toggle:hover { border-color:var(--cyan); }
+.theme-toggle .t-icon { width:13px; height:13px; color:var(--tx2); flex-shrink:0; }
+.tt-track { width:32px; height:18px; border-radius:9px; background:var(--bdr2); position:relative; flex-shrink:0; transition:background .25s; }
+[data-theme="light"] .tt-track { background:var(--teal); }
+.tt-thumb { position:absolute; top:2px; left:2px; width:14px; height:14px; border-radius:50%; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.3); transition:transform .25s; }
+[data-theme="light"] .tt-thumb { transform:translateX(14px); }
+
+/* BACK TO PORTAL — gold blinking animation */
+.btn-back-portal {
+  display:flex; align-items:center; gap:5px;
+  font-size:11px; font-weight:700; color:#FFD700;
+  text-decoration:none; padding:5px 13px;
+  border:1.5px solid #FFD700; border-radius:20px;
+  background:transparent; cursor:pointer;
+  white-space:nowrap; flex-shrink:0;
+  animation:portal-gold-blink 1.7s ease-in-out infinite;
+  transition:background .2s;
+}
+.btn-back-portal:hover { background:rgba(255,215,0,.12); }
+.btn-back-portal svg { width:13px; height:13px; flex-shrink:0; }
+@keyframes portal-gold-blink {
+  0%,100% { border-color:#FFD700; box-shadow:none; color:#FFD700; }
+  50%      { border-color:#f59e0b; box-shadow:0 0 16px rgba(255,215,0,.55); color:#f59e0b; }
+}
+
+/* burger */
+.burger { display:none; align-items:center; justify-content:center; width:36px; height:36px; border-radius:var(--rsm); background:var(--surf2); border:1px solid var(--bdr2); color:var(--tx2); cursor:pointer; transition:all .2s; flex-shrink:0; }
+.burger:hover { border-color:var(--cyan); color:var(--cyan); }
+.burger svg { width:16px; height:16px; }
+
+/* mobile FAB */
+.mobile-menu-btn { display:none; align-items:center; justify-content:center; width:36px; height:36px; border-radius:50%; background:var(--ga); border:none; cursor:pointer; flex-shrink:0; box-shadow:0 4px 14px rgba(13,148,136,.45); transition:transform .2s; }
+.mobile-menu-btn:hover { transform:scale(1.1); }
+.mobile-menu-btn i { width:16px; height:16px; color:#fff; }
+
+/* ─── SIDEBAR ─── */
+.sidebar { position:fixed; top:var(--hh); left:0; bottom:0; width:var(--sw); background:var(--surf); border-right:1px solid var(--bdr); display:flex; flex-direction:column; z-index:500; overflow:hidden; transition:transform .3s var(--ease),background .35s,border-color .35s; }
+.sb-top { padding:14px 13px 10px; border-bottom:1px solid var(--bdr); flex-shrink:0; }
+.sb-badge { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:20px; font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--orange); background:var(--orange-g); border:1px solid rgba(244,121,32,.25); }
+.sb-role { margin-top:7px; font-size:11px; color:var(--tx3); font-family:'JetBrains Mono',monospace; }
+.sb-role span { color:var(--tx2); }
+.sb-scroll { flex:1; overflow-y:auto; padding:8px 10px 20px; }
+.nav-grp { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.3px; color:var(--tx3); padding:10px 8px 4px; }
+.nav-btn,.nav-item { display:flex; align-items:center; gap:10px; width:100%; padding:9px 11px; border-radius:var(--rsm); background:transparent; border:none; color:var(--tx2); font-family:'Plus Jakarta Sans',sans-serif; font-size:12.5px; font-weight:500; cursor:pointer; transition:all .15s; text-align:left; margin-bottom:1px; text-decoration:none; }
+.nav-btn i,.nav-item i { width:15px; height:15px; flex-shrink:0; opacity:.65; transition:opacity .15s,filter .15s,transform .2s; }
+.nav-btn:hover,.nav-item:hover { background:rgba(13,148,136,.10); color:var(--tx2); }
+.nav-btn:hover i,.nav-item:hover i { opacity:1; transform:scale(1.1); filter:drop-shadow(0 0 5px currentColor); }
+.nav-btn.active-nav,.nav-item.active-nav { background:linear-gradient(135deg,rgba(13,148,136,.18),rgba(6,182,212,.10)); border:1px solid var(--bdr2); color:var(--tx); }
+.nav-pip { width:7px; height:7px; border-radius:50%; margin-left:auto; flex-shrink:0; animation:pdot 2s ease-in-out infinite; }
+
+/* sidebar footer */
+.sb-foot { padding:10px 13px 14px; border-top:1px solid var(--bdr); flex-shrink:0; }
+.sf-lbl { font-size:9px; text-transform:uppercase; letter-spacing:1px; color:var(--tx3); margin-bottom:8px; }
+.sf-row { display:flex; align-items:center; justify-content:space-between; font-size:11px; color:var(--tx2); margin-bottom:5px; }
+.sf-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.sd-ok { background:var(--emerald); box-shadow:0 0 5px var(--emerald); }
+.sd-warn { background:var(--amber); box-shadow:0 0 5px var(--amber); }
+.sf-label { display:flex; align-items:center; gap:6px; }
+.sb-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); backdrop-filter:blur(4px); z-index:499; }
+.sb-overlay.show { display:block; }
+
+/* ─── MAIN ─── */
+main { margin-left:var(--sw); padding-top:var(--hh); min-height:100vh; transition:margin-left .3s var(--ease); }
+.main-inner { padding:24px 28px 80px; }
+
+/* ─── PAGE TITLE ─── */
+.page-header { margin-bottom:24px; }
+.page-title { font-size:22px; font-weight:800; color:var(--tx); display:flex; align-items:center; gap:10px; line-height:1.2; }
+.page-title .pt-icon { width:28px; height:28px; background:var(--ga); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.page-title .pt-icon i { width:15px; height:15px; color:#fff; }
+.page-subtitle { font-size:13px; color:var(--tx3); margin-top:4px; font-family:'JetBrains Mono',monospace; }
+.page-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:16px; }
+
+/* ─── BUTTONS ─── */
+.btn { display:inline-flex; align-items:center; gap:7px; padding:8px 16px; border-radius:var(--rsm); border:1px solid var(--bdr2); background:var(--surf2); color:var(--tx2); font-size:12px; font-weight:600; cursor:pointer; transition:all .2s; font-family:'Plus Jakarta Sans',sans-serif; text-decoration:none; white-space:nowrap; }
+.btn:hover { border-color:var(--cyan); color:var(--cyan); }
+.btn i { width:13px; height:13px; flex-shrink:0; }
+.btn-primary { background:var(--ga); border-color:transparent; color:#fff; }
+.btn-primary:hover { opacity:.9; color:#fff; transform:translateY(-1px); box-shadow:0 4px 14px rgba(13,148,136,.4); }
+.btn-success { background:linear-gradient(135deg,#059669,#10b981); border-color:transparent; color:#fff; }
+.btn-success:hover { opacity:.9; color:#fff; }
+.btn-amber { background:linear-gradient(135deg,#d97706,#f59e0b); border-color:transparent; color:#fff; }
+.btn-amber:hover { opacity:.9; color:#fff; }
+.btn-rose { background:linear-gradient(135deg,#e11d48,#ef4444); border-color:transparent; color:#fff; }
+.btn-rose:hover { opacity:.9; color:#fff; }
+.btn-upload { background:var(--orange-g); border-color:var(--orange); color:var(--orange); }
+.btn-upload:hover { background:var(--orange); color:#fff; }
+
+/* ─── KPI OVERVIEW GRID ─── */
+.kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+.kpi-card {
+  background:var(--card); border:1px solid var(--bdr); border-radius:var(--r);
+  padding:18px 20px; cursor:pointer; transition:all .25s var(--ease);
+  position:relative; overflow:hidden;
+}
+.kpi-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+.kpi-card.kp-cyan::before { background:var(--ga); }
+.kpi-card.kp-emerald::before { background:var(--gc); }
+.kpi-card.kp-amber::before { background:var(--gb); }
+.kpi-card.kp-rose::before { background:var(--gd); }
+.kpi-card.kp-violet::before { background:linear-gradient(135deg,#8b5cf6,#a78bfa); }
+.kpi-card.kp-sky::before { background:linear-gradient(135deg,#0284c7,#38bdf8); }
+.kpi-card:hover { transform:translateY(-4px); box-shadow:var(--sh); border-color:var(--bdr2); }
+.kpi-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.kpi-icon { width:36px; height:36px; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.kpi-icon i { width:18px; height:18px; }
+.kpi-icon.ic-cyan { background:var(--cyan-g); color:var(--cyan); }
+.kpi-icon.ic-emerald { background:var(--em-g); color:var(--emerald); }
+.kpi-icon.ic-amber { background:var(--am-g); color:var(--amber); }
+.kpi-icon.ic-rose { background:var(--rose-g); color:var(--rose); }
+.kpi-icon.ic-violet { background:rgba(139,92,246,.12); color:#a78bfa; }
+.kpi-icon.ic-sky { background:rgba(2,132,199,.12); color:#38bdf8; }
+.kpi-badge { font-family:'JetBrains Mono',monospace; font-size:10px; padding:2px 7px; border-radius:10px; border:1px solid; }
+.kpi-badge.up { color:var(--emerald); background:var(--em-g); border-color:rgba(16,185,129,.3); }
+.kpi-badge.down { color:var(--rose); background:var(--rose-g); border-color:rgba(239,68,68,.3); }
+.kpi-badge.warn { color:var(--amber); background:var(--am-g); border-color:rgba(245,158,11,.3); }
+.kpi-val { font-family:'JetBrains Mono',monospace; font-size:28px; font-weight:700; line-height:1; color:var(--tx); }
+.kpi-label { font-size:12px; color:var(--tx3); margin-top:4px; }
+.kpi-sub { font-size:11px; color:var(--tx3); margin-top:6px; font-family:'JetBrains Mono',monospace; }
+
+/* ─── SECTION VISIBILITY ─── */
+.sec-panel { display:block; }
+.sec-panel.hidden { display:none !important; }
+
+/* ─── SECTION CARDS ─── */
+.section-card { background:var(--card); border:1px solid var(--bdr); border-radius:var(--r); padding:22px 24px; margin-bottom:22px; box-shadow:var(--sh2); }
+.sec-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; flex-wrap:wrap; gap:10px; }
+.sec-title { font-size:16px; font-weight:700; color:var(--tx); display:flex; align-items:center; gap:8px; }
+.sec-title::before { content:''; display:block; width:3px; height:16px; background:var(--ga); border-radius:2px; flex-shrink:0; }
+.sec-title i { width:17px; height:17px; }
+.sec-actions { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+
+/* ─── TABLES ─── */
+.table-wrap { overflow-x:auto; border-radius:var(--rsm); border:1px solid var(--bdr); }
+table { width:100%; border-collapse:separate; border-spacing:0; font-size:13px; min-width:600px; }
+th { padding:11px 14px; text-align:left; background:var(--surf); color:var(--tx2); font-size:11px; text-transform:uppercase; letter-spacing:.8px; font-weight:700; border-bottom:1px solid var(--bdr2); white-space:nowrap; }
+td { padding:11px 14px; color:var(--tx); border-bottom:1px solid var(--bdr); vertical-align:middle; }
+tr:last-child td { border-bottom:none; }
+tbody tr:hover td { background:var(--violet-g); }
+th:first-child { border-radius:8px 0 0 0; }
+th:last-child { border-radius:0 8px 0 0; }
+
+/* ─── STATUS PILLS ─── */
+.pill { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; white-space:nowrap; }
+.pill-green { background:var(--em-g); color:var(--emerald); border:1px solid rgba(16,185,129,.3); }
+.pill-amber { background:var(--am-g); color:var(--amber); border:1px solid rgba(245,158,11,.3); }
+.pill-rose { background:var(--rose-g); color:var(--rose); border:1px solid rgba(239,68,68,.3); }
+.pill-cyan { background:var(--cyan-g); color:var(--cyan); border:1px solid rgba(6,182,212,.3); }
+.pill-violet { background:rgba(139,92,246,.12); color:#a78bfa; border:1px solid rgba(139,92,246,.3); }
+
+/* ─── CHARTS ─── */
+.charts-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:22px; }
+.chart-card { background:var(--card); border:1px solid var(--bdr); border-radius:var(--r); padding:20px; box-shadow:var(--sh2); }
+.chart-title { font-size:13px; font-weight:700; color:var(--tx2); margin-bottom:16px; display:flex; align-items:center; gap:7px; }
+.chart-title i { width:14px; height:14px; color:var(--cyan); }
+.chart-wrap { position:relative; height:220px; }
+
+/* ─── PROGRESS BARS ─── */
+.progress-list { display:flex; flex-direction:column; gap:12px; }
+.progress-item { }
+.progress-meta { display:flex; justify-content:space-between; margin-bottom:5px; font-size:12px; }
+.progress-label { color:var(--tx2); font-weight:500; }
+.progress-val { color:var(--tx3); font-family:'JetBrains Mono',monospace; }
+.progress-bar { height:6px; background:var(--surf2); border-radius:4px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:4px; transition:width 1s var(--ease); }
+.pf-cyan { background:var(--ga); }
+.pf-emerald { background:var(--gc); }
+.pf-amber { background:var(--gb); }
+.pf-rose { background:var(--gd); }
+.pf-violet { background:linear-gradient(90deg,#8b5cf6,#a78bfa); }
+
+/* ─── ALERTS PANEL ─── */
+.alert-list { display:flex; flex-direction:column; gap:10px; }
+.alert-item { display:flex; align-items:flex-start; gap:12px; padding:12px 14px; border-radius:var(--rsm); border-left:3px solid; }
+.alert-item.a-rose { background:var(--rose-g); border-color:var(--rose); }
+.alert-item.a-amber { background:var(--am-g); border-color:var(--amber); }
+.alert-item.a-cyan { background:var(--cyan-g); border-color:var(--cyan); }
+.alert-item.a-emerald { background:var(--em-g); border-color:var(--emerald); }
+.alert-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.alert-icon i { width:15px; height:15px; }
+.alert-body { flex:1; }
+.alert-title { font-size:13px; font-weight:700; color:var(--tx); line-height:1.2; }
+.alert-desc { font-size:12px; color:var(--tx3); margin-top:2px; }
+.alert-time { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--tx3); flex-shrink:0; }
+
+/* ─── STAT MINI GRID ─── */
+.mini-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px; }
+.mini-stat { background:var(--surf2); border:1px solid var(--bdr); border-radius:var(--rsm); padding:12px 14px; text-align:center; }
+.mini-val { font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700; line-height:1; }
+.mini-lbl { font-size:10px; color:var(--tx3); text-transform:uppercase; letter-spacing:.6px; margin-top:4px; }
+
+/* ─── UPLOAD ZONE ─── */
+.upload-zone { border:2px dashed var(--bdr2); border-radius:var(--r); padding:32px; text-align:center; cursor:pointer; transition:all .25s; background:var(--surf2); }
+.upload-zone:hover,.upload-zone.dragover { border-color:var(--cyan); background:var(--cyan-g); }
+.upload-zone i { width:32px; height:32px; color:var(--tx3); margin-bottom:10px; }
+.upload-zone p { font-size:13px; color:var(--tx3); }
+.upload-zone span { font-size:12px; color:var(--tx3); font-family:'JetBrains Mono',monospace; }
+
+/* ─── MODAL ─── */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:20000; align-items:center; justify-content:center; backdrop-filter:blur(6px); padding:20px; }
+.modal-overlay.open { display:flex; }
+.modal-box { background:var(--surf); border:1px solid var(--bdr2); border-radius:18px; width:90%; max-width:560px; padding:26px; box-shadow:0 32px 80px rgba(0,0,0,.6); animation:modal-in .3s var(--bounce); }
+@keyframes modal-in { from{transform:translateY(40px);opacity:0;} to{transform:none;opacity:1;} }
+.modal-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+.modal-title { font-size:16px; font-weight:700; color:var(--tx); display:flex; align-items:center; gap:8px; }
+.modal-title i { width:17px; height:17px; }
+.modal-close { width:30px; height:30px; border-radius:var(--rsm); background:var(--surf2); border:1px solid var(--bdr); color:var(--tx3); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+.modal-close:hover { border-color:var(--rose); color:var(--rose); }
+.modal-close i { width:14px; height:14px; }
+
+/* ─── FORM ─── */
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.form-group { display:flex; flex-direction:column; gap:5px; }
+.form-group.full { grid-column:1/-1; }
+.form-label { font-size:11px; font-weight:600; color:var(--tx3); text-transform:uppercase; letter-spacing:.5px; }
+.form-input,.form-select,.form-textarea { background:var(--surf2); border:1px solid var(--bdr2); border-radius:var(--rsm); padding:9px 12px; color:var(--tx); font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; outline:none; transition:border-color .2s; width:100%; }
+.form-input:focus,.form-select:focus,.form-textarea:focus { border-color:var(--cyan); box-shadow:0 0 0 3px var(--cyan-g); }
+.form-textarea { resize:vertical; min-height:80px; }
+.form-select option { background:var(--surf); color:var(--tx); }
+
+/* ─── TOAST ─── */
+#toast { position:fixed; top:calc(var(--hh) + 12px); right:18px; z-index:99999; background:var(--surf); border:1px solid var(--bdr2); color:var(--tx); padding:11px 18px; border-radius:10px; box-shadow:var(--sh); transform:translateY(-14px); opacity:0; transition:all .3s; pointer-events:none; display:flex; align-items:center; gap:8px; font-size:13px; max-width:320px; }
+#toast.show { transform:none; opacity:1; }
+#toast i { width:15px; height:15px; }
+
+/* ─── MOBILE DRAWER ─── */
+.mobile-nav-overlay { position:fixed; inset:0; background:rgba(0,0,0,.62); z-index:998; opacity:0; visibility:hidden; transition:all .3s; backdrop-filter:blur(4px); }
+.mobile-nav-overlay.active { opacity:1; visibility:visible; }
+.mobile-nav-container { position:fixed; top:0; right:0; bottom:0; width:320px; background:var(--surf); border-left:1px solid var(--bdr); z-index:999; pointer-events:none; opacity:0; transform:translateX(100%); transition:all .3s var(--ease); display:flex; flex-direction:column; }
+.mobile-nav-container.active { pointer-events:auto; opacity:1; transform:none; }
+.mobile-nav-header { display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid var(--bdr); flex-shrink:0; }
+.mobile-nav-header h3 { font-size:15px; font-weight:700; margin:0; color:var(--tx); }
+.mobile-nav-close { width:32px; height:32px; border-radius:var(--rsm); background:var(--surf2); border:1px solid var(--bdr2); color:var(--tx2); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+.mobile-nav-close:hover { border-color:var(--rose); color:var(--rose); }
+.mobile-nav-close i { width:15px; height:15px; }
+.mobile-nav-list { flex:1; overflow-y:auto; padding:10px 13px; list-style:none; }
+.mobile-nav-item { margin-bottom:4px; }
+.mobile-nav-button { width:100%; display:flex; align-items:center; gap:12px; padding:11px 13px; border-radius:9px; background:var(--surf2); border:1px solid var(--bdr); color:var(--tx2); cursor:pointer; transition:all .15s; text-align:left; font-family:'Plus Jakarta Sans',sans-serif; text-decoration:none; }
+.mobile-nav-button:hover { background:var(--violet-g); border-color:var(--violet); color:var(--tx); }
+.mobile-nav-icon { width:34px; height:34px; border-radius:9px; background:var(--surf); border:1px solid var(--bdr2); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--cyan); }
+.mobile-nav-icon i { width:15px; height:15px; }
+.mobile-nav-text { flex:1; }
+.mobile-nav-title { font-size:13px; font-weight:600; color:var(--tx); display:block; line-height:1.2; }
+.mobile-nav-subtitle { font-size:11px; color:var(--tx2); display:block; margin-top:2px; }
+
+/* ─── BLINK ANIMATIONS ─── */
+@keyframes blink-gold { 0%,100%{box-shadow:0 0 6px #FFD700;opacity:1;} 50%{box-shadow:0 0 14px #FFD700;opacity:.4;} }
+@keyframes blink-cyan { 0%,100%{box-shadow:0 0 6px #22d3ee;opacity:1;} 50%{box-shadow:0 0 14px #22d3ee;opacity:.4;} }
+@keyframes blink-emerald { 0%,100%{box-shadow:0 0 6px #10b981;opacity:1;} 50%{box-shadow:0 0 14px #10b981;opacity:.4;} }
+@keyframes blink-amber { 0%,100%{box-shadow:0 0 6px #f59e0b;opacity:1;} 50%{box-shadow:0 0 14px #f59e0b;opacity:.4;} }
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%);box-shadow:none;}
+  .sidebar.open{transform:none;box-shadow:var(--sh);}
+  main{margin-left:0;}
+  .burger{display:flex;}
+  .mobile-menu-btn{display:flex;}
+  .logo-text{display:none;}
+  .live-dot span{display:none;}
+  .kpi-grid{grid-template-columns:repeat(2,1fr);}
+  .charts-grid{grid-template-columns:1fr;}
+  .form-grid{grid-template-columns:1fr;}
+  .main-inner{padding:16px 14px 80px;}
+}
+@media(max-width:560px){
+  header{padding:0 12px;}
+  .kpi-grid{grid-template-columns:repeat(2,1fr); gap:10px;}
+  .btn-back-portal{font-size:10px;padding:4px 9px;}
+  .hdr-right{gap:5px;}
+  .mini-grid{grid-template-columns:repeat(2,1fr);}
+  .clock-pill span{display:none;}
+}
+@media(min-width:901px){
+  .mobile-menu-btn{display:none!important;}
+  .mobile-nav-container,.mobile-nav-overlay{display:none!important;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ HEADER ══════════════════ -->
+<header>
+  <div style="display:flex;align-items:center;gap:10px">
+    <button class="burger" id="burgerBtn" aria-label="Toggle sidebar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    <a href="{{ url_for('dashboard') }}" class="logo-link">
+      <div class="logo-box">
+        <img src="{{ url_for('static', filename='SLNT.jpeg') }}" style="height:34px;width:auto;max-width:180px;object-fit:contain;">
+      </div>
+      <div class="logo-text">
+        <div class="logo-name">SLN Terminus</div>
+        <div class="logo-sub">Resource Management</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="hdr-right">
+    <!-- Live clock -->
+    <div class="clock-pill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span id="currentTime" style="font-variant-numeric:tabular-nums">00:00:00</span>
+    </div>
+    <!-- Live indicator -->
+    <div class="live-dot"><span class="pdot"></span><span>Live</span></div>
+
+    <!-- Theme toggle -->
+    <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle dark / light mode">
+      <svg class="t-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <div class="tt-track"><div class="tt-thumb"></div></div>
+      <svg class="t-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </div>
+
+    <!-- Back to Portal — gold blinking -->
+    <a class="btn-back-portal" href="/sln_terminus" title="Back to SLN Terminus Portal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Portal
+    </a>
+
+    <!-- Mobile FAB -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open navigation">
+      <i data-lucide="menu"></i>
+    </button>
+  </div>
+</header>
+
+<!-- Sidebar overlay -->
+<div class="sb-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
+
+<!-- ══════════════════ SIDEBAR ══════════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-top">
+    <div class="sb-badge">👥 Workforce</div>
+    <div class="sb-role">Module: <span id="sidebarRoleLabel">Resource Mgmt</span></div>
+  </div>
+
+  <div class="sb-scroll">
+    <div class="nav-grp">Dashboard</div>
+    <button class="nav-btn active-nav" data-section="overview" onclick="showSection('overview')">
+      <i data-lucide="layout-dashboard" style="color:var(--cyan)"></i><span>Overview</span>
+      <span class="nav-pip" style="background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:blink-cyan 1.8s ease-in-out infinite;"></span>
+    </button>
+
+    <div class="nav-grp">Manpower</div>
+    <button class="nav-btn" data-section="planning" onclick="showSection('planning')">
+      <i data-lucide="users" style="color:#a78bfa"></i><span>Planning</span>
+      <span class="nav-pip" style="background:#a78bfa;animation:pdot 2s ease-in-out infinite;"></span>
+    </button>
+    <button class="nav-btn" data-section="deployment" onclick="showSection('deployment')">
+      <i data-lucide="map-pin" style="color:#38bdf8"></i><span>Deployment</span>
+      <span class="nav-pip" style="background:#38bdf8;animation:pdot 2s ease-in-out infinite;"></span>
+    </button>
+    <button class="nav-btn" data-section="attendance" onclick="showSection('attendance')">
+      <i data-lucide="clock" style="color:var(--emerald)"></i><span>Attendance & Shifts</span>
+      <span class="nav-pip" style="background:var(--emerald);box-shadow:0 0 8px var(--emerald);animation:blink-emerald 1.8s ease-in-out infinite;"></span>
+    </button>
+
+    <div class="nav-grp">Operations</div>
+    <button class="nav-btn" data-section="tasks" onclick="showSection('tasks')">
+      <i data-lucide="check-square" style="color:var(--amber)"></i><span>Task Execution</span>
+      <span class="nav-pip" style="background:var(--amber);animation:blink-amber 2s ease-in-out infinite;"></span>
+    </button>
+    <button class="nav-btn" data-section="vendor" onclick="showSection('vendor')">
+      <i data-lucide="handshake" style="color:#fb923c"></i><span>Vendor Validation</span>
+      <span class="nav-pip" style="background:#fb923c;animation:pdot 1.6s ease-in-out infinite;"></span>
+    </button>
+    <button class="nav-btn" data-section="alerts" onclick="showSection('alerts')">
+      <i data-lucide="bell-alert" style="color:var(--rose)"></i><span>Alerts & Exceptions</span>
+      <span class="nav-pip" style="background:var(--rose);animation:pdot 1.3s ease-in-out infinite;"></span>
+    </button>
+
+    <div class="nav-grp">Analytics</div>
+    <button class="nav-btn" data-section="cost" onclick="showSection('cost')">
+      <i data-lucide="bar-chart-3" style="color:#FFD700"></i><span>Cost & Efficiency</span>
+      <span class="nav-pip" style="background:#FFD700;box-shadow:0 0 8px #FFD700;animation:blink-gold 1.8s ease-in-out infinite;"></span>
+    </button>
+    <button class="nav-btn" data-section="kpi" onclick="showSection('kpi')">
+      <i data-lucide="activity" style="color:var(--cyan)"></i><span>KPI Report</span>
+      <span class="nav-pip" style="background:var(--cyan);animation:blink-cyan 2s ease-in-out infinite;"></span>
+    </button>
+
+    <div class="nav-grp">Data</div>
+    <button class="nav-btn" data-section="upload" onclick="showSection('upload')">
+      <i data-lucide="upload-cloud" style="color:var(--orange)"></i><span>Upload Data</span>
+      <span class="nav-pip" style="background:var(--orange);animation:pdot 2s ease-in-out infinite;"></span>
+    </button>
+  </div>
+
+  <div class="sb-foot">
+    <div class="sf-lbl">System Status</div>
+    <div class="sf-row">
+      <div class="sf-label"><span class="sf-dot sd-ok"></span>Portal</div>
+      <span style="color:var(--emerald);font-size:11px">Online</span>
+    </div>
+    <div class="sf-row">
+      <div class="sf-label"><span class="sf-dot sd-ok"></span>Database</div>
+      <span style="color:var(--emerald);font-size:11px">Connected</span>
+    </div>
+    <div class="sf-row">
+      <div class="sf-label"><span class="sf-dot sd-warn"></span>Hyderabad</div>
+      <span style="color:var(--tx2);font-size:11px">IST Zone</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ══════════════════ MAIN ══════════════════ -->
+<main id="mainContent">
+  <div class="main-inner">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <div>
+          <div class="page-title">
+            <div class="pt-icon"><i data-lucide="users"></i></div>
+            Workforce & Resource Management
+          </div>
+          <div class="page-subtitle">Manpower Control & Productivity Optimization · SLN Terminus</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-upload" onclick="document.getElementById('xlsxUploadInput').click()">
+            <i data-lucide="upload"></i> Upload Excel
+          </button>
+          <input type="file" id="xlsxUploadInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleFileUpload(event)">
+          <button class="btn btn-success" onclick="exportExcel()">
+            <i data-lucide="download"></i> Export Excel
+          </button>
+          <button class="btn btn-amber" onclick="exportPDF()">
+            <i data-lucide="file-text"></i> Export PDF
+          </button>
+          <button class="btn btn-primary" onclick="openAddModal()">
+            <i data-lucide="user-plus"></i> Add Staff
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ OVERVIEW SECTION ══════════════════ -->
+    <div id="sec-overview" class="sec-panel">
+      <!-- KPI GRID — clickable counters -->
+      <div class="kpi-grid">
+        <div class="kpi-card kp-cyan" onclick="showSection('planning')" title="Click to view Planning">
+          <div class="kpi-top">
+            <div class="kpi-icon ic-cyan"><i data-lucide="users"></i></div>
+            <span class="kpi-badge up">+2%</span>
+          </div>
+          <div class="kpi-val" id="kv-total">248</div>
+          <div class="kpi-label">Total Planned Manpower</div>
+          <div class="kpi-sub">Actual: <span id="kv-actual">231</span> deployed</div>
+        </div>
+        <div class="kpi-card kp-emerald" onclick="showSection('attendance')" title="Click to view Attendance">
+          <div class="kpi-top">
+            <div class="kpi-icon ic-emerald"><i data-lucide="user-check"></i></div>
+            <span class="kpi-badge up">93.1%</span>
+          </div>
+          <div class="kpi-val" id="kv-attendance" style="color:var(--emerald)">93<span style="font-size:16px">%</span></div>
+          <div class="kpi-label">Attendance Rate</div>
+          <div class="kpi-sub">Absent today: <span id="kv-absent">17</span></div>
+        </div>
+        <div class="kpi-card kp-amber" onclick="showSection('vendor')" title="Click to view Vendor Compliance">
+          <div class="kpi-top">
+            <div class="kpi-icon ic-amber"><i data-lucide="handshake"></i></div>
+            <span class="kpi-badge warn">-3%</span>
+          </div>
+          <div class="kpi-val" id="kv-vendor" style="color:var(--amber)">87<span style="font-size:16px">%</span></div>
+          <div class="kpi-label">Vendor Compliance</div>
+          <div class="kpi-sub">Under-deployed: <span id="kv-underdeployed">4</span> vendors</div>
+        </div>
+        <div class="kpi-card kp-rose" onclick="showSection('alerts')" title="Click to view Alerts">
+          <div class="kpi-top">
+            <div class="kpi-icon ic-rose"><i data-lucide="bell-alert"></i></div>
+            <span class="kpi-badge down">3 critical</span>
+          </div>
+          <div class="kpi-val" id="kv-alerts" style="color:var(--rose)">7</div>
+          <div class="kpi-label">Active Alerts</div>
+          <div class="kpi-sub">Requires immediate action</div>
+        </div>
+        <div class="kpi-card kp-violet" onclick="showSection('tasks')" title="Click to view Tasks">
+          <div class="kpi-top">
+            <div class="kpi-icon ic-violet"><i data-lucide="check-square"></i></div>
+            <span class="kpi-badge up">+8%</span>
+          </div>
+          <div class="kpi-val" id="kv-tasks" style="color:#a78bfa">892</div>
+          <div class="kpi-label">Tasks Completed Today</div>
+          <div class="kpi-sub">Productivity: <span id="kv-prod">3.86</span> tasks/staff</div>
+        </div>
+        <div class="kpi-card kp-sky" onclick="showSection('cost')" title="Click to view Cost Analysis">
+          <div class="kpi-top">
+            <div class="kpi-icon ic-sky"><i data-lucide="indian-rupee"></i></div>
+            <span class="kpi-badge up">-2.1%</span>
+          </div>
+          <div class="kpi-val" id="kv-cost" style="color:#38bdf8">₹4.2L</div>
+          <div class="kpi-label">Monthly Manpower Cost</div>
+          <div class="kpi-sub">Per unit: ₹<span id="kv-cost-unit">1,818</span></div>
+        </div>
+      </div>
+
+      <!-- CHARTS ROW -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title"><i data-lucide="bar-chart-2"></i> Planned vs Actual Manpower</div>
+          <div class="chart-wrap"><canvas id="chartPlannedActual"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title"><i data-lucide="pie-chart"></i> Function-wise Distribution</div>
+          <div class="chart-wrap"><canvas id="chartFunctionPie"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title"><i data-lucide="trending-up"></i> Attendance Trend (Last 7 Days)</div>
+          <div class="chart-wrap"><canvas id="chartAttendanceTrend"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title"><i data-lucide="bar-chart-3"></i> Vendor Compliance by Vendor</div>
+          <div class="chart-wrap"><canvas id="chartVendorCompliance"></canvas></div>
+        </div>
+      </div>
+
+      <!-- PRODUCTIVITY + COMPLIANCE SIDE BY SIDE -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px;">
+        <div class="chart-card">
+          <div class="chart-title"><i data-lucide="activity"></i> Productivity by Function</div>
+          <div class="progress-list" style="margin-top:8px">
+            <div class="progress-item"><div class="progress-meta"><span class="progress-label">Housekeeping</span><span class="progress-val">94%</span></div><div class="progress-bar"><div class="progress-fill pf-cyan" style="width:94%"></div></div></div>
+            <div class="progress-item"><div class="progress-meta"><span class="progress-label">Security</span><span class="progress-val">88%</span></div><div class="progress-bar"><div class="progress-fill pf-emerald" style="width:88%"></div></div></div>
+            <div class="progress-item"><div class="progress-meta"><span class="progress-label">Maintenance</span><span class="progress-val">79%</span></div><div class="progress-bar"><div class="progress-fill pf-amber" style="width:79%"></div></div></div>
+            <div class="progress-item"><div class="progress-meta"><span class="progress-label">Admin Support</span><span class="progress-val">72%</span></div><div class="progress-bar"><div class="progress-fill pf-violet" style="width:72%"></div></div></div>
+            <div class="progress-item"><div class="progress-meta"><span class="progress-label">Fire & Safety</span><span class="progress-val">96%</span></div><div class="progress-bar"><div class="progress-fill pf-rose" style="width:96%"></div></div></div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title"><i data-lucide="target"></i> SLA Adherence</div>
+          <div class="chart-wrap" style="height:190px"><canvas id="chartSLA"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ PLANNING SECTION ══════════════════ -->
+    <div id="sec-planning" class="sec-panel hidden">
+      <div class="section-card">
+        <div class="sec-head">
+          <div class="sec-title"><i data-lucide="users" style="color:#a78bfa"></i> Manpower Planning — Baseline</div>
+          <div class="sec-actions">
+            <button class="btn" onclick="exportSectionExcel('planningTable','Manpower_Planning')"><i data-lucide="download"></i> Excel</button>
+            <button class="btn btn-primary" onclick="openAddModal()"><i data-lucide="plus"></i> Add Plan</button>
+          </div>
+        </div>
+        <div class="mini-grid">
+          <div class="mini-stat"><div class="mini-val" style="color:var(--cyan)">248</div><div class="mini-lbl">Planned Total</div></div>
+          <div class="mini-stat"><div class="mini-val" style="color:var(--emerald)">231</div><div class="mini-lbl">Actual Deployed</div></div>
+          <div class="mini-stat"><div class="mini-val" style="color:var(--rose)">17</div><div class="mini-lbl">Shortfall</div></div>
+        </div>
+        <div class="table-wrap">
+          <table id="planningTable">
+            <thead><tr><th>#</th><th>Property Zone</th><th>Function</th><th>Planned</th><th>Actual</th><th>Shortfall</th><th>Shift Coverage</th><th>SLA Req.</th><th>Status</th></tr></thead>
+            <tbody id="planningTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ DEPLOYMENT SECTION ══════════════════ -->
+    <div id="sec-deployment" class="sec-panel hidden">
+      <div class="section-card">
+        <div class="sec-head">
+          <div class="sec-title"><i data-lucide="map-pin" style="color:#38bdf8"></i> Deployment Allocation</div>
+          <div class="sec-actions">
+            <button class="btn" onclick="exportSectionExcel('deploymentTable','Deployment_Allocation')"><i data-lucide="download"></i> Excel</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="deploymentTable">
+            <thead><tr><th>#</th><th>Staff Name</th><th>ID</th><th>Property</th><th>Zone</th><th>Role/Function</th><th>Vendor</th><th>Contract Ref</th><th>Shift</th><th>Status</th></tr></thead>
+            <tbody id="deploymentTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ ATTENDANCE SECTION ══════════════════ -->
+    <div id="sec-attendance" class="sec-panel hidden">
+      <div class="section-card">
+        <div class="sec-head">
+          <div class="sec-title"><i data-lucide="clock" style="color:var(--emerald)"></i> Attendance & Shift Tracking</div>
+          <div class="sec-actions">
+            <button class="btn" onclick="exportSectionExcel('attendanceTable','Attendance_Tracking')"><i data-lucide="download"></i> Excel</button>
+          </div>
+        </div>
+        <div class="mini-grid" style="grid-template-columns:repeat(4,1fr)">
+          <div class="mini-stat"><div class="mini-val" style="color:var(--emerald)">231</div><div class="mini-lbl">Present</div></div>
+          <div class="mini-stat"><div class="mini-val" style="color:var(--rose)">17</div><div class="mini-lbl">Absent</div></div>
+          <div class="mini-stat"><div class="mini-val" style="color:var(--amber)">8</div><div class="mini-lbl">Late Check-in</div></div>
+          <div class="mini-stat"><div class="mini-val" style="color:#38bdf8">5</div><div class="mini-lbl">Shift Gaps</div></div>
+        </div>
+        <div class="table-wrap">
+          <table id="attendanceTable">
+            <thead><tr><th>#</th><th>Staff Name</th><th>Function</th><th>Date</th><th>Check-In</th><th>Check-Out</th><th>Shift</th><th>Status</th><th>Remarks</th></tr></thead>
+            <tbody id="attendanceTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ TASK EXECUTION SECTION ══════════════════ -->
+    <div id="sec-tasks" class="sec-panel hidden">
+      <div class="section-card">
+        <div class="sec-head">
+          <div class="sec-title"><i data-lucide="check-square" style="color:var(--amber)"></i> Task Execution & Activity Tracking</div>
+          <div class="sec-actions">
+            <button class="btn" onclick="exportSectionExcel('tasksTable','Task_Execution')"><i data-lucide="download"></i> Excel</button>
+            <button class="btn btn-primary" onclick="openAddTaskModal()"><i data-lucide="plus"></i> Add Task</button>
+          </div>
+        </div>
+        <div class="mini-grid">
+          <div class="mini-stat"><div class="mini-val" style="color:var(--emerald)">892</div><div class="mini-lbl">Tasks Completed</div></div>
+          <div class="mini-stat"><div class="mini-val" style="color:var(--amber)">38</div><div class="mini-lbl">In Progress</div></div>
+          <div class="mini-stat"><div class="mini-val" style="color:var(--rose)">12</div><div class="mini-lbl">Overdue</div></div>
+        </div>
+        <div class="table-wrap">
+          <table id="tasksTable">
+            <thead><tr><th>#</th><th>Task Type</th><th>Assigned To</th><th>Area/Zone</th><th>Start Time</th><th>End Time</th><th>Duration</th><th>Area Covered</th><th>Status</th></tr></thead>
+            <tbody id="tasksTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ VENDOR VALIDATION SECTION ══════════════════ -->
+    <div id="sec-vendor" class="sec-panel hidden">
+      <div class="section-card">
+        <div class="sec-head">
+          <div class="sec-title"><i data-lucide="handshake" style="color:#fb923c"></i> Vendor Manpower Validation</div>
+          <div class="sec-actions">
+            <button class="btn" onclick="exportSectionExcel('vendorTable','Vendor_Validation')"><i data-lucide="download"></i> Excel</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="vendorTable">
+            <thead><tr><th>#</th><th>Vendor Name</th><th>Function</th><th>Contracted</th><th>Deployed</th><th>Gap</th><th>Compliance %</th><th>SLA Status</th><th>Last Verified</th></tr></thead>
+            <tbody id="vendorTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ ALERTS SECTION ══════════════════ -->
+    <div id="sec-alerts" class="sec-panel hidden">
+      <div class="section-card">
+        <div class="sec-head">
+          <div class="sec-title"><i data-lucide="bell-alert" style="color:var(--rose)"></i> Alerts & Exceptions</div>
+          <div class="sec-actions">
+            <button class="btn" onclick="dismissAllAlerts()"><i data-lucide="check-check"></i> Dismiss All</button>
+          </div>
+        </div>
+        <div class="alert-list" id="alertsList"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ COST & EFFICIENCY SECTION ══════════════════ -->
+    <div id="sec-cost" class="sec-panel hidden">
+      <div class="section-card">
+        <div class="sec-head">
+          <div class="sec-title"><i data-lucide="bar-chart-3" style="color:#FFD700"></i> Cost & Efficiency Analysis</div>
+          <div class="sec-actions">
+            <button class="btn" onclick="exportSectionExcel('costTable','Cost_Analysis')"><i data-lucide="download"></i> Excel</button>
+          </div>
+        </div>
+        <div class="mini-grid">
+          <div class="mini-stat"><div class="mini-val" style="color:#FFD700">₹4.2L</div><div class="mini-lbl">Total Monthly Cost</div></div>
+          <div class="mini-stat"><div class="mini-val" style="color:var(--rose)">₹18K</div><div class="mini-lbl">Overtime Cost</div></div>
+          <div class="mini-stat"><div class="mini-val" style="color:var(--emerald)">82%</div><div class="mini-lbl">Productive Utilization</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0">
+          <div class="chart-card">
+            <div class="chart-title"><i data-lucide="bar-chart-2"></i> Cost per Property</div>
+            <div class="chart-wrap"><canvas id="chartCostProperty"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title"><i data-lucide="pie-chart"></i> Idle vs Productive</div>
+            <div class="chart-wrap"><canvas id="chartIdleVsProd"></canvas></div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table id="costTable">
+            <thead><tr><th>#</th><th>Property</th><th>Function</th><th>Staff Count</th><th>Base Cost (₹)</th><th>Overtime (₹)</th><th>Total Cost (₹)</th><th>Cost/Unit (₹)</th><th>Efficiency %</th></tr></thead>
+            <tbody id="costTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ KPI SECTION ══════════════════ -->
+    <div id="sec-kpi" class="sec-panel hidden">
+      <div class="section-card">
+        <div class="sec-head">
+          <div class="sec-title"><i data-lucide="activity" style="color:var(--cyan)"></i> KPI Dashboard</div>
+          <div class="sec-actions">
+            <button class="btn btn-amber" onclick="exportKPIPDF()"><i data-lucide="file-text"></i> Export PDF Report</button>
+            <button class="btn" onclick="exportSectionExcel('kpiTable','KPI_Report')"><i data-lucide="download"></i> Excel</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;">
+          <div class="mini-stat" style="border-top:3px solid var(--emerald)"><div class="mini-val" style="color:var(--emerald)">93%</div><div class="mini-lbl">Attendance %</div></div>
+          <div class="mini-stat" style="border-top:3px solid var(--cyan)"><div class="mini-val" style="color:var(--cyan)">3.86</div><div class="mini-lbl">Productivity/Staff</div></div>
+          <div class="mini-stat" style="border-top:3px solid #FFD700"><div class="mini-val" style="color:#FFD700">₹1,818</div><div class="mini-lbl">Cost/Unit</div></div>
+          <div class="mini-stat" style="border-top:3px solid var(--amber)"><div class="mini-val" style="color:var(--amber)">87%</div><div class="mini-lbl">Vendor Compliance</div></div>
+        </div>
+        <div class="chart-card" style="margin-bottom:18px">
+          <div class="chart-title"><i data-lucide="trending-up"></i> KPI Trend (Monthly)</div>
+          <div class="chart-wrap"><canvas id="chartKPITrend"></canvas></div>
+        </div>
+        <div class="table-wrap">
+          <table id="kpiTable">
+            <thead><tr><th>#</th><th>KPI Metric</th><th>Target</th><th>Actual</th><th>Variance</th><th>Period</th><th>Status</th></tr></thead>
+            <tbody id="kpiTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ UPLOAD SECTION ══════════════════ -->
+    <div id="sec-upload" class="sec-panel hidden">
+      <div class="section-card">
+        <div class="sec-head">
+          <div class="sec-title"><i data-lucide="upload-cloud" style="color:var(--orange)"></i> Upload Source Data</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+          <div>
+            <div class="upload-zone" id="dropZone" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFile(event)" onclick="document.getElementById('xlsxUploadInput2').click()">
+              <i data-lucide="file-spreadsheet" style="display:block;margin:0 auto 10px;"></i>
+              <p>Drop Excel / CSV file here</p>
+              <span>Supports .xlsx, .xls, .csv</span>
+              <input type="file" id="xlsxUploadInput2" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleFileUpload(event)">
+            </div>
+          </div>
+          <div>
+            <div style="background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r);padding:18px;">
+              <div style="font-size:13px;font-weight:700;color:var(--tx);margin-bottom:12px;display:flex;align-items:center;gap:7px;"><i data-lucide="info" style="width:14px;height:14px;color:var(--cyan)"></i> Import Instructions</div>
+              <div style="font-size:12px;color:var(--tx3);line-height:1.8">
+                ✅ Upload must contain headers in Row 1<br>
+                ✅ Required columns: Name, Function, Zone, Date, Status<br>
+                ✅ Date format: DD-MM-YYYY or YYYY-MM-DD<br>
+                ✅ Max file size: 10MB<br><br>
+                <b style="color:var(--tx2)">Download Template:</b>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+                <button class="btn" onclick="downloadTemplate('attendance')"><i data-lucide="download"></i> Attendance Template</button>
+                <button class="btn" onclick="downloadTemplate('deployment')"><i data-lucide="download"></i> Deployment Template</button>
+                <button class="btn" onclick="downloadTemplate('vendor')"><i data-lucide="download"></i> Vendor Template</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="uploadPreview" style="display:none">
+          <div class="sec-title" style="margin-bottom:12px;font-size:14px">Preview — Uploaded Data</div>
+          <div class="table-wrap" style="max-height:320px;overflow-y:auto">
+            <table id="uploadPreviewTable"><thead></thead><tbody></tbody></table>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:14px">
+            <button class="btn btn-success" onclick="confirmImport()"><i data-lucide="check"></i> Confirm Import</button>
+            <button class="btn" onclick="cancelImport()"><i data-lucide="x"></i> Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- .main-inner -->
+</main>
+
+<!-- ══════════════════ ADD STAFF MODAL ══════════════════ -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-title"><i data-lucide="user-plus" style="color:var(--cyan)"></i> Add Staff Record</div>
+      <button class="modal-close" onclick="closeModal('addModal')"><i data-lucide="x"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="f-name" placeholder="Staff name"></div>
+      <div class="form-group"><label class="form-label">Staff ID</label><input class="form-input" id="f-id" placeholder="EMP-001"></div>
+      <div class="form-group"><label class="form-label">Function</label>
+        <select class="form-select" id="f-function">
+          <option>Housekeeping</option><option>Security</option><option>Maintenance</option><option>Fire & Safety</option><option>Admin Support</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Zone / Area</label><input class="form-input" id="f-zone" placeholder="Lobby, SLN Terminus…"></div>
+      <div class="form-group"><label class="form-label">Shift</label>
+        <select class="form-select" id="f-shift">
+          <option>Morning (6AM–2PM)</option><option>Evening (2PM–10PM)</option><option>Night (10PM–6AM)</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Vendor</label><input class="form-input" id="f-vendor" placeholder="Vendor company name"></div>
+      <div class="form-group full"><label class="form-label">Remarks</label><textarea class="form-textarea" id="f-remarks" placeholder="Optional notes…"></textarea></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px;justify-content:flex-end">
+      <button class="btn" onclick="closeModal('addModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveStaff()"><i data-lucide="save"></i> Save Record</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ MOBILE DRAWER ══════════════════ -->
+<div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+<div class="mobile-nav-container" id="mobileNavContainer">
+  <div class="mobile-nav-header">
+    <h3>Navigation</h3>
+    <button class="mobile-nav-close" id="mobileNavClose"><i data-lucide="x"></i></button>
+  </div>
+  <ul class="mobile-nav-list" id="mobileNavList"></ul>
+</div>
+
+<!-- TOAST -->
+<div id="toast"><i data-lucide="check-circle"></i><span id="toastMsg">Action completed</span></div>
+
+<script>
+/* ══════════════════════════════════════
+   GLOBAL STATE & SAMPLE DATA
+══════════════════════════════════════ */
+const STATE = {
+  staffData: [],
+  attendanceData: [],
+  taskData: [],
+  vendorData: [],
+  costData: [],
+  kpiData: [],
+  uploadBuffer: null
+};
+
+// Seed sample data
+function seedData(){
+  STATE.staffData = [
+    {id:'EMP-001',name:'Dhanujay',function:'Executive',zone:'SLN Terminus',shift:'General',vendor:'Emerzhent',status:'Present'}
+    
+  ];
+
+  STATE.attendanceData = [
+    {name:'U Sekhar',function:'HK Supervisor',date:'2026-03-18',checkin:'06:02',checkout:'14:05',shift:'Afternoon',status:'Present',remarks:'On time'}
+  ];
+
+  STATE.taskData = [
+    {type:'Fire Panel Inspection',assigned:'Naveen',area:'All Floors',start:'10:30',end:'—',duration:'—',coverage:'20 floors',status:'In Progress'}
+  ];
+
+  STATE.vendorData = [
+    {name:'CleanPro Services',function:'Housekeeping',contracted:45,deployed:40,gap:5,compliance:89,sla:'Partial',verified:'2026-03-17'},
+    {name:'SecureGuard Ltd',function:'Security',contracted:32,deployed:32,gap:0,compliance:100,sla:'Met',verified:'2026-03-18'},
+    {name:'TechServ FM',function:'Maintenance',contracted:18,deployed:15,gap:3,compliance:83,sla:'Partial',verified:'2026-03-17'},
+    {name:'SafetyFirst Corp',function:'Fire & Safety',contracted:8,deployed:8,gap:0,compliance:100,sla:'Met',verified:'2026-03-18'},
+    {name:'HireFleet India',function:'Admin Support',contracted:12,deployed:9,gap:3,compliance:75,sla:'Breach',verified:'2026-03-16'},
+    {name:'GreenGarden FM',function:'Landscaping',contracted:6,deployed:5,gap:1,compliance:83,sla:'Partial',verified:'2026-03-17'},
+  ];
+
+  STATE.costData = [
+    {property:'SLN Terminus — Office Floors',function:'Housekeeping',count:22,base:110000,overtime:8000,total:118000,perUnit:5364,efficiency:91},
+    {property:'SLN Terminus — Mall',function:'Housekeeping',count:18,base:90000,overtime:5500,total:95500,perUnit:5306,efficiency:88},
+    {property:'SLN Terminus — Common Area',function:'Security',count:32,base:160000,overtime:12000,total:172000,perUnit:5375,efficiency:94},
+    {property:'SLN Terminus — B1 Service Area',function:'Maintenance',count:15,base:75000,overtime:9000,total:84000,perUnit:5600,efficiency:79},
+    {property:'SLN Terminus — Basements',function:'Fire & Safety',count:8,base:40000,overtime:2000,total:42000,perUnit:5250,efficiency:96},
+    {property:'SLN Terminus — Admin',function:'Admin Support',count:9,base:45000,overtime:1500,total:46500,perUnit:5167,efficiency:72},
+  ];
+
+  STATE.kpiData = [
+    {metric:'Attendance %',target:'95%',actual:'93%',variance:'-2%',period:'Mar 2026',status:'Near Target'},
+    {metric:'Productivity (Tasks/Staff)',target:'4.0',actual:'3.86',variance:'-0.14',period:'Mar 2026',status:'Near Target'},
+    {metric:'Cost per Manpower Unit (₹)',target:'₹1,800',actual:'₹1,818',variance:'+₹18',period:'Mar 2026',status:'Within Budget'},
+    {metric:'Vendor Compliance %',target:'95%',actual:'87%',variance:'-8%',period:'Mar 2026',status:'Below Target'},
+    {metric:'Shift Coverage %',target:'100%',actual:'97%',variance:'-3%',period:'Mar 2026',status:'Near Target'},
+    {metric:'SLA Adherence %',target:'95%',actual:'89%',variance:'-6%',period:'Mar 2026',status:'Below Target'},
+    {metric:'Overtime Hours',target:'<200h',actual:'186h',variance:'-14h',period:'Mar 2026',status:'On Target'},
+    {metric:'Late Reporting Incidents',target:'<5',actual:'8',variance:'+3',period:'Mar 2026',status:'Exceeds Limit'},
+  ];
+}
+
+const planningData = [
+  {zone:'SLN Terminus',function:'Housekeeping',planned:22,actual:20,shift:'2-Shift',sla:'95%',status:'Under'},
+  {zone:'SLN Terminus',function:'Housekeeping',planned:18,actual:18,shift:'2-Shift',sla:'95%',status:'Met'},
+  {zone:'Main Gate',function:'Security',planned:8,actual:8,shift:'3-Shift',sla:'100%',status:'Met'},
+  {zone:'Parking Level',function:'Security',planned:6,actual:5,shift:'3-Shift',sla:'100%',status:'Under'},
+  {zone:'Plant Room',function:'Maintenance',planned:8,actual:7,shift:'Morning',sla:'90%',status:'Under'},
+  {zone:'All Floors',function:'Fire & Safety',planned:8,actual:8,shift:'3-Shift',sla:'100%',status:'Met'},
+  {zone:'Management Office',function:'Admin Support',planned:12,actual:9,shift:'Morning',sla:'85%',status:'Under'},
+  {zone:'Common Areas',function:'Landscaping',planned:6,actual:5,shift:'Morning',sla:'80%',status:'Under'},
+];
+
+/* ══════════════════════════════════════
+   SECTION NAVIGATION — reliable data-section lookup
+══════════════════════════════════════ */
+const SECTIONS = ['overview','planning','deployment','attendance','tasks','vendor','alerts','cost','kpi','upload'];
+
+function showSection(id){
+  // 1. Show/hide all section panels
+  SECTIONS.forEach(function(s){
+    var el = document.getElementById('sec-'+s);
+    if(!el) return;
+    if(s === id){
+      el.classList.remove('hidden');
+    } else {
+      el.classList.add('hidden');
+    }
+  });
+
+  // 2. Update active-nav highlight using data-section attribute
+  document.querySelectorAll('.nav-btn[data-section], .nav-item[data-section]').forEach(function(btn){
+    if(btn.getAttribute('data-section') === id){
+      btn.classList.add('active-nav');
+    } else {
+      btn.classList.remove('active-nav');
+    }
+  });
+
+  // 3. Lazy-render charts only when their panel becomes visible
+  if(id === 'cost')  { setTimeout(renderCostCharts, 80); }
+  if(id === 'kpi')   { setTimeout(renderKPICharts,  80); }
+
+  // 4. Close sidebar on mobile after navigation
+  if(window.innerWidth <= 900){ closeSidebar(); }
+}
+
+/* ══════════════════════════════════════
+   RENDER TABLES
+══════════════════════════════════════ */
+function statusPill(s){
+  if(!s) return '—';
+  const m = {
+    'Present':'pill-green','Met':'pill-green','Completed':'pill-green','On Target':'pill-green','Within Budget':'pill-green',
+    'Late':'pill-amber','Partial':'pill-amber','In Progress':'pill-amber','Near Target':'pill-amber','Under':'pill-amber',
+    'Absent':'pill-rose','Overdue':'pill-rose','Breach':'pill-rose','Below Target':'pill-rose','Exceeds Limit':'pill-rose',
+    'Met (SLA)':'pill-green'
+  };
+  const cls = m[s] || 'pill-cyan';
+  return `<span class="pill ${cls}">${s}</span>`;
+}
+
+function renderPlanningTable(){
+  const tbody = document.getElementById('planningTbody');
+  tbody.innerHTML = planningData.map((r,i)=>`
+    <tr>
+      <td>${i+1}</td><td>${r.zone}</td><td>${r.function}</td>
+      <td style="color:var(--cyan);font-family:'JetBrains Mono',monospace">${r.planned}</td>
+      <td style="color:var(--emerald);font-family:'JetBrains Mono',monospace">${r.actual}</td>
+      <td style="color:${r.planned-r.actual>0?'var(--rose)':'var(--emerald)'};font-family:'JetBrains Mono',monospace">${r.planned-r.actual}</td>
+      <td>${r.shift}</td><td>${r.sla}</td><td>${statusPill(r.status)}</td>
+    </tr>`).join('');
+}
+
+function renderDeploymentTable(){
+  const tbody = document.getElementById('deploymentTbody');
+  tbody.innerHTML = STATE.staffData.map((r,i)=>`
+    <tr>
+      <td>${i+1}</td><td><b>${r.name}</b></td><td style="font-family:'JetBrains Mono',monospace;color:var(--tx3)">${r.id}</td>
+      <td>SLN Terminus</td><td>${r.zone}</td><td>${r.function}</td>
+      <td>${r.vendor}</td><td>VND-2026-${String(i+1).padStart(3,'0')}</td>
+      <td>${r.shift}</td><td>${statusPill(r.status)}</td>
+    </tr>`).join('');
+}
+
+function renderAttendanceTable(){
+  const tbody = document.getElementById('attendanceTbody');
+  tbody.innerHTML = STATE.attendanceData.map((r,i)=>`
+    <tr>
+      <td>${i+1}</td><td><b>${r.name}</b></td><td>${r.function}</td>
+      <td style="font-family:'JetBrains Mono',monospace">${r.date}</td>
+      <td style="font-family:'JetBrains Mono',monospace;color:var(--emerald)">${r.checkin}</td>
+      <td style="font-family:'JetBrains Mono',monospace;color:var(--tx3)">${r.checkout}</td>
+      <td>${r.shift}</td><td>${statusPill(r.status)}</td>
+      <td style="color:var(--tx3)">${r.remarks||'—'}</td>
+    </tr>`).join('');
+}
+
+function renderTasksTable(){
+  const tbody = document.getElementById('tasksTbody');
+  tbody.innerHTML = STATE.taskData.map((r,i)=>`
+    <tr>
+      <td>${i+1}</td><td>${r.type}</td><td>${r.assigned}</td><td>${r.area}</td>
+      <td style="font-family:'JetBrains Mono',monospace">${r.start}</td>
+      <td style="font-family:'JetBrains Mono',monospace">${r.end}</td>
+      <td style="font-family:'JetBrains Mono',monospace;color:var(--cyan)">${r.duration}</td>
+      <td>${r.coverage}</td><td>${statusPill(r.status)}</td>
+    </tr>`).join('');
+}
+
+function renderVendorTable(){
+  const tbody = document.getElementById('vendorTbody');
+  tbody.innerHTML = STATE.vendorData.map((r,i)=>`
+    <tr>
+      <td>${i+1}</td><td><b>${r.name}</b></td><td>${r.function}</td>
+      <td style="font-family:'JetBrains Mono',monospace;color:var(--cyan)">${r.contracted}</td>
+      <td style="font-family:'JetBrains Mono',monospace;color:var(--emerald)">${r.deployed}</td>
+      <td style="font-family:'JetBrains Mono',monospace;color:${r.gap>0?'var(--rose)':'var(--emerald)'}">${r.gap>0?'-'+r.gap:'0'}</td>
+      <td style="font-family:'JetBrains Mono',monospace;color:${r.compliance>=95?'var(--emerald)':r.compliance>=80?'var(--amber)':'var(--rose)'}">${r.compliance}%</td>
+      <td>${statusPill(r.sla)}</td>
+      <td style="font-family:'JetBrains Mono',monospace;color:var(--tx3)">${r.verified}</td>
+    </tr>`).join('');
+}
+
+function renderCostTable(){
+  const tbody = document.getElementById('costTbody');
+  tbody.innerHTML = STATE.costData.map((r,i)=>`
+    <tr>
+      <td>${i+1}</td><td>${r.property}</td><td>${r.function}</td>
+      <td style="font-family:'JetBrains Mono',monospace">${r.count}</td>
+      <td style="font-family:'JetBrains Mono',monospace">₹${r.base.toLocaleString('en-IN')}</td>
+      <td style="font-family:'JetBrains Mono',monospace;color:var(--amber)">₹${r.overtime.toLocaleString('en-IN')}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--tx)">₹${r.total.toLocaleString('en-IN')}</td>
+      <td style="font-family:'JetBrains Mono',monospace;color:var(--cyan)">₹${r.perUnit.toLocaleString('en-IN')}</td>
+      <td style="font-family:'JetBrains Mono',monospace;color:${r.efficiency>=90?'var(--emerald)':r.efficiency>=75?'var(--amber)':'var(--rose)'}">${r.efficiency}%</td>
+    </tr>`).join('');
+}
+
+function renderKPITable(){
+  const tbody = document.getElementById('kpiTbody');
+  tbody.innerHTML = STATE.kpiData.map((r,i)=>`
+    <tr>
+      <td>${i+1}</td><td><b>${r.metric}</b></td>
+      <td style="color:var(--emerald)">${r.target}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-weight:700">${r.actual}</td>
+      <td style="font-family:'JetBrains Mono',monospace;color:${r.variance.startsWith('-')?'var(--rose)':'var(--emerald)'}">${r.variance}</td>
+      <td style="color:var(--tx3)">${r.period}</td>
+      <td>${statusPill(r.status)}</td>
+    </tr>`).join('');
+}
+
+function renderAlerts(){
+  const alerts = [
+    {type:'rose',icon:'alert-triangle',title:'Staff Shortage — SLN Terminus Housekeeping',desc:'Deployed 20/22 planned. Gap of 2 staff since morning shift.',time:'06:30'},
+    {type:'rose',icon:'x-circle',title:'Vendor Under-Deployment — HireFleet India',desc:'Admin support: 9/12 contracted staff deployed. SLA breach risk.',time:'08:45'},
+    {type:'rose',icon:'clock',title:'Overdue Task — Lobby Sanitization',desc:'Anitha Devi (Absent). Task overdue by 3 hours.',time:'09:00'},
+    {type:'amber',icon:'alert-circle',title:'Late Reporting — 2 Security Staff',desc:'Suresh Babu & Lakshmi Narayan checked in late today.',time:'14:28'},
+    {type:'amber',icon:'trending-down',title:'Vendor Compliance Drop — HireFleet India',desc:'Compliance down to 75% this week. Review required.',time:'09:00'},
+    {type:'cyan',icon:'info',title:'Shift Handover Pending — Plant Room',desc:'Maintenance shift handover not logged for evening shift.',time:'14:00'},
+    {type:'emerald',icon:'check-circle',title:'Security — Full Coverage Achieved',desc:'SecureGuard Ltd: All 32/32 contracted staff deployed.',time:'07:00'},
+  ];
+  const list = document.getElementById('alertsList');
+  list.innerHTML = alerts.map(a=>`
+    <div class="alert-item a-${a.type}">
+      <div class="alert-icon" style="background:var(--${a.type==='rose'?'rose':a.type==='amber'?'amber':a.type==='cyan'?'cyan':'emerald'}-g)">
+        <i data-lucide="${a.icon}" style="color:var(--${a.type==='rose'?'rose':a.type==='amber'?'amber':a.type==='cyan'?'cyan':'emerald'})"></i>
+      </div>
+      <div class="alert-body">
+        <div class="alert-title">${a.title}</div>
+        <div class="alert-desc">${a.desc}</div>
+      </div>
+      <div class="alert-time">${a.time}</div>
+    </div>`).join('');
+  setTimeout(()=>{ try{ lucide.createIcons(); }catch(e){} }, 100);
+}
+
+function dismissAllAlerts(){
+  document.getElementById('alertsList').innerHTML = `<div style="text-align:center;padding:40px;color:var(--tx3);font-size:13px">✅ All alerts dismissed for this session</div>`;
+  showToast('All alerts dismissed');
+}
+
+/* ══════════════════════════════════════
+   CHARTS
+══════════════════════════════════════ */
+const CHART_DEFAULTS = () => ({
+  responsive:true, maintainAspectRatio:false,
+  plugins:{ legend:{ labels:{ color: document.documentElement.dataset.theme==='dark'?'#b8dde8':'#0f2e35', font:{size:11,family:'Plus Jakarta Sans'} } } },
+  scales:{ x:{ ticks:{ color: document.documentElement.dataset.theme==='dark'?'#4a7a8a':'#3d7080', font:{size:11} }, grid:{ color: document.documentElement.dataset.theme==='dark'?'rgba(6,182,212,.06)':'rgba(13,148,136,.08)' } }, y:{ ticks:{ color: document.documentElement.dataset.theme==='dark'?'#4a7a8a':'#3d7080', font:{size:11} }, grid:{ color: document.documentElement.dataset.theme==='dark'?'rgba(6,182,212,.06)':'rgba(13,148,136,.08)' } } }
+});
+
+const chartInstances = {};
+
+function destroyChart(id){ if(chartInstances[id]){ chartInstances[id].destroy(); delete chartInstances[id]; } }
+
+function renderMainCharts(){
+  const labels = ['SLN Terminus HK','SLN Terminus HK','Security','Maintenance','Fire & Safety','Admin','Landscaping'];
+  const planned = [22,18,14,8,8,12,6];
+  const actual  = [20,18,13,7,8,9,5];
+
+  destroyChart('chartPlannedActual');
+  chartInstances['chartPlannedActual'] = new Chart(document.getElementById('chartPlannedActual'),{
+    type:'bar', data:{
+      labels,
+      datasets:[
+        {label:'Planned',data:planned,backgroundColor:'rgba(6,182,212,.3)',borderColor:'#06b6d4',borderWidth:2,borderRadius:4},
+        {label:'Actual', data:actual, backgroundColor:'rgba(16,185,129,.3)',borderColor:'#10b981',borderWidth:2,borderRadius:4}
+      ]
+    }, options:{...CHART_DEFAULTS(), plugins:{...CHART_DEFAULTS().plugins}}
+  });
+
+  destroyChart('chartFunctionPie');
+  chartInstances['chartFunctionPie'] = new Chart(document.getElementById('chartFunctionPie'),{
+    type:'doughnut', data:{
+      labels:['Housekeeping','Security','Maintenance','Fire & Safety','Admin'],
+      datasets:[{data:[38,14,8,8,9],backgroundColor:['#06b6d4','#ef4444','#f59e0b','#ff6b35','#a78bfa'],borderWidth:0,hoverOffset:8}]
+    }, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'right',labels:{color: document.documentElement.dataset.theme==='dark'?'#b8dde8':'#0f2e35',font:{size:11}}}}}
+  });
+
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  destroyChart('chartAttendanceTrend');
+  chartInstances['chartAttendanceTrend'] = new Chart(document.getElementById('chartAttendanceTrend'),{
+    type:'line', data:{
+      labels:days,
+      datasets:[{label:'Attendance %',data:[95,92,94,93,91,89,93],fill:true,backgroundColor:'rgba(16,185,129,.1)',borderColor:'#10b981',borderWidth:2.5,tension:.4,pointBackgroundColor:'#10b981',pointRadius:4}]
+    }, options:{...CHART_DEFAULTS()}
+  });
+
+  const vendors = STATE.vendorData.map(v=>v.name.split(' ')[0]);
+  const compliance = STATE.vendorData.map(v=>v.compliance);
+  destroyChart('chartVendorCompliance');
+  chartInstances['chartVendorCompliance'] = new Chart(document.getElementById('chartVendorCompliance'),{
+    type:'bar', data:{
+      labels:vendors,
+      datasets:[{label:'Compliance %',data:compliance,backgroundColor:compliance.map(c=>c>=95?'rgba(16,185,129,.4)':c>=80?'rgba(245,158,11,.4)':'rgba(239,68,68,.4)'),borderColor:compliance.map(c=>c>=95?'#10b981':c>=80?'#f59e0b':'#ef4444'),borderWidth:2,borderRadius:4}]
+    }, options:{...CHART_DEFAULTS(), scales:{...CHART_DEFAULTS().scales, y:{...CHART_DEFAULTS().scales.y, min:0, max:100}}}
+  });
+
+  destroyChart('chartSLA');
+  chartInstances['chartSLA'] = new Chart(document.getElementById('chartSLA'),{
+    type:'radar', data:{
+      labels:['Housekeeping','Security','Maintenance','Fire & Safety','Admin Support'],
+      datasets:[
+        {label:'Target',data:[95,100,90,100,85],borderColor:'rgba(6,182,212,.5)',backgroundColor:'rgba(6,182,212,.08)',borderWidth:1.5,pointBackgroundColor:'#06b6d4'},
+        {label:'Actual', data:[89,100,83,100,75],borderColor:'rgba(16,185,129,.8)',backgroundColor:'rgba(16,185,129,.12)',borderWidth:2,pointBackgroundColor:'#10b981'}
+      ]
+    }, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{color: document.documentElement.dataset.theme==='dark'?'#b8dde8':'#0f2e35',font:{size:11}}}},scales:{r:{ticks:{color: document.documentElement.dataset.theme==='dark'?'#4a7a8a':'#3d7080'},grid:{color: document.documentElement.dataset.theme==='dark'?'rgba(6,182,212,.1)':'rgba(13,148,136,.12)'},pointLabels:{color: document.documentElement.dataset.theme==='dark'?'#b8dde8':'#0f2e35',font:{size:10}}}}}
+  });
+}
+
+function renderCostCharts(){
+  const props = STATE.costData.map(r=>r.property.split('—')[1].trim());
+  const totals = STATE.costData.map(r=>r.total);
+
+  destroyChart('chartCostProperty');
+  chartInstances['chartCostProperty'] = new Chart(document.getElementById('chartCostProperty'),{
+    type:'bar', data:{
+      labels:props,
+      datasets:[{label:'Monthly Cost (₹)',data:totals,backgroundColor:'rgba(255,215,0,.25)',borderColor:'#FFD700',borderWidth:2,borderRadius:4}]
+    }, options:{...CHART_DEFAULTS()}
+  });
+
+  destroyChart('chartIdleVsProd');
+  chartInstances['chartIdleVsProd'] = new Chart(document.getElementById('chartIdleVsProd'),{
+    type:'doughnut', data:{
+      labels:['Productive','Idle'],
+      datasets:[{data:[82,18],backgroundColor:['rgba(16,185,129,.5)','rgba(239,68,68,.4)'],borderWidth:0,hoverOffset:8}]
+    }, options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom',labels:{color: document.documentElement.dataset.theme==='dark'?'#b8dde8':'#0f2e35',font:{size:11}}}}}
+  });
+}
+
+function renderKPICharts(){
+  const months = ['Oct','Nov','Dec','Jan','Feb','Mar'];
+  destroyChart('chartKPITrend');
+  chartInstances['chartKPITrend'] = new Chart(document.getElementById('chartKPITrend'),{
+    type:'line', data:{
+      labels:months,
+      datasets:[
+        {label:'Attendance %',data:[91,92,94,93,92,93],borderColor:'#10b981',backgroundColor:'rgba(16,185,129,.08)',fill:true,tension:.4,borderWidth:2,pointRadius:3},
+        {label:'Vendor Compliance %',data:[82,84,88,86,85,87],borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,.06)',fill:true,tension:.4,borderWidth:2,pointRadius:3},
+        {label:'SLA Adherence %',data:[87,88,91,89,88,89],borderColor:'#06b6d4',backgroundColor:'rgba(6,182,212,.06)',fill:true,tension:.4,borderWidth:2,pointRadius:3}
+      ]
+    }, options:{...CHART_DEFAULTS()}
+  });
+}
+
+/* ══════════════════════════════════════
+   MODALS
+══════════════════════════════════════ */
+function openAddModal(){ document.getElementById('addModal').classList.add('open'); }
+function openAddTaskModal(){ showToast('Task form — coming soon'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+function saveStaff(){
+  const name = document.getElementById('f-name').value.trim();
+  if(!name){ showToast('Please enter staff name','error'); return; }
+  STATE.staffData.push({
+    id:`EMP-${String(STATE.staffData.length+1).padStart(3,'0')}`,
+    name, function:document.getElementById('f-function').value,
+    zone:document.getElementById('f-zone').value,
+    shift:document.getElementById('f-shift').value,
+    vendor:document.getElementById('f-vendor').value,
+    status:'Present'
+  });
+  closeModal('addModal');
+  renderDeploymentTable();
+  showToast(`✅ Staff "${name}" added successfully`);
+}
+
+/* ══════════════════════════════════════
+   UPLOAD HANDLING
+══════════════════════════════════════ */
+function dragOver(e){ e.preventDefault(); document.getElementById('dropZone').classList.add('dragover'); }
+function dragLeave(e){ document.getElementById('dropZone').classList.remove('dragover'); }
+function dropFile(e){ e.preventDefault(); dragLeave(e); const f=e.dataTransfer.files[0]; if(f) processFile(f); }
+function handleFileUpload(e){ const f=e.target.files[0]; if(f) processFile(f); e.target.value=''; }
+
+function processFile(file){
+  showToast(`📂 Reading "${file.name}"…`);
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    try{
+      const wb = XLSX.read(ev.target.result, {type:'array'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const data = XLSX.utils.sheet_to_json(ws, {header:1});
+      STATE.uploadBuffer = data;
+      renderUploadPreview(data);
+      showToast(`✅ ${data.length-1} rows loaded. Review and confirm.`);
+    }catch(e){ showToast('❌ Failed to parse file: '+e.message,'error'); }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function renderUploadPreview(data){
+  if(!data || data.length<2) return;
+  const headers = data[0];
+  const rows = data.slice(1,21);
+  const thead = document.querySelector('#uploadPreviewTable thead');
+  const tbody = document.querySelector('#uploadPreviewTable tbody');
+  thead.innerHTML = `<tr>${headers.map(h=>`<th>${h||''}</th>`).join('')}</tr>`;
+  tbody.innerHTML = rows.map(r=>`<tr>${headers.map((_,i)=>`<td>${r[i]||''}</td>`).join('')}</tr>`).join('');
+  document.getElementById('uploadPreview').style.display='block';
+  setTimeout(()=>{ try{ lucide.createIcons(); }catch(e){} }, 50);
+}
+
+function confirmImport(){
+  if(!STATE.uploadBuffer){ showToast('No data to import','error'); return; }
+  showToast(`✅ ${STATE.uploadBuffer.length-1} records imported successfully`);
+  STATE.uploadBuffer = null;
+  document.getElementById('uploadPreview').style.display='none';
+}
+
+function cancelImport(){
+  STATE.uploadBuffer = null;
+  document.getElementById('uploadPreview').style.display='none';
+  showToast('Import cancelled');
+}
+
+function downloadTemplate(type){
+  const templates = {
+    attendance:[['Name','Function','Zone','Date','Check-In','Check-Out','Shift','Status','Remarks'],['John Doe','Housekeeping','Tower A','2026-03-18','06:00','14:00','Morning','Present','']],
+    deployment:[['Staff Name','Staff ID','Property','Zone','Role','Vendor','Contract Ref','Shift'],['John Doe','EMP-001','SLN Terminus','Tower A','Housekeeping','CleanPro Services','VND-001','Morning']],
+    vendor:[['Vendor Name','Function','Contracted Count','Deployed Count','Last Verified'],['CleanPro Services','Housekeeping','45','40','2026-03-17']]
+  };
+  const ws = XLSX.utils.aoa_to_sheet(templates[type]);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Template');
+  XLSX.writeFile(wb, `SLN_${type}_template.xlsx`);
+  showToast(`📥 ${type} template downloaded`);
+}
+
+/* ══════════════════════════════════════
+   EXPORT FUNCTIONS
+══════════════════════════════════════ */
+function exportExcel(){
+  const wb = XLSX.utils.book_new();
+
+  // Attendance sheet
+  const attData = [['Name','Function','Date','Check-In','Check-Out','Shift','Status','Remarks'],
+    ...STATE.attendanceData.map(r=>[r.name,r.function,r.date,r.checkin,r.checkout,r.shift,r.status,r.remarks])];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(attData), 'Attendance');
+
+  // Staff Deployment
+  const depData = [['ID','Name','Function','Zone','Shift','Vendor','Status'],
+    ...STATE.staffData.map(r=>[r.id,r.name,r.function,r.zone,r.shift,r.vendor,r.status])];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(depData), 'Deployment');
+
+  // Vendor Compliance
+  const venData = [['Vendor','Function','Contracted','Deployed','Gap','Compliance %','SLA Status'],
+    ...STATE.vendorData.map(r=>[r.name,r.function,r.contracted,r.deployed,r.gap,r.compliance+'%',r.sla])];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(venData), 'Vendor Compliance');
+
+  // KPI
+  const kpiData = [['KPI Metric','Target','Actual','Variance','Period','Status'],
+    ...STATE.kpiData.map(r=>[r.metric,r.target,r.actual,r.variance,r.period,r.status])];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(kpiData), 'KPI Report');
+
+  const today = new Date().toISOString().split('T')[0];
+  XLSX.writeFile(wb, `SLN_Workforce_Report_${today}.xlsx`);
+  showToast('📥 Excel report exported');
+}
+
+function exportSectionExcel(tableId, filename){
+  const table = document.getElementById(tableId);
+  if(!table){ showToast('Table not found','error'); return; }
+  const ws = XLSX.utils.table_to_sheet(table);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, filename.replace(/_/g,' '));
+  XLSX.writeFile(wb, `SLN_${filename}_${new Date().toISOString().split('T')[0]}.xlsx`);
+  showToast('📥 Excel exported');
+}
+
+function exportPDF(){
+  const { jsPDF } = window.jspdf;
+  if(!jsPDF){ showToast('PDF library loading…','error'); return; }
+  const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+
+  // Header
+  doc.setFillColor(2,11,18);
+  doc.rect(0,0,210,28,'F');
+  doc.setTextColor(255,215,0);
+  doc.setFontSize(16); doc.setFont('helvetica','bold');
+  doc.text('SLN TERMINUS', 14, 12);
+  doc.setFontSize(10); doc.setFont('helvetica','normal');
+  doc.setTextColor(184,221,232);
+  doc.text('Workforce & Resource Management Report', 14, 19);
+  doc.text(`Generated: ${new Date().toLocaleString('en-IN')}`, 14, 25);
+
+  let y = 36;
+
+  // KPI Summary
+  doc.setTextColor(6,182,212); doc.setFontSize(12); doc.setFont('helvetica','bold');
+  doc.text('KEY PERFORMANCE INDICATORS', 14, y); y+=7;
+
+  doc.autoTable({
+    startY: y,
+    head:[['KPI Metric','Target','Actual','Variance','Status']],
+    body: STATE.kpiData.map(r=>[r.metric,r.target,r.actual,r.variance,r.status]),
+    theme:'grid',
+    headStyles:{fillColor:[13,148,136],textColor:[255,255,255],fontSize:9,fontStyle:'bold'},
+    bodyStyles:{fontSize:9,textColor:[50,50,50]},
+    alternateRowStyles:{fillColor:[240,250,250]},
+    margin:{left:14,right:14}
+  });
+  y = doc.lastAutoTable.finalY + 10;
+
+  // Vendor Compliance
+  if(y > 230){ doc.addPage(); y=20; }
+  doc.setTextColor(245,158,11); doc.setFontSize(12); doc.setFont('helvetica','bold');
+  doc.text('VENDOR COMPLIANCE SUMMARY', 14, y); y+=7;
+
+  doc.autoTable({
+    startY: y,
+    head:[['Vendor','Function','Contracted','Deployed','Gap','Compliance %','SLA Status']],
+    body: STATE.vendorData.map(r=>[r.name,r.function,r.contracted,r.deployed,r.gap>0?'-'+r.gap:'0',r.compliance+'%',r.sla]),
+    theme:'grid',
+    headStyles:{fillColor:[245,158,11],textColor:[255,255,255],fontSize:9,fontStyle:'bold'},
+    bodyStyles:{fontSize:9,textColor:[50,50,50]},
+    alternateRowStyles:{fillColor:[255,253,240]},
+    margin:{left:14,right:14}
+  });
+  y = doc.lastAutoTable.finalY + 10;
+
+  // Attendance
+  if(y > 230){ doc.addPage(); y=20; }
+  doc.setTextColor(16,185,129); doc.setFontSize(12); doc.setFont('helvetica','bold');
+  doc.text('ATTENDANCE SUMMARY', 14, y); y+=7;
+
+  doc.autoTable({
+    startY: y,
+    head:[['Staff Name','Function','Date','Check-In','Shift','Status']],
+    body: STATE.attendanceData.map(r=>[r.name,r.function,r.date,r.checkin,r.shift,r.status]),
+    theme:'grid',
+    headStyles:{fillColor:[16,185,129],textColor:[255,255,255],fontSize:9,fontStyle:'bold'},
+    bodyStyles:{fontSize:9,textColor:[50,50,50]},
+    alternateRowStyles:{fillColor:[240,255,248]},
+    margin:{left:14,right:14}
+  });
+
+  // Footer
+  const pageCount = doc.internal.getNumberOfPages();
+  for(let p=1;p<=pageCount;p++){
+    doc.setPage(p);
+    doc.setFillColor(2,11,18);
+    doc.rect(0,287,210,10,'F');
+    doc.setTextColor(74,122,138); doc.setFontSize(8);
+    doc.text(`SLN Terminus · Workforce & Resource Management · Page ${p} of ${pageCount}`, 14, 293);
+    doc.text('Confidential', 175, 293);
+  }
+
+  doc.save(`SLN_Workforce_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+  showToast('📄 PDF A4 report exported');
+}
+
+function exportKPIPDF(){ exportPDF(); }
+
+/* ══════════════════════════════════════
+   CLOCK, THEME, TOAST
+══════════════════════════════════════ */
+function updateClock(){
+  const now = new Date();
+  const h=String(now.getHours()).padStart(2,'0');
+  const m=String(now.getMinutes()).padStart(2,'0');
+  const s=String(now.getSeconds()).padStart(2,'0');
+  document.querySelectorAll('#currentTime').forEach(el=>el.textContent=`${h}:${m}:${s}`);
+}
+setInterval(updateClock,1000); updateClock();
+
+function toggleTheme(){
+  const html = document.documentElement;
+  html.setAttribute('data-theme', html.dataset.theme==='dark'?'light':'dark');
+  localStorage.setItem('slnTheme', html.dataset.theme);
+  setTimeout(()=>{ renderMainCharts(); },100);
+}
+(function(){ const t=localStorage.getItem('slnTheme'); if(t) document.documentElement.setAttribute('data-theme',t); })();
+
+function showToast(msg,type){
+  const toast = document.getElementById('toast');
+  const icon = toast.querySelector('i');
+  document.getElementById('toastMsg').textContent = msg;
+  if(type==='error'){ icon.setAttribute('data-lucide','x-circle'); toast.style.borderColor='var(--rose)'; }
+  else { icon.setAttribute('data-lucide','check-circle'); toast.style.borderColor='var(--emerald)'; }
+  try{ lucide.createIcons(); }catch(e){}
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),3000);
+}
+
+/* ══════════════════════════════════════
+   SIDEBAR BURGER
+══════════════════════════════════════ */
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sbOverlay');
+document.getElementById('burgerBtn').addEventListener('click',()=>{
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('show');
+});
+function closeSidebar(){ sidebar.classList.remove('open'); overlay.classList.remove('show'); }
+
+/* ══════════════════════════════════════
+   MOBILE NAV
+══════════════════════════════════════ */
+const mobileNavItems = [
+  {link:'/sln_terminus',icon:'home',title:'SLN Terminus Portal',subtitle:'Back to main portal'},
+  {link:'/sln_resource_mgmt',icon:'users',title:'Resource Management',subtitle:'Current module'},
+  {link:'/gm_tasks',icon:'clipboard-check',title:'GM Tasks',subtitle:'Task management'},
+  {link:'/sln_hk/',icon:'sparkles',title:'Housekeeping',subtitle:'HK operations'},
+  {link:'/sln_sec',icon:'shield-alert',title:'Security',subtitle:'Security ops'},
+  {link:'/sln_mms_dashboard',icon:'activity',title:'MMS Dashboard',subtitle:'Maintenance'},
+];
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const list = document.getElementById('mobileNavList');
+  if(list){
+    list.innerHTML = mobileNavItems.map(item=>`
+      <li class="mobile-nav-item">
+        <a class="mobile-nav-button" href="${item.link}">
+          <div class="mobile-nav-icon"><i data-lucide="${item.icon}"></i></div>
+          <div class="mobile-nav-text"><span class="mobile-nav-title">${item.title}</span><span class="mobile-nav-subtitle">${item.subtitle}</span></div>
+        </a>
+      </li>`).join('');
+  }
+  try{ lucide.createIcons(); }catch(e){}
+
+  seedData();
+  renderPlanningTable();
+  renderDeploymentTable();
+  renderAttendanceTable();
+  renderTasksTable();
+  renderVendorTable();
+  renderCostTable();
+  renderKPITable();
+  renderAlerts();
+  renderMainCharts();
+
+  // Mobile nav toggle
+  document.getElementById('mobileMenuBtn').addEventListener('click',()=>{
+    document.getElementById('mobileNavOverlay').classList.add('active');
+    document.getElementById('mobileNavContainer').classList.add('active');
+    document.body.style.overflow='hidden';
+  });
+  const closeMob = ()=>{
+    document.getElementById('mobileNavOverlay').classList.remove('active');
+    document.getElementById('mobileNavContainer').classList.remove('active');
+    document.body.style.overflow='';
+  };
+  document.getElementById('mobileNavClose').addEventListener('click',closeMob);
+  document.getElementById('mobileNavOverlay').addEventListener('click',closeMob);
+});
+</script>
+</body>
+</html>

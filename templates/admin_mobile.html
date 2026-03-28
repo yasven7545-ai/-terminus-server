@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Admin</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-900 text-white p-6">
+
+<h1 class="text-xl font-bold mb-6">Admin Triage</h1>
+
+{% for i in issues %}
+<div class="glass-card p-4 mb-3">
+<h3 class="font-semibold">{{ i.title }}</h3>
+<p class="text-xs text-gray-400">{{ i.status }}</p>
+
+<div class="flex gap-2 mt-3">
+<a href="/admin/update/{{i.id}}/In%20Progress" class="bg-yellow-500 px-3 py-1 rounded">Progress</a>
+<a href="/admin/update/{{i.id}}/Resolved" class="bg-green-600 px-3 py-1 rounded">Resolve</a>
+</div>
+</div>
+{% endfor %}
+
+</body>
+</html>

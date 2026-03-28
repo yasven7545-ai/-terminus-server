@@ -1,0 +1,3490 @@
+[
+  {
+    "asset_code": "HT I/C  VCB-1",
+    "asset_name": "HT Panel I/C Source -1 VCB",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "HT I/C  VCB-2",
+    "asset_name": "HT Panel I/C Source -2 VCB",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "HT O/G-1 VCB-1",
+    "asset_name": "HT Panel O/G VCB-1",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "HT I/C from O/G VCB-4",
+    "asset_name": "HT I/C from O/G VCB",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "HT TR 01 VCB-1",
+    "asset_name": "Transformer- HT I/C VCB-1",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "HT TR 02 VCB-2",
+    "asset_name": "Transformer- HT I/C VCB-2",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "HT TR 03 VCB-3",
+    "asset_name": "Transformer- HT I/C VCB-3",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "HT TR 04 VCB-4",
+    "asset_name": "Transformer- HT I/C VCB-4",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "HT TR 05 VCB-5",
+    "asset_name": "Transformer- HT I/C VCB-5",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG-01",
+    "asset_name": "DG set-1 1500 KVA",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG-02",
+    "asset_name": "DG set-2 1500 KVA",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG-03",
+    "asset_name": "DG set-3 1500 KVA",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG-04",
+    "asset_name": "DG set-4 1500 KVA",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "TR-1",
+    "asset_name": "Transformer-1 - 1600KVA",
+    "location": "Transformer Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "TR-2",
+    "asset_name": "Transformer-2 - 1600KVA",
+    "location": "Transformer Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "TR-3",
+    "asset_name": "Transformer-3 - 1600KVA",
+    "location": "Transformer Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "TR-4",
+    "asset_name": "Transformer-4 - 1600KVA",
+    "location": "Transformer Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "TR-5",
+    "asset_name": "Transformer-5 - 630KVA",
+    "location": "Transformer Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "T/R-1 Isolator -1",
+    "asset_name": "LT Kiosk panel ACB's -1",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "T/R-2 Isolator -2",
+    "asset_name": "LT Kiosk panel ACB's -2",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "T/R-3 Isolator -3",
+    "asset_name": "LT Kiosk panel ACB's -3",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "T/R-4 Isolator -4",
+    "asset_name": "LT Kiosk panel ACB's -4",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "T/R-5 Isolator -5",
+    "asset_name": "LT Kiosk panel ACB's -5",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LT I/C ACB EB-1",
+    "asset_name": "LT panel EB Incomining  ACB -1",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LT I/C ACB EB-2",
+    "asset_name": "LT panel EB Incomining  ACB -2",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LT I/C ACB EB-3",
+    "asset_name": "LT panel EB Incomining  ACB -3",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LT I/C ACB EB-4",
+    "asset_name": "LT panel EB Incomining  ACB -4",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LT I/C ACB EB-5",
+    "asset_name": "LT panel EB Incomining  ACB -5",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LT I/C ACB DG-1",
+    "asset_name": "LT panel DG Incomining  ACB -1",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LT I/C ACB DG-2",
+    "asset_name": "LT panel DG Incomining  ACB -2",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LT I/C ACB DG-3",
+    "asset_name": "LT panel DG Incomining  ACB -3",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LT I/C ACB DG-4",
+    "asset_name": "LT panel DG Incomining  ACB -4",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LT Buscoupler ACB-1",
+    "asset_name": "LT Panel BUSCOUPLER -1",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LT Buscoupler ACB-2",
+    "asset_name": "LT Panel BUSCOUPLER -2",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LT Buscoupler ACB-3",
+    "asset_name": "LT Panel BUSCOUPLER -3",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LT Buscoupler ACB-4",
+    "asset_name": "LT Panel BUSCOUPLER -4",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller O/G ACB Source-1",
+    "asset_name": "Chiller Source -1",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller O/G ACB Source-2",
+    "asset_name": "Chiller Source -2",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Spare ACB",
+    "asset_name": "LT Spare ACB",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "PLC panel",
+    "asset_name": "Main PLC panel",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "EB Capacitor panel-1",
+    "asset_name": "400 kvar APFCR panel-1",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "EB Capacitor panel-2",
+    "asset_name": "400 kvar APFCR panel-1",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "EB Capacitor panel-3",
+    "asset_name": "400 kvar APFCR panel-1",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "EB Capacitor panel-4",
+    "asset_name": "400 kvar APFCR panel-1",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "EB Capacitor panel-5",
+    "asset_name": "150 kvar APFCR panel-1",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG O/G VCB-1",
+    "asset_name": "DG AMF panel O/G  VCB-1",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG O/G VCB-2",
+    "asset_name": "DG AMF panel O/G  VCB-2",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG O/G VCB-3",
+    "asset_name": "DG AMF panel O/G  VCB-3",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG O/G VCB-4",
+    "asset_name": "DG AMF panel O/G  VCB-4",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG O/G ACB -5 spare",
+    "asset_name": "DG AMF panel O/G",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller I/C ACB Source-1",
+    "asset_name": "Chiller source-1 I/C ACB",
+    "location": "Plant Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller I/C ACB Source-2",
+    "asset_name": "Chiller source-2 I/C ACB",
+    "location": "Plant Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Buscoupler ACB",
+    "asset_name": "Chiller Buscoupler ACB",
+    "location": "Plant Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller-1 ACB",
+    "asset_name": "Chiller-1 O/G ACB",
+    "location": "Plant Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller-2 ACB",
+    "asset_name": "Chiller-2 O/G ACB",
+    "location": "Plant Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller-3 ACB",
+    "asset_name": "Chiller-3 O/G ACB",
+    "location": "Plant Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "HT I/C Panel",
+    "asset_name": "33kv I/C source panel",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "HT O/G Panel",
+    "asset_name": "HT TR I/C panel",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LT kiosk panel",
+    "asset_name": "LT TR O/G panel",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LT PANEL",
+    "asset_name": "LT I/C from kiosk panel",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "AMF Panel-1",
+    "asset_name": "AMF DG panel-1",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "AMF Panel-2",
+    "asset_name": "AMF DG panel-2",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "AMF Panel-3",
+    "asset_name": "AMF DG panel-3",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "AMF Panel-4",
+    "asset_name": "AMF DG panel-4",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "UPS-1",
+    "asset_name": "60 KVA ups",
+    "location": "UPS Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Inverter-1",
+    "asset_name": "Battery chargers-1",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Inverter-2",
+    "asset_name": "Battery chargers-2",
+    "location": "LT ROOM",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Inverter-3",
+    "asset_name": "Battery chargers-3",
+    "location": "Server Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "UPS Panel",
+    "asset_name": "60 kva Ups panel",
+    "location": "UPS Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Elevator OE-1",
+    "asset_name": "Office Elevator-1",
+    "location": "Level-9",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Elevator OE-2",
+    "asset_name": "Office Elevator-2",
+    "location": "Level-9",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Elevator OE-3",
+    "asset_name": "Office Elevator-3",
+    "location": "Level-9",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Elevator OS-1",
+    "asset_name": "Office Service Elevator-1",
+    "location": "Level-9",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Elevator MG-1",
+    "asset_name": "Mall Guest Elevator-1",
+    "location": "Level-3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Elevator MG-2",
+    "asset_name": "Mall Guest Elevator-2",
+    "location": "Level-3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Elevator MS-1",
+    "asset_name": "Mall Service Elevator-1",
+    "location": "Level-3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Elevator MS-2",
+    "asset_name": "Mall Service Elevator-2",
+    "location": "Level-3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Elevator AG-1",
+    "asset_name": "Appartment Guest Elevator-1",
+    "location": "LMR",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Elevator AG-2",
+    "asset_name": "Appartment Guest Elevator-2",
+    "location": "LMR",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Elevator AS-1",
+    "asset_name": "Appartment Service Elevator-1",
+    "location": "LMR",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Elevator AS-2",
+    "asset_name": "Appartment Service Elevator-2",
+    "location": "LMR",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Elevator FE-1",
+    "asset_name": "Dmart FE Elevator-1",
+    "location": "Level-2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Elevator FE-2",
+    "asset_name": "Dmart FE Elevator-2",
+    "location": "Level-2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Escalator L3-L2",
+    "asset_name": "L3-L2  Down Escalator",
+    "location": "Level-2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Escalator L2-L3",
+    "asset_name": "L2-L3  Up Escalator",
+    "location": "Level-3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Escalator L2-L1",
+    "asset_name": "L2-L1 Down Escalator",
+    "location": "Level-1",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Escalator L1-L2",
+    "asset_name": "L1-L2 Up Escalator",
+    "location": "Level-2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Escalator L1-LG",
+    "asset_name": "L1-LG Down Escalator",
+    "location": "Level-G",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Escalator LG-L1",
+    "asset_name": "LG-L1 Up Escalator",
+    "location": "Level-1",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Travellator LG",
+    "asset_name": "LG-B1 Mid Down Travellator",
+    "location": "Level-G",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Travellator B1",
+    "asset_name": "B1 Mid - B1  Down Travellator",
+    "location": "B1 Mid Level",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Travellator B2",
+    "asset_name": "B1-B2  Down Travellator",
+    "location": "Level-B1",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Travellator L1-LG",
+    "asset_name": "D mart inside L1-LG Down Escalator",
+    "location": "Level-1",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Condenser pump-1",
+    "asset_name": "Chiller condenser pumps",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Condenser pump-2",
+    "asset_name": "Chiller condenser pumps",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Condenser pump-3",
+    "asset_name": "Chiller condenser pumps",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Primary pump-1",
+    "asset_name": "Chiller Primary pumps",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Primary pump-2",
+    "asset_name": "Chiller Primary pumps",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Primary pump-3",
+    "asset_name": "Chiller Primary pumps",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Mall secondary pump-1",
+    "asset_name": "Chiller Secondary pumps",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Mall secondary pump-2",
+    "asset_name": "Chiller Secondary pumps",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Mall secondary pump-3",
+    "asset_name": "Chiller Secondary pumps",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Marriott Secondary pump-1",
+    "asset_name": "Chiller Secondary pumps",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Marriott Secondary pump-2",
+    "asset_name": "Chiller Secondary pumps",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Marriott Secondary pump-3",
+    "asset_name": "Chiller Secondary pumps",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Package Condenser pump-1",
+    "asset_name": "Package condenser pumps",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Package Condenser pump-2",
+    "asset_name": "Package condenser pumps",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Package Condenser pump-3",
+    "asset_name": "Package condenser pumps",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Mall secondary pump VFD -1",
+    "asset_name": "VFD units",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Mall secondary pump VFD -2",
+    "asset_name": "VFD units",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Mall secondary pump VFD -3",
+    "asset_name": "VFD units",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Marriott Secondary pump VFD-1",
+    "asset_name": "VFD units",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Marriott Secondary pump VFD-2",
+    "asset_name": "VFD units",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Marriott Secondary pump VFD-3",
+    "asset_name": "VFD units",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chilled water makeup pump-1",
+    "asset_name": "Chilled water Pressuer makeup pumps",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chilled water makeup pump-2",
+    "asset_name": "Chilled water Pressuer makeup pumps",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG condenser pump-1",
+    "asset_name": "DG Condenser pumps",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG condenser pump-2",
+    "asset_name": "DG Condenser pumps",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG condenser pump-3",
+    "asset_name": "DG Condenser pumps",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG condenser pump-4",
+    "asset_name": "DG Condenser pumps",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG condenser pump-5",
+    "asset_name": "DG Condenser pumps",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "WTP Raw water Pump-1",
+    "asset_name": "WTP pumps",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "WTP Raw water Pump-2",
+    "asset_name": "WTP pumps",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Domestic water shifting Pump-1",
+    "asset_name": "Domastic pumps",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Domestic water shifting Pump-2",
+    "asset_name": "Domastic pumps",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Cooling tower-1",
+    "asset_name": "Cooling towers",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Cooling tower-2",
+    "asset_name": "Cooling towers",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Cooling tower-3",
+    "asset_name": "Cooling towers",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG Cooling tower-1",
+    "asset_name": "Cooling towers",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG Cooling tower-2",
+    "asset_name": "Cooling towers",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Package Cooling tower-1",
+    "asset_name": "Cooling towers",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Package Cooling tower-2",
+    "asset_name": "Cooling towers",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Cooling tower-1 fan -1 To 4",
+    "asset_name": "CT Fans",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Cooling tower-2 fan -1 To 4",
+    "asset_name": "CT Fans",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Cooling tower-3 fan -1 & 2",
+    "asset_name": "CT Fans",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG Cooling tower-1 fan -1 & 2",
+    "asset_name": "CT Fans",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG Cooling tower-2 fan -1 & 2",
+    "asset_name": "CT Fans",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Package Cooling tower-1 fan -1 To 4",
+    "asset_name": "CT Fans",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Package Cooling tower-2 fan -1 To 4",
+    "asset_name": "CT Fans",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L8 common area lobby Package Unit-1",
+    "asset_name": "Package units",
+    "location": "L8 Beside office Lift Lobby",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L7 common area lobby Package Unit-1",
+    "asset_name": "Package units",
+    "location": "L7 Beside office Lift Lobby",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L6 common area lobby Package Unit-1",
+    "asset_name": "Package units",
+    "location": "L6 Beside office Lift Lobby",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L5 common area lobby Package Unit-1",
+    "asset_name": "Package units",
+    "location": "L5 Beside office Lift Lobby",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L4 common area lobby Package Unit-1",
+    "asset_name": "Package units",
+    "location": "L4 Beside office Lift Lobby",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L1 Common area AHU -1",
+    "asset_name": "AHU Units",
+    "location": "L1 AHU opp MS lifts",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L2 Common area AHU -1",
+    "asset_name": "AHU Units",
+    "location": "L2AHU opp MS lifts",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L2 Common area CSU -1",
+    "asset_name": "CSU Units",
+    "location": "L2 above LRR",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L3 Common area AHU -1",
+    "asset_name": "AHU Units",
+    "location": "L3 above GRR",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L3 Common area CSU -1",
+    "asset_name": "CSU Units",
+    "location": "L3 above LRR",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LG MS Lift Lobby CSU -1",
+    "asset_name": "CSU Units",
+    "location": "LG above Ceiling  MS Lift Lobby",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LG OE Lift Lobby CSU  -2",
+    "asset_name": "CSU Units",
+    "location": "LG Podium above Ceiling  OE Lift Lobby",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B1 LT Room  CSU -1",
+    "asset_name": "CSU Units",
+    "location": "B1 LT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B1 HT Room CSU -1",
+    "asset_name": "CSU Units",
+    "location": "B1 HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B1 Garbage room AC Unit-1",
+    "asset_name": "Cold storage Unit",
+    "location": "B1 Garbage Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B1 UPS Room Fan coil Unit-1",
+    "asset_name": "FCU Unit",
+    "location": "B1 UPS Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B1 Server Room Split  Air Conditioner -1",
+    "asset_name": "Split AC units",
+    "location": "B1 Server Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B1 Server Room Split  Air Conditioner -2",
+    "asset_name": "Split AC units",
+    "location": "B1 Server Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "CCTV Room Split  Air Conditioner -1",
+    "asset_name": "Split AC units",
+    "location": "B1 CCTV Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "CCTV Room Split  Air Conditioner -2",
+    "asset_name": "Split AC units",
+    "location": "B1 CCTV Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "BMS Room Split  Air Conditioner -1",
+    "asset_name": "Split AC units",
+    "location": "B1 BMS Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B1 UPS Room Split  Air Conditioner -1",
+    "asset_name": "Split AC units",
+    "location": "B1 UPS Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 OE Lift Lobby Split  Air Conditioner-1",
+    "asset_name": "Split AC units",
+    "location": "B2 OE Lift Lobby",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 OE Lift Lobby Split  Air Conditioner-1",
+    "asset_name": "Split AC units",
+    "location": "B3 OE Lift Lobby",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 OE Lift Lobby Split  Air Conditioner-1",
+    "asset_name": "Split AC units",
+    "location": "B4OE Lift Lobby",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L9 OE Lift Lobby Split  Air Conditioner -1",
+    "asset_name": "Split AC units",
+    "location": "L9 OE Lift Lobby",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L9 UPS Room Split  Air Conditioner -1",
+    "asset_name": "Split AC units",
+    "location": "L9 UPS Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L8 Server room split AC Unit-1",
+    "asset_name": "Split AC units",
+    "location": "Server Room L8",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L7 Server room split AC Unit-1",
+    "asset_name": "Split AC units",
+    "location": "Server Room L7",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L6 Server room split AC Unit-1",
+    "asset_name": "Split AC units",
+    "location": "Server Room L6",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L5 Server room split AC Unit-1",
+    "asset_name": "Split AC units",
+    "location": "Server Room L5",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L4 Server room split AC Unit-1",
+    "asset_name": "Split AC units",
+    "location": "Server Room L4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller-1",
+    "asset_name": "350 TR chiller-1",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller-2",
+    "asset_name": "650 TR chiller-1",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller-3",
+    "asset_name": "650 TR chiller-2",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "ST-5 Fresh Air  Unit -1",
+    "asset_name": "Fresh Air Units",
+    "location": "Level-9",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "ST-5 Exahust Unit -1",
+    "asset_name": "Exahust Units",
+    "location": "Level-9",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Scrubber Unit -1",
+    "asset_name": "Scrubber Units",
+    "location": "Level-9",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Air washer Unit -1",
+    "asset_name": "Air washer Units",
+    "location": "Level-9",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG Fresh air fan -1",
+    "asset_name": "Fresh Air Units",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG Fresh air fan -2",
+    "asset_name": "Fresh Air Units",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG Fresh air fan -3",
+    "asset_name": "Fresh Air Units",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG Fresh air fan -4",
+    "asset_name": "Fresh Air Units",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG Exhaust Fan -1",
+    "asset_name": "Exahust Units",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG Exhaust Fan -2",
+    "asset_name": "Exahust Units",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG Exhaust Fan -3",
+    "asset_name": "Exahust Units",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG Exhaust Fan -4",
+    "asset_name": "Exahust Units",
+    "location": "DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Toilet Exhaust-1",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B1 Toilet Exhaust-1",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 1",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L2 GRR Toilet Exhaust-1",
+    "asset_name": "Exahust Units",
+    "location": "Level-L2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L2 LRR Toilet Exhaust-1",
+    "asset_name": "Exahust Units",
+    "location": "Level-L2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L3 GRR Toilet Exhaust-1",
+    "asset_name": "Exahust Units",
+    "location": "Level-L3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L3 LRR Toilet Exhaust-1",
+    "asset_name": "Exahust Units",
+    "location": "Level-L3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B1 Garbage Room Exhaust-1",
+    "asset_name": "Exahust Units",
+    "location": "B1 Garbage Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 STP Fresh Air Fan-1",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Fresh Air Fan unit -1",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Fresh Air Fan unit -2",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Fresh Air Fan unit -3",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Fresh Air Fan unit -4",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Fresh Air Fan unit -5",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Fresh Air Fan unit -6",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Fresh Air Fan unit -7",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Fresh Air Fan unit -8",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Fresh Air Fan unit -9",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Fresh Air Fan unit -10",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Fresh Air Fan unit -11",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Fresh Air Fan unit -12",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Fresh Air Fan unit -13",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Fresh Air Fan unit -14",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Fresh Air Fan unit -15",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Exhaust Fan unit -1",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Exhaust Fan unit -2",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Exhaust Fan unit -3",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Exhaust Fan unit -4",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Exhaust Fan unit -5",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Exhaust Fan unit -6",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Exhaust Fan unit -7",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Exhaust Fan unit -8",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Exhaust Fan unit -9",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Exhaust Fan unit -10",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Exhaust Fan unit -11",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Exhaust Fan unit -12",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Fresh Air Fan unit-1",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Fresh Air Fan unit-2",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Fresh Air Fan unit-3",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Fresh Air Fan unit-4",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Fresh Air Fan unit-5",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Fresh Air Fan unit-6",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Fresh Air Fan unit-7",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Fresh Air Fan unit-8",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Fresh Air Fan unit-9",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Fresh Air Fan unit-10",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Fresh Air Fan unit-11",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Fresh Air Fan unit-12",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Fresh Air Fan unit-13",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Fresh Air Fan unit-14",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Fresh Air Fan unit-15",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Exhaust Fan unit-1",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Exhaust Fan unit-2",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Exhaust Fan unit-3",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Exhaust Fan unit-4",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Exhaust Fan unit-5",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Exhaust Fan unit-6",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Exhaust Fan unit-7",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Exhaust Fan unit-8",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Exhaust Fan unit-9",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Exhaust Fan unit-10",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Exhaust Fan unit-11",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Exhaust Fan unit-12",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Fresh Air Fan unit-1",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Fresh Air Fan unit-2",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Fresh Air Fan unit-3",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Fresh Air Fan unit-4",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Fresh Air Fan unit-5",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Fresh Air Fan unit-6",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Fresh Air Fan unit-7",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Fresh Air Fan unit-8",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Fresh Air Fan unit-9",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Fresh Air Fan unit-10",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Fresh Air Fan unit-11",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Fresh Air Fan unit-12",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Fresh Air Fan unit-13",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Fresh Air Fan unit-14",
+    "asset_name": "Fresh Air Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Exhaust Fan  unit-1",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Exhaust Fan  unit-2",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Exhaust Fan  unit-3",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Exhaust Fan  unit-4",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Exhaust Fan  unit-5",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Exhaust Fan  unit-6",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Exhaust Fan  unit-7",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Exhaust Fan  unit-8",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Exhaust Fan  unit-9",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Exhaust Fan  unit-10",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Exhaust Fan  unit-11",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Exhaust Fan  unit-12",
+    "asset_name": "Exahust Units",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B1 T/R Room Exhaust unit-1",
+    "asset_name": "Exahust Units",
+    "location": "Transformer Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B1 T/R Room Fresh Air unit-1",
+    "asset_name": "Fresh Air Units",
+    "location": "Transformer Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B1 Chiller Room Fresh Air unit-1",
+    "asset_name": "Fresh Air Units",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B1 Chiller Room Exhaust unit-1",
+    "asset_name": "Exahust Units",
+    "location": "B1 Chiller plant room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Staircase Pressurization fans -1",
+    "asset_name": "Pressurization units",
+    "location": "Level-9",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Staircase Pressurization fans -2",
+    "asset_name": "Pressurization units",
+    "location": "Level-9",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "By Pass Motor  Pump-1(STP)",
+    "asset_name": "Stp By pass pump",
+    "location": "Level-B4 STP",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "SBR Drain Pump 1",
+    "asset_name": "SBR pumps",
+    "location": "Level-B4 STP",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "SBR Drain Pump 2",
+    "asset_name": "SBR pumps",
+    "location": "Level-B4 STP",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Raw Pump-1",
+    "asset_name": "STP Raw water pumps",
+    "location": "Level-B4 STP",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Raw Pump-2",
+    "asset_name": "STP Raw water pumps",
+    "location": "Level-B4 STP",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Sludge Pump 1",
+    "asset_name": "sludge pumps",
+    "location": "Level-B4 STP",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Sludge Pump 2",
+    "asset_name": "sludge pumps",
+    "location": "Level-B4 STP",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Screw Pump-1",
+    "asset_name": "screw pumps",
+    "location": "Level-B4 STP",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Screw Pump-2",
+    "asset_name": "screw pumps",
+    "location": "Level-B4 STP",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Feeding Pump 1",
+    "asset_name": "STP filter feed pumps",
+    "location": "Level-B4 STP",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Feeding Pump 2",
+    "asset_name": "STP filter feed pumps",
+    "location": "Level-B4 STP",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Softener Pump 1",
+    "asset_name": "Softner pumps",
+    "location": "Level-B4 STP",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Softener Pump 2",
+    "asset_name": "Softner pumps",
+    "location": "Level-B4 STP",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Drain Pump-1",
+    "asset_name": "STP Drain pumps",
+    "location": "Level-B4 STP",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Drain Pump-2",
+    "asset_name": "STP Drain pumps",
+    "location": "Level-B4 STP",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Air Blower 1",
+    "asset_name": "Air Blower motors",
+    "location": "Level-B4 STP",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Air Blower 2",
+    "asset_name": "Air Blower motors",
+    "location": "Level-B4 STP",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Air Blower 3",
+    "asset_name": "Air Blower motors",
+    "location": "Level-B4 STP",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Rain Water Drain Pump-1(50HP)(Over Flow Rain Water)",
+    "asset_name": "Rain water drain pump",
+    "location": "Level-B4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Fire Diesel generator Pump  -1",
+    "asset_name": "Fire fighting pumps",
+    "location": "B1 Fire Fighting Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Fire Hydrant Pumps -Kirloskar-1",
+    "asset_name": "Fire fighting pumps",
+    "location": "B1 Fire Fighting Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Fire Sprinkler Pumps -Kirloskar-1",
+    "asset_name": "Fire fighting pumps",
+    "location": "B1 Fire Fighting Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Fire Stand by Pumps -Kirloskar-1",
+    "asset_name": "Fire fighting pumps",
+    "location": "B1 Fire Fighting Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Fire Low Jockey Pumps -Grundfos-1",
+    "asset_name": "Fire fighting pumps",
+    "location": "B1 Fire Fighting Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Fire High Jockey Pumps -Grundfos-1",
+    "asset_name": "Fire fighting pumps",
+    "location": "B1 Fire Fighting Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Addressable Control panel-1 & 2",
+    "asset_name": "Fire Alarm & PA  system",
+    "location": "B1 CCTV Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Detectors - 627 Nos",
+    "asset_name": "Fire Alarm & PA  system",
+    "location": "All Locations",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "MCP - 48 Nos",
+    "asset_name": "Fire Alarm & PA  system",
+    "location": "All Locations",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Hooters - 46 Nos",
+    "asset_name": "Fire Alarm & PA  system",
+    "location": "All Locations",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Speakers - 281 Nos",
+    "asset_name": "Fire Alarm & PA  system",
+    "location": "All Locations",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "FJT Phone -1",
+    "asset_name": "Fire Alarm & PA  system",
+    "location": "CCTV Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "FJT Receiver - 3 Nos",
+    "asset_name": "Fire Alarm & PA  system",
+    "location": "CCTV Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Fire Extinguishers - 239 Nos",
+    "asset_name": "Fire Alarm & PA  system",
+    "location": "All Locations",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Camera - 256 Nos",
+    "asset_name": "CCTV",
+    "location": "All Locations",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Primary Rate Interface(Telephone PRI)",
+    "asset_name": "PRI",
+    "location": "B1 Server Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "HT panel (Supply to Transformer I/C)",
+    "asset_name": "HT O/G Panel",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LT Kiosk Panel (Supply from Transformers)",
+    "asset_name": "LT O/G Kiosk Panel",
+    "location": "HT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Main PCC Panel (LT Room)",
+    "asset_name": "Main LT panel",
+    "location": "LT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Marriott PCC Panel (LT Room)",
+    "asset_name": "Marriott PCC Panel (LT Room)",
+    "location": "LT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "DG PMCC Panel -1",
+    "asset_name": "DG PMCC Panel -1",
+    "location": "LT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "UPS PCC Panel -1",
+    "asset_name": "UPS PCC Panel -1",
+    "location": "UPS Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "UPS PCC Panel -2",
+    "asset_name": "UPS PCC Panel -2",
+    "location": "UPS Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Lift Panel (Basement -1)",
+    "asset_name": "Lift Panel (Basement -1)",
+    "location": "LT Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Fire Control MCC panel -1",
+    "asset_name": "Fire Control MCC panel -1",
+    "location": "B1 Pump Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Fire Control MCC panel -2",
+    "asset_name": "Fire Control MCC panel -2",
+    "location": "B1 Pump Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller Panel (Basement -1)",
+    "asset_name": "Chiller Panel (Basement -1)",
+    "location": "B1 Pump Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Pumps MCC Panel (Basement -1)",
+    "asset_name": "Pumps MCC Panel (Basement -1)",
+    "location": "B1 Pump Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Main PCC Panel (Terrace)",
+    "asset_name": "Main PCC Panel (Terrace)",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Air Washer & Scrubber PCC Panel (L 9)",
+    "asset_name": "Air Washer & Scrubber PCC Panel (L 9)",
+    "location": "Level-9",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Secondary Pumps VFD panel-B1",
+    "asset_name": "Secondary Pumps VFD panel-B1",
+    "location": "B1 Pump Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "STP MCC Panel Basement - 4 (B4-4.0)",
+    "asset_name": "STP MCC Panel Basement - 4 (B4-4.0)",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Stack Parking MCC Panel-1.1 No's 3",
+    "asset_name": "Stack Parking MCC Panel-1.1 No's 3",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Scrubber MCC Panel -1(L9)",
+    "asset_name": "Scrubber MCC Panel -1(L9)",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Air Washer  MCC Panel -1(L9)",
+    "asset_name": "Air Washer  MCC Panel -1(L9)",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Package Cooling Tower Fans MCC Panels -1",
+    "asset_name": "Package Cooling Tower Fans MCC Panels -1",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Package Cooling Tower Fans MCC Panels -2",
+    "asset_name": "Package Cooling Tower Fans MCC Panels -2",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller  cooling Tower Fans MCC Panel -1",
+    "asset_name": "Chiller  cooling Tower Fans MCC Panel -1",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller  cooling Tower Fans MCC Panel -2",
+    "asset_name": "Chiller  cooling Tower Fans MCC Panel -2",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller  cooling Tower Fans MCC Panel -3",
+    "asset_name": "Chiller  cooling Tower Fans MCC Panel -3",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "All Earth Pits - 76 Nos",
+    "asset_name": "All Earth Pits - 76 Nos",
+    "location": "LG",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Lighting arrester-1 To 2",
+    "asset_name": "Lighting arrester-1 To 2",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4-MDB-1",
+    "asset_name": "Basment MDB`s",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4-MDB-2",
+    "asset_name": "Basment MDB`s",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4-MDB-3",
+    "asset_name": "Basment MDB`s",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3-MDB-1",
+    "asset_name": "Basment MDB`s",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3-MDB-2",
+    "asset_name": "Basment MDB`s",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3-MDB-3",
+    "asset_name": "Basment MDB`s",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2-MDB-1",
+    "asset_name": "Basment MDB`s",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2-MDB-2",
+    "asset_name": "Basment MDB`s",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2-MDB-3",
+    "asset_name": "Basment MDB`s",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B1-MDB-1",
+    "asset_name": "Basment MDB`s",
+    "location": "Basement - 1",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B1-MDB-2",
+    "asset_name": "Basment MDB`s",
+    "location": "Basement - 1",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LG MDB-1",
+    "asset_name": "Basment MDB`s",
+    "location": "LG",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LG MDB-2",
+    "asset_name": "Basment MDB`s",
+    "location": "LG",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L1 MDB -1",
+    "asset_name": "Basment MDB`s",
+    "location": "Level - 1",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L2 MDB-1",
+    "asset_name": "Basment MDB`s",
+    "location": "Level - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L2 MDB-2",
+    "asset_name": "Basment MDB`s",
+    "location": "Level - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L3 MDB-1",
+    "asset_name": "Basment MDB`s",
+    "location": "Level - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L3 MDB-2",
+    "asset_name": "Basment MDB`s",
+    "location": "Level - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L4 MDB-1",
+    "asset_name": "Basment MDB`s",
+    "location": "Level - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L4 MDB-2",
+    "asset_name": "Basment MDB`s",
+    "location": "Level - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L5 MDB-1",
+    "asset_name": "Basment MDB`s",
+    "location": "Level - 5",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L5 MDB-2",
+    "asset_name": "Basment MDB`s",
+    "location": "Level - 5",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L6 MDB-1",
+    "asset_name": "Basment MDB`s",
+    "location": "Level - 6",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L6 MDB-2",
+    "asset_name": "Basment MDB`s",
+    "location": "Level - 6",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L7 MDB-1",
+    "asset_name": "Basment MDB`s",
+    "location": "Level - 7",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L7 MDB-2",
+    "asset_name": "Basment MDB`s",
+    "location": "Level - 7",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L8 MDB-1",
+    "asset_name": "Basment MDB`s",
+    "location": "Level - 8",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L8 MDB-2",
+    "asset_name": "Basment MDB`s",
+    "location": "Level - 8",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L9 MDB-1",
+    "asset_name": "Basment MDB`s",
+    "location": "Level - 9",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4-SDB -1.1 No's 3",
+    "asset_name": "Basment SDB`s",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B1-SDB - 1.1",
+    "asset_name": "Basment SDB`s",
+    "location": "Basement - 1",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 EL Lighting  DB-1 & 2",
+    "asset_name": "ELDB`s",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 EL Lighting  DB-1 & 2",
+    "asset_name": "ELDB`s",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 EL Lighting  DB-1 & 2",
+    "asset_name": "ELDB`s",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B1 EL Lighting  DB-1 To 3",
+    "asset_name": "ELDB`s",
+    "location": "Basement - 1",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LG EL Lighting  DB-1",
+    "asset_name": "ELDB`s",
+    "location": "Lower Ground",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L1 EL Lighting  DB-1",
+    "asset_name": "ELDB`s",
+    "location": "Level - 1",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L2 EL Lighting  DB-1 & 2",
+    "asset_name": "ELDB`s",
+    "location": "Level - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L3 EL Lighting  DB-1 & 2",
+    "asset_name": "ELDB`s",
+    "location": "Level - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L4 EL Lighting  DB-1",
+    "asset_name": "ELDB`s",
+    "location": "Level - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L5 EL Lighting  DB-1",
+    "asset_name": "ELDB`s",
+    "location": "Level - 5",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L6 EL Lighting  DB-1",
+    "asset_name": "ELDB`s",
+    "location": "Level - 6",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L7 EL Lighting  DB-1",
+    "asset_name": "ELDB`s",
+    "location": "Level - 7",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L8 EL Lighting  DB-1",
+    "asset_name": "ELDB`s",
+    "location": "Level - 8",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L9 EL Lighting  DB-1",
+    "asset_name": "ELDB`s",
+    "location": "Level - 9",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B4 Raw power Lighting DB -1 To 4",
+    "asset_name": "RPDB`s",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B3 Raw power Lighting DB -1 To 4",
+    "asset_name": "RPDB`s",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B2 Raw power Lighting DB -1 To 4",
+    "asset_name": "RPDB`s",
+    "location": "Basement - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "B1 Raw power Lighting DB -1 To 4",
+    "asset_name": "RPDB`s",
+    "location": "Basement - 1",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LG Raw power Lighting DB -1 To 4",
+    "asset_name": "RPDB`s",
+    "location": "Lower Ground",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L1 Raw power Lighting DB -1 To 3",
+    "asset_name": "RPDB`s",
+    "location": "Level - 1",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L2 Raw power Lighting DB -1 To 4",
+    "asset_name": "RPDB`s",
+    "location": "Level - 2",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L3 Raw power Lighting DB -1 To 3",
+    "asset_name": "RPDB`s",
+    "location": "Level - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "L9 Raw power Lighting DB -1",
+    "asset_name": "RPDB`s",
+    "location": "Level - 9",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Drain Sump pump-1",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Drain Sump pump-2",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Drain Sump pump-3",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Drain Sump pump-4",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Drain Sump pump-5",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Drain Sump Starter Panel-1",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Drain Sump Starter Panel-2",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Drain Sump Starter Panel-3",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Drain Sump Starter Panel-4",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Drain Sump Starter Panel-5",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Raw water shifting Pump Starter 1",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Raw water shifting Pump Starter 2",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "SBR Pumps Starter -1",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "SBR Pumps Starter -2",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Drain Pump Starter-1",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Drain Pump Starter-2",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Air Blowers Starter -1",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Air Blowers Starter -2",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Air Blowers Starter -3",
+    "asset_name": "Starter panels",
+    "location": "Basement - 4",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Domestic Tank - 1 To 3",
+    "asset_name": "Water storage Tanks",
+    "location": "B1 Pump Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Raw Water Tank - 1 To 2",
+    "asset_name": "Water storage Tanks",
+    "location": "B1 Pump Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Fire Tank 1 To 2",
+    "asset_name": "Water storage Tanks",
+    "location": "B1 Pump Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Domestic Tank",
+    "asset_name": "Water storage Tanks",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Flush Tank",
+    "asset_name": "Water storage Tanks",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Softner Tank",
+    "asset_name": "Water storage Tanks",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Fire Tank",
+    "asset_name": "Water storage Tanks",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "STP Final Tank",
+    "asset_name": "Water storage Tanks",
+    "location": "B4 STP Plant",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "STP Softner Tank",
+    "asset_name": "Water storage Tanks",
+    "location": "B4 STP Plant",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Stainers (1 - 5)",
+    "asset_name": "Stainers",
+    "location": "B1 DG Room",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Stainers (1 & 2)",
+    "asset_name": "Stainers",
+    "location": "B1 Domestic Tank",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Chiller (1 - 3) Stainers",
+    "asset_name": "Stainers",
+    "location": "B1 Chiller Plant",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Condensor Pumps Stainers",
+    "asset_name": "Stainers",
+    "location": "B1 Chiller Plant",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Secondary Pumps Stainers",
+    "asset_name": "Stainers",
+    "location": "B1 Chiller Plant",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Primary Pumps  Stainers",
+    "asset_name": "Stainers",
+    "location": "B1 Chiller Plant",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Package condenser Stainers",
+    "asset_name": "Stainers",
+    "location": "Terrace",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Condensing tank for chiller",
+    "asset_name": "Condensing Tank",
+    "location": "Service Floor",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Pressure Release Valves",
+    "asset_name": "PRV`s",
+    "location": "All Shafts",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Sliding Door",
+    "asset_name": "Glas doors",
+    "location": "LG",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Staricase Emergency Doors",
+    "asset_name": "Staircase Doors",
+    "location": "Staircase 1 to 5",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "LPG Gas pipe & Regulators",
+    "asset_name": "Gas Regulators",
+    "location": "Basment-1 Ramp side Gas Bank",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  },
+  {
+    "asset_code": "Multi stack Parking - 106 Nos",
+    "asset_name": "Stack Parking",
+    "location": "Basement - 3",
+    "category": "",
+    "created_by": "admin",
+    "created_at": "2025-12-31 17:32:01"
+  }
+]

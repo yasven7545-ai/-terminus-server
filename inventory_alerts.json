@@ -1,0 +1,200 @@
+[
+  {
+    "item": "C-0001",
+    "department": "Carpentry",
+    "qty": 2,
+    "min": 2
+  },
+  {
+    "item": "C-0002",
+    "department": "Carpentry",
+    "qty": 2,
+    "min": 2
+  },
+  {
+    "item": "C-0003",
+    "department": "Carpentry",
+    "qty": 2,
+    "min": 2
+  },
+  {
+    "item": "C-0004",
+    "department": "Carpentry",
+    "qty": 1,
+    "min": 1
+  },
+  {
+    "item": "C-0005",
+    "department": "Carpentry",
+    "qty": 1,
+    "min": 1
+  },
+  {
+    "item": "C-0006",
+    "department": "Carpentry",
+    "qty": 1,
+    "min": 1
+  },
+  {
+    "item": "C-0007",
+    "department": "Carpentry",
+    "qty": 1,
+    "min": 1
+  },
+  {
+    "item": "C-0008",
+    "department": "Carpentry",
+    "qty": 1,
+    "min": 1
+  },
+  {
+    "item": "C-0009",
+    "department": "Carpentry",
+    "qty": 1,
+    "min": 1
+  },
+  {
+    "item": "C-0010",
+    "department": "Carpentry",
+    "qty": 1,
+    "min": 1
+  },
+  {
+    "item": "C-0011",
+    "department": "Carpentry",
+    "qty": 1,
+    "min": 1
+  },
+  {
+    "item": "C-0012",
+    "department": "Carpentry",
+    "qty": 2,
+    "min": 2
+  },
+  {
+    "item": "PT-0001",
+    "department": "Painting",
+    "qty": 10,
+    "min": 10
+  },
+  {
+    "item": "PT-0002",
+    "department": "Painting",
+    "qty": 5,
+    "min": 5
+  },
+  {
+    "item": "PT-0003",
+    "department": "Painting",
+    "qty": 5,
+    "min": 5
+  },
+  {
+    "item": "PT-0004",
+    "department": "Painting",
+    "qty": 5,
+    "min": 5
+  },
+  {
+    "item": "PT-0005",
+    "department": "Painting",
+    "qty": 5,
+    "min": 5
+  },
+  {
+    "item": "PT-0006",
+    "department": "Painting",
+    "qty": 5,
+    "min": 5
+  },
+  {
+    "item": "PT-0007",
+    "department": "Painting",
+    "qty": 4,
+    "min": 4
+  },
+  {
+    "item": "PT-0008",
+    "department": "Painting",
+    "qty": 4,
+    "min": 4
+  },
+  {
+    "item": "PT-0009",
+    "department": "Painting",
+    "qty": 0,
+    "min": 0
+  },
+  {
+    "item": "PT-0010",
+    "department": "Painting",
+    "qty": 0,
+    "min": 0
+  },
+  {
+    "item": "PT-0011",
+    "department": "Painting",
+    "qty": 0,
+    "min": 0
+  },
+  {
+    "item": "PT-0012",
+    "department": "Painting",
+    "qty": 0,
+    "min": 0
+  },
+  {
+    "item": "PT-0013",
+    "department": "Painting",
+    "qty": 0,
+    "min": 0
+  },
+  {
+    "item": "PT-0014",
+    "department": "Painting",
+    "qty": 0,
+    "min": 0
+  },
+  {
+    "item": "PT-0015",
+    "department": "Painting",
+    "qty": 4,
+    "min": 4
+  },
+  {
+    "item": "PT-0016",
+    "department": "Painting",
+    "qty": 0,
+    "min": 0
+  },
+  {
+    "item": "PT-0017",
+    "department": "Painting",
+    "qty": 8,
+    "min": 8
+  },
+  {
+    "item": "PT-0018",
+    "department": "Painting",
+    "qty": 10,
+    "min": 10
+  },
+  {
+    "item": "PT-0019",
+    "department": "Painting",
+    "qty": 30,
+    "min": 30
+  },
+  {
+    "item": "PT-0020",
+    "department": "Painting",
+    "qty": 30,
+    "min": 30
+  },
+  {
+    "item": "PT-0021",
+    "department": "Painting",
+    "qty": 30,
+    "min": 30
+  }
+]

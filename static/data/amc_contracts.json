@@ -1,0 +1,16 @@
+{
+  "contracts": [
+    {
+      "contract_id": "AMC-2026-0001",
+      "asset_id": "HT I/C VCB-1",
+      "asset_name": "HT Panel I/C Source -1 VCB",
+      "vendor": "Santosh Electronics",
+      "start_date": "2025-01-15",
+      "end_date": "2026-01-14",
+      "service_frequency": "Yearly",
+      "next_service": "2025-06-15",
+      "status": "active"
+    }
+  ],
+  "last_updated": "2026-02-11T19:00:56.529835"
+}

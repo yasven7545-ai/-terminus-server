@@ -1,0 +1,624 @@
+/* ===========================================================
+   mobile.css — Final patched version (Radial menu)
+   Replace your mobile.css completely with this content.
+   - Mobile-only radial menu
+   - Fixed inner + outer radii
+   - No continuous rotation (no drifting)
+   - Pop-in stagger animation on open
+   - Desktop hidden
+   =========================================================== */
+
+/* --------------------------
+   Base: make safe defaults
+--------------------------- */
+:root {
+  --radial-size: 180px;
+  --main-btn-size: 46px;
+  --btn-size: 48px;
+  --inner-radius: 150px;   /* inner ring distance from center */
+  --outer-radius: 230px;   /* outer ring distance from center */
+  --stagger-delay: 45ms;
+}
+
+/* -----------------------------------------------------------
+   MOBILE ONLY (apply everything below only for small screens)
+   ----------------------------------------------------------- */
+@media (max-width: 768px) {
+
+  /* hide desktop sidebar + old hamburger */
+  .sidebar,
+  .mobile-menu-btn {
+    display: none !important;
+    pointer-events: none !important;
+  }
+
+  header, main {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  html, body {
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* =========================
+     RADIAL MENU WRAPPER
+     ========================= */
+  .radial-menu-wrapper {
+    position: fixed !important;
+    bottom: 120px !important;              /* sits above footer area */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 140px;
+  height: 140px;
+  padding: 0;
+    pointer-events: none !important;      /* default: let open state enable clicks */
+    z-index: 99995 !important; 
+  }
+    .radial-main-btn {
+      bottom: 100px !important;   /* Raised button so it doesn't enter icon zone */
+  }
+
+  /* MAIN BUTTON */
+  .radial-main-btn {
+    position: absolute !important;
+    bottom: px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: var(--main-btn-size) !important;
+    height: var(--main-btn-size) !important;
+    border-radius: 50% !important;
+    background: #3b82f6 !important;
+    color: #fff !important;
+    font-size: 34px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    border: none !important;
+    pointer-events: auto !important;      /* allow clicks */
+    box-shadow: 0 6px 20px rgba(0,0,0,0.45) !important;
+    z-index: 100000 !important;
+    transition: transform .12s ease !important;
+  }
+
+  
+  /* MENU (invisible until .open) */
+  .radial-menu {
+    width: var(--radial-size) !important;
+    height: var(--radial-size) !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+    transition: opacity .32s ease !important;
+  }
+
+  /* open state — enable pointer events */
+  .radial-menu.open {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+  }
+
+  /* Ring containers (centered) */
+  .radial-menu .ring {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    width: 100% !important;
+    height: 100% !important;
+    transform: translate(-50%, -50%) !important;
+    transform-origin: center center !important;
+    pointer-events: none !important; /* children will be clickable when open */
+  }
+
+  /* BUTTON BASE STYLE */
+  .radial-menu .ring button {
+    position: absolute !important;
+    left: 50% !important;
+    top: 10% !important;
+    width: var(--btn-size) !important;
+    height: var(--btn-size) !important;
+    margin: calc(var(--btn-size) / -2) !important;
+    border-radius: 50% !important;
+    background: #0f1a2b !important;
+    border: 1px solid rgba(255,255,255,0.04) !important;
+    color: #fff !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 4px !important;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.46) !important;
+    transform-origin: center center !important;
+    opacity: 0 !important;
+    pointer-events: auto !important;
+    transition: transform .34s cubic-bezier(.2,.9,.2,1) !important,
+                opacity .28s ease !important;
+    z-index: 100001 !important;
+    font-family: inherit !important;
+  }
+
+  /* Label below icons */
+  .radial-menu .ring button .label {
+    font-size: 11px !important;
+    color: #d1d5db !important;
+    text-align: center !important;
+    line-height: 1 !important;
+    opacity: 0 !important;
+    transform: translateY(6px) !important;
+    transition: opacity .22s ease, transform .22s ease !important;
+    pointer-events: none !important;
+  }
+
+ /* When menu opens */
+.radial-menu.open .ring button {
+    opacity: 1 !important;
+
+    /* Append the animation to existing transform */
+    transform: var(--pos) scale(1) !important;
+    transition-delay: calc(var(--i) * var(--stagger-delay)) !important;
+}
+
+  .radial-menu.open .ring button .label {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+  }
+
+  /* Stagger effect via CSS var for each button (set inline --i on each button) */
+  .radial-menu.open .ring button {
+    transition-delay: calc(var(--i) * var(--stagger-delay)) !important;
+  }
+
+  /* --------------------------
+     FIXED CIRCLE POSITIONING
+     — Use strong selectors and !important to override other CSS
+     -------------------------- */
+
+ /* INNER ring */
+.radial-menu .ring.inner button {
+    --angle: calc((360deg / 7) * var(--i));
+    --pos: rotate(var(--angle)) 
+           translate(var(--inner-radius)) 
+           rotate(calc(var(--angle) * -1));
+
+    transform: var(--pos);   /* <-- main position */
+}
+
+/* OUTER ring */
+.radial-menu .ring.outer button {
+    --angle: calc((360deg / 9) * var(--i));
+     --offset: 18deg;   /* change as needed */
+    --pos: rotate(var(--angle)) 
+           translate(var(--outer-radius)) 
+           rotate(calc(var(--angle) * -1));
+
+    transform: var(--pos);   /* <-- main position */
+}
+
+  /* Safety: prevent continuous rotation that disturbs positioning */
+  .radial-menu .ring,
+  .radial-menu.open .ring {
+    animation: none !important;
+  }
+
+  /* Slight ring background / focus circle (visual only) */
+  .radial-menu .ring::before {
+    content: "";
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: calc(var(--radial-size) - 20px) !important;
+    height: calc(var(--radial-size) - 20px) !important;
+    border-radius: 50% !important;
+    background: rgba(10,12,15,0.15) !important;
+    pointer-events: none !important;
+    z-index: 10000 !important;
+  }
+
+  /* small responsive tunings */
+  @media (max-width: 420px) {
+    :root {
+      --radial-size: 200px;
+      --main-btn-size: 50px;
+      --btn-size: 52px;
+      --inner-radius: 95px;
+      --outer-radius: 160px;
+    }
+    .radial-main-btn { width: var(--main-btn-size) !important; height: var(--main-btn-size) !important; }
+    .radial-menu { width: var(--radial-size) !important; height: var(--radial-size) !important; }
+  }
+
+}
+
+@keyframes splashOut {
+  0% { transform: scale(1) translate(0,0); opacity: 1; }
+  100% { transform: scale(0.4) translate(0,40px); opacity: 0; }
+}
+
+.radial-menu .ring button.splash-away {
+  animation: splashOut .35s ease forwards !important;
+}
+
+
+/* ===========================================================
+   MOBILE VIEW — CLEAN + FIXED + SIGNATURE ALIGNED
+   =========================================================== */
+@media (max-width: 768px) {
+
+  /* General page spacing */
+  body {
+    font-size: 14px;
+    line-height: 1.4;
+    padding: 10px;
+  }
+
+  .wrap,
+  .container,
+  .main-box {
+    padding: 16px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  section {
+    margin-bottom: 20px;
+  }
+
+  /* Cards / sections */
+  .card,
+  .details-box,
+  .top-section,
+  .summary,
+  .signatures-row {
+    margin-bottom: 18px !important;
+    padding: 12px !important;
+  }
+
+  /* Universal column stacking */
+  .row,
+  .form-row,
+  .grid,
+  .top-section,
+  .details-box,
+  .header-fields,
+  .summary {
+    display: flex !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
+    gap: 12px !important;
+  }
+
+  .row > *,
+  .grid > *,
+  .form-row > * {
+    width: 100% !important;
+  }
+
+  /* Header block vertical layout */
+  .header-grid {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  /* Info block formatting */
+  .info-block {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+
+  .info-item {
+    margin-bottom: 12px !important;
+    width: 100% !important;
+  }
+
+  .info-item label {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* Buttons / Selects */
+  button,
+  .btn,
+  .btn-ghost,
+  select,
+  input {
+    width: 100% !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* Upload + controls */
+  .top-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  .uploader,
+  .controls {
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  /* Table responsiveness */
+  .kra-table,
+  .table-wrap {
+    width: 100% !important;
+    overflow-x: auto !important;
+    display: block !important;
+  }
+
+  .kra-table th,
+  .kra-table td,
+  .kra-table tr,
+  .kra-table thead,
+  .kra-table tbody {
+    white-space: nowrap !important;
+  }
+
+  table {
+    width: 100% !important;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  canvas {
+    max-width: 100% !important;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Summary boxes */
+  .summary .box {
+    width: 100% !important;
+    min-width: unset !important;
+    text-align: center !important;
+  }
+
+  /* ===========================================================
+     SIGNATURE BLOCK FIX
+     =========================================================== */
+
+  .signatures-row {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+
+  .sign-box {
+    width: 100% !important;
+    padding: 14px !important;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .sign-preview,
+  .sign-box .preview-area {
+    width: 100% !important;
+    min-height: 140px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+  .sign-box input[type="file"] {
+    width: 100% !important;
+    margin-top: 8px;
+  }
+
+  /* Back button full width */
+  #btnBack {
+    width: 100% !important;
+    text-align: center !important;
+  }
+}
+
+
+/* Fix for tiny dropdowns + Export + PDF buttons */
+.button-row,
+.filter-row,
+.action-row,
+.controls-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 100% !important;
+}
+
+.button-row > *,
+.filter-row > *,
+.action-row > *,
+.controls-row > * {
+    width: 100% !important;
+}
+
+
+/* END */
+
+
+/* ===========================================================
+   CAM CHARGES — MOBILE VIEW ONLY
+   =========================================================== */
+@media (max-width: 768px) {
+
+    /* Keep buttons readable but not oversized */
+    #camPage .btn {
+        width: 100%;
+        padding: 10px 14px;
+        font-size: 14px;
+        border-radius: 6px;
+        margin-bottom: 10px;
+        text-align: center;
+        display: block;
+    }
+
+    /* Upload label behaves exactly like the buttons */
+    #camPage label.btn {
+        width: 100%;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    /* Reduce dark background thickness */
+    #camPage .btn {
+        background: #1e293b;
+        border: 1px solid #475569;
+        color: #fff;
+    }
+
+    #camPage .btn:hover {
+        background: #334155;
+    }
+
+    /* Optional: tighter spacing above the table */
+    #camTable {
+        margin-top: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    /* Fix spacing ONLY in Disputes */
+    #disputes {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    #disputes h2 {
+        padding-left: 6px !important;
+    }
+
+    #disputesTable {
+        width: 100% !important;
+        border-collapse: collapse;
+        margin: 0 !important;
+        display: block;
+    }
+
+    #disputesTable thead tr th,
+    #disputesTable tbody tr td {
+        padding: 10px 12px !important;
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    /* Container padding fix */
+    #ideas {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    #ideas h2 {
+        font-size: 20px !important;
+        padding-left: 8px !important;
+        margin-bottom: 12px !important;
+    }
+
+    /* Box wrapper cleanup */
+    #ideas .box {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Table full width + mobile scroll */
+    #ideas table {
+        width: 100% !important;
+        border-collapse: collapse;
+        display: block;
+        overflow-x: auto;
+        margin: 0 !important;
+    }
+
+    /* Cell spacing */
+    #ideas th,
+    #ideas td {
+        padding: 10px 12px !important;
+        font-size: 14px !important;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    /* Any buttons used inside Ideas */
+    #ideas .btn {
+        width: 100%;
+        padding: 10px 14px;
+        margin-bottom: 10px;
+        text-align: center;
+        border-radius: 6px;
+    }
+}
+
+@media (max-width: 768px) {
+
+    #cafm {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    #cafm h2 {
+        font-size: 20px !important;
+        margin-bottom: 12px !important;
+        padding-left: 8px !important;
+    }
+
+    #cafm .box {
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    #team {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    #team h2 {
+        font-size: 20px !important;
+        padding-left: 8px !important;
+        margin-bottom: 12px !important;
+    }
+
+    #team .box {
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+}
+
+
+/* ----------------------------------------------------------
+   DESKTOP: hide radial UI entirely
+   (ensures no desktop breakage)
+   ---------------------------------------------------------- */
+@media (min-width: 769px) {
+  .radial-menu-wrapper,
+  .radial-main-btn,
+  .radial-menu {
+    display: none !important;
+  }
+}
+
+

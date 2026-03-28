@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SLN PM Daily — Terminus MMS</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+/* ══════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — INDUSTRIAL TERMINUS THEME
+   ══════════════════════════════════════════════════════════════ */
+:root {
+  --bg:       #0b0e14;
+  --surface:  #111720;
+  --surface2: #161d2a;
+  --border:   #1e2d42;
+  --accent:   #00c2ff;
+  --accent2:  #0af0b0;
+  --warn:     #ffb700;
+  --danger:   #ff4060;
+  --text:     #c8dae8;
+  --text-dim: #5a7a8f;
+  --text-hd:  #e8f4ff;
+  --radius:   6px;
+  --mono:     'IBM Plex Mono', monospace;
+  --sans:     'Syne', sans-serif;
+  --glow:     0 0 18px rgba(0,194,255,0.18);
+}
+[data-theme="light"] {
+  --bg:       #ffffff;
+  --surface:  #ffffff;
+  --surface2: #ffffff;
+  --border:   transparent;
+  --accent:   #006fa8;
+  --accent2:  #009b74;
+  --warn:     #b87800;
+  --danger:   #cc2040;
+  --text:     #1a2c3d;
+  --text-dim: #607585;
+  --text-hd:  #0a1a28;
+  --glow:     none;
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+
+html,body {
+  height:100%;
+  font-family: var(--mono);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  overflow: hidden;
+}
+
+/* ══════ SCANLINE OVERLAY ══════ */
+body::before {
+  content:'';
+  position:fixed; inset:0; pointer-events:none; z-index:999;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.04) 2px,
+    rgba(0,0,0,0.04) 4px
+  );
+}
+[data-theme="light"] body::before { display:none; }
+
+/* ══════ LAYOUT ══════ */
+#app { display:flex; height:100vh; overflow:hidden; }
+
+/* ══════ SIDEBAR / CALENDAR ══════ */
+#sidebar {
+  width: 240px;
+  min-width: 240px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: width .3s, min-width .3s;
+}
+#sidebar.collapsed { width:48px; min-width:48px; }
+#sidebar.collapsed .sidebar-label,
+#sidebar.collapsed #calendar-wrap,
+#sidebar.collapsed .quick-grid,
+#sidebar.collapsed .qlabel { display:none; }
+
+.sidebar-header {
+  padding: 14px 12px 10px;
+  border-bottom: 1px solid var(--border);
+  display:flex; align-items:center; gap:8px;
+}
+.logo-mark {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.sidebar-toggle {
+  margin-left: auto;
+  background:none; border:none;
+  color: var(--text-dim); cursor:pointer; font-size:16px;
+  transition: color .2s;
+}
+.sidebar-toggle:hover { color: var(--accent); }
+
+/* Back-to-Portal Button (TOPBAR — orange blinking) */
+#btn-portal-top {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:6px 12px;
+  background: transparent;
+  border: 1px solid #ff8c00;
+  border-radius: var(--radius);
+  color: #ff8c00;
+  font-family: var(--mono);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1px;
+  cursor:pointer;
+  text-decoration:none;
+  white-space:nowrap;
+  flex-shrink:0;
+  animation: portal-blink 1.5s ease-in-out infinite;
+  transition: background .2s;
+}
+#btn-portal-top:hover { background:rgba(255,140,0,.12); }
+@keyframes portal-blink {
+  0%,100% { border-color:#ff8c00; box-shadow:none; }
+  50%      { border-color:#ffb700; box-shadow:0 0 12px rgba(255,140,0,.55); }
+}
+.blink-dot-orange {
+  width:6px; height:6px; border-radius:50%;
+  background:#ff8c00;
+  animation: blink-o 1s step-end infinite;
+  flex-shrink:0;
+}
+@keyframes blink-o { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* Calendar */
+#calendar-wrap { padding:10px; flex-shrink:0; }
+.cal-header {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:8px;
+}
+.cal-nav {
+  background:none; border:none; color:var(--text-dim);
+  cursor:pointer; font-size:12px; padding:2px 4px;
+}
+.cal-nav:hover { color:var(--accent); }
+.cal-month {
+  font-family:var(--sans); font-weight:700; font-size:11px;
+  color:var(--text-hd); letter-spacing:.5px; text-transform:uppercase;
+}
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
+.cal-day-hd {
+  text-align:center; font-size:9px; color:var(--text-dim);
+  padding:2px 0; font-weight:600;
+}
+.cal-day {
+  text-align:center; padding:3px 0; font-size:10px;
+  border-radius:3px; cursor:pointer;
+  transition: background .15s, color .15s;
+}
+.cal-day:hover { background:var(--border); color:var(--text-hd); }
+.cal-day.today {
+  background: var(--accent);
+  color: #000;
+  font-weight:700;
+}
+.cal-day.has-entry { border-bottom:2px solid var(--accent2); }
+.cal-day.empty { cursor:default; }
+
+/* Quick Buttons */
+.qlabel {
+  padding:4px 10px 3px;
+  font-size:9px; letter-spacing:1.5px; color:var(--text-dim);
+  text-transform:uppercase;
+}
+.quick-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:5px; padding:0 10px 10px;
+}
+.q-btn {
+  padding:6px 4px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  color:var(--text); font-family:var(--mono);
+  font-size:10px; cursor:pointer; text-align:center;
+  transition: border-color .2s, color .2s;
+  white-space:nowrap;
+}
+.q-btn:hover { border-color:var(--accent); color:var(--accent); }
+.q-btn.active { border-color:var(--accent2); color:var(--accent2); background:rgba(10,240,176,0.06); }
+
+/* Status bar */
+.sys-status {
+  margin-top:auto;
+  padding:8px 10px;
+  border-top:1px solid var(--border);
+  display:flex; flex-direction:column; gap:4px;
+}
+.status-row {
+  display:flex; align-items:center; gap:6px;
+  font-size:9px; color:var(--text-dim);
+}
+.status-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--accent2);
+  animation: pulse 2s ease-in-out infinite;
+  flex-shrink:0;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+#live-clock {
+  font-size:10px; color:var(--accent); font-weight:600; letter-spacing:.5px;
+}
+
+/* ══════ MAIN ══════ */
+#main {
+  flex:1; display:flex; flex-direction:column; overflow:hidden;
+}
+
+/* Top bar */
+#topbar {
+  display:flex; align-items:center; gap:12px;
+  padding:10px 16px;
+  border-bottom:1px solid var(--border);
+  background:var(--surface);
+  flex-shrink:0;
+}
+.tb-title {
+  font-family:var(--sans);
+  font-size:15px; font-weight:800;
+  color:var(--text-hd); letter-spacing:.5px;
+  white-space:nowrap;
+}
+.tb-sub { font-size:9px; color:var(--text-dim); letter-spacing:.5px; }
+.tb-spacer { flex:1; }
+
+/* Theme toggle */
+.theme-toggle {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:20px; width:44px; height:22px;
+  cursor:pointer; position:relative; flex-shrink:0;
+}
+.theme-toggle::after {
+  content:''; position:absolute; top:3px; left:3px;
+  width:16px; height:16px; border-radius:50%;
+  background:var(--accent);
+  transition:left .25s;
+}
+[data-theme="light"] .theme-toggle::after { left:25px; }
+
+/* ══════ CONTENT AREA ══════ */
+#content {
+  flex:1; overflow-y:auto; padding:14px 16px;
+  display:flex; gap:14px;
+}
+#content::-webkit-scrollbar { width:4px; }
+#content::-webkit-scrollbar-track { background:transparent; }
+#content::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+
+/* ══════ LEFT — ENTRY PANEL ══════ */
+#panel-left { flex:1; display:flex; flex-direction:column; gap:12px; min-width:0; }
+
+/* Doc header */
+.doc-header {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:12px 14px;
+  position:relative;
+  overflow:hidden;
+}
+.doc-header::before {
+  content:'';
+  position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+}
+.doc-meta {
+  display:flex; gap:20px; flex-wrap:wrap;
+  margin-top:8px;
+}
+.meta-field { display:flex; flex-direction:column; gap:2px; }
+.meta-label { font-size:9px; color:var(--text-dim); letter-spacing:1px; text-transform:uppercase; }
+.meta-value {
+  font-size:11px; color:var(--text-hd); font-weight:600;
+  border:none; background:transparent; font-family:var(--mono);
+  outline:none; padding:2px 0;
+  border-bottom:1px solid var(--border);
+  width:140px;
+  color:var(--text);
+}
+.meta-value:focus { border-bottom-color:var(--accent); color:var(--text-hd); }
+
+/* Table */
+.table-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  flex:1;
+}
+.table-card-hd {
+  display:flex; align-items:center; gap:8px;
+  padding:9px 12px;
+  border-bottom:1px solid var(--border);
+  background:var(--surface2);
+}
+.tc-title {
+  font-family:var(--sans); font-size:11px; font-weight:700;
+  color:var(--text-hd); letter-spacing:.5px; text-transform:uppercase;
+}
+.tc-count {
+  margin-left:auto;
+  background:var(--border); color:var(--text-dim);
+  font-size:9px; padding:2px 6px; border-radius:10px;
+}
+.tbl-wrap { overflow-x:auto; }
+table {
+  width:100%; border-collapse:collapse;
+}
+thead tr { background:var(--surface2); }
+th {
+  padding:7px 10px;
+  text-align:left; font-size:9px; letter-spacing:1px;
+  text-transform:uppercase; color:var(--text-dim);
+  border-bottom:1px solid var(--border);
+  white-space:nowrap;
+  font-weight:600;
+}
+td {
+  padding:6px 10px;
+  border-bottom:1px solid rgba(30,45,66,.5);
+  font-size:11px;
+  vertical-align:middle;
+}
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:rgba(0,194,255,0.03); }
+tbody tr { transition:background .15s; }
+
+/* Editable cells */
+td input[type="text"],
+td textarea,
+td select {
+  background:transparent; border:none; outline:none;
+  font-family:var(--mono); font-size:11px; color:var(--text);
+  width:100%;
+  padding:1px;
+}
+td input:focus,td textarea:focus,td select:focus {
+  background:rgba(0,194,255,0.05);
+  border-radius:2px;
+  color:var(--text-hd);
+}
+td textarea { resize:none; height:28px; line-height:1.4; }
+td select { cursor:pointer; }
+
+/* Fix dropdown option text in light mode */
+[data-theme="light"] td select,
+[data-theme="light"] td select option {
+  color: #1a2c3d;
+  background: #ffffff;
+}
+[data-theme="light"] td input[type="text"],
+[data-theme="light"] td textarea {
+  color: #1a2c3d;
+}
+[data-theme="light"] td input::placeholder,
+[data-theme="light"] td textarea::placeholder { color:#9ca3af; }
+
+/* Description popup expand button */
+.desc-expand-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-dim); font-size: 13px; padding: 4px 6px;
+  opacity: 0.7; transition: opacity .15s, color .15s;
+  flex-shrink: 0; line-height: 1;
+  min-width: 28px; min-height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 4px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.desc-expand-btn:hover, .desc-expand-btn:active { opacity: 1; color: var(--accent); background: rgba(0,194,255,0.08); }
+
+/* Description popup modal */
+#desc-modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%; height: 100%;
+  z-index: 99999;
+  background: rgba(0,0,0,0.6);
+  align-items: center; justify-content: center;
+  padding: 16px;
+  -webkit-overflow-scrolling: touch;
+}
+#desc-modal.open { display: flex; }
+#desc-modal-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  width: 100%; max-width: 520px;
+  max-height: 90vh;
+  box-shadow: 0 8px 40px rgba(0,0,0,.35);
+  display: flex; flex-direction: column; overflow: hidden;
+  position: relative; z-index: 100000;
+}
+[data-theme="light"] #desc-modal-box {
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 40px rgba(0,0,0,.15);
+}
+#desc-modal-hd {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+[data-theme="light"] #desc-modal-hd { border-bottom: 1px solid #e5e7eb; background: #f9fafb; }
+#desc-modal-label {
+  font-family: var(--sans); font-size: 11px; font-weight: 700;
+  color: var(--text-hd); letter-spacing: .5px; text-transform: uppercase; flex: 1;
+}
+#desc-modal-row {
+  font-size: 10px; color: var(--text-dim); font-family: var(--mono);
+}
+#desc-modal-close {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-dim); font-size: 18px; line-height: 1;
+  transition: color .15s; padding: 0 2px;
+}
+#desc-modal-close:hover { color: var(--danger); }
+#desc-modal-body { padding: 14px; flex: 1; }
+#desc-modal-textarea {
+  width: 100%; height: 140px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: var(--mono); font-size: 16px;
+  padding: 10px 12px; resize: none; outline: none;
+  line-height: 1.6;
+  transition: border-color .2s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+@media(max-width:600px){
+  #desc-modal-textarea { font-size: 16px; height: 120px; }
+  #desc-modal-box { max-height: 80vh; }
+  #desc-modal-body { padding: 10px; }
+}
+[data-theme="light"] #desc-modal-textarea {
+  background: #f9fafb; border: 1px solid #e5e7eb; color: #1a2c3d;
+}
+#desc-modal-textarea:focus { border-color: var(--accent); }
+#desc-modal-footer {
+  display: flex; justify-content: flex-end; gap: 8px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--border);
+  background: var(--surface2);
+}
+[data-theme="light"] #desc-modal-footer { border-top: 1px solid #e5e7eb; background: #f9fafb; }
+#desc-modal-charcount {
+  font-size: 10px; color: var(--text-dim); align-self: center; margin-right: auto;
+  font-family: var(--mono);
+}
+
+/* Priority badges */
+.prio {
+  display:inline-flex; align-items:center;
+  font-size:9px; font-weight:700; letter-spacing:1px;
+  padding:2px 7px; border-radius:3px;
+}
+.prio-H { background:rgba(255,64,96,.18); color:#ff4060; border:1px solid #ff406060; }
+.prio-M { background:rgba(255,183,0,.15); color:#ffb700; border:1px solid #ffb70060; }
+.prio-L { background:rgba(10,240,176,.12); color:#0af0b0; border:1px solid #0af0b060; }
+
+/* Priority cell coloring on table rows */
+td.prio-cell-H { background:rgba(255,64,96,.08); }
+td.prio-cell-M { background:rgba(255,183,0,.07); }
+td.prio-cell-L { background:rgba(10,240,176,.06); }
+td.prio-cell-H select { color:#ff4060; font-weight:700; }
+td.prio-cell-M select { color:#ffb700; font-weight:700; }
+td.prio-cell-L select { color:#0af0b0; font-weight:700; }
+
+/* Action row */
+.action-row {
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+}
+.btn {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:7px 14px;
+  border-radius:var(--radius);
+  font-family:var(--mono); font-size:11px; font-weight:600;
+  cursor:pointer; letter-spacing:.5px;
+  transition: all .2s;
+  border:1px solid transparent;
+  white-space:nowrap;
+}
+.btn-primary {
+  background:var(--accent); color:#000; border-color:var(--accent);
+}
+.btn-primary:hover { background:#00a8e0; box-shadow:var(--glow); }
+.btn-ghost {
+  background:transparent; color:var(--text); border-color:var(--border);
+}
+.btn-ghost:hover { border-color:var(--accent); color:var(--accent); }
+.btn-warn {
+  background:transparent; color:var(--warn); border-color:var(--warn);
+}
+.btn-warn:hover { background:rgba(255,183,0,.1); }
+.btn-danger {
+  background:transparent; color:var(--danger); border-color:var(--danger);
+}
+.btn-danger:hover { background:rgba(255,64,96,.1); }
+.btn-sm { padding:5px 10px; font-size:10px; }
+
+/* ══════ RIGHT — INFO COLUMN ══════ */
+#panel-right {
+  width:220px; min-width:220px;
+  display:flex; flex-direction:column; gap:12px;
+}
+
+.info-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+}
+.info-card-hd {
+  padding:8px 12px;
+  background:var(--surface2);
+  border-bottom:1px solid var(--border);
+  font-family:var(--sans); font-size:10px; font-weight:700;
+  color:var(--text-hd); letter-spacing:.5px; text-transform:uppercase;
+}
+.info-card-body { padding:10px 12px; }
+
+/* stat boxes */
+.stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.stat-box {
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:8px 6px;
+  text-align:center;
+}
+.stat-num {
+  font-family:var(--sans); font-size:18px; font-weight:800;
+  color:var(--accent); line-height:1;
+}
+.stat-lbl { font-size:8px; color:var(--text-dim); margin-top:2px; letter-spacing:.5px; text-transform:uppercase; }
+
+/* ── CLICKABLE STAT BOXES ── */
+.stat-clickable {
+  cursor:pointer;
+  transition: border-color .18s, box-shadow .18s, transform .15s;
+}
+.stat-clickable:hover {
+  border-color:var(--accent);
+  box-shadow:0 0 10px rgba(0,194,255,.18);
+  transform:translateY(-1px);
+}
+.stat-clickable.active {
+  border-color:var(--accent);
+  background:rgba(0,194,255,.08);
+  box-shadow:var(--glow);
+}
+
+/* ── CLICKABLE SUMMARY ROWS ── */
+.summary-clickable {
+  cursor:pointer;
+  border-radius:4px;
+  padding-left:4px;
+  margin:0 -4px;
+  transition:background .15s;
+}
+.summary-clickable:hover { background:rgba(0,194,255,.07); }
+.summary-clickable.active { background:rgba(0,194,255,.12); }
+
+/* summary text */
+.summary-line {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:4px 0;
+  border-bottom:1px solid var(--border);
+  font-size:10px;
+}
+.summary-line:last-child { border-bottom:none; }
+.sl-key { color:var(--text-dim); }
+.sl-val { color:var(--text-hd); font-weight:600; }
+
+/* Toast */
+#toast {
+  position:fixed; bottom:20px; right:20px; z-index:9000;
+  background:var(--surface2);
+  border:1px solid var(--accent2);
+  border-radius:var(--radius);
+  padding:10px 16px;
+  font-size:11px; color:var(--accent2);
+  box-shadow:0 4px 24px rgba(0,0,0,.4);
+  transform:translateY(60px); opacity:0;
+  transition:transform .3s, opacity .3s;
+  pointer-events:none;
+  max-width:260px;
+}
+#toast.show { transform:translateY(0); opacity:1; }
+
+/* Add-row button */
+#add-row-btn {
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  margin:6px 0;
+  padding:6px;
+  background:transparent;
+  border:1px dashed var(--border);
+  border-radius:var(--radius);
+  color:var(--text-dim); font-family:var(--mono); font-size:10px;
+  cursor:pointer; letter-spacing:.5px;
+  transition: border-color .2s, color .2s;
+}
+#add-row-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+/* Row delete */
+.row-del {
+  background:none; border:none;
+  color:var(--text-dim); cursor:pointer; font-size:13px;
+  transition:color .15s; padding:0 2px;
+}
+.row-del:hover { color:var(--danger); }
+
+/* ══════ SECTION TABS ══════ */
+.section-tabs {
+  display:flex; gap:0; border-bottom:1px solid var(--border);
+  flex-shrink:0;
+  padding:0 16px;
+  background:var(--surface);
+}
+.s-tab {
+  padding:8px 14px;
+  font-family:var(--mono); font-size:10px; font-weight:600;
+  color:var(--text-dim); cursor:pointer; letter-spacing:.5px;
+  border-bottom:2px solid transparent;
+  transition:color .2s, border-color .2s;
+  white-space:nowrap;
+}
+.s-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+.s-tab:hover:not(.active) { color:var(--text); }
+
+/* ══════ RESPONSIVE ══════ */
+@media(max-width:900px){
+  #panel-right { display:none; }
+  #sidebar { width:48px; min-width:48px; }
+  #sidebar .sidebar-label,
+  #sidebar #calendar-wrap,
+  #sidebar .quick-grid,
+  #sidebar .qlabel { display:none; }
+}
+@media(max-width:600px){
+  #content { padding:8px; }
+  .doc-meta { gap:10px; }
+  .meta-value { width:100px; }
+}
+
+/* Loading skeleton */
+.skeleton {
+  background:linear-gradient(90deg,var(--surface2) 25%,var(--border) 50%,var(--surface2) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.4s infinite;
+  border-radius:3px; height:12px;
+}
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* Print / export */
+@media print {
+  #sidebar,#topbar .btn,#panel-right,#add-row-btn,.row-del,.action-row { display:none!important; }
+  body,#app,#main { overflow:visible; height:auto; }
+  #content { overflow:visible; display:block; }
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- ═══════════ SIDEBAR ═══════════ -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <span class="logo-mark sidebar-label">SLN·PM</span>
+      <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar">⇄</button>
+    </div>
+
+    <!-- Calendar -->
+    <div id="calendar-wrap">
+      <div class="cal-header">
+        <button class="cal-nav" onclick="calNav(-1)">◀</button>
+        <span class="cal-month" id="cal-month-label">—</span>
+        <button class="cal-nav" onclick="calNav(1)">▶</button>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+
+    <!-- Quick Buttons -->
+    <div class="qlabel sidebar-label">QUICK FILL</div>
+    <div class="quick-grid sidebar-label">
+      <button class="q-btn" onclick="quickFill('PPM Check')">PPM Check</button>
+      <button class="q-btn" onclick="quickFill('Inspection')">Inspection</button>
+      <button class="q-btn" onclick="quickFill('Repair')">Repair</button>
+      <button class="q-btn" onclick="quickFill('Safety')">Safety</button>
+      <button class="q-btn" onclick="quickFill('Vendor')">Vendor</button>
+      <button class="q-btn" onclick="quickFill('Cleaning')">Cleaning</button>
+    </div>
+
+    <!-- System Status -->
+    <div class="sys-status">
+      <div class="status-row sidebar-label">
+        <span class="status-dot"></span>
+        <span>SYSTEM LIVE</span>
+      </div>
+      <div id="live-clock" class="sidebar-label">--:--:--</div>
+    </div>
+  </aside>
+
+  <!-- ═══════════ MAIN ═══════════ -->
+  <div id="main">
+    <!-- Topbar -->
+    <header id="topbar">
+      <div>
+        <div class="tb-title">PM DAILY LOG</div>
+        <div class="tb-sub" id="topbar-sub">SLN TERMINUS · PROPERTY MANAGEMENT</div>
+      </div>
+      <div class="tb-spacer"></div>
+      <button class="btn btn-ghost btn-sm" onclick="triggerMonthlyMail()" title="Send monthly mail">📧 MAIL</button>
+      <button class="btn btn-ghost btn-sm" onclick="exportPDF()" title="Export A4 PDF">⬇ PDF</button>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme"></button>
+      <a href="/sln_terminus" id="btn-portal-top" title="Back to Portal">
+        <span class="blink-dot-orange"></span>
+        ← PORTAL
+      </a>
+    </header>
+
+    <!-- Tabs -->
+    <div class="section-tabs">
+      <div class="s-tab active" onclick="setTab('tasks')">TASKS</div>
+      <div class="s-tab" onclick="setTab('remarks')">REMARKS</div>
+      <div class="s-tab" onclick="setTab('history')">HISTORY</div>
+    </div>
+
+    <!-- Content -->
+    <div id="content">
+      <!-- LEFT PANEL -->
+      <div id="panel-left">
+
+        <!-- Doc Header -->
+        <div class="doc-header">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+            <div style="font-family:var(--sans);font-size:13px;font-weight:800;color:var(--text-hd);letter-spacing:1px;">PROPERTY MANAGEMENT DAILY REPORT</div>
+            <div style="font-size:9px;color:var(--text-dim);margin-left:auto;letter-spacing:1px;" id="doc-ref-no">REF: SLN-PM-2026-001</div>
+          </div>
+          <div class="doc-meta">
+            <div class="meta-field">
+              <span class="meta-label">DATE</span>
+              <input class="meta-value" type="date" id="doc-date" style="width:140px;"/>
+            </div>
+            <div class="meta-field">
+              <span class="meta-label">SHIFT</span>
+              <select class="meta-value" id="doc-shift" style="width:100px;">
+                <option>General</option>
+              </select>
+            </div>
+            <div class="meta-field">
+              <span class="meta-label">REPORTED BY</span>
+              <input class="meta-value" id="doc-property" value="Mr. Madhav Reddy" style="width:140px;"/>
+            </div>
+            <div class="meta-field">
+              <span class="meta-label">PROPERTY</span>
+              <input class="meta-value" id="doc-property" value="SLN TERMINUS" style="width:140px;"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: TASKS -->
+        <div id="tab-tasks" class="tab-section">
+          <div class="table-card">
+            <div class="table-card-hd">
+              <span class="tc-title">TASK LOG</span>
+              <span class="tc-count" id="task-count">0 entries</span>
+            </div>
+            <div class="tbl-wrap">
+              <table id="task-table">
+                <thead>
+                  <tr>
+                    <th style="width:32px;">#</th>
+                    <th style="width:160px;">LOCATION / AREA</th>
+                    <th>TASK DESCRIPTION</th>
+                    <th style="width:80px;">PRIORITY</th>
+                    <th style="width:90px;">STATUS</th>
+                    <th style="width:140px;">REMARKS</th>
+                    <th style="width:28px;"></th>
+                  </tr>
+                </thead>
+                <tbody id="task-tbody"></tbody>
+              </table>
+            </div>
+            <button id="add-row-btn" onclick="addTaskRow()">+ ADD TASK ROW</button>
+          </div>
+
+          <div class="action-row">
+            <button class="btn btn-primary" onclick="saveData()">💾 SAVE LOG</button>
+            <button class="btn btn-warn" onclick="clearAll()">⚠ CLEAR ALL</button>
+            <button class="btn btn-ghost btn-sm" onclick="exportPDF()">⬇ EXPORT PDF</button>
+            <button class="btn btn-ghost btn-sm" onclick="triggerMonthlyMail()">📧 MONTHLY MAIL</button>
+          </div>
+        </div>
+
+        <!-- TAB: REMARKS -->
+        <div id="tab-remarks" class="tab-section" style="display:none;">
+          <div class="table-card">
+            <div class="table-card-hd"><span class="tc-title">REMARKS / OBSERVATIONS</span></div>
+            <div style="padding:12px;">
+              <textarea id="remarks-text" style="
+                width:100%; min-height:200px; background:var(--surface2);
+                border:1px solid var(--border); border-radius:var(--radius);
+                color:var(--text); font-family:var(--mono); font-size:12px;
+                padding:10px; resize:vertical; outline:none;
+                line-height:1.7;
+              " placeholder="Enter daily remarks, observations, escalations, follow-up items..."></textarea>
+              <div style="margin-top:8px; display:flex; gap:8px;">
+                <button class="btn btn-primary btn-sm" onclick="saveData()">💾 SAVE REMARKS</button>
+                <button class="btn btn-ghost btn-sm" onclick="clearRemarks()">CLEAR</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: HISTORY -->
+        <div id="tab-history" class="tab-section" style="display:none;">
+          <div class="table-card">
+            <div class="table-card-hd"><span class="tc-title">SAVED HISTORY</span><span class="tc-count" id="history-count">0 logs</span></div>
+            <div id="history-list" style="padding:10px; display:flex; flex-direction:column; gap:6px;">
+              <div style="color:var(--text-dim); font-size:11px; text-align:center; padding:20px;">Loading history...</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /panel-left -->
+
+      <!-- RIGHT PANEL -->
+      <div id="panel-right">
+
+        <!-- ── CLICKABLE STAT COUNTERS ── -->
+        <div class="info-card">
+          <div class="info-card-hd">TODAY'S SUMMARY <span id="filter-badge" style="display:none;margin-left:4px;font-size:8px;color:var(--accent);background:rgba(0,194,255,.12);padding:1px 6px;border-radius:10px;cursor:pointer;" onclick="clearFilter()">CLEAR ✕</span></div>
+          <div class="info-card-body">
+            <div class="stat-grid">
+              <div class="stat-box stat-clickable" id="sc-total" onclick="filterTable('all')" title="Show all tasks">
+                <div class="stat-num" id="stat-total">0</div>
+                <div class="stat-lbl">All Tasks</div>
+              </div>
+              <div class="stat-box stat-clickable" id="sc-done" onclick="filterTable('status','Completed')" title="Show completed only">
+                <div class="stat-num" id="stat-done" style="color:var(--accent2)">0</div>
+                <div class="stat-lbl">Completed</div>
+              </div>
+              <div class="stat-box stat-clickable" id="sc-pending" onclick="filterTable('status','Pending')" title="Show pending only">
+                <div class="stat-num" id="stat-pending" style="color:var(--warn)">0</div>
+                <div class="stat-lbl">Pending</div>
+              </div>
+              <div class="stat-box stat-clickable" id="sc-high" onclick="filterTable('priority','H')" title="Show High priority only">
+                <div class="stat-num" id="stat-high" style="color:var(--danger)">0</div>
+                <div class="stat-lbl">High Prio</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PRIORITY BREAKDOWN (clickable rows) ── -->
+        <div class="info-card">
+          <div class="info-card-hd">PRIORITY</div>
+          <div class="info-card-body">
+            <div class="summary-line summary-clickable" onclick="filterTable('priority','H')" title="Filter High priority">
+              <span class="sl-key">🔴 High</span>
+              <span class="sl-val" id="pb-h" style="color:var(--danger)">0</span>
+            </div>
+            <div class="summary-line summary-clickable" onclick="filterTable('priority','M')" title="Filter Medium priority">
+              <span class="sl-key">🟡 Medium</span>
+              <span class="sl-val" id="pb-m" style="color:var(--warn)">0</span>
+            </div>
+            <div class="summary-line summary-clickable" onclick="filterTable('priority','L')" title="Filter Low priority">
+              <span class="sl-key">🟢 Low</span>
+              <span class="sl-val" id="pb-l" style="color:var(--accent2)">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── STATUS OVERVIEW (clickable rows) ── -->
+        <div class="info-card">
+          <div class="info-card-hd">STATUS</div>
+          <div class="info-card-body">
+            <div class="summary-line summary-clickable" onclick="filterTable('status','Completed')" title="Filter Completed">
+              <span class="sl-key">✅ Completed</span><span class="sl-val" id="sb-done">0</span>
+            </div>
+            <div class="summary-line summary-clickable" onclick="filterTable('status','In Progress')" title="Filter In Progress">
+              <span class="sl-key">⏳ In Progress</span><span class="sl-val" id="sb-wip">0</span>
+            </div>
+            <div class="summary-line summary-clickable" onclick="filterTable('status','Pending')" title="Filter Pending">
+              <span class="sl-key">⏸ Pending</span><span class="sl-val" id="sb-pending">0</span>
+            </div>
+            <div class="summary-line summary-clickable" onclick="filterTable('status','Deferred')" title="Filter Deferred">
+              <span class="sl-key">❌ Deferred</span><span class="sl-val" id="sb-defer">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── MAIL ACTIONS ── -->
+        <div class="info-card">
+          <div class="info-card-hd">SEND REPORT</div>
+          <div class="info-card-body" style="display:flex;flex-direction:column;gap:6px;">
+            <button class="btn btn-primary btn-sm" style="width:100%;justify-content:center;" onclick="sendTodayMail()">
+              📤 SEND TODAY'S LOG
+            </button>
+            <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;" onclick="triggerMonthlyMail()">
+              📧 MONTHLY SUMMARY
+            </button>
+          </div>
+        </div>
+
+        <!-- ── SYSTEM INFO ── -->
+        <div class="info-card">
+          <div class="info-card-hd">SYSTEM</div>
+          <div class="info-card-body">
+            <div class="summary-line"><span class="sl-key">Last saved</span><span class="sl-val" id="last-saved">—</span></div>
+            <div class="summary-line"><span class="sl-key">Version</span><span class="sl-val">SLN-PM v2.1</span></div>
+            <div class="summary-line"><span class="sl-key">Mode</span><span class="sl-val" id="sys-mode">LIVE</span></div>
+          </div>
+        </div>
+
+      </div><!-- /panel-right -->
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- ═══════════ SCRIPTS ═══════════ -->
+<script>
+/* ══════════════════════════════════════════════════════
+   SLN PM DAILY — CORE JAVASCRIPT  v2.1
+   ══════════════════════════════════════════════════════ */
+
+const API = {
+  save:       '/sln/pm/daily/save',
+  load:       '/sln/pm/daily/load',
+  history:    '/sln/pm/daily/history',
+  export:     '/sln/pm/daily/export_pdf',
+  send_today: '/sln/pm/daily/send_today',
+  mail:       '/sln/pm/daily/send_mail',
+};
+
+let calDate    = new Date();
+let entryDates = new Set();
+let currentTab = 'tasks';
+let activeFilter = { type: null, value: null };  // current filter state
+
+/* ───── INIT ───── */
+window.addEventListener('DOMContentLoaded', () => {
+  initClock();
+  initCalendar();
+  setDocDefaults();
+  loadTodayData();
+  loadHistory();
+  updateStats();
+});
+
+/* ───── CLOCK ───── */
+function initClock() {
+  const el = document.getElementById('live-clock');
+  function tick() {
+    const now = new Date();
+    el.textContent = now.toLocaleTimeString('en-IN', {hour12:false});
+  }
+  tick(); setInterval(tick, 1000);
+}
+
+/* ───── CALENDAR ───── */
+function initCalendar() { renderCalendar(); }
+
+function renderCalendar() {
+  const y = calDate.getFullYear(), m = calDate.getMonth();
+  document.getElementById('cal-month-label').textContent =
+    calDate.toLocaleString('en',{month:'short',year:'numeric'}).toUpperCase();
+
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d => {
+    const hd = document.createElement('div');
+    hd.className='cal-day-hd'; hd.textContent=d;
+    grid.appendChild(hd);
+  });
+
+  const first = new Date(y,m,1).getDay();
+  for(let i=0;i<first;i++){
+    const e=document.createElement('div'); e.className='cal-day empty'; grid.appendChild(e);
+  }
+  const days  = new Date(y,m+1,0).getDate();
+  const today = new Date();
+  const [td,tm,ty] = [today.getDate(), today.getMonth(), today.getFullYear()];
+
+  for(let d=1;d<=days;d++){
+    const el  = document.createElement('div');
+    el.className='cal-day'; el.textContent=d;
+    const key = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    if(d===td && m===tm && y===ty) el.classList.add('today');
+    if(entryDates.has(key)) el.classList.add('has-entry');
+    el.onclick = () => jumpToDate(key);
+    grid.appendChild(el);
+  }
+}
+
+function calNav(dir){ calDate.setMonth(calDate.getMonth()+dir); renderCalendar(); }
+function jumpToDate(dateStr){ document.getElementById('doc-date').value=dateStr; loadTodayData(); }
+
+/* ───── DOC DEFAULTS ───── */
+function setDocDefaults() {
+  const now = new Date();
+  document.getElementById('doc-date').value = now.toISOString().split('T')[0];
+  const n = Math.floor(Math.random()*900)+100;
+  document.getElementById('doc-ref-no').textContent = `REF: SLN-PM-${now.getFullYear()}-${n}`;
+}
+
+/* ───── TASK TABLE ───── */
+function addTaskRow(data={}) {
+  const tbody = document.getElementById('task-tbody');
+  const idx   = tbody.rows.length + 1;
+  const tr    = document.createElement('tr');
+  const prio  = data.priority || 'M';
+  const status = data.status  || 'Pending';
+  const prioCls = prio==='H'?'prio-cell-H':prio==='L'?'prio-cell-L':'prio-cell-M';
+
+  tr.innerHTML = `
+    <td style="color:var(--text-dim);font-size:10px;">${idx}</td>
+    <td><input type="text" value="${data.location||''}" placeholder="Area / Location"/></td>
+    <td style="position:relative;">
+      <div style="display:flex;align-items:flex-start;gap:4px;">
+        <textarea placeholder="Task description..." style="flex:1;">${data.description||''}</textarea>
+        <button class="desc-expand-btn" onclick="openDescModal(this)" title="Open editor">⛶</button>
+      </div>
+    </td>
+    <td class="${prioCls}">
+      <select onchange="updatePrioColor(this);updateStats()" style="font-size:10px;font-weight:700;background:transparent;border:none;outline:none;width:100%;cursor:pointer;">
+        <option value="H" ${prio==='H'?'selected':''}>H — High</option>
+        <option value="M" ${prio==='M'?'selected':''}>M — Med</option>
+        <option value="L" ${prio==='L'?'selected':''}>L — Low</option>
+      </select>
+    </td>
+    <td>
+      <select onchange="updateStats()" style="font-size:10px;background:transparent;border:none;outline:none;width:100%;cursor:pointer;">
+        <option value="Pending"     ${status==='Pending'?'selected':''}>Pending</option>
+        <option value="In Progress" ${status==='In Progress'?'selected':''}>In Progress</option>
+        <option value="Completed"   ${status==='Completed'?'selected':''}>Completed</option>
+        <option value="Deferred"    ${status==='Deferred'?'selected':''}>Deferred</option>
+      </select>
+    </td>
+    <td><textarea placeholder="Remarks / notes..." style="height:28px;resize:none;">${data.assigned||data.remarks||''}</textarea></td>
+    <td><button class="row-del" onclick="deleteRow(this)" title="Delete row">✕</button></td>
+  `;
+  tbody.appendChild(tr);
+  updateTaskCount();
+  updateStats();
+}
+
+function updatePrioColor(sel) {
+  const td = sel.closest('td');
+  td.className = '';
+  td.classList.add(sel.value==='H'?'prio-cell-H':sel.value==='L'?'prio-cell-L':'prio-cell-M');
+}
+
+function deleteRow(btn) {
+  btn.closest('tr').remove();
+  reindexRows();
+  updateStats();
+}
+
+function reindexRows() {
+  document.querySelectorAll('#task-tbody tr').forEach((tr,i) => {
+    tr.cells[0].textContent = i+1;
+  });
+  updateTaskCount();
+}
+
+function updateTaskCount() {
+  const c = document.getElementById('task-tbody').rows.length;
+  document.getElementById('task-count').textContent = `${c} entr${c===1?'y':'ies'}`;
+}
+
+function getTableData() {
+  const rows = [];
+  document.querySelectorAll('#task-tbody tr').forEach(tr => {
+    rows.push({
+      location:    tr.cells[1].querySelector('input').value,
+      description: tr.cells[2].querySelector('textarea').value,
+      priority:    tr.cells[3].querySelector('select').value,
+      status:      tr.cells[4].querySelector('select').value,
+      remarks:     tr.cells[5].querySelector('textarea').value,
+    });
+  });
+  return rows;
+}
+
+/* ───── TABLE FILTER ───── */
+function filterTable(type, value) {
+  // Toggle off if same filter clicked again
+  if(activeFilter.type===type && activeFilter.value===value) {
+    clearFilter(); return;
+  }
+  activeFilter = { type, value };
+
+  // Highlight active counter
+  document.querySelectorAll('.stat-clickable,.summary-clickable').forEach(el => el.classList.remove('active'));
+
+  const idMap = {
+    'all':        'sc-total',
+    'Completed':  type==='status' ? 'sc-done'    : null,
+    'Pending':    type==='status' ? 'sc-pending'  : null,
+    'H':          'sc-high',
+  };
+  if(type==='all') {
+    document.getElementById('sc-total')?.classList.add('active');
+  } else {
+    // Highlight matching stat box
+    if(type==='status' && value==='Completed')  document.getElementById('sc-done')?.classList.add('active');
+    if(type==='status' && value==='Pending')    document.getElementById('sc-pending')?.classList.add('active');
+    if(type==='priority' && value==='H')        document.getElementById('sc-high')?.classList.add('active');
+
+    // Highlight matching summary row
+    document.querySelectorAll('.summary-clickable').forEach(row => {
+      const onclick = row.getAttribute('onclick') || '';
+      if(onclick.includes(`'${value}'`)) row.classList.add('active');
+    });
+  }
+
+  // Apply row visibility
+  document.querySelectorAll('#task-tbody tr').forEach(tr => {
+    if(type==='all') { tr.style.display=''; return; }
+    const val = type==='priority'
+      ? tr.cells[3].querySelector('select').value
+      : tr.cells[4].querySelector('select').value;
+    tr.style.display = (val===value) ? '' : 'none';
+  });
+
+  // Show badge
+  const badge = document.getElementById('filter-badge');
+  if(badge) {
+    badge.style.display = 'inline';
+    badge.title = `Filtering: ${type}=${value}. Click to clear.`;
+  }
+
+  const label = type==='priority'
+    ? {H:'High',M:'Medium',L:'Low'}[value]||value
+    : value;
+  showToast(`🔍 Filtered: ${type==='priority'?'Priority':'Status'} = ${label}`);
+}
+
+function clearFilter() {
+  activeFilter = { type:null, value:null };
+  document.querySelectorAll('#task-tbody tr').forEach(tr => tr.style.display='');
+  document.querySelectorAll('.stat-clickable,.summary-clickable').forEach(el => el.classList.remove('active'));
+  const badge = document.getElementById('filter-badge');
+  if(badge) badge.style.display='none';
+  showToast('✅ Filter cleared — showing all tasks');
+}
+
+/* ───── STATS ───── */
+function updateStats() {
+  const rows    = getTableData();
+  const total   = rows.length;
+  const done    = rows.filter(r=>r.status==='Completed').length;
+  const wip     = rows.filter(r=>r.status==='In Progress').length;
+  const pend    = rows.filter(r=>r.status==='Pending').length;
+  const defer   = rows.filter(r=>r.status==='Deferred').length;
+  const high    = rows.filter(r=>r.priority==='H').length;
+  const med     = rows.filter(r=>r.priority==='M').length;
+  const low     = rows.filter(r=>r.priority==='L').length;
+
+  document.getElementById('stat-total').textContent   = total;
+  document.getElementById('stat-done').textContent    = done;
+  document.getElementById('stat-pending').textContent = pend + defer;
+  document.getElementById('stat-high').textContent    = high;
+  document.getElementById('pb-h').textContent = high;
+  document.getElementById('pb-m').textContent = med;
+  document.getElementById('pb-l').textContent = low;
+  document.getElementById('sb-done').textContent    = done;
+  document.getElementById('sb-wip').textContent     = wip;
+  document.getElementById('sb-pending').textContent = pend;
+  document.getElementById('sb-defer').textContent   = defer;
+  updateTaskCount();
+}
+
+/* ───── QUICK FILL ───── */
+function quickFill(type) {
+  const now  = new Date();
+  const time = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  addTaskRow({ description: type + ' — ', priority:'M', status:'Pending' });
+  document.querySelectorAll('.q-btn').forEach(b => {
+    if(b.textContent===type){ b.classList.add('active'); setTimeout(()=>b.classList.remove('active'),600); }
+  });
+}
+
+/* ───── TABS ───── */
+function setTab(name) {
+  currentTab = name;
+  document.querySelectorAll('.tab-section').forEach(s => s.style.display='none');
+  document.getElementById('tab-'+name).style.display='';
+  document.querySelectorAll('.s-tab').forEach(t => t.classList.remove('active'));
+  ['tasks','remarks','history'].forEach((t,i) => {
+    if(t===name) document.querySelectorAll('.s-tab')[i].classList.add('active');
+  });
+  if(name==='history') loadHistory();
+}
+
+/* ───── SAVE ───── */
+async function saveData() {
+  const payload = buildPayload();
+  try {
+    const res  = await fetch(API.save, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if(data.success) {
+      showToast('✅ Log saved successfully');
+      document.getElementById('last-saved').textContent =
+        new Date().toLocaleTimeString('en-IN',{hour12:false});
+      entryDates.add(payload.date);
+      renderCalendar();
+    } else {
+      showToast('❌ Save failed: '+(data.error||'Unknown'), 4000);
+    }
+  } catch(e) {
+    showToast('⚠ Saved locally (server offline)');
+    document.getElementById('last-saved').textContent =
+      new Date().toLocaleTimeString('en-IN',{hour12:false});
+  }
+}
+
+/* ───── LOAD ───── */
+async function loadTodayData() {
+  const date = document.getElementById('doc-date').value;
+  try {
+    const res  = await fetch(`${API.load}?date=${date}`);
+    const data = await res.json();
+    if(data.success && data.log) {
+      populateForm(data.log);
+      showToast(`📂 Loaded log for ${date}`);
+    }
+  } catch(e) { /* silent offline */ }
+}
+
+function populateForm(log) {
+  if(log.shift)    document.getElementById('doc-shift').value    = log.shift;
+  if(log.author)   document.getElementById('doc-author').value   = log.author;
+  if(log.property) document.getElementById('doc-property').value = log.property;
+  if(log.remarks)  document.getElementById('remarks-text').value = log.remarks;
+  document.getElementById('task-tbody').innerHTML = '';
+  (log.tasks||[]).forEach(t => addTaskRow(t));
+  updateStats();
+}
+
+/* ───── HISTORY ───── */
+async function loadHistory() {
+  const wrap = document.getElementById('history-list');
+  try {
+    const res  = await fetch(API.history);
+    const data = await res.json();
+    if(!data.success || !data.logs?.length) {
+      wrap.innerHTML = '<div style="color:var(--text-dim);font-size:11px;text-align:center;padding:20px;">No history yet.</div>';
+      document.getElementById('history-count').textContent = '0 logs';
+      return;
+    }
+    document.getElementById('history-count').textContent = `${data.logs.length} logs`;
+    data.logs.forEach(l => entryDates.add(l.date));
+    renderCalendar();
+    wrap.innerHTML = data.logs.map(l => `
+      <div style="padding:8px 10px;background:var(--surface2);border:1px solid var(--border);
+                  border-radius:var(--radius);cursor:pointer;transition:border-color .15s;"
+           onmouseover="this.style.borderColor='var(--accent)'"
+           onmouseout="this.style.borderColor='var(--border)'"
+           onclick="jumpToDate('${l.date}');setTab('tasks')">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+          <span style="font-weight:700;color:var(--text-hd);font-size:11px;">${l.date}</span>
+          <span style="font-size:9px;color:var(--text-dim);">${l.shift||'—'}</span>
+        </div>
+        <div style="font-size:10px;color:var(--text-dim);">
+          ${l.task_count||0} tasks · by ${l.author||'—'}
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    wrap.innerHTML = '<div style="color:var(--text-dim);font-size:11px;text-align:center;padding:20px;">Server offline.</div>';
+  }
+}
+
+/* ───── PAYLOAD BUILDER ───── */
+function buildPayload() {
+  return {
+    date:     document.getElementById('doc-date').value,
+    shift:    document.getElementById('doc-shift').value,
+    author:   document.getElementById('doc-author').value,
+    property: document.getElementById('doc-property').value,
+    tasks:    getTableData(),
+    remarks:  document.getElementById('remarks-text').value,
+  };
+}
+
+/* ───── EXPORT PDF ───── */
+function buildPrintHTML() {
+  const payload = buildPayload();
+
+  const prioOrder = {H:0, M:1, L:2};
+  const tasks = [...payload.tasks]
+    .filter(t => t.location || t.description || t.remarks)
+    .sort((a,b) => (prioOrder[a.priority]??1) - (prioOrder[b.priority]??1));
+
+  const prioBadge = {
+    H: `<span style="display:inline-block;padding:1px 8px;border-radius:2px;font-size:10px;font-weight:700;letter-spacing:.5px;background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5;">HIGH</span>`,
+    M: `<span style="display:inline-block;padding:1px 8px;border-radius:2px;font-size:10px;font-weight:700;letter-spacing:.5px;background:#fff7ed;color:#c2410c;border:1px solid #fdba74;">MED</span>`,
+    L: `<span style="display:inline-block;padding:1px 8px;border-radius:2px;font-size:10px;font-weight:700;letter-spacing:.5px;background:#dcfce7;color:#15803d;border:1px solid #86efac;">LOW</span>`,
+  };
+
+  const statusColor = {
+    'Completed':   'color:#15803d;font-weight:600;',
+    'In Progress': 'color:#c2410c;font-weight:600;',
+    'Pending':     'color:#b45309;font-weight:600;',
+    'Deferred':    'color:#6b7280;',
+  };
+
+  const rows = tasks.map((t,i) => `
+    <tr>
+      <td style="padding:7px 8px;text-align:center;color:#9ca3af;font-size:10px;">${i+1}</td>
+      <td style="padding:7px 8px;font-size:11px;overflow-wrap:break-word;word-break:break-word;">${(t.location||'—').replace(/</g,'&lt;')}</td>
+      <td style="padding:7px 8px;font-size:11px;overflow-wrap:break-word;word-break:break-word;">${(t.description||'—').replace(/</g,'&lt;')}</td>
+      <td style="padding:7px 8px;text-align:center;white-space:nowrap;">${prioBadge[t.priority]||prioBadge.M}</td>
+      <td style="padding:7px 8px;font-size:11px;white-space:nowrap;${statusColor[t.status]||'color:#374151;'}">${t.status||'—'}</td>
+      <td style="padding:7px 8px;font-size:11px;overflow-wrap:break-word;word-break:break-word;color:#4b5563;">${(t.remarks||'—').replace(/</g,'&lt;')}</td>
+    </tr>`).join('');
+
+  const total   = tasks.length;
+  const done    = tasks.filter(t=>t.status==='Completed').length;
+  const high    = tasks.filter(t=>t.priority==='H').length;
+  const genTime = new Date().toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false});
+
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"/>
+<title>SLN PM Daily — ${payload.date}</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Segoe UI',Arial,sans-serif;color:#111827;background:#fff;padding:32px 36px;font-size:12px;}
+  h1{font-size:20px;font-weight:800;color:#111827;margin-bottom:3px;letter-spacing:-.2px;}
+  .prop{font-size:10px;color:#6b7280;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;}
+  .meta{font-size:11px;color:#374151;margin-bottom:20px;}
+  .meta span{margin-right:18px;}
+  /* Summary */
+  .sum-bar{display:flex;gap:24px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #e5e7eb;}
+  .sum-cell{text-align:left;}
+  .sum-cell .sv{font-size:26px;font-weight:800;line-height:1;color:#111827;}
+  .sum-cell .sk{font-size:9px;color:#9ca3af;margin-top:2px;text-transform:uppercase;letter-spacing:.6px;}
+  /* Table */
+  .section-title{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#9ca3af;margin-bottom:8px;}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;}
+  col.c-no  {width:30px;}
+  col.c-loc {width:120px;}
+  col.c-desc{width:auto;}
+  col.c-prio{width:76px;}
+  col.c-stat{width:90px;}
+  col.c-rem {width:140px;}
+  thead tr{border-bottom:2px solid #111827;}
+  th{padding:7px 8px;text-align:left;font-size:9px;letter-spacing:.8px;font-weight:700;color:#374151;text-transform:uppercase;white-space:nowrap;background:#fff;}
+  th:first-child{text-align:center;}
+  tbody tr{border-bottom:1px solid #f3f4f6;}
+  tbody tr:last-child{border-bottom:1px solid #e5e7eb;}
+  td{padding:7px 8px;vertical-align:middle;background:#fff;}
+  /* Remarks */
+  .remarks-box{margin-top:22px;padding:12px 0;border-top:1px solid #e5e7eb;font-size:11px;color:#374151;white-space:pre-wrap;line-height:1.7;}
+  .remarks-box b{display:block;margin-bottom:4px;font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;}
+  /* Footer */
+  .footer{margin-top:20px;display:flex;justify-content:space-between;font-size:9px;color:#d1d5db;border-top:1px solid #f3f4f6;padding-top:8px;}
+  .print-btn{margin-top:16px;padding:7px 18px;background:#111827;color:#fff;border:none;border-radius:3px;cursor:pointer;font-size:11px;font-weight:600;letter-spacing:.5px;}
+  @media print{.print-btn{display:none!important;}body{padding:14px;}}
+</style></head><body>
+
+<div class="prop">SLN TERMINUS &nbsp;·&nbsp; Property Management</div>
+<h1>PM Daily Log Report</h1>
+<div class="meta">
+  <span>${payload.date}</span>
+  <span>Shift: ${payload.shift}</span>
+  <span>By: ${payload.author||'—'}</span>
+</div>
+
+<div class="sum-bar">
+  <div class="sum-cell"><div class="sv">${total}</div><div class="sk">Total Tasks</div></div>
+  <div class="sum-cell"><div class="sv" style="color:#15803d;">${done}</div><div class="sk">Completed</div></div>
+  <div class="sum-cell"><div class="sv" style="color:#b45309;">${total-done}</div><div class="sk">Open</div></div>
+  <div class="sum-cell"><div class="sv" style="color:#b91c1c;">${high}</div><div class="sk">High Priority</div></div>
+</div>
+
+<div class="section-title">Task Log</div>
+<table>
+  <colgroup>
+    <col class="c-no"/><col class="c-loc"/><col class="c-desc"/>
+    <col class="c-prio"/><col class="c-stat"/><col class="c-rem"/>
+  </colgroup>
+  <thead><tr>
+    <th style="text-align:center;">#</th>
+    <th>Location / Area</th>
+    <th>Task Description</th>
+    <th style="text-align:center;">Priority</th>
+    <th>Status</th>
+    <th>Remarks</th>
+  </tr></thead>
+  <tbody>${rows||'<tr><td colspan="6" style="padding:18px;text-align:center;color:#9ca3af;">No tasks recorded.</td></tr>'}</tbody>
+</table>
+
+${payload.remarks?`<div class="remarks-box"><b>Remarks / Observations</b>${payload.remarks}</div>`:''}
+
+<div class="footer">
+  <span>Generated by SLN TERMINUS MMS &nbsp;·&nbsp; ${genTime} &nbsp;·&nbsp; Confidential</span>
+  <span>REF: ${payload.date}</span>
+</div>
+<button class="print-btn" onclick="window.print()">🖨&nbsp; Print / Save as PDF</button>
+</body></html>`;
+}
+
+async function exportPDF() {
+  showToast('⏳ Generating report...');
+  try {
+    const res = await fetch(API.export, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(buildPayload())
+    });
+    if(res.ok) {
+      const contentType = res.headers.get('content-type')||'';
+      if(contentType.includes('application/pdf')) {
+        const blob = await res.blob();
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        a.href = url; a.download = `SLN_PM_Daily_${buildPayload().date}.pdf`;
+        a.click(); URL.revokeObjectURL(url);
+        showToast('✅ PDF exported');
+        return;
+      }
+    }
+    // Fallback — open rich HTML print view
+    const w = window.open('','_blank');
+    w.document.write(buildPrintHTML()); w.document.close();
+    showToast('📄 Report opened — use Print to save as PDF');
+  } catch(e) {
+    const w = window.open('','_blank');
+    w.document.write(buildPrintHTML()); w.document.close();
+    showToast('📄 Report opened — use Print to save as PDF');
+  }
+}
+
+/* ───── SEND TODAY'S LOG (immediate mail) ───── */
+async function sendTodayMail() {
+  const payload = buildPayload();
+  if(!confirm(`Send today's PM log (${payload.date}) to all receivers now?`)) return;
+  showToast('📤 Sending today\'s log...', 5000);
+  try {
+    const res  = await fetch(API.send_today, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if(data.success) {
+      showToast(`✅ Log sent! ${data.recipients} recipients · ${data.task_count} tasks`, 4000);
+    } else {
+      showToast('❌ Mail failed: '+(data.error||'Unknown error'), 6000);
+      console.error('Mail error:', data.error);
+    }
+  } catch(e) {
+    showToast('❌ Network error — mail not sent', 4000);
+    console.error(e);
+  }
+}
+
+/* ───── MONTHLY MAIL ───── */
+async function triggerMonthlyMail() {
+  if(!confirm('Send monthly PM summary to all receivers?')) return;
+  showToast('📧 Sending monthly summary...', 5000);
+  try {
+    const res  = await fetch(API.mail, {
+      method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'
+    });
+    const data = await res.json();
+    if(data.success) {
+      showToast(`✅ Monthly summary sent! ${data.log_count} logs · ${data.task_total} total tasks`, 4000);
+    } else {
+      showToast('❌ Mail failed: '+(data.error||'Unknown error'), 6000);
+      console.error('Mail error:', data.error);
+    }
+  } catch(e) {
+    showToast('❌ Network error — mail not sent', 4000);
+    console.error(e);
+  }
+}
+
+/* ───── THEME ───── */
+function toggleTheme() {
+  const html = document.documentElement;
+  html.setAttribute('data-theme', html.getAttribute('data-theme')==='dark'?'light':'dark');
+}
+
+/* ───── SIDEBAR ───── */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+}
+
+/* ───── CLEAR ───── */
+function clearAll() {
+  if(!confirm('Clear all tasks?')) return;
+  document.getElementById('task-tbody').innerHTML='';
+  clearFilter();
+  updateStats();
+  showToast('🗑 Cleared all tasks');
+}
+function clearRemarks() {
+  document.getElementById('remarks-text').value='';
+}
+
+/* ───── TOAST ───── */
+function showToast(msg, dur=2800) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove('show'), dur);
+}
+
+/* ───── SEED ROWS ───── */
+addTaskRow(); addTaskRow(); addTaskRow();
+
+/* ───── DESCRIPTION POPUP ───── */
+let _descTarget = null; // the textarea in the table currently being edited
+
+function openDescModal(btn) {
+  const td = btn.closest('td');
+  const ta = td.querySelector('textarea');
+  if (!ta) return;
+  _descTarget = ta;
+  const row = ta.closest('tr');
+  const rowIdx = row ? (row.rowIndex || '') : '';
+  document.getElementById('desc-modal-row').textContent = rowIdx ? `Row ${rowIdx}` : '';
+  const mta = document.getElementById('desc-modal-textarea');
+  mta.value = ta.value;
+  updateDescCount();
+  // Move modal to body to escape any overflow:hidden parents (iOS fix)
+  const modal = document.getElementById('desc-modal');
+  if (modal.parentNode !== document.body) document.body.appendChild(modal);
+  modal.classList.add('open');
+  // Prevent body scroll while modal open
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.width = '100%';
+  setTimeout(() => { mta.focus(); mta.setSelectionRange(mta.value.length, mta.value.length); }, 100);
+}
+
+function closeDescModal(save) {
+  if (save && _descTarget) {
+    _descTarget.value = document.getElementById('desc-modal-textarea').value;
+    _descTarget.dispatchEvent(new Event('input', {bubbles:true}));
+  }
+  document.getElementById('desc-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  document.body.style.position = '';
+  document.body.style.width = '';
+  _descTarget = null;
+}
+
+function updateDescCount() {
+  const v = document.getElementById('desc-modal-textarea').value;
+  document.getElementById('desc-modal-charcount').textContent = v.length + ' chars';
+}
+</script>
+
+<!-- DESCRIPTION POPUP MODAL -->
+<div id="desc-modal">
+  <div id="desc-modal-box">
+    <div id="desc-modal-hd">
+      <span id="desc-modal-label">✏ Task Description</span>
+      <span id="desc-modal-row"></span>
+      <button id="desc-modal-close" onclick="closeDescModal(true)" title="Close">✕</button>
+    </div>
+    <div id="desc-modal-body">
+      <textarea id="desc-modal-textarea" placeholder="Enter full task description..." oninput="updateDescCount()"></textarea>
+    </div>
+    <div id="desc-modal-footer">
+      <span id="desc-modal-charcount">0 chars</span>
+      <button class="btn btn-ghost btn-sm" onclick="closeDescModal(false)">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="closeDescModal(true)">✓ Done</button>
+    </div>
+  </div>
+</div>
+<script>
+// Attach after modal HTML is in DOM
+document.getElementById('desc-modal').addEventListener('click', function(e){
+  if (e.target === this) closeDescModal(true);
+});
+document.getElementById('desc-modal-textarea').addEventListener('keydown', function(e){
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); closeDescModal(true); }
+  if (e.key === 'Escape') closeDescModal(true);
+});
+</script>
+</body>
+</html>

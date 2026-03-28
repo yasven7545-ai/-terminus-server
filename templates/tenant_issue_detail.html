@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Issue</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-900 text-white p-6">
+
+<a href="/tenant" class="text-blue-400 mb-4 block">← Back</a>
+
+<div class="glass-card p-6">
+<h1 class="text-lg font-bold">{{ issue.title }}</h1>
+<p class="text-sm text-gray-400 mt-1">{{ issue.status }}</p>
+
+<p class="mt-4">{{ issue.description }}</p>
+
+<hr class="my-4 border-white/10">
+
+<form method="POST">
+<textarea name="comment" class="glass-input w-full p-3 rounded-xl mb-3" placeholder="Add comment"></textarea>
+<button class="bg-blue-600 w-full py-3 rounded-xl">Send</button>
+</form>
+
+</div>
+
+</body>
+</html>

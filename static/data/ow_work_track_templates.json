@@ -1,0 +1,24 @@
+{
+  "Contract Awarded": {
+    "subject": "[ONEWEST] Contract Awarded / PO Issued: Transformer Issue",
+    "body": "Dear All,\n\nPlease be informed that the Purchase Order / Contract has been awarded for the below work.\n\nWork Title     : Transformer Issue\nLocation       : Basement 1 (TR Room)\nVendor         : After approval\nPO / Contract  : \nExpected Start : \nExpected End   : \n\nRegards,\nONEWEST Property Management",
+    "departments": [
+      "All"
+    ]
+  },
+  "Completion & Closure": {
+    "subject": "[ONEWEST] Work Completed and Closed: Transformer Issue",
+    "body": "Dear All,\n\nWe are pleased to inform that the following work has been completed and closed.\n\nWork Title     : Transformer Issue\nLocation       : Basement 1 (TR Room)\nVendor         : After approval\nFinal Cost     : \nCompletion Date: 04 Mar 2026\nInspection     : Pending\nRemarks        : \n\nRegards,\nONEWEST Property Management",
+    "departments": [
+      "All"
+    ]
+  },
+  "Management Approval": {
+    "subject": "[ONEWEST] Final Management Approval: ADP\u2019s vendor for stack parking to dismantle etc.",
+    "body": "Dear Management,\n\n\u2705 Quotations have been received and comparative analysis is ready for your final approval.\n\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\ud83d\udccc WORK DETAILS\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n  \ud83d\udcdd  Work Title     : ADP\u2019s vendor for stack parking to dismantle etc.\n  \ud83d\udccd  Location       : ONE WEST\n  \ud83c\udfed  Vendor         : \n  \ud83d\udcb0  Final Cost     : \u20b9 \n  \ud83d\udccb  Description    : It has been over a month that notice was sent from Rimpy to ADP\u2019s vendor for stack parking to dismantle etc. What is the status? . Can we close this issue , cannot have broken or unused material in the parking area as per Vastu.\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\nRimpy conveyed that, we can go ahead dismantle the stack parking installations and dispose the material dumped by Ms/. Nagoorji ..",
+    "departments": [
+      "All",
+      "All"
+    ]
+  }
+}

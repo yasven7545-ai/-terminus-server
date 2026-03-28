@@ -1,0 +1,66 @@
+[
+  {
+    "metric": "Attendance %",
+    "target": "95%",
+    "actual": "93%",
+    "variance": "-2%",
+    "period": "Mar 2026",
+    "status": "Near Target"
+  },
+  {
+    "metric": "Productivity (Tasks/Staff)",
+    "target": "4.0",
+    "actual": "3.86",
+    "variance": "-0.14",
+    "period": "Mar 2026",
+    "status": "Near Target"
+  },
+  {
+    "metric": "Cost per Manpower Unit (₹)",
+    "target": "₹1,800",
+    "actual": "₹1,818",
+    "variance": "+₹18",
+    "period": "Mar 2026",
+    "status": "Within Budget"
+  },
+  {
+    "metric": "Vendor Compliance %",
+    "target": "95%",
+    "actual": "87%",
+    "variance": "-8%",
+    "period": "Mar 2026",
+    "status": "Below Target"
+  },
+  {
+    "metric": "Shift Coverage %",
+    "target": "100%",
+    "actual": "97%",
+    "variance": "-3%",
+    "period": "Mar 2026",
+    "status": "Near Target"
+  },
+  {
+    "metric": "SLA Adherence %",
+    "target": "95%",
+    "actual": "89%",
+    "variance": "-6%",
+    "period": "Mar 2026",
+    "status": "Below Target"
+  },
+  {
+    "metric": "Overtime Hours",
+    "target": "<200h",
+    "actual": "186h",
+    "variance": "-14h",
+    "period": "Mar 2026",
+    "status": "On Target"
+  },
+  {
+    "metric": "Late Reporting Incidents",
+    "target": "<5",
+    "actual": "8",
+    "variance": "+3",
+    "period": "Mar 2026",
+    "status": "Exceeds Limit"
+  }
+]

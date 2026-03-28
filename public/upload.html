@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Excel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar">
+    <h2>SLN Terminus</h2>
+    <a href="index.html">🏠 Home</a>
+    <a href="reports.html">📊 Reports</a>
+    <a href="graph.html">📈 Graph</a>
+    <a href="upload.html" class="active">📤 Upload</a>
+  </div>
+
+  <div class="main-content">
+    <h1>Upload New Excel File</h1>
+    <form id="uploadForm">
+      <input type="file" id="fileInput" accept=".xlsx" required />
+      <button type="submit">Upload</button>
+    </form>
+    <p id="uploadStatus"></p>
+  </div>
+
+  <script>
+    document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fileInput = document.getElementById("fileInput");
+      const formData = new FormData();
+      formData.append("file", fileInput.files[0]);
+
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      document.getElementById("uploadStatus").innerText = await res.text();
+    });
+  </script>
+</body>
+</html>

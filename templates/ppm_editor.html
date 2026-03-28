@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>PPM Editor</title>
+
+  <style>
+    body{
+      margin:0;
+      background:#0d1117;
+      font-family:system-ui, sans-serif;
+      color:#fff;
+    }
+    .topbar{
+      padding:12px 20px;
+      background:#11151c;
+      border-bottom:1px solid rgba(255,255,255,0.05);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .topbar button{
+      padding:6px 14px;
+      border-radius:8px;
+      border:none;
+      background:#30363d;
+      color:#fff;
+      cursor:pointer;
+    }
+    .container{
+      padding:20px;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:14px;
+    }
+    th,td{
+      border:1px solid rgba(255,255,255,0.05);
+      padding:6px 8px;
+    }
+    input{
+      width:100%;
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.05);
+      color:#fff;
+      border-radius:6px;
+      padding:4px;
+    }
+    select{
+      width:100%;
+      background:#111;
+      border:1px solid rgba(255,255,255,0.15);
+      color:#fff;
+      border-radius:6px;
+      padding:4px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="topbar">
+    <h2 style="margin:0;">PPM Editor</h2>
+    <div>
+      <button onclick="saveEditorChanges()">Save</button>
+      <button onclick="window.close()">Close</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <h3>Assets</h3>
+
+    <table id="assetTable">
+      <thead>
+        <tr>
+          <th>Asset ID</th>
+          <th>Name</th>
+          <th>In-House/Vendor</th>
+          <th>Vendor Email</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="assetRows"></tbody>
+    </table>
+
+    <br>
+    <button onclick="addAsset()">+ Add Asset</button>
+
+    <hr style="margin:25px 0; opacity:0.2;">
+
+    <h3>PPM Schedule</h3>
+
+    <table>
+      <thead id="wkHead"></thead>
+      <tbody id="wkRows"></tbody>
+    </table>
+
+  </div>
+
+  <!-- editor JS ONLY -->
+  <script src="{{ url_for('static', filename='js/ppm_editor.js') }}"></script>
+
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OGM CAM | Corporate Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        corp: {
+                            950: '#020617', // Deepest Navy
+                            900: '#0f172a', // Background
+                            800: '#1e293b', // Cards
+                            700: '#334155', // Borders
+                        },
+                        accent: {
+                            blue: '#3b82f6',
+                            glow: 'rgba(59, 130, 246, 0.5)'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: radial-gradient(circle at top left, #1e293b 0%, #020617 100%);
+            color: #f1f5f9;
+            min-height: 100vh;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .editable-cell:focus {
+            background: rgba(59, 130, 246, 0.1);
+            outline: 1px solid #3b82f6;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+        }
+        .tab-active {
+            color: #3b82f6;
+            border-bottom: 2px solid #3b82f6;
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight text-white uppercase">
+                    OGM CAM <span class="text-accent-blue">Charges</span>
+                </h1>
+                <p class="text-slate-400 text-sm font-medium">Reporting Period: June 2023 – Nov 2025</p>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <div class="flex flex-col">
+                    <span class="text-[10px] uppercase text-slate-500 font-bold ml-1">Year</span>
+                    <select id="yearFilter" class="bg-corp-800 border border-corp-700 text-sm rounded-lg px-4 py-2 focus:ring-2 focus:ring-accent-blue outline-none transition-all">
+                        <option value="">All Fiscal Years</option>
+                    </select>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-[10px] uppercase text-slate-500 font-bold ml-1">Month</span>
+                    <select id="monthFilter" class="bg-corp-800 border border-corp-700 text-sm rounded-lg px-4 py-2 focus:ring-2 focus:ring-accent-blue outline-none transition-all">
+                        <option value="">All Months</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <main class="glass-panel rounded-2xl overflow-hidden">
+            <div class="flex border-b border-corp-700 px-6 bg-corp-900/50">
+                <button onclick="switchTab('summary')" id="tab-summary" class="tab-btn px-6 py-4 text-sm font-semibold transition-all hover:text-white text-gray-400">Cumulative Summary</button>
+                <button onclick="switchTab('fm-incl')" id="tab-fm-incl" class="tab-btn px-6 py-4 text-sm font-semibold transition-all hover:text-white text-gray-400">FM (Incl. Utility)</button>
+                <button onclick="switchTab('fm-excl')" id="tab-fm-excl" class="tab-btn px-6 py-4 text-sm font-semibold transition-all hover:text-white text-gray-400">FM (Excl. Utility)</button>
+            </div>
+
+            <div class="p-6">
+                <div id="loader" class="flex flex-col items-center justify-center py-20">
+                    <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-accent-blue mb-4"></div>
+                    <p class="text-slate-400 animate-pulse">Synchronizing Data...</p>
+                </div>
+
+                <div id="tableContainer" class="hidden">
+                    </div>
+            </div>
+        </main>
+
+        <footer class="mt-6 flex justify-between items-center text-xs text-slate-500">
+            <p>© 2024 OGM Corporate Module • System Secure</p>
+            <div id="saveStatus" class="hidden items-center gap-2 text-emerald-400 font-medium">
+                <span class="h-2 w-2 rounded-full bg-emerald-400 animate-ping"></span>
+                Changes Auto-synced
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        let allData = {};
+        let currentTab = 'summary';
+
+        // 1. Initialize & Fetch
+        async function init() {
+            try {
+                const response = await fetch('/api/dashboard-data');
+                allData = await response.json();
+                populateFilters();
+                switchTab('summary');
+            } catch (e) {
+                console.error("Connection Error", e);
+                document.getElementById('loader').innerHTML = `<p class="text-red-400">Database Connection Failed</p>`;
+            }
+        }
+
+        // 2. Populate Dropdowns
+        function populateFilters() {
+            const years = new Set();
+            const months = new Set();
+            
+            Object.values(allData).forEach(sheet => {
+                sheet.forEach(row => {
+                    if (row.Month && row.Month.includes('`')) {
+                        const [m, y] = row.Month.split('`');
+                        years.add('20' + y);
+                        months.add(row.Month);
+                    }
+                });
+            });
+
+            const ySelect = document.getElementById('yearFilter');
+            const mSelect = document.getElementById('monthFilter');
+
+            [...years].sort().forEach(y => ySelect.add(new Option(y, y)));
+            [...months].sort().forEach(m => mSelect.add(new Option(m, m)));
+        }
+
+        // 3. Tab Management
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('tab-active'));
+            document.getElementById(`tab-${tab}`).classList.add('tab-active');
+            renderTable();
+        }
+
+        // 4. Render Table with Realistic View
+        function renderTable() {
+            const container = document.getElementById('tableContainer');
+            const loader = document.getElementById('loader');
+            loader.classList.add('hidden');
+            container.classList.remove('hidden');
+
+            const dataTypeMap = { 'summary': 'summary', 'fm-incl': 'fm_incl', 'fm-excl': 'fm_excl' };
+            let data = allData[dataTypeMap[currentTab]] || [];
+
+            // Apply Filters
+            const yF = document.getElementById('yearFilter').value;
+            const mF = document.getElementById('monthFilter').value;
+            if(yF) data = data.filter(r => r.Month.endsWith(yF.slice(-2)));
+            if(mF) data = data.filter(r => r.Month === mF);
+
+            if (data.length === 0) {
+                container.innerHTML = `<div class="text-center py-10 text-slate-500 italic">No records found for current filter criteria.</div>`;
+                return;
+            }
+
+            const headers = Object.keys(data[0]);
+            
+            let html = `
+                <div class="overflow-x-auto rounded-xl border border-corp-700">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-corp-950/80 text-slate-400 font-bold uppercase text-[11px] tracking-widest">
+                                ${headers.map(h => `<th class="px-6 py-4 border-b border-corp-700">${h}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-corp-700">
+                            ${data.map((row, idx) => `
+                                <tr class="hover:bg-accent-blue/5 transition-colors">
+                                    ${headers.map(h => {
+                                        const isEditable = h !== 'Month';
+                                        const val = row[h] ?? '-';
+                                        return `
+                                            <td class="px-6 py-4 ${isEditable ? 'editable-cell' : 'text-slate-400 font-medium bg-corp-900/30'}"
+                                                contenteditable="${isEditable}"
+                                                data-row="${idx}" data-col="${h}" data-tab="${dataTypeMap[currentTab]}">
+                                                ${val}
+                                            </td>`;
+                                    }).join('')}
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-6 flex justify-end">
+                    <button onclick="saveData(this)" class="bg-accent-blue hover:bg-blue-500 text-white px-8 py-2.5 rounded-lg font-bold text-sm shadow-lg shadow-accent-glow transition-all active:scale-95">
+                        COMMIT CHANGES
+                    </button>
+                </div>
+            `;
+            container.innerHTML = html;
+        }
+
+        // 5. Data Persistence
+        async function saveData(btn) {
+            const originalText = btn.textContent;
+            btn.innerHTML = `<span class="animate-pulse">PROCESSING...</span>`;
+            btn.disabled = true;
+
+            const cells = document.querySelectorAll(`[data-tab="${allData[currentTab] ? currentTab : 'summary'}"][contenteditable="true"]`);
+            // Note: In real app, we use mapping to correct sheet name
+            const updates = Array.from(cells).map(c => ({
+                row: c.dataset.row,
+                col: c.dataset.col,
+                value: c.textContent.trim()
+            }));
+
+            try {
+                const res = await fetch('/api/update-data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ dataType: currentTab.replace('-', '_'), updates })
+                });
+
+                if(res.ok) {
+                    const status = document.getElementById('saveStatus');
+                    status.classList.remove('hidden');
+                    setTimeout(() => status.classList.add('hidden'), 3000);
+                }
+            } catch (err) {
+                alert("Critical: Sync Failed");
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        // Listeners
+        document.getElementById('yearFilter').addEventListener('change', renderTable);
+        document.getElementById('monthFilter').addEventListener('change', renderTable);
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

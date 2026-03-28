@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>PM Elite — Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-dark: #020617;
+            --bg-glass: rgba(15, 23, 42, 0.7);
+            --primary: #f97316;
+            --primary-glow: rgba(249, 115, 22, 0.6);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        html, body {
+            margin: 0; padding: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Blinking Home Button */
+        @keyframes home-glow {
+            0%, 100% { box-shadow: 0 0 10px var(--primary); transform: scale(1); }
+            50% { box-shadow: 0 0 25px var(--primary); transform: scale(1.02); }
+        }
+        .home-btn {
+            display: flex; align-items: center; gap: 8px;
+            text-decoration: none; color: #fff;
+            padding: 8px 18px; border: 2px solid var(--primary);
+            border-radius: 50px; font-family: 'Orbitron', sans-serif;
+            font-size: 11px; animation: home-glow 2.5s infinite ease-in-out;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+        }
+
+        header {
+            position: fixed; top: 0; left: 0; right: 0; height: 70px;
+            background: var(--bg-glass); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 30px; z-index: 1000;
+        }
+
+        .sidebar {
+            position: fixed; top: 70px; left: 0; bottom: 0; width: 260px;
+            background: rgba(10, 15, 28, 0.95); border-right: 1px solid var(--border);
+            padding: 30px 15px; display: flex; flex-direction: column; gap: 8px; z-index: 900;
+        }
+        .nav-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 18px; border-radius: 12px;
+            color: var(--text-muted); cursor: pointer; transition: 0.3s;
+        }
+        .nav-item:hover { background: rgba(249, 115, 22, 0.1); color: var(--primary); }
+        .nav-item.active { background: var(--primary); color: #fff; }
+
+        main { margin-left: 260px; margin-top: 70px; padding: 40px; }
+        .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .card { background: var(--bg-glass); border: 1px solid var(--border); padding: 25px; border-radius: 20px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div style="font-family:'Orbitron'; font-size:18px;">EMERZHENT SLN MMSM</div>
+    <a href="sln_terminus.html" class="home-btn">
+        <i data-lucide="home"></i>
+        <span>SLN_TERMINUS</span>
+    </a>
+</header>
+
+<div class="sidebar">
+    <div class="nav-item active"><i data-lucide="layout"></i> Overview</div>
+    
+    <div class="nav-item" onclick="goToDailyUpdates()">
+        <i data-lucide="calendar-check"></i> Daily Updates
+    </div>
+
+    <div class="nav-item"><i data-lucide="users"></i> Tenants</div>
+    <div class="nav-item"><i data-lucide="wrench"></i> Maintenance</div>
+</div>
+
+<main>
+    <h1>Property Dashboard</h1>
+    <div class="card-grid">
+        <div class="card">
+            <span style="font-size: 11px; color: var(--text-muted);">OCCUPANCY</span>
+            <div style="font-size: 32px; font-weight: 700; color: var(--primary);">94.8%</div>
+        </div>
+        <div class="card">
+            <span style="font-size: 11px; color: var(--text-muted);">ACTIVE ALERTS</span>
+            <div style="font-size: 32px; font-weight: 700;">04</div>
+        </div>
+        <div class="card">
+            <span style="font-size: 11px; color: var(--text-muted);">SYSTEM STATUS</span>
+            <div style="font-size: 32px; font-weight: 700; color: #10b981;">HEALTHY</div>
+        </div>
+    </div>
+</main>
+
+<script>
+    lucide.createIcons();
+
+    function goToDailyUpdates() {
+        // Mee server routes batti redirect chesthundhi
+        window.location.href = '/property-manager-updates';
+    }
+</script>
+
+</body>
+</html>

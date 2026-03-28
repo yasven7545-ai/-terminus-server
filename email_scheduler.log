@@ -1,0 +1,557 @@
+2026-02-04 13:27:10,479 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 13:27:10,492 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 13:27:10,493 - INFO - Scheduler started
+2026-02-04 13:27:10,542 - WARNING -  * Debugger is active!
+2026-02-04 13:27:10,544 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 13:27:50,972 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\ppm_daily_mailer.py', reloading
+2026-02-04 13:27:53,260 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 13:27:53,265 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 13:27:53,265 - INFO - Scheduler started
+2026-02-04 13:27:53,294 - WARNING -  * Debugger is active!
+2026-02-04 13:27:53,296 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 13:28:02,064 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\server.py', reloading
+2026-02-04 13:28:04,363 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 13:28:04,364 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 13:28:04,365 - INFO - Scheduler started
+2026-02-04 13:28:04,392 - WARNING -  * Debugger is active!
+2026-02-04 13:28:04,395 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 13:28:24,059 - INFO - Found 0 open work orders for today
+2026-02-04 13:28:24,059 - INFO - No new work orders for today. Email skipped.
+2026-02-04 13:28:54,771 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 13:28:54,773 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 13:28:54,773 - INFO - Scheduler started
+2026-02-04 13:28:54,842 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.117:5000
+2026-02-04 13:28:54,843 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-04 13:28:54,844 - INFO -  * Restarting with stat
+2026-02-04 13:28:56,565 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 13:28:56,566 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 13:28:56,566 - INFO - Scheduler started
+2026-02-04 13:28:56,602 - WARNING -  * Debugger is active!
+2026-02-04 13:28:56,604 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 13:29:04,253 - INFO - 127.0.0.1 - - [04/Feb/2026 13:29:04] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-04 13:29:06,245 - INFO - 127.0.0.1 - - [04/Feb/2026 13:29:06] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 13:29:06,268 - INFO - 127.0.0.1 - - [04/Feb/2026 13:29:06] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 13:29:06,518 - INFO - 127.0.0.1 - - [04/Feb/2026 13:29:06] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-04 13:29:08,570 - INFO - 127.0.0.1 - - [04/Feb/2026 13:29:08] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 13:30:22,119 - INFO - 127.0.0.1 - - [04/Feb/2026 13:30:22] "[35m[1mPOST /api/trigger-daily-email HTTP/1.1[0m" 500 -
+2026-02-04 13:38:30,918 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\server.py', reloading
+2026-02-04 13:38:31,558 - INFO -  * Restarting with stat
+2026-02-04 13:38:37,646 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 13:38:37,655 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 13:38:37,655 - INFO - Scheduler started
+2026-02-04 13:38:37,748 - WARNING -  * Debugger is active!
+2026-02-04 13:38:37,752 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 13:38:40,168 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\server.py', reloading
+2026-02-04 13:38:40,517 - INFO -  * Restarting with stat
+2026-02-04 13:38:43,012 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 13:38:43,014 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 13:38:43,014 - INFO - Scheduler started
+2026-02-04 13:38:43,049 - WARNING -  * Debugger is active!
+2026-02-04 13:38:43,053 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 13:38:49,775 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 13:38:49,777 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 13:38:49,777 - INFO - Scheduler started
+2026-02-04 13:38:49,842 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.117:5000
+2026-02-04 13:38:49,842 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-04 13:38:49,846 - INFO -  * Restarting with stat
+2026-02-04 13:38:51,751 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 13:38:51,753 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 13:38:51,753 - INFO - Scheduler started
+2026-02-04 13:38:51,781 - WARNING -  * Debugger is active!
+2026-02-04 13:38:51,784 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 13:38:56,826 - INFO - 127.0.0.1 - - [04/Feb/2026 13:38:56] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-04 13:38:57,835 - INFO - 127.0.0.1 - - [04/Feb/2026 13:38:57] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 13:38:57,946 - INFO - 127.0.0.1 - - [04/Feb/2026 13:38:57] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 13:38:57,963 - INFO - 127.0.0.1 - - [04/Feb/2026 13:38:57] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-04 13:38:59,516 - INFO - 127.0.0.1 - - [04/Feb/2026 13:38:59] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 13:39:07,330 - INFO - 127.0.0.1 - - [04/Feb/2026 13:39:07] "[35m[1mPOST /api/trigger-daily-email HTTP/1.1[0m" 500 -
+2026-02-04 15:34:01,083 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\server.py', reloading
+2026-02-04 15:34:02,070 - INFO -  * Restarting with stat
+2026-02-04 15:35:03,989 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 15:35:03,994 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 15:35:03,994 - INFO - Scheduler started
+2026-02-04 15:35:04,147 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.117:5000
+2026-02-04 15:35:04,147 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-04 15:35:04,156 - INFO -  * Restarting with stat
+2026-02-04 15:35:05,977 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 15:35:05,980 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 15:35:05,980 - INFO - Scheduler started
+2026-02-04 15:35:06,006 - WARNING -  * Debugger is active!
+2026-02-04 15:35:06,008 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 15:35:07,979 - INFO - 127.0.0.1 - - [04/Feb/2026 15:35:07] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-04 15:35:09,143 - INFO - 127.0.0.1 - - [04/Feb/2026 15:35:09] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-04 15:35:09,214 - INFO - 127.0.0.1 - - [04/Feb/2026 15:35:09] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 15:35:09,226 - INFO - 127.0.0.1 - - [04/Feb/2026 15:35:09] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 15:35:11,292 - INFO - 127.0.0.1 - - [04/Feb/2026 15:35:11] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 15:35:20,478 - INFO - 127.0.0.1 - - [04/Feb/2026 15:35:20] "POST /api/trigger-daily-email HTTP/1.1" 200 -
+2026-02-04 15:44:53,063 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\server.py', reloading
+2026-02-04 15:44:53,397 - INFO -  * Restarting with stat
+2026-02-04 15:44:55,637 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 15:44:55,639 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 15:44:55,640 - INFO - Scheduler started
+2026-02-04 15:44:55,669 - WARNING -  * Debugger is active!
+2026-02-04 15:44:55,671 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 15:46:06,502 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\ppm_daily_mailer.py', reloading
+2026-02-04 15:46:06,792 - INFO -  * Restarting with stat
+2026-02-04 15:46:08,773 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 15:46:08,775 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 15:46:08,775 - INFO - Scheduler started
+2026-02-04 15:46:08,800 - WARNING -  * Debugger is active!
+2026-02-04 15:46:08,802 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 15:47:29,396 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 15:47:29,398 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 15:47:29,398 - INFO - Scheduler started
+2026-02-04 15:47:29,437 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.117:5000
+2026-02-04 15:47:29,437 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-04 15:47:29,439 - INFO -  * Restarting with stat
+2026-02-04 15:47:31,174 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 15:47:31,175 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 15:47:31,175 - INFO - Scheduler started
+2026-02-04 15:47:31,199 - WARNING -  * Debugger is active!
+2026-02-04 15:47:31,201 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 15:47:36,570 - INFO - 127.0.0.1 - - [04/Feb/2026 15:47:36] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-04 15:47:37,803 - INFO - 127.0.0.1 - - [04/Feb/2026 15:47:37] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-04 15:48:20,864 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 15:48:20,865 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 15:48:20,865 - INFO - Scheduler started
+2026-02-04 15:48:20,907 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.117:5000
+2026-02-04 15:48:20,907 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-04 15:48:20,909 - INFO -  * Restarting with stat
+2026-02-04 15:48:22,601 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 15:48:22,602 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 15:48:22,602 - INFO - Scheduler started
+2026-02-04 15:48:22,627 - WARNING -  * Debugger is active!
+2026-02-04 15:48:22,629 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 15:48:25,053 - INFO - 127.0.0.1 - - [04/Feb/2026 15:48:25] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-04 15:48:26,245 - INFO - 127.0.0.1 - - [04/Feb/2026 15:48:26] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-04 15:49:31,550 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 15:49:31,551 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 15:49:31,551 - INFO - Scheduler started
+2026-02-04 15:49:31,584 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.117:5000
+2026-02-04 15:49:31,584 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-04 15:49:31,587 - INFO -  * Restarting with stat
+2026-02-04 15:49:33,405 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 15:49:33,407 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 15:49:33,407 - INFO - Scheduler started
+2026-02-04 15:49:33,433 - WARNING -  * Debugger is active!
+2026-02-04 15:49:33,435 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 15:49:34,856 - INFO - 127.0.0.1 - - [04/Feb/2026 15:49:34] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-04 15:49:36,019 - INFO - 127.0.0.1 - - [04/Feb/2026 15:49:36] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-04 15:49:55,339 - INFO - 127.0.0.1 - - [04/Feb/2026 15:49:55] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-04 15:49:56,611 - INFO - 127.0.0.1 - - [04/Feb/2026 15:49:56] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 15:49:56,615 - INFO - 127.0.0.1 - - [04/Feb/2026 15:49:56] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-04 15:49:56,662 - INFO - 127.0.0.1 - - [04/Feb/2026 15:49:56] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 15:49:57,189 - INFO - 127.0.0.1 - - [04/Feb/2026 15:49:57] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 15:50:11,989 - INFO - 127.0.0.1 - - [04/Feb/2026 15:50:11] "POST /api/trigger-daily-email HTTP/1.1" 200 -
+2026-02-04 16:08:15,840 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\server.py', reloading
+2026-02-04 16:08:16,557 - INFO -  * Restarting with stat
+2026-02-04 16:08:22,256 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 16:08:22,262 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 16:08:22,263 - INFO - Scheduler started
+2026-02-04 16:08:22,345 - WARNING -  * Debugger is active!
+2026-02-04 16:08:22,348 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 16:08:50,262 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\ppm_daily_mailer.py', reloading
+2026-02-04 16:08:50,606 - INFO -  * Restarting with stat
+2026-02-04 16:08:52,837 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 16:08:52,841 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 16:08:52,841 - INFO - Scheduler started
+2026-02-04 16:08:52,880 - WARNING -  * Debugger is active!
+2026-02-04 16:08:52,882 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 16:09:44,822 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 16:09:44,824 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 16:09:44,824 - INFO - Scheduler started
+2026-02-04 16:09:44,921 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.117:5000
+2026-02-04 16:09:44,922 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-04 16:09:44,923 - INFO -  * Restarting with stat
+2026-02-04 16:09:46,883 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 16:09:46,884 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 16:09:46,885 - INFO - Scheduler started
+2026-02-04 16:09:46,921 - WARNING -  * Debugger is active!
+2026-02-04 16:09:46,925 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 16:09:48,701 - INFO - 127.0.0.1 - - [04/Feb/2026 16:09:48] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-04 16:09:50,032 - INFO - 127.0.0.1 - - [04/Feb/2026 16:09:50] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 16:09:50,041 - INFO - 127.0.0.1 - - [04/Feb/2026 16:09:50] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-04 16:09:50,100 - INFO - 127.0.0.1 - - [04/Feb/2026 16:09:50] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 16:09:51,687 - INFO - 127.0.0.1 - - [04/Feb/2026 16:09:51] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 16:10:07,454 - INFO - 127.0.0.1 - - [04/Feb/2026 16:10:07] "POST /api/workflow/create HTTP/1.1" 200 -
+2026-02-04 16:10:09,200 - INFO - 127.0.0.1 - - [04/Feb/2026 16:10:09] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 16:10:09,308 - INFO - 127.0.0.1 - - [04/Feb/2026 16:10:09] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 16:10:09,393 - INFO - 127.0.0.1 - - [04/Feb/2026 16:10:09] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 16:10:12,743 - INFO - 127.0.0.1 - - [04/Feb/2026 16:10:12] "POST /api/workflow/create HTTP/1.1" 200 -
+2026-02-04 16:10:14,190 - INFO - 127.0.0.1 - - [04/Feb/2026 16:10:14] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 16:10:14,257 - INFO - 127.0.0.1 - - [04/Feb/2026 16:10:14] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 16:10:14,396 - INFO - 127.0.0.1 - - [04/Feb/2026 16:10:14] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 16:10:15,854 - INFO - 127.0.0.1 - - [04/Feb/2026 16:10:15] "POST /api/workflow/create HTTP/1.1" 200 -
+2026-02-04 16:10:17,986 - INFO - 127.0.0.1 - - [04/Feb/2026 16:10:17] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 16:10:17,997 - INFO - 127.0.0.1 - - [04/Feb/2026 16:10:17] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 16:10:18,236 - INFO - 127.0.0.1 - - [04/Feb/2026 16:10:18] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 16:10:49,249 - INFO - 127.0.0.1 - - [04/Feb/2026 16:10:49] "POST /api/workflow/close HTTP/1.1" 200 -
+2026-02-04 16:10:51,116 - INFO - 127.0.0.1 - - [04/Feb/2026 16:10:51] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 16:10:51,129 - INFO - 127.0.0.1 - - [04/Feb/2026 16:10:51] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 16:10:51,199 - INFO - 127.0.0.1 - - [04/Feb/2026 16:10:51] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 16:12:09,643 - INFO - 127.0.0.1 - - [04/Feb/2026 16:12:09] "POST /api/workflow/close HTTP/1.1" 200 -
+2026-02-04 16:12:11,537 - INFO - 127.0.0.1 - - [04/Feb/2026 16:12:11] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 16:12:11,562 - INFO - 127.0.0.1 - - [04/Feb/2026 16:12:11] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 16:12:11,711 - INFO - 127.0.0.1 - - [04/Feb/2026 16:12:11] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 17:30:17,638 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\server.py', reloading
+2026-02-04 17:30:17,946 - INFO -  * Restarting with stat
+2026-02-04 17:30:20,204 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 17:30:20,206 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 17:30:20,206 - INFO - Scheduler started
+2026-02-04 17:30:20,234 - WARNING -  * Debugger is active!
+2026-02-04 17:30:20,236 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 17:30:43,983 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\ppm_daily_mailer.py', reloading
+2026-02-04 17:30:44,262 - INFO -  * Restarting with stat
+2026-02-04 17:30:46,425 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 17:30:46,426 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 17:30:46,427 - INFO - Scheduler started
+2026-02-04 17:30:46,466 - WARNING -  * Debugger is active!
+2026-02-04 17:30:46,469 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 17:31:26,632 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 17:31:26,633 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 17:31:26,633 - INFO - Scheduler started
+2026-02-04 17:31:26,670 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.117:5000
+2026-02-04 17:31:26,670 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-04 17:31:26,672 - INFO -  * Restarting with stat
+2026-02-04 17:31:28,458 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 17:31:28,461 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 17:31:28,461 - INFO - Scheduler started
+2026-02-04 17:31:28,507 - WARNING -  * Debugger is active!
+2026-02-04 17:31:28,511 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 17:31:32,005 - INFO - 127.0.0.1 - - [04/Feb/2026 17:31:32] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-04 17:31:33,752 - INFO - 127.0.0.1 - - [04/Feb/2026 17:31:33] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 17:31:33,759 - INFO - 127.0.0.1 - - [04/Feb/2026 17:31:33] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 17:31:33,760 - INFO - 127.0.0.1 - - [04/Feb/2026 17:31:33] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-04 17:31:34,212 - INFO - 127.0.0.1 - - [04/Feb/2026 17:31:34] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 17:31:42,583 - INFO - 127.0.0.1 - - [04/Feb/2026 17:31:42] "POST /api/workflow/close HTTP/1.1" 200 -
+2026-02-04 17:31:44,814 - INFO - 127.0.0.1 - - [04/Feb/2026 17:31:44] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 17:31:44,821 - INFO - 127.0.0.1 - - [04/Feb/2026 17:31:44] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 17:31:44,988 - INFO - 127.0.0.1 - - [04/Feb/2026 17:31:44] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 17:32:01,019 - INFO - 127.0.0.1 - - [04/Feb/2026 17:32:01] "POST /api/workflow/close HTTP/1.1" 200 -
+2026-02-04 17:32:02,987 - INFO - 127.0.0.1 - - [04/Feb/2026 17:32:02] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 17:32:03,035 - INFO - 127.0.0.1 - - [04/Feb/2026 17:32:03] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 17:32:03,115 - INFO - 127.0.0.1 - - [04/Feb/2026 17:32:03] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 17:32:10,216 - INFO - 127.0.0.1 - - [04/Feb/2026 17:32:10] "POST /api/workflow/close HTTP/1.1" 200 -
+2026-02-04 17:32:12,311 - INFO - 127.0.0.1 - - [04/Feb/2026 17:32:12] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 17:32:12,350 - INFO - 127.0.0.1 - - [04/Feb/2026 17:32:12] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 17:32:12,428 - INFO - 127.0.0.1 - - [04/Feb/2026 17:32:12] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 17:32:21,027 - INFO - 127.0.0.1 - - [04/Feb/2026 17:32:21] "POST /api/workflow/close HTTP/1.1" 200 -
+2026-02-04 17:32:23,331 - INFO - 127.0.0.1 - - [04/Feb/2026 17:32:23] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 17:32:23,369 - INFO - 127.0.0.1 - - [04/Feb/2026 17:32:23] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 17:32:23,447 - INFO - 127.0.0.1 - - [04/Feb/2026 17:32:23] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 17:32:41,726 - INFO - 127.0.0.1 - - [04/Feb/2026 17:32:41] "POST /api/trigger-daily-email HTTP/1.1" 200 -
+2026-02-04 17:33:52,956 - INFO - 127.0.0.1 - - [04/Feb/2026 17:33:52] "GET /sln_terminus HTTP/1.1" 200 -
+2026-02-04 17:33:53,348 - INFO - 127.0.0.1 - - [04/Feb/2026 17:33:53] "[36mGET /static/T_Logo.png HTTP/1.1[0m" 304 -
+2026-02-04 17:33:53,349 - INFO - 127.0.0.1 - - [04/Feb/2026 17:33:53] "[36mGET /static/T_Logo.jpg HTTP/1.1[0m" 304 -
+2026-02-04 17:33:53,705 - INFO - 127.0.0.1 - - [04/Feb/2026 17:33:53] "GET /api/user_profile HTTP/1.1" 200 -
+2026-02-04 17:33:53,733 - INFO - 127.0.0.1 - - [04/Feb/2026 17:33:53] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-04 17:33:53,785 - INFO - 127.0.0.1 - - [04/Feb/2026 17:33:53] "[36mGET /static/data/SLN_Terminus_Dashboard_Data.xlsx HTTP/1.1[0m" 304 -
+2026-02-04 17:34:10,768 - INFO - 127.0.0.1 - - [04/Feb/2026 17:34:10] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-04 17:34:11,442 - INFO - 127.0.0.1 - - [04/Feb/2026 17:34:11] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 17:34:11,447 - INFO - 127.0.0.1 - - [04/Feb/2026 17:34:11] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-04 17:34:11,451 - INFO - 127.0.0.1 - - [04/Feb/2026 17:34:11] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 17:34:11,568 - INFO - 127.0.0.1 - - [04/Feb/2026 17:34:11] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 17:34:47,836 - INFO - 127.0.0.1 - - [04/Feb/2026 17:34:47] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-04 17:34:49,216 - INFO - 127.0.0.1 - - [04/Feb/2026 17:34:49] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 17:34:49,288 - INFO - 127.0.0.1 - - [04/Feb/2026 17:34:49] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-04 17:34:49,348 - INFO - 127.0.0.1 - - [04/Feb/2026 17:34:49] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 17:34:49,436 - INFO - 127.0.0.1 - - [04/Feb/2026 17:34:49] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 17:35:03,156 - INFO - 127.0.0.1 - - [04/Feb/2026 17:35:03] "POST /api/ppm/import-excel HTTP/1.1" 200 -
+2026-02-04 17:35:06,921 - INFO - 127.0.0.1 - - [04/Feb/2026 17:35:06] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-04 17:35:07,590 - INFO - 127.0.0.1 - - [04/Feb/2026 17:35:07] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 17:35:07,592 - INFO - 127.0.0.1 - - [04/Feb/2026 17:35:07] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-04 17:35:07,634 - INFO - 127.0.0.1 - - [04/Feb/2026 17:35:07] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 17:35:07,715 - INFO - 127.0.0.1 - - [04/Feb/2026 17:35:07] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 17:35:27,716 - INFO - 127.0.0.1 - - [04/Feb/2026 17:35:27] "GET /api/ppm/workorders/export HTTP/1.1" 200 -
+2026-02-04 17:44:45,695 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\server.py', reloading
+2026-02-04 17:44:46,359 - INFO -  * Restarting with stat
+2026-02-04 17:44:52,080 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 17:44:52,092 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 17:44:52,092 - INFO - Scheduler started
+2026-02-04 17:44:52,216 - WARNING -  * Debugger is active!
+2026-02-04 17:44:52,219 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 17:46:16,825 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 17:46:16,827 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 17:46:16,827 - INFO - Scheduler started
+2026-02-04 17:46:16,940 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.117:5000
+2026-02-04 17:46:16,940 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-04 17:46:16,942 - INFO -  * Restarting with stat
+2026-02-04 17:46:18,668 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 17:46:18,670 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 17:46:18,670 - INFO - Scheduler started
+2026-02-04 17:46:18,696 - WARNING -  * Debugger is active!
+2026-02-04 17:46:18,698 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 17:46:24,425 - INFO - 127.0.0.1 - - [04/Feb/2026 17:46:24] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-04 17:46:25,751 - INFO - 127.0.0.1 - - [04/Feb/2026 17:46:25] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 17:46:25,756 - INFO - 127.0.0.1 - - [04/Feb/2026 17:46:25] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-04 17:46:25,796 - INFO - 127.0.0.1 - - [04/Feb/2026 17:46:25] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 17:46:27,205 - INFO - 127.0.0.1 - - [04/Feb/2026 17:46:27] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 17:46:59,151 - INFO - 127.0.0.1 - - [04/Feb/2026 17:46:59] "POST /api/ppm/import-excel HTTP/1.1" 200 -
+2026-02-04 17:47:01,242 - INFO - 127.0.0.1 - - [04/Feb/2026 17:47:01] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-04 17:47:02,046 - INFO - 127.0.0.1 - - [04/Feb/2026 17:47:02] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-04 17:47:02,054 - INFO - 127.0.0.1 - - [04/Feb/2026 17:47:02] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 17:47:02,096 - INFO - 127.0.0.1 - - [04/Feb/2026 17:47:02] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 17:47:02,185 - INFO - 127.0.0.1 - - [04/Feb/2026 17:47:02] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 17:48:40,215 - INFO - 127.0.0.1 - - [04/Feb/2026 17:48:40] "[35m[1mPOST /api/workflow/close HTTP/1.1[0m" 500 -
+2026-02-04 17:49:09,000 - INFO - 127.0.0.1 - - [04/Feb/2026 17:49:09] "POST /api/trigger-daily-email HTTP/1.1" 200 -
+2026-02-04 17:54:57,237 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\server.py', reloading
+2026-02-04 17:54:58,200 - INFO -  * Restarting with stat
+2026-02-04 17:55:05,128 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 17:55:05,140 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 17:55:05,140 - INFO - Scheduler started
+2026-02-04 17:55:05,264 - WARNING -  * Debugger is active!
+2026-02-04 17:55:05,266 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 17:55:38,481 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\server.py', reloading
+2026-02-04 17:55:38,795 - INFO -  * Restarting with stat
+2026-02-04 17:55:40,808 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 17:55:40,809 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 17:55:40,809 - INFO - Scheduler started
+2026-02-04 17:55:40,848 - WARNING -  * Debugger is active!
+2026-02-04 17:55:40,850 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 17:56:15,757 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\server.py', reloading
+2026-02-04 17:56:16,043 - INFO -  * Restarting with stat
+2026-02-04 17:56:18,106 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 17:56:18,108 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 17:56:18,108 - INFO - Scheduler started
+2026-02-04 17:56:18,132 - WARNING -  * Debugger is active!
+2026-02-04 17:56:18,135 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 17:56:44,718 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\server.py', reloading
+2026-02-04 17:56:45,003 - INFO -  * Restarting with stat
+2026-02-04 17:56:47,237 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 17:56:47,240 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 17:56:47,241 - INFO - Scheduler started
+2026-02-04 17:56:47,281 - WARNING -  * Debugger is active!
+2026-02-04 17:56:47,284 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 17:58:14,935 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 17:58:14,936 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 17:58:14,936 - INFO - Scheduler started
+2026-02-04 17:58:15,017 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.117:5000
+2026-02-04 17:58:15,017 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-04 17:58:15,019 - INFO -  * Restarting with stat
+2026-02-04 17:58:16,735 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-04 17:58:16,737 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-04 17:58:16,737 - INFO - Scheduler started
+2026-02-04 17:58:16,768 - WARNING -  * Debugger is active!
+2026-02-04 17:58:16,772 - INFO -  * Debugger PIN: 117-323-311
+2026-02-04 17:58:24,712 - INFO - 127.0.0.1 - - [04/Feb/2026 17:58:24] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-04 17:58:25,809 - INFO - 127.0.0.1 - - [04/Feb/2026 17:58:25] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 17:58:25,841 - INFO - 127.0.0.1 - - [04/Feb/2026 17:58:25] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 17:58:25,846 - INFO - 127.0.0.1 - - [04/Feb/2026 17:58:25] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-04 17:58:27,438 - INFO - 127.0.0.1 - - [04/Feb/2026 17:58:27] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 17:59:09,849 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:09] "POST /api/ppm/import-excel HTTP/1.1" 200 -
+2026-02-04 17:59:11,691 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:11] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-04 17:59:12,343 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:12] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 17:59:12,346 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:12] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-04 17:59:12,413 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:12] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 17:59:12,495 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:12] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 17:59:31,278 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:31] "POST /api/workflow/close HTTP/1.1" 200 -
+2026-02-04 17:59:33,179 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:33] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 17:59:33,202 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:33] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 17:59:33,327 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:33] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 17:59:50,904 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:50] "POST /api/workflow/create HTTP/1.1" 200 -
+2026-02-04 17:59:53,284 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:53] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 17:59:53,378 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:53] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 17:59:53,440 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:53] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 17:59:55,370 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:55] "POST /api/workflow/create HTTP/1.1" 200 -
+2026-02-04 17:59:57,278 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:57] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 17:59:57,351 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:57] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 17:59:57,468 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:57] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 17:59:59,180 - INFO - 127.0.0.1 - - [04/Feb/2026 17:59:59] "POST /api/workflow/create HTTP/1.1" 200 -
+2026-02-04 18:00:00,860 - INFO - 127.0.0.1 - - [04/Feb/2026 18:00:00] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 18:00:00,891 - INFO - 127.0.0.1 - - [04/Feb/2026 18:00:00] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 18:00:01,056 - INFO - 127.0.0.1 - - [04/Feb/2026 18:00:01] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-04 18:00:17,888 - INFO - 127.0.0.1 - - [04/Feb/2026 18:00:17] "POST /api/trigger-daily-email HTTP/1.1" 200 -
+2026-02-04 18:00:21,626 - INFO - 127.0.0.1 - - [04/Feb/2026 18:00:21] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-04 18:00:22,295 - INFO - 127.0.0.1 - - [04/Feb/2026 18:00:22] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-04 18:00:22,310 - INFO - 127.0.0.1 - - [04/Feb/2026 18:00:22] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-04 18:00:22,327 - INFO - 127.0.0.1 - - [04/Feb/2026 18:00:22] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-04 18:00:22,401 - INFO - 127.0.0.1 - - [04/Feb/2026 18:00:22] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-05 08:00:00,013 - INFO - Running job "send_daily_summary (trigger: cron[hour='8', minute='0'], next run at: 2026-02-05 08:00:00 IST)" (scheduled at 2026-02-05 08:00:00+05:30)
+2026-02-05 08:00:00,015 - INFO - Running job "send_daily_summary (trigger: cron[hour='8', minute='0'], next run at: 2026-02-05 08:00:00 IST)" (scheduled at 2026-02-05 08:00:00+05:30)
+2026-02-05 08:00:00,114 - INFO - Found 0 open work orders for today
+2026-02-05 08:00:00,114 - INFO - No new work orders for today. Email skipped.
+2026-02-05 08:00:00,114 - INFO - No new work orders for today. Email skipped.
+2026-02-05 08:00:00,114 - INFO - Job "send_daily_summary (trigger: cron[hour='8', minute='0'], next run at: 2026-02-06 08:00:00 IST)" executed successfully
+2026-02-06 08:00:00,151 - INFO - Running job "send_daily_summary (trigger: cron[hour='8', minute='0'], next run at: 2026-02-07 08:00:00 IST)" (scheduled at 2026-02-06 08:00:00+05:30)
+2026-02-06 08:00:00,216 - INFO - Running job "send_daily_summary (trigger: cron[hour='8', minute='0'], next run at: 2026-02-06 08:00:00 IST)" (scheduled at 2026-02-06 08:00:00+05:30)
+2026-02-06 08:00:00,307 - INFO - Found 0 open work orders for today
+2026-02-06 08:00:00,307 - INFO - No new work orders for today. Email skipped.
+2026-02-06 08:00:00,308 - INFO - Job "send_daily_summary (trigger: cron[hour='8', minute='0'], next run at: 2026-02-07 08:00:00 IST)" executed successfully
+2026-02-06 08:00:00,389 - INFO - Found 0 open work orders for today
+2026-02-06 08:00:00,389 - INFO - No new work orders for today. Email skipped.
+2026-02-06 08:00:00,390 - INFO - Job "send_daily_summary (trigger: cron[hour='8', minute='0'], next run at: 2026-02-07 08:00:00 IST)" executed successfully
+2026-02-06 09:46:55,629 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\server.py', reloading
+2026-02-06 09:47:00,489 - INFO -  * Restarting with stat
+2026-02-06 09:47:24,046 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-06 09:47:24,077 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-06 09:47:24,077 - INFO - Scheduler started
+2026-02-06 09:47:24,248 - WARNING -  * Debugger is active!
+2026-02-06 09:47:24,257 - INFO -  * Debugger PIN: 117-323-311
+2026-02-06 09:47:34,491 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\server.py', reloading
+2026-02-06 09:47:34,758 - INFO -  * Restarting with stat
+2026-02-06 09:47:36,776 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-06 09:47:36,778 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-06 09:47:36,778 - INFO - Scheduler started
+2026-02-06 09:47:36,830 - WARNING -  * Debugger is active!
+2026-02-06 09:47:36,833 - INFO -  * Debugger PIN: 117-323-311
+2026-02-06 09:48:24,512 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\server.py', reloading
+2026-02-06 09:48:24,850 - INFO -  * Restarting with stat
+2026-02-06 09:48:26,910 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-06 09:48:26,912 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-06 09:48:26,912 - INFO - Scheduler started
+2026-02-06 09:48:26,944 - WARNING -  * Debugger is active!
+2026-02-06 09:48:26,950 - INFO -  * Debugger PIN: 117-323-311
+2026-02-06 09:50:32,098 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\server.py', reloading
+2026-02-06 09:50:32,373 - INFO -  * Restarting with stat
+2026-02-06 09:50:34,238 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-06 09:50:34,245 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-06 09:50:34,245 - INFO - Scheduler started
+2026-02-06 09:50:34,333 - WARNING -  * Debugger is active!
+2026-02-06 09:50:34,339 - INFO -  * Debugger PIN: 117-323-311
+2026-02-06 09:50:42,744 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-06 09:50:42,745 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-06 09:50:42,745 - INFO - Scheduler started
+2026-02-06 09:50:42,857 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.117:5000
+2026-02-06 09:50:42,857 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-06 09:50:42,859 - INFO -  * Restarting with stat
+2026-02-06 09:50:44,528 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-06 09:50:44,529 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-06 09:50:44,529 - INFO - Scheduler started
+2026-02-06 09:50:44,555 - WARNING -  * Debugger is active!
+2026-02-06 09:50:44,559 - INFO -  * Debugger PIN: 117-323-311
+2026-02-06 09:50:51,252 - INFO - 127.0.0.1 - - [06/Feb/2026 09:50:51] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-06 09:50:52,498 - INFO - 127.0.0.1 - - [06/Feb/2026 09:50:52] "[33mGET /api/ppm/assets HTTP/1.1[0m" 404 -
+2026-02-06 09:50:52,506 - INFO - 127.0.0.1 - - [06/Feb/2026 09:50:52] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-06 09:50:52,511 - INFO - 127.0.0.1 - - [06/Feb/2026 09:50:52] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-06 09:50:52,612 - INFO - 127.0.0.1 - - [06/Feb/2026 09:50:52] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-06 09:51:25,461 - INFO - 127.0.0.1 - - [06/Feb/2026 09:51:25] "POST /api/ppm/import-excel HTTP/1.1" 200 -
+2026-02-06 09:51:28,341 - INFO - 127.0.0.1 - - [06/Feb/2026 09:51:28] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-06 09:51:28,804 - INFO - 127.0.0.1 - - [06/Feb/2026 09:51:28] "[33mGET /api/ppm/assets HTTP/1.1[0m" 404 -
+2026-02-06 09:51:28,834 - INFO - 127.0.0.1 - - [06/Feb/2026 09:51:28] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-06 09:51:28,863 - INFO - 127.0.0.1 - - [06/Feb/2026 09:51:28] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-06 09:51:28,866 - INFO - 127.0.0.1 - - [06/Feb/2026 09:51:28] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-06 09:51:45,447 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\server.py', reloading
+2026-02-06 09:51:45,791 - INFO -  * Restarting with stat
+2026-02-06 09:51:47,767 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-06 09:51:47,769 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-06 09:51:47,770 - INFO - Scheduler started
+2026-02-06 09:51:47,797 - WARNING -  * Debugger is active!
+2026-02-06 09:51:47,800 - INFO -  * Debugger PIN: 117-323-311
+2026-02-06 09:52:01,185 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-06 09:52:01,186 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-06 09:52:01,186 - INFO - Scheduler started
+2026-02-06 09:52:01,229 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.117:5000
+2026-02-06 09:52:01,229 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-06 09:52:01,231 - INFO -  * Restarting with stat
+2026-02-06 09:52:02,914 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-06 09:52:02,916 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-06 09:52:02,916 - INFO - Scheduler started
+2026-02-06 09:52:02,945 - WARNING -  * Debugger is active!
+2026-02-06 09:52:02,948 - INFO -  * Debugger PIN: 117-323-311
+2026-02-06 09:52:06,428 - INFO - 127.0.0.1 - - [06/Feb/2026 09:52:06] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-06 09:52:06,951 - INFO - 127.0.0.1 - - [06/Feb/2026 09:52:06] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-06 09:52:06,975 - INFO - 127.0.0.1 - - [06/Feb/2026 09:52:06] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-06 09:52:06,987 - INFO - 127.0.0.1 - - [06/Feb/2026 09:52:06] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-06 09:52:07,537 - INFO - 127.0.0.1 - - [06/Feb/2026 09:52:07] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-06 09:53:21,566 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:21] "POST /api/workflow/create HTTP/1.1" 200 -
+2026-02-06 09:53:23,264 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:23] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-06 09:53:23,355 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:23] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-06 09:53:23,431 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:23] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-06 09:53:26,638 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:26] "POST /api/workflow/create HTTP/1.1" 200 -
+2026-02-06 09:53:27,945 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:27] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-06 09:53:27,986 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:27] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-06 09:53:28,201 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:28] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-06 09:53:30,138 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:30] "POST /api/workflow/create HTTP/1.1" 200 -
+2026-02-06 09:53:31,839 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:31] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-06 09:53:31,852 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:31] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-06 09:53:32,253 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:32] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-06 09:53:33,238 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:33] "POST /api/workflow/create HTTP/1.1" 200 -
+2026-02-06 09:53:34,486 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:34] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-06 09:53:34,525 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:34] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-06 09:53:34,674 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:34] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-06 09:53:47,095 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:47] "POST /api/workflow/close HTTP/1.1" 200 -
+2026-02-06 09:53:48,810 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:48] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-06 09:53:48,862 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:48] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-06 09:53:48,977 - INFO - 127.0.0.1 - - [06/Feb/2026 09:53:48] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-06 09:54:08,671 - INFO - 127.0.0.1 - - [06/Feb/2026 09:54:08] "POST /api/workflow/close HTTP/1.1" 200 -
+2026-02-06 09:54:10,286 - INFO - 127.0.0.1 - - [06/Feb/2026 09:54:10] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-06 09:54:10,346 - INFO - 127.0.0.1 - - [06/Feb/2026 09:54:10] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-06 09:54:10,483 - INFO - 127.0.0.1 - - [06/Feb/2026 09:54:10] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-06 09:54:15,330 - INFO - 127.0.0.1 - - [06/Feb/2026 09:54:15] "POST /api/workflow/close HTTP/1.1" 200 -
+2026-02-06 09:54:16,707 - INFO - 127.0.0.1 - - [06/Feb/2026 09:54:16] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-06 09:54:16,775 - INFO - 127.0.0.1 - - [06/Feb/2026 09:54:16] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-06 09:54:16,887 - INFO - 127.0.0.1 - - [06/Feb/2026 09:54:16] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-06 09:54:21,413 - INFO - 127.0.0.1 - - [06/Feb/2026 09:54:21] "POST /api/workflow/close HTTP/1.1" 200 -
+2026-02-06 09:54:22,655 - INFO - 127.0.0.1 - - [06/Feb/2026 09:54:22] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-06 09:54:22,681 - INFO - 127.0.0.1 - - [06/Feb/2026 09:54:22] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-06 09:54:22,826 - INFO - 127.0.0.1 - - [06/Feb/2026 09:54:22] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-06 09:54:27,046 - INFO - 127.0.0.1 - - [06/Feb/2026 09:54:27] "POST /api/workflow/close HTTP/1.1" 200 -
+2026-02-06 09:54:28,308 - INFO - 127.0.0.1 - - [06/Feb/2026 09:54:28] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-06 09:54:28,329 - INFO - 127.0.0.1 - - [06/Feb/2026 09:54:28] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-06 09:54:28,499 - INFO - 127.0.0.1 - - [06/Feb/2026 09:54:28] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-06 09:54:49,130 - INFO - 127.0.0.1 - - [06/Feb/2026 09:54:49] "GET /api/ppm/workorders/export HTTP/1.1" 200 -
+2026-02-06 09:54:55,241 - INFO - 127.0.0.1 - - [06/Feb/2026 09:54:55] "POST /api/trigger-daily-email HTTP/1.1" 200 -
+2026-02-06 09:55:37,714 - INFO - 127.0.0.1 - - [06/Feb/2026 09:55:37] "POST /api/trigger-daily-email HTTP/1.1" 200 -
+2026-02-06 09:56:12,698 - INFO - 127.0.0.1 - - [06/Feb/2026 09:56:12] "POST /api/trigger-daily-email HTTP/1.1" 200 -
+2026-02-06 10:06:41,157 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-06 10:06:41,162 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-06 10:06:41,162 - INFO - Scheduler started
+2026-02-06 10:06:41,396 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.117:5000
+2026-02-06 10:06:41,397 - INFO - [33mPress CTRL+C to quit[0m
+2026-02-06 10:06:41,404 - INFO -  * Restarting with stat
+2026-02-06 10:06:43,399 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-06 10:06:43,400 - INFO - Added job "send_daily_summary" to job store "default"
+2026-02-06 10:06:43,400 - INFO - Scheduler started
+2026-02-06 10:06:43,450 - WARNING -  * Debugger is active!
+2026-02-06 10:06:43,453 - INFO -  * Debugger PIN: 117-323-311
+2026-02-06 10:06:48,734 - INFO - 127.0.0.1 - - [06/Feb/2026 10:06:48] "GET /ppm_dashboard HTTP/1.1" 200 -
+2026-02-06 10:06:49,472 - INFO - 127.0.0.1 - - [06/Feb/2026 10:06:49] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-06 10:06:49,506 - INFO - 127.0.0.1 - - [06/Feb/2026 10:06:49] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-06 10:06:49,510 - INFO - 127.0.0.1 - - [06/Feb/2026 10:06:49] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 204 -
+2026-02-06 10:06:50,908 - INFO - 127.0.0.1 - - [06/Feb/2026 10:06:50] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-06 10:07:40,338 - INFO - 127.0.0.1 - - [06/Feb/2026 10:07:40] "POST /api/workflow/close HTTP/1.1" 200 -
+2026-02-06 10:07:42,292 - INFO - 127.0.0.1 - - [06/Feb/2026 10:07:42] "GET /api/ppm/dashboard/stats HTTP/1.1" 200 -
+2026-02-06 10:07:42,406 - INFO - 127.0.0.1 - - [06/Feb/2026 10:07:42] "GET /api/ppm/workorders HTTP/1.1" 200 -
+2026-02-06 10:07:42,460 - INFO - 127.0.0.1 - - [06/Feb/2026 10:07:42] "GET /api/ppm/assets HTTP/1.1" 200 -
+2026-02-06 10:07:55,800 - INFO - 127.0.0.1 - - [06/Feb/2026 10:07:55] "POST /api/trigger-daily-email HTTP/1.1" 200 -
+2026-02-06 10:32:05,231 - INFO -  * Detected change in 'C:\\Users\\Venu\\Desktop\\my_dashboard\\ppm_daily_mailer.py', reloading
+2026-02-06 10:32:05,559 - INFO -  * Restarting with stat

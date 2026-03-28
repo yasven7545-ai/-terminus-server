@@ -1,0 +1,105 @@
+"""
+Run this ONCE to pre-generate the per-sheet JSON cache files.
+Usage: python cam_setup.py
+Place this file in: C:\\Users\\Venu\\Desktop\\my_dashboard\\
+"""
+from pathlib import Path
+import openpyxl, json
+
+BASE_DIR   = Path(__file__).parent.resolve()
+CAM_EXCEL  = BASE_DIR / "static" / "data" / "CAM Charges revised.xlsx"
+SHEETS_DIR = BASE_DIR / "static" / "data" / "cam_sheets"
+SHEETS_DIR.mkdir(parents=True, exist_ok=True)
+
+def safe_val(c):
+    if c is None: return ''
+    if isinstance(c, float):
+        if c != c or abs(c) == float('inf'): return ''
+        return round(c, 4)
+    if isinstance(c, bool): return c
+    return str(c)
+
+wb_f = openpyxl.load_workbook(str(CAM_EXCEL), data_only=False)
+wb_v = openpyxl.load_workbook(str(CAM_EXCEL), data_only=True)
+index = {}
+
+for sh in wb_f.sheetnames:
+    ws_f = wb_f[sh]; ws_v = wb_v[sh]
+
+    merged_map = {}
+    for mc in ws_f.merged_cells.ranges:
+        for ri in range(mc.min_row, mc.max_row+1):
+            for ci in range(mc.min_col, mc.max_col+1):
+                merged_map[(ri,ci)] = {
+                    'rs': mc.max_row-mc.min_row+1,
+                    'cs': mc.max_col-mc.min_col+1,
+                    'master': ri==mc.min_row and ci==mc.min_col
+                }
+
+    col_widths = {}
+    for col, dim in ws_f.column_dimensions.items():
+        try:
+            ci = openpyxl.utils.column_index_from_string(col)
+            if ci <= (ws_f.max_column or 0):
+                col_widths[str(ci)] = max(int((dim.width or 8.43)*7.5), 55)
+        except: pass
+
+    rows_out = []
+    for ri in range(1, (ws_f.max_row or 0)+1):
+        row_out = []
+        for ci in range(1, (ws_f.max_column or 0)+1):
+            cf = ws_f.cell(ri,ci); cv = ws_v.cell(ri,ci)
+            fval = cf.value
+            is_f = isinstance(fval,str) and fval.startswith('=')
+            comp = safe_val(cv.value)
+            bold   = bool(cf.font and cf.font.bold)
+            italic = bool(cf.font and cf.font.italic)
+            bg = fc = None
+            try:
+                raw = cf.fill.fgColor.rgb if cf.fill and cf.fill.fgColor else None
+                if raw and raw not in ('00000000','FFFFFFFF','FF000000','00FFFFFF'):
+                    bg = '#'+raw[2:]
+            except: pass
+            try:
+                raw = cf.font.color.rgb if cf.font and cf.font.color else None
+                if raw and raw not in ('00000000','FF000000'):
+                    fc = '#'+raw[2:]
+            except: pass
+            align = 'left'
+            if cf.alignment:
+                h = cf.alignment.horizontal
+                if h in ('center','centerContinuous'): align = 'center'
+                elif h in ('right','distributed'):     align = 'right'
+
+            cd = {
+                'v':  str(fval) if (not is_f and fval is not None) else '',
+                'cv': str(comp) if comp != '' else '',
+                'f':  fval if is_f else None,
+                'b': bold, 'i': italic, 'bg': bg, 'fc': fc, 'al': align
+            }
+            m = merged_map.get((ri,ci))
+            if m:
+                cd['rs']   = m['rs']
+                cd['cs']   = m['cs']
+                cd['skip'] = not m['master']
+            row_out.append(cd)
+        rows_out.append(row_out)
+
+    data = {
+        'rows': rows_out,
+        'col_widths': col_widths,
+        'max_row': ws_f.max_row or 0,
+        'max_col': ws_f.max_column or 0,
+    }
+
+    safe = sh.replace('/', '-').replace(' ', '_')
+    fp   = SHEETS_DIR / f"{safe}.json"
+    with open(fp, 'w', encoding='utf-8') as f:
+        json.dump(data, f, separators=(',',':'), default=str)
+    index[sh] = {'max_row': data['max_row'], 'max_col': data['max_col']}
+    print(f"  ✓ {sh}: {data['max_row']}r × {data['max_col']}c  →  {fp.name}")
+
+with open(SHEETS_DIR / "index.json", 'w', encoding='utf-8') as f:
+    json.dump(index, f)
+
+print(f"\n✅ Done — {len(index)} sheets cached in {SHEETS_DIR}")

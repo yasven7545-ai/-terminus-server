@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>OGM — One Golden Mile Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+/* ══════════════════════════════════════════════════════
+   DARK THEME — Deep Navy / Teal / Cyan  (OGM Identity)
+══════════════════════════════════════════════════════ */
+:root,
+[data-theme="dark"] {
+  --bg:           #020b12;
+  --bg2:          #071520;
+  --bg3:          #010810;
+  --bg4:          #0c1e2e;
+  --bg-card:      rgba(7,21,32,0.80);
+  --border:       rgba(6,182,212,0.12);
+  --border2:      rgba(6,182,212,0.26);
+  --border3:      rgba(6,182,212,0.48);
+
+  /* Primary — teal/cyan */
+  --teal:         #0d9488;
+  --teal2:        #0f766e;
+  --teal3:        #2dd4bf;
+  --tealglow:     rgba(13,148,136,0.18);
+  --cyan:         #06b6d4;
+  --cyan2:        #0891b2;
+  --cyan3:        #67e8f9;
+
+  --accent-gradient: linear-gradient(135deg,#0d9488 0%,#06b6d4 100%);
+  --header-gradient: linear-gradient(90deg,#0d9488,#06b6d4);
+
+  --text:         #b8dde8;
+  --text2:        #daf0f7;
+  --text3:        #4a7a8a;
+  --text-muted:   #4a7a8a;
+
+  --success:      #10b981;
+  --warning:      #f59e0b;
+  --danger:       #ef4444;
+  --orange:       #f97316;
+  --purple:       #a78bfa;
+
+  --r:            12px;
+  --r2:           8px;
+  --shadow:       0 8px 36px rgba(0,0,0,.70);
+  --header-height: 60px;
+  --sidebar-width: 250px;
+  --mobile-nav-width: 320px;
+  --ease-back:    cubic-bezier(0.34,1.56,0.64,1);
+}
+
+/* ══════════════════════════════════════════════════════
+   LIGHT THEME — Soft teal-white
+══════════════════════════════════════════════════════ */
+[data-theme="light"] {
+  --bg:           #f0fafa;
+  --bg2:          #e0f5f5;
+  --bg3:          #ffffff;
+  --bg4:          #cdeeed;
+  --bg-card:      rgba(255,255,255,0.95);
+  --border:       rgba(13,148,136,0.14);
+  --border2:      rgba(13,148,136,0.30);
+  --border3:      rgba(13,148,136,0.52);
+
+  --teal:         #0f766e;
+  --teal2:        #115e59;
+  --teal3:        #0d9488;
+  --tealglow:     rgba(15,118,110,0.10);
+  --cyan:         #0891b2;
+  --cyan2:        #0e7490;
+  --cyan3:        #06b6d4;
+
+  --text:         #0f2e35;
+  --text2:        #07191e;
+  --text3:        #3d7080;
+  --text-muted:   #3d7080;
+}
+
+/* ══════════════════════════════════════════════════════
+   RESET & BASE
+══════════════════════════════════════════════════════ */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; outline:none; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  line-height:1.6;
+  transition:background .3s,color .3s;
+}
+
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 90% 10%, rgba(6,182,212,.07), transparent),
+    radial-gradient(ellipse 40% 30% at 5% 80%,  rgba(13,148,136,.05), transparent);
+}
+[data-theme="light"] body::before {
+  background:
+    radial-gradient(ellipse 60% 40% at 90% 10%, rgba(13,148,136,.04), transparent),
+    radial-gradient(ellipse 40% 30% at 5% 80%,  rgba(6,182,212,.03), transparent);
+}
+
+::-webkit-scrollbar { width:4px; height:4px; }
+::-webkit-scrollbar-track { background:var(--bg2); }
+::-webkit-scrollbar-thumb { background:var(--border3); border-radius:2px; }
+
+/* ══════════════════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════════════════ */
+header {
+  position:fixed; top:0; left:0; right:0;
+  height:var(--header-height);
+  background:var(--bg3);
+  border-bottom:1px solid var(--border2);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 20px;
+  z-index:200;
+  box-shadow:0 2px 24px rgba(0,0,0,.5);
+  transition:background .3s, border-color .3s;
+}
+
+.h-left  { display:flex; align-items:center; gap:12px; min-width:0; }
+.h-right { display:flex; align-items:center; gap:9px; flex-shrink:0; }
+
+/* ── Logo area — always dark so logo shows correctly ── */
+.logo-area {
+  display:flex; align-items:center; gap:10px;
+  background:#051018;
+  border:1px solid rgba(6,182,212,.35);
+  padding:5px 13px; border-radius:10px;
+  flex-shrink:0; overflow:hidden;
+  text-decoration:none;
+}
+.logo-area img { height:28px; width:auto; display:block; object-fit:contain; }
+
+.logo-pill {
+  background:var(--accent-gradient);
+  color:#fff; font-family:'Outfit',sans-serif; font-weight:800;
+  font-size:11px; padding:3px 11px; border-radius:20px;
+  letter-spacing:.07em; white-space:nowrap; flex-shrink:0;
+}
+
+.h-titles { display:flex; flex-direction:column; line-height:1.25; min-width:0; }
+.h-title  { font-family:'Outfit',sans-serif; font-weight:700; font-size:14px; color:var(--text2); white-space:nowrap; }
+.h-sub    { font-size:9px; color:var(--text3); letter-spacing:.05em; text-transform:uppercase; white-space:nowrap; }
+
+/* Live badge */
+.live-badge {
+  display:flex; align-items:center; gap:5px;
+  font-size:9px; color:var(--teal3); font-weight:700;
+  letter-spacing:.05em; text-transform:uppercase;
+}
+.live-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--teal3); animation:live-pulse 2s infinite;
+}
+@keyframes live-pulse { 0%,100%{opacity:1;} 50%{opacity:.2;} }
+
+/* Back to Portal */
+.btn-portal {
+  display:flex; align-items:center; gap:5px;
+  font-size:11px; font-weight:600; color:var(--teal3);
+  text-decoration:none; padding:5px 13px;
+  border:1px solid var(--teal2); border-radius:20px;
+  animation:portal-blink 1.7s ease-in-out infinite;
+  transition:background .2s; white-space:nowrap; flex-shrink:0;
+}
+.btn-portal:hover { background:var(--tealglow); }
+.btn-portal i { width:13px; height:13px; }
+@keyframes portal-blink {
+  0%,100% { border-color:var(--teal2); box-shadow:none; }
+  50%     { border-color:var(--teal3); box-shadow:0 0 14px rgba(13,148,136,.45); }
+}
+
+/* Time gadget */
+.time-gadget {
+  display:flex; align-items:center; gap:6px;
+  padding:4px 11px;
+  background:rgba(13,148,136,.07);
+  border:1px solid var(--border);
+  border-radius:20px; color:var(--teal3);
+  font-size:12px; font-family:'JetBrains Mono',monospace; font-weight:500;
+  white-space:nowrap;
+}
+.time-gadget i { width:12px; height:12px; }
+@media (max-width:520px) { .time-gadget { display:none; } }
+
+/* Action icon buttons */
+.icon-btn {
+  background:rgba(255,255,255,.04); border:1px solid var(--border);
+  color:var(--text2); width:36px; height:36px; border-radius:9px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all .2s; flex-shrink:0;
+}
+.icon-btn:hover { background:var(--tealglow); border-color:var(--teal3); color:var(--teal3); }
+.icon-btn i { width:15px; height:15px; }
+
+/* Dark/Light toggle */
+.theme-toggle {
+  background:var(--bg2); border:1px solid var(--border2);
+  border-radius:20px; width:60px; height:28px;
+  cursor:pointer; position:relative; flex-shrink:0;
+  transition:background .3s, border-color .3s;
+  display:flex; align-items:center;
+}
+.theme-thumb {
+  width:22px; height:22px; border-radius:50%;
+  background:var(--accent-gradient);
+  position:absolute; top:3px; left:3px;
+  transition:transform .3s var(--ease-back);
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; box-shadow:0 2px 6px rgba(0,0,0,.4); line-height:1;
+}
+[data-theme="light"] .theme-thumb { transform:translateX(32px); }
+
+/* Mobile hamburger */
+.mobile-menu-btn {
+  background:var(--accent-gradient);
+  border:none; width:38px; height:38px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; box-shadow:0 4px 14px rgba(13,148,136,.4);
+  transition:all .3s; flex-shrink:0;
+}
+.mobile-menu-btn:hover { transform:scale(1.1) rotate(15deg); }
+.mobile-menu-btn i { width:17px; height:17px; color:#fff; }
+
+/* ══════════════════════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════════════════════ */
+.sidebar {
+  position:fixed;
+  top:calc(var(--header-height) + 12px);
+  left:10px; bottom:10px;
+  width:var(--sidebar-width);
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:12px 8px 110px;
+  display:flex; flex-direction:column; gap:2px;
+  overflow-y:auto; z-index:40;
+  box-shadow:var(--shadow);
+  transition:background .3s, border-color .3s;
+}
+
+.sb-section { padding:3px 8px; margin:6px 0 2px; }
+.sb-label   {
+  font-size:9px; font-weight:700; color:var(--text3);
+  letter-spacing:.12em; text-transform:uppercase;
+}
+.sb-divider { border:none; border-top:1px solid var(--border); margin:6px 8px; }
+
+/* Stylus nav item — orange accent strip matches OGM original */
+.stylus-btn {
+  background:rgba(255,255,255,.02); border:1px solid transparent;
+  color:var(--text2); padding:10px 14px 10px 16px;
+  border-radius:10px; text-align:left;
+  font-size:12.5px; font-family:'Inter',sans-serif; font-weight:500;
+  cursor:pointer; display:flex; align-items:center; gap:10px;
+  transition:all .18s; position:relative; overflow:hidden; width:100%;
+}
+.stylus-btn::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+  background:var(--accent-gradient); opacity:0; transition:opacity .2s;
+  border-radius:2px 0 0 2px;
+}
+.stylus-btn:hover {
+  background:rgba(13,148,136,.10); border-color:var(--border2);
+  color:var(--teal3); transform:translateX(4px);
+}
+.stylus-btn:hover::before { opacity:1; }
+.stylus-btn.active {
+  background:rgba(13,148,136,.22);
+  border-color:rgba(13,148,136,.55);
+  color:var(--teal3); font-weight:700;
+  box-shadow:0 0 12px rgba(13,148,136,.18);
+  transform:translateX(4px);
+}
+.stylus-btn.active::before { opacity:1; }
+.stylus-btn.active i { opacity:1; }
+[data-theme="light"] .stylus-btn.active {
+  background:rgba(13,148,136,.14);
+  border-color:rgba(13,148,136,.50);
+  color:var(--teal2);
+}
+.stylus-btn i { width:14px; height:14px; flex-shrink:0; }
+
+/* Prereq / coming soon */
+.stylus-btn.prereq { opacity:.48; cursor:default !important; }
+.stylus-btn.prereq:hover { background:transparent; border-color:transparent; color:var(--text2); transform:none; cursor:default !important; }
+.stylus-btn.prereq:hover::before { opacity:0; }
+
+/* Blinking soon badge */
+@keyframes soon-blink {
+  0%,100% { border-color:rgba(13,148,136,.22); box-shadow:none; color:var(--teal3); }
+  50%     { border-color:rgba(13,148,136,.65); box-shadow:0 0 8px rgba(13,148,136,.38); color:var(--teal3); }
+}
+.nav-badge {
+  margin-left:auto; font-family:'JetBrains Mono',monospace; font-size:9px;
+  background:rgba(13,148,136,.10); color:var(--teal3);
+  border:1px solid rgba(13,148,136,.22);
+  padding:1px 6px; border-radius:8px; white-space:nowrap;
+  animation:soon-blink 1.8s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════
+   STATUS GADGET
+══════════════════════════════════════════════════════ */
+.status-gadget {
+  position:fixed; bottom:10px; left:10px;
+  width:var(--sidebar-width);
+  background:var(--bg2); border:1px solid var(--border);
+  border-radius:12px; padding:10px 14px; z-index:45;
+  box-shadow:0 8px 28px rgba(0,0,0,.4);
+  transition:background .3s, border-color .3s;
+}
+.sg-header { font-size:9px; text-transform:uppercase; letter-spacing:.1em; color:var(--text3); margin-bottom:7px; display:flex; justify-content:space-between; }
+.sg-row    { display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; font-size:11px; }
+.sg-label  { display:flex; align-items:center; gap:7px; color:var(--text2); }
+.sg-dot    { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.dot-on    { background:var(--success); box-shadow:0 0 5px var(--success); }
+.dot-warn  { background:var(--warning); box-shadow:0 0 5px var(--warning); }
+@media (max-width:768px) { .status-gadget { display:none; } }
+
+/* ══════════════════════════════════════════════════════
+   MAIN
+══════════════════════════════════════════════════════ */
+main {
+  margin-left:calc(var(--sidebar-width) + 32px);
+  margin-top:var(--header-height);
+  padding:24px 26px 100px;
+  position:relative; z-index:1;
+}
+
+/* ══════════════════════════════════════════════════════
+   WELCOME / IDLE
+══════════════════════════════════════════════════════ */
+.idle-screen {
+  min-height:74vh; display:flex;
+  align-items:center; justify-content:center;
+  padding:20px 10px;
+}
+
+.idle-card {
+  padding:38px 52px; border-radius:24px;
+  background:var(--bg3); border:1px solid var(--border2);
+  box-shadow:0 24px 56px rgba(0,0,0,.42);
+  position:relative; overflow:hidden;
+  animation:fadeUp .7s ease forwards; width:100%; max-width:740px;
+}
+[data-theme="light"] .idle-card { box-shadow:0 12px 40px rgba(13,148,136,.12); }
+@keyframes fadeUp { from{opacity:0;transform:translateY(24px);} to{opacity:1;transform:translateY(0);} }
+
+.idle-card::before {
+  content:''; position:absolute; top:-80px; right:-80px;
+  width:240px; height:240px;
+  background:radial-gradient(circle, rgba(6,182,212,.12), transparent 70%);
+  pointer-events:none;
+}
+.idle-card::after {
+  content:''; position:absolute; bottom:-60px; left:-60px;
+  width:180px; height:180px;
+  background:radial-gradient(circle, rgba(13,148,136,.08), transparent 70%);
+  pointer-events:none;
+}
+
+/* Logo container — always dark so logo is always visible */
+.idle-logo-wrap {
+  width:100px; height:100px; margin:0 auto 20px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:24px;
+  background:#030f18;
+  border:1px solid rgba(6,182,212,.35);
+  box-shadow:0 0 30px rgba(6,182,212,.22);
+  animation:logoFloat 3s infinite ease-in-out;
+}
+.idle-logo { width:74px; height:auto; display:block; }
+@keyframes logoFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+
+.idle-title {
+  font-family:'Outfit',sans-serif; font-size:2.3rem; font-weight:800;
+  color:var(--text2); margin:0 0 8px; letter-spacing:-1px; text-align:center;
+}
+.idle-title span { color:var(--teal3); }
+.idle-sub { color:var(--text3); font-size:.88rem; text-align:center; max-width:460px; margin:0 auto 22px; line-height:1.7; }
+
+.status-badge {
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(13,148,136,.10); color:var(--teal3);
+  padding:5px 14px; border-radius:100px; font-size:12px; font-weight:600;
+  border:1px solid rgba(13,148,136,.22); margin:0 auto 22px; display:flex;
+  width:fit-content;
+}
+.badge-dot {
+  width:7px; height:7px; border-radius:50%; background:var(--teal3);
+  animation:live-pulse 1.6s infinite;
+}
+
+/* Quick access grid */
+.qa-label {
+  font-size:9px; font-weight:700; color:var(--text3);
+  text-transform:uppercase; letter-spacing:.12em;
+  text-align:left; margin:16px 0 8px;
+}
+.quick-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }
+
+.quick-card {
+  background:var(--bg2); border:1px solid var(--border);
+  border-radius:11px; padding:13px 8px;
+  cursor:pointer; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:6px;
+  transition:all .2s; text-decoration:none; position:relative; overflow:hidden;
+}
+.quick-card:hover {
+  border-color:var(--border2); background:var(--bg4);
+  transform:translateY(-2px); box-shadow:0 8px 22px rgba(13,148,136,.18);
+}
+.quick-card:hover .qc-icon { transform:scale(1.12); }
+.qc-icon {
+  width:36px; height:36px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .2s; flex-shrink:0;
+}
+.qc-icon i { width:18px; height:18px; }
+.qc-label { font-size:11px; font-weight:600; color:var(--text2); text-align:center; line-height:1.3; }
+
+/* Soon cards */
+.quick-card.soon-card { opacity:.5; cursor:default; animation:soon-card-pulse 2s ease-in-out infinite; }
+.quick-card.soon-card:hover { transform:none; box-shadow:none; }
+@keyframes soon-card-pulse {
+  0%,100% { border-color:rgba(13,148,136,.12); }
+  50%     { border-color:rgba(13,148,136,.42); box-shadow:0 0 12px rgba(13,148,136,.13); }
+}
+.qc-soon-tag {
+  position:absolute; top:5px; right:5px;
+  font-size:8px; font-weight:700; letter-spacing:.06em;
+  background:rgba(13,148,136,.12); color:var(--teal3);
+  border:1px solid rgba(13,148,136,.28); border-radius:5px;
+  padding:1px 5px; animation:soon-blink 1.8s ease-in-out infinite;
+}
+
+@media (max-width:600px) {
+  .quick-grid { grid-template-columns:repeat(2,1fr); }
+  .idle-card  { padding:24px 14px; }
+  .idle-title { font-size:1.7rem; }
+}
+
+/* ══════════════════════════════════════════════════════
+   MOBILE NAV
+══════════════════════════════════════════════════════ */
+.mob-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,.72);
+  backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
+  z-index:998; opacity:0; visibility:hidden; transition:all .3s;
+}
+.mob-overlay.active { opacity:1; visibility:visible; }
+
+.mob-drawer {
+  position:fixed; top:0; left:0; bottom:0;
+  width:82vw; max-width:300px;
+  background:var(--bg2); border-right:1px solid var(--border2);
+  z-index:999; pointer-events:none; opacity:0;
+  transform:translateX(-100%); transition:transform .32s ease, opacity .32s ease;
+  display:flex; flex-direction:column;
+  box-shadow:6px 0 32px rgba(0,0,0,.55);
+}
+.mob-drawer.active { pointer-events:auto; opacity:1; transform:translateX(0); }
+
+.mob-drawer-hdr {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:14px 16px; border-bottom:1px solid var(--border); flex-shrink:0;
+  background:var(--bg3);
+}
+.mob-drawer-hdr h3 { font-family:'Outfit',sans-serif; font-size:15px; font-weight:700; color:var(--text2); margin:0; }
+
+.mob-close-btn {
+  background:none; border:none; color:var(--text3); cursor:pointer;
+  width:34px; height:34px; display:flex; align-items:center; justify-content:center;
+  border-radius:50%; transition:all .2s;
+}
+.mob-close-btn:hover { background:rgba(255,255,255,.06); color:var(--text2); }
+.mob-close-btn i { width:18px; height:18px; }
+
+.mob-status-bar {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:9px 16px; background:rgba(13,148,136,.07);
+  border-bottom:1px solid var(--border); font-size:11px; color:var(--teal3);
+  font-family:'JetBrains Mono',monospace; flex-shrink:0;
+}
+.mob-status-item { display:flex; align-items:center; gap:5px; }
+.mob-status-item i { width:12px; height:12px; }
+
+.mob-nav-list { flex:1; overflow-y:auto; padding:10px 12px; list-style:none; margin:0; }
+.mob-nav-list::-webkit-scrollbar { width:3px; }
+.mob-nav-list::-webkit-scrollbar-thumb { background:rgba(13,148,136,.35); border-radius:2px; }
+.mob-nav-item { margin:3px 0; }
+
+.mob-nav-btn {
+  background:transparent; border:1px solid transparent; width:100%;
+  padding:10px 14px; border-radius:10px;
+  color:var(--text2); font-family:'Inter',sans-serif; font-size:13px; font-weight:500;
+  text-align:left; cursor:pointer; display:flex; align-items:center; gap:11px; transition:all .2s;
+}
+.mob-nav-btn:hover { background:rgba(13,148,136,.09); border-color:rgba(13,148,136,.24); color:var(--teal3); }
+.mob-nav-btn.prereq { opacity:.44; cursor:default; }
+.mob-nav-btn.prereq:hover { background:transparent; border-color:transparent; color:var(--text2); }
+
+.mob-icon-wrap {
+  width:32px; height:32px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.mob-icon-wrap i { width:15px; height:15px; }
+.mob-nav-text { flex:1; }
+.mob-nav-title    { font-size:13px; font-weight:600; color:var(--text2); display:block; }
+.mob-nav-subtitle { font-size:11px; color:var(--text3); display:block; margin-top:1px; }
+
+@keyframes mob-soon-blink {
+  0%,100% { border-color:rgba(13,148,136,.22); color:var(--teal3); }
+  50%     { border-color:rgba(13,148,136,.68); box-shadow:0 0 8px rgba(13,148,136,.36); color:var(--teal3); }
+}
+.mob-soon-badge {
+  font-size:9px; background:rgba(13,148,136,.12); color:var(--teal3);
+  border:1px solid rgba(13,148,136,.25); padding:1px 6px;
+  border-radius:8px; font-family:'JetBrains Mono',monospace;
+  animation:mob-soon-blink 1.8s ease-in-out infinite;
+}
+
+/* Particles */
+.ptc-wrap { position:absolute; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+.ptc { position:absolute; border-radius:50%; opacity:.4; animation:ptcFloat 3s ease-in-out infinite; }
+@keyframes ptcFloat { 0%,100%{transform:translateY(0) translateX(0);opacity:.4;} 50%{transform:translateY(-16px) translateX(7px);opacity:.1;} }
+
+/* ══════════════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════════════ */
+#uploadMsg {
+  position:fixed; top:70px; right:18px; z-index:99999;
+  background:var(--bg2); border:1px solid var(--border2); color:var(--text2);
+  padding:10px 18px; border-radius:10px; box-shadow:0 10px 28px rgba(0,0,0,.45);
+  transform:translateY(-16px); opacity:0; transition:all .3s;
+  pointer-events:none; display:flex; align-items:center; gap:9px; font-size:13px;
+}
+#uploadMsg.show { transform:translateY(0); opacity:1; }
+#uploadMsg i { width:15px; height:15px; }
+
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════ */
+@media (max-width:768px) {
+  .sidebar, .status-gadget { display:none !important; }
+  [data-theme="light"] .sidebar,
+  [data-theme="dark"]  .sidebar { display:none !important; }
+  header { padding:0 12px; }
+  .h-titles, .live-badge, .h-sub { display:none !important; }
+  /* Hide desktop-only icon buttons on mobile */
+  .icon-btn, .time-gadget { display:none !important; }
+  main { margin-left:0; margin-top:var(--header-height); padding:16px 13px 100px; }
+  /* Touch targets */
+  .mob-nav-btn { min-height:52px; padding:12px 14px; }
+  /* Portal button — text hidden on very small screens */
+  .btn-portal span { display:none; }
+}
+@media (min-width:769px) {
+  .mob-drawer, .mob-overlay, .mobile-menu-btn { display:none !important; }
+}
+
+/* Clock pulse */
+@keyframes time-pulse {
+  0%,100% { opacity:1; text-shadow:0 0 6px var(--teal3); }
+  50%     { opacity:.55; text-shadow:0 0 14px var(--cyan3); }
+}
+#currentTime, #mobCurrentTime { animation:time-pulse 2s infinite ease-in-out; }
+
+/* --- OGM SIDEBAR FOOTER --- */
+.ogm-sb-foot{padding:10px 12px 14px;border-top:1px solid var(--border);flex-shrink:0;}
+.ogm-docs-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:9px 12px;border-radius:8px;background:rgba(13,148,136,.12);border:1.5px solid var(--teal);color:var(--teal3);font-size:11.5px;font-weight:700;font-family:"Inter",sans-serif;text-decoration:none;cursor:pointer;letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px;transition:all .25s;position:relative;overflow:hidden;}
+.ogm-docs-btn svg{width:13px;height:13px;flex-shrink:0;}
+.ogm-docs-btn:hover{background:var(--teal);color:#fff;box-shadow:0 0 22px rgba(13,148,136,.55);transform:translateY(-1px);}
+.ogm-docs-blink{animation:ogm-ds-blink 1.4s ease-in-out infinite;}
+@keyframes ogm-ds-blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.ogm-docs-btn::after{content:"";position:absolute;inset:-2px;border-radius:10px;border:1.5px solid var(--teal);opacity:0;animation:ogm-ds-ring 2s ease-in-out infinite;}
+@keyframes ogm-ds-ring{0%{opacity:.55;transform:scale(1);}100%{opacity:0;transform:scale(1.07);}}
+.ogm-sf-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:6px;}
+.ogm-sf-row{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px;}
+.ogm-sf-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.ogm-sd-ok{background:#10b981;box-shadow:0 0 5px #10b981;}
+.ogm-sd-warn{background:#f59e0b;box-shadow:0 0 5px #f59e0b;}
+.ogm-sf-label{display:flex;align-items:center;gap:6px;}
+.nav-badge{animation:ogm-soon-blink 2.5s ease-in-out infinite;}
+@keyframes ogm-soon-blink{0%,100%{opacity:1;}50%{opacity:.35;}}
+.prereq{opacity:.55;cursor:default!important;}
+.prereq:hover{background:transparent!important;transform:none!important;cursor:default!important;}
+
+button[disabled], button.prereq { cursor:default !important; }
+
+/* Light mode — mobile drawer */
+[data-theme="light"] .mob-drawer { background:#ffffff; border-right-color:rgba(13,148,136,.3); }
+[data-theme="light"] .mob-drawer-hdr { background:#f0fafa; }
+[data-theme="light"] .mob-nav-btn { color:#0f2e35; }
+[data-theme="light"] .mob-nav-title { color:#0f2e35; }
+[data-theme="light"] .mob-nav-subtitle { color:#3d7080; }
+[data-theme="light"] .mob-nav-btn.prereq { color:#3d7080; opacity:.5; }
+[data-theme="light"] .mob-soon-badge { color:#0d9488; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<header>
+  <div class="h-left">
+    <!-- Mobile hamburger -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open navigation">
+      <i data-lucide="menu"></i>
+    </button>
+
+    <!-- Logo area -->
+    <a class="logo-area" href="{{ url_for('dashboard') }}">
+      <img src="{{ url_for('static', filename='OGM.jpeg') }}" alt="OGM Logo" id="headerLogo" style="height:30px;width:auto;display:block;">
+      
+    </a>
+
+    <div class="h-titles">
+     
+    </div>
+
+    <div class="live-badge">
+      <span class="live-dot"></span>
+      <span>LIVE</span>
+    </div>
+  </div>
+
+    <div class="h-right">
+    <!-- Clock - FIRST -->
+    <div class="time-gadget">
+      <i data-lucide="clock"></i>
+      <span id="currentTime">00:00:00</span>
+    </div>
+    <!-- Action buttons -->
+    <button class="icon-btn" title="Upload File" onclick="document.getElementById('fileInput').click()">
+      <i data-lucide="upload"></i>
+    </button>
+    <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none" onchange="loadExcelFromInput()">
+    <button class="icon-btn" title="Load Server Data" onclick="fetchFromServer()">
+      <i data-lucide="server"></i>
+    </button>
+    <button class="icon-btn" title="Auto Sync" onclick="fetchFromServer()">
+      <i data-lucide="refresh-cw"></i>
+    </button>
+    <!-- Theme Toggle - SECOND -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Switch light/dark">
+      <div class="theme-thumb" id="themeThumb">
+        <span id="themeIcon">🌙</span>
+      </div>
+    </button>
+    <!-- Back to Portal - THIRD -->
+    <a href="{{ url_for('dashboard') }}" class="btn-portal">
+      <i data-lucide="arrow-left"></i>
+      Back to Portal
+    </a>
+  </div>
+</header>
+
+<!-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 SIDEBAR \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 -->
+<aside class="sidebar" id="sidebar" style="display:flex;flex-direction:column;">
+  <div class="sb-section"><div class="sb-label" style="color:var(--success);">⚡ Active</div></div>
+  <button class="stylus-btn" data-link="/ogm/pm/daily" onclick="window.location.href='/ogm/pm/daily'" style="position:relative;">
+    <i data-lucide="notebook-pen" style="color:#10b981;"></i><span>PM Daily Log</span>
+    <span style="margin-left:auto;width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 8px rgba(16,185,129,.9);flex-shrink:0;animation:live-pulse 2s infinite;"></span>
+  </button>
+  <hr class="sb-divider">
+  <div class="sb-section"><div class="sb-label" style="color:var(--text3);">🔒 Operations</div></div>
+  <button class="stylus-btn prereq" title="Coming Soon" disabled><i data-lucide="layout-grid"></i><span>Space Occupancy</span><span class="nav-badge">soon</span></button>
+  <button class="stylus-btn prereq" title="Coming Soon" disabled><i data-lucide="layout-dashboard"></i><span>CAM Budget</span><span class="nav-badge">soon</span></button>
+  <button class="stylus-btn prereq" title="Coming Soon" disabled><i data-lucide="coins"></i><span>CAM Charges</span><span class="nav-badge">soon</span></button>
+  <button class="stylus-btn prereq" title="Coming Soon" disabled><i data-lucide="alert-circle"></i><span>Issues</span><span class="nav-badge">soon</span></button>
+  <button class="stylus-btn prereq" title="Coming Soon" disabled><i data-lucide="clipboard-list"></i><span>Work Track</span><span class="nav-badge">soon</span></button>
+  <button class="stylus-btn prereq" title="Coming Soon" disabled><i data-lucide="id-card"></i><span>Vendor Visit</span><span class="nav-badge">soon</span></button>
+  <button class="stylus-btn prereq" title="Coming Soon" disabled><i data-lucide="package"></i><span>Store Inventory</span><span class="nav-badge">soon</span></button>
+  <hr class="sb-divider">
+  <div class="sb-section"><div class="sb-label" style="color:var(--success);">🔥 Safety</div></div>
+  <button class="stylus-btn" data-link="/ogm_fire" onclick="window.location.href='/ogm_fire'" style="position:relative;">
+    <i data-lucide="flame" style="color:#ef4444;"></i><span>Fire Fighting</span>
+    <span style="margin-left:auto;width:7px;height:7px;border-radius:50%;background:#ef4444;box-shadow:0 0 8px rgba(239,68,68,.9);flex-shrink:0;animation:live-pulse 2s infinite;"></span>
+  </button>
+  <hr class="sb-divider">
+  <div class="sb-section"><div class="sb-label" style="color:var(--text3);">Upcoming</div></div>
+  <button class="stylus-btn prereq" title="Coming Soon" disabled><i data-lucide="zap-off"></i><span>Energy Monitor</span><span class="nav-badge">soon</span></button>
+  <button class="stylus-btn prereq" title="Coming Soon" disabled><i data-lucide="file-bar-chart"></i><span>MIS Reports</span><span class="nav-badge">soon</span></button>
+  <button class="stylus-btn prereq" title="Coming Soon" disabled><i data-lucide="target"></i><span>KRA Tracker</span><span class="nav-badge">soon</span></button>
+  <button class="stylus-btn prereq" title="Coming Soon" disabled><i data-lucide="users"></i><span>Tenant Mgmt</span><span class="nav-badge">soon</span></button>
+  <button class="stylus-btn prereq" title="Coming Soon" disabled><i data-lucide="shield-check"></i><span>Compliance</span><span class="nav-badge">soon</span></button>
+  <button class="stylus-btn prereq" title="Coming Soon" disabled><i data-lucide="bar-chart-3"></i><span>Analytics</span><span class="nav-badge">soon</span></button>
+  <div style="flex:1;min-height:12px;"></div>
+  <div class="ogm-sb-foot">
+    <a class="ogm-docs-btn" href="/ogm_doc_suite" title="OGM Documentation Suite">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      <span class="ogm-docs-blink">📋 Doc Suite</span>
+    </a>
+    <div class="ogm-sf-lbl">System Status</div>
+    <div class="ogm-sf-row"><div class="ogm-sf-label"><span class="ogm-sf-dot ogm-sd-ok"></span>Portal</div><span style="color:#10b981;font-size:11px">Online</span></div>
+    <div class="ogm-sf-row"><div class="ogm-sf-label"><span class="ogm-sf-dot ogm-sd-ok"></span>Database</div><span style="color:#10b981;font-size:11px">Connected</span></div>
+    <div class="ogm-sf-row"><div class="ogm-sf-label"><span class="ogm-sf-dot ogm-sd-warn"></span>Hyderabad</div><span style="color:var(--text2);font-size:11px">IST Zone</span></div>
+  </div>
+</aside>
+
+<!-- STATUS GADGET -->
+<div class="status-gadget">
+  <div class="sg-header">
+    <span>System Status</span>
+    <span id="statusDate" style="font-family:'JetBrains Mono',monospace;font-size:9px;"></span>
+  </div>
+  <div class="sg-row"><span class="sg-label"><span class="sg-dot dot-on"></span>API Server</span><span style="font-size:10px;color:var(--success);">Online</span></div>
+  <div class="sg-row"><span class="sg-label"><span class="sg-dot dot-on"></span>Data Sync</span><span style="font-size:10px;color:var(--success);">Live</span></div>
+  <div class="sg-row"><span class="sg-label"><span class="sg-dot dot-on"></span>Modules</span><span style="font-size:10px;color:var(--success);">2 Active</span></div>
+</div>
+
+<!-- ═══════════════════════ MOBILE NAV ═══════════════════════ -->
+<div class="mob-overlay" id="mobOverlay"></div>
+<div class="mob-drawer" id="mobDrawer">
+  <div class="mob-drawer-hdr">
+    <h3>Navigation</h3>
+    <button class="mob-close-btn" id="mobClose" aria-label="Close">
+      <i data-lucide="x"></i>
+    </button>
+  </div>
+  <div class="mob-status-bar">
+    <div class="mob-status-item">
+      <i data-lucide="clock"></i>
+      <span id="mobCurrentTime">00:00:00</span>
+    </div>
+    <div class="mob-status-item">
+      <i data-lucide="map-pin"></i>
+      <span>Hyderabad</span>
+    </div>
+  </div>
+  <ul class="mob-nav-list" id="mobNavList"></ul>
+  <div class="ptc-wrap" id="ptcWrap"></div>
+</div>
+
+<!-- ═══════════════════════ MAIN ═══════════════════════ -->
+<main>
+
+  <!-- IDLE / WELCOME -->
+  <div class="idle-screen">
+    <div class="idle-card">
+      <div class="ptc-wrap" id="idlePtc"></div>
+
+      <!-- Logo -->
+      <div class="idle-logo-wrap">
+        <img src="{{ url_for('static', filename='OGM.jpeg') }}" alt="OGM Logo" class="idle-logo" id="idleLogo">
+      </div>
+
+      <h1 class="idle-title"><span>Well Come</span></h1>
+      <p class="idle-sub">System operational. Select a module below or from the sidebar to initialize secure data visualization.</p>
+
+      <div class="status-badge">
+        <span class="badge-dot"></span>
+        Global Systems Online
+      </div>
+
+      <!-- Quick Access — Active Modules -->
+      <div class="qa-label">⚡ Quick Access</div>
+      <div class="quick-grid">
+
+        <!-- PM Daily Log — LIVE -->
+        <a class="quick-card" href="/ogm/pm/daily" style="position:relative;">
+          <div class="qc-icon" style="background:rgba(16,185,129,.15);color:#10b981;"><i data-lucide="notebook-pen"></i></div>
+          <span class="qc-label">PM Daily Log</span>
+          <span style="position:absolute;top:7px;right:7px;width:6px;height:6px;border-radius:50%;
+                       background:#10b981;box-shadow:0 0 8px rgba(16,185,129,.9);
+                       animation:live-pulse 2s infinite;"></span>
+        </a>
+
+        <!-- Fire Fighting — LIVE -->
+        <a class="quick-card" href="/ogm_fire" style="position:relative;">
+          <div class="qc-icon" style="background:rgba(239,68,68,.15);color:#ef4444;"><i data-lucide="flame"></i></div>
+          <span class="qc-label">Fire Fighting</span>
+          <span style="position:absolute;top:7px;right:7px;width:6px;height:6px;border-radius:50%;
+                       background:#ef4444;box-shadow:0 0 8px rgba(239,68,68,.9);
+                       animation:live-pulse 2s infinite;"></span>
+        </a>
+
+      </div>
+
+      <!-- Coming Soon -->
+      <div class="qa-label" style="margin-top:16px;">🔒 Coming Soon</div>
+      <div class="quick-grid">
+
+        <div class="quick-card soon-card">
+          <span class="qc-soon-tag">soon</span>
+          <div class="qc-icon" style="background:rgba(13,148,136,.07);color:#2dd4bf;"><i data-lucide="layout-grid"></i></div>
+          <span class="qc-label">Space Occupancy</span>
+        </div>
+        <div class="quick-card soon-card">
+          <span class="qc-soon-tag">soon</span>
+          <div class="qc-icon" style="background:rgba(6,182,212,.09);color:#67e8f9;"><i data-lucide="layout-dashboard"></i></div>
+          <span class="qc-label">CAM Budget</span>
+        </div>
+        <div class="quick-card soon-card">
+          <span class="qc-soon-tag">soon</span>
+          <div class="qc-icon" style="background:rgba(16,185,129,.07);color:#34d399;"><i data-lucide="coins"></i></div>
+          <span class="qc-label">CAM Charges</span>
+        </div>
+        <div class="quick-card soon-card">
+          <span class="qc-soon-tag">soon</span>
+          <div class="qc-icon" style="background:rgba(239,68,68,.07);color:#f87171;"><i data-lucide="alert-circle"></i></div>
+          <span class="qc-label">Issues</span>
+        </div>
+        <div class="quick-card soon-card">
+          <span class="qc-soon-tag">soon</span>
+          <div class="qc-icon" style="background:rgba(14,165,233,.07);color:#38bdf8;"><i data-lucide="clipboard-list"></i></div>
+          <span class="qc-label">Work Track</span>
+        </div>
+        <div class="quick-card soon-card">
+          <span class="qc-soon-tag">soon</span>
+          <div class="qc-icon" style="background:rgba(245,158,11,.07);color:#fbbf24;"><i data-lucide="id-card"></i></div>
+          <span class="qc-label">Vendor Visit</span>
+        </div>
+        <div class="quick-card soon-card">
+          <span class="qc-soon-tag">soon</span>
+          <div class="qc-icon" style="background:rgba(99,102,241,.07);color:#818cf8;"><i data-lucide="package"></i></div>
+          <span class="qc-label">Store Inventory</span>
+        </div>
+        <div class="quick-card soon-card">
+          <span class="qc-soon-tag">soon</span>
+          <div class="qc-icon" style="background:rgba(167,139,250,.07);color:#c4b5fd;"><i data-lucide="folder-open"></i></div>
+          <span class="qc-label">Doc Suite</span>
+        </div>
+        <div class="quick-card soon-card">
+          <span class="qc-soon-tag">soon</span>
+          <div class="qc-icon" style="background:rgba(13,148,136,.07);color:#2dd4bf;"><i data-lucide="zap-off"></i></div>
+          <span class="qc-label">Energy Monitor</span>
+        </div>
+        <div class="quick-card soon-card">
+          <span class="qc-soon-tag">soon</span>
+          <div class="qc-icon" style="background:rgba(13,148,136,.07);color:#2dd4bf;"><i data-lucide="file-bar-chart"></i></div>
+          <span class="qc-label">MIS Reports</span>
+        </div>
+        <div class="quick-card soon-card">
+          <span class="qc-soon-tag">soon</span>
+          <div class="qc-icon" style="background:rgba(13,148,136,.07);color:#2dd4bf;"><i data-lucide="target"></i></div>
+          <span class="qc-label">KRA Tracker</span>
+        </div>
+        <div class="quick-card soon-card">
+          <span class="qc-soon-tag">soon</span>
+          <div class="qc-icon" style="background:rgba(13,148,136,.07);color:#2dd4bf;"><i data-lucide="users"></i></div>
+          <span class="qc-label">Tenant Mgmt</span>
+        </div>
+        <div class="quick-card soon-card">
+          <span class="qc-soon-tag">soon</span>
+          <div class="qc-icon" style="background:rgba(13,148,136,.07);color:#2dd4bf;"><i data-lucide="shield-check"></i></div>
+          <span class="qc-label">Compliance</span>
+        </div>
+        <div class="quick-card soon-card">
+          <span class="qc-soon-tag">soon</span>
+          <div class="qc-icon" style="background:rgba(13,148,136,.07);color:#2dd4bf;"><i data-lucide="bar-chart-3"></i></div>
+          <span class="qc-label">Analytics</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Toast -->
+<div id="uploadMsg" aria-live="polite"></div>
+
+<!-- ═══════════════════════ SCRIPTS ═══════════════════════ -->
+<script>
+/* ── Theme Toggle ── */
+(function(){
+  const root = document.documentElement;
+  const btn  = document.getElementById('themeToggle');
+  const icon = document.getElementById('themeIcon');
+  const saved = localStorage.getItem('ogm_theme') || 'dark';
+  root.setAttribute('data-theme', saved);
+  icon.textContent = saved === 'dark' ? '🌙' : '☀️';
+
+  btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    icon.textContent = next === 'dark' ? '🌙' : '☀️';
+    localStorage.setItem('ogm_theme', next);
+  });
+})();
+
+/* ── Live Clock ── */
+function updateClock() {
+  const t = new Date().toLocaleTimeString('en-GB',{hour12:false});
+  ['currentTime','mobCurrentTime'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.textContent = t;
+  });
+  const ds = document.getElementById('statusDate');
+  if(ds) ds.textContent = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short'});
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+/* ── Toast ── */
+function showUploadMessage(msg, type='success') {
+  const box = document.getElementById('uploadMsg');
+  const col = type==='success' ? 'var(--success)' : 'var(--danger)';
+  box.innerHTML = `<i data-lucide="${type==='success'?'check-circle':'alert-triangle'}" style="color:${col}"></i> ${msg}`;
+  box.style.borderLeft = `4px solid ${col}`;
+  try{ lucide.createIcons(); }catch(e){}
+  box.classList.add('show');
+  setTimeout(()=>box.classList.remove('show'), 3200);
+}
+
+/* ── Excel helpers ── */
+window.sheetCache = {};
+function parseWorkbook(wb) {
+  wb.SheetNames.forEach(n => { window.sheetCache[n] = XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,defval:''}); });
+}
+async function fetchFromServer() {
+  try {
+    showUploadMessage('Syncing data…','success');
+    const r = await fetch('/static/data/OGM_Dashboard_Data.xlsx');
+    if(!r.ok) throw new Error();
+    parseWorkbook(XLSX.read(await r.arrayBuffer()));
+    showUploadMessage('Data loaded successfully','success');
+  } catch(e){ showUploadMessage('Server data unavailable','error'); }
+}
+async function loadExcelFromInput() {
+  const fi = document.getElementById('fileInput');
+  if(!fi?.files?.length){ showUploadMessage('Select a file first','error'); return; }
+  try{ parseWorkbook(XLSX.read(await fi.files[0].arrayBuffer())); showUploadMessage('File loaded','success'); }
+  catch(e){ showUploadMessage('Failed to read file','error'); }
+}
+
+/* ── Mobile Nav ── */
+document.addEventListener('DOMContentLoaded', function(){
+(function(){
+  const menuBtn = document.getElementById('mobileMenuBtn');
+  const drawer  = document.getElementById('mobDrawer');
+  const overlay = document.getElementById('mobOverlay');
+  const closeBt = document.getElementById('mobClose');
+  const navList = document.getElementById('mobNavList');
+  const ptcWrap = document.getElementById('ptcWrap');
+  if(!menuBtn||!drawer||!overlay||!closeBt||!navList) return;
+
+  const COLOR = {
+    'layout-grid':'#2dd4bf','layout-dashboard':'#67e8f9','coins':'#34d399',
+    'alert-circle':'#f87171','clipboard-list':'#38bdf8','id-card':'#fbbf24',
+    'package':'#818cf8','folder-open':'#c4b5fd','notebook-pen':'#10b981','cpu':'#fb923c',
+    'terminal':'#a78bfa','box':'#f97316','activity':'#10b981',
+    'git-branch':'#06b6d4','shield':'#0ea5e9','command':'#8b5cf6',
+    'zap':'#fbbf24','home':'#2dd4bf','users':'#2dd4bf','mail-check':'#2dd4bf',
+    'zap-off':'#2dd4bf','file-bar-chart':'#2dd4bf','target':'#2dd4bf','flame':'#ef4444',
+    'shield-check':'#2dd4bf','bar-chart-3':'#2dd4bf'
+  };
+
+  const items = [
+    /* Operations — PM Daily Log + Fire Fighting LIVE */
+    {link:'/ogm/pm/daily',  icon:'notebook-pen',  title:'PM Daily Log',     sub:'Property management log', live:true},
+    {link:'/ogm_fire',      icon:'flame',          title:'Fire Fighting',    sub:'Fire command center',     live:true},
+    /* Coming soon operations */
+    {prereq:true, icon:'layout-grid',    title:'Space Occupancy',  sub:'Coming soon'},
+    {prereq:true, icon:'layout-dashboard',title:'CAM Budget',      sub:'Coming soon'},
+    {prereq:true, icon:'coins',           title:'CAM Charges',     sub:'Coming soon'},
+    {prereq:true, icon:'alert-circle',    title:'Issues',          sub:'Coming soon'},
+    {prereq:true, icon:'clipboard-list',  title:'Work Track',      sub:'Coming soon'},
+    {prereq:true, icon:'id-card',         title:'Vendor Visit',    sub:'Coming soon'},
+    {prereq:true, icon:'package',         title:'Store Inventory', sub:'Coming soon'},
+    {prereq:true, icon:'folder-open',     title:'Doc Suite',       sub:'Coming soon'},
+    {prereq:true, icon:'zap-off',         title:'Energy Monitor',  sub:'Coming soon'},
+    {prereq:true, icon:'file-bar-chart',  title:'MIS Reports',     sub:'Coming soon'},
+    {prereq:true, icon:'target',          title:'KRA Tracker',     sub:'Coming soon'},
+    {prereq:true, icon:'users',           title:'Tenant Mgmt',     sub:'Coming soon'},
+    {prereq:true, icon:'shield-check',    title:'Compliance',      sub:'Coming soon'},
+    {prereq:true, icon:'bar-chart-3',     title:'Analytics',       sub:'Coming soon'},
+  ];
+
+  let opsAdded=false, soonAdded=false;
+  function build() {
+    navList.innerHTML=''; opsAdded=false; soonAdded=false;
+    items.forEach(item => {
+      const isOps  = !item.prereq;
+
+      if (item.prereq && !soonAdded) { addLabel('Coming Soon'); soonAdded=true; }
+      if (isOps && !opsAdded)        { addLabel('Operations');  opsAdded=true; }
+
+      const li  = document.createElement('li'); li.className='mob-nav-item';
+      const btn = document.createElement('button');
+      btn.className = 'mob-nav-btn' + (item.prereq?' prereq':'');
+      if(item.link && !item.prereq) btn.setAttribute('data-link', item.link);
+      if(item.prereq) btn.disabled=true;
+
+      const col = COLOR[item.icon]||'#2dd4bf';
+      const wrap = document.createElement('div'); wrap.className='mob-icon-wrap';
+      wrap.style.cssText=`background:${col}22;border:1px solid ${col}44;color:${col};`;
+      wrap.innerHTML=`<i data-lucide="${item.icon}"></i>`;
+
+      const txt=document.createElement('div'); txt.className='mob-nav-text';
+      txt.innerHTML=`<span class="mob-nav-title">${item.title}</span><span class="mob-nav-subtitle">${item.sub}</span>`;
+      btn.appendChild(wrap); btn.appendChild(txt);
+      if(item.live){
+        const dot=document.createElement('span');
+        dot.style.cssText='width:6px;height:6px;border-radius:50%;background:#10b981;box-shadow:0 0 6px rgba(16,185,129,.9);margin-left:auto;animation:live-pulse 2s infinite;flex-shrink:0;';
+        btn.appendChild(dot);
+      }
+      if(item.prereq){ const b=document.createElement('span'); b.className='mob-soon-badge'; b.textContent='soon'; btn.appendChild(b); }
+      li.appendChild(btn); navList.appendChild(li);
+    });
+    try{ lucide.createIcons(); }catch(e){}
+  }
+  function addLabel(text) {
+    const li=document.createElement('li');
+    li.innerHTML=`<div style="font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;padding:10px 14px 4px;">${text}</div>`;
+    navList.appendChild(li);
+  }
+  function particles() {
+    if(!ptcWrap) return; ptcWrap.innerHTML='';
+    const cols=['#0d9488','#06b6d4','#2dd4bf','#67e8f9'];
+    for(let i=0;i<12;i++){
+      const p=document.createElement('div'); p.className='ptc';
+      const s=Math.random()*4+2;
+      p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;top:${Math.random()*100}%;background:${cols[i%4]};animation-delay:${Math.random()*5}s;animation-duration:${Math.random()*3+2}s;`;
+      ptcWrap.appendChild(p);
+    }
+  }
+  build(); particles();
+
+  const open  = ()=>{ overlay.classList.add('active'); drawer.classList.add('active'); document.body.style.overflow='hidden'; };
+  const close = ()=>{ drawer.classList.remove('active'); overlay.classList.remove('active'); document.body.style.overflow=''; };
+  menuBtn.addEventListener('click', open);
+  closeBt.addEventListener('click', close);
+  overlay.addEventListener('click', close);
+  navList.addEventListener('click', e=>{
+    const b = e.target.closest('.mob-nav-btn');
+    if(!b||b.disabled) return;
+    close();
+    const lk = b.getAttribute('data-link');
+    if(lk) window.location.href = lk;
+  });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
+})();
+}); // end DOMContentLoaded — Mobile Nav
+
+/* ── Idle particles ── */
+document.addEventListener('DOMContentLoaded', () => {
+  try{ lucide.createIcons(); }catch(e){}
+
+  const ip = document.getElementById('idlePtc');
+  if(ip){
+    const cols=['rgba(13,148,136,.45)','rgba(6,182,212,.45)','rgba(45,212,191,.3)'];
+    for(let i=0;i<18;i++){
+      const p=document.createElement('div'); p.className='ptc';
+      const s=Math.random()*7+3;
+      p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;top:${Math.random()*100}%;background:${cols[i%3]};animation-delay:${Math.random()*6}s;animation-duration:${Math.random()*4+3}s;`;
+      ip.appendChild(p);
+    }
+  }
+
+  // Sidebar active state — persists across navigation via sessionStorage
+  (function(){
+    const SB_KEY = 'ogm_sidebar_active';
+    const path   = window.location.pathname.replace(/\/+$/, '');
+
+    // 1. On load: restore from sessionStorage OR match current URL
+    const saved = sessionStorage.getItem(SB_KEY);
+    document.querySelectorAll('.stylus-btn[data-link]').forEach(btn => {
+      const link = btn.getAttribute('data-link').replace(/\/+$/, '');
+      const isMatch = (path === link || path.startsWith(link + '/'));
+      const isSaved = (saved === link);
+      if (isMatch || isSaved) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    // 2. On click: save to sessionStorage and mark active immediately
+    document.querySelectorAll('.stylus-btn:not(.prereq)').forEach(btn => {
+      btn.addEventListener('click', function(){
+        document.querySelectorAll('.stylus-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const link = this.getAttribute('data-link');
+        if (link) sessionStorage.setItem(SB_KEY, link);
+      });
+    });
+
+    // 3. Clear saved state when on the portal home itself (idle screen)
+    if (path === '/ogm' || path === '') {
+      sessionStorage.removeItem(SB_KEY);
+      document.querySelectorAll('.stylus-btn').forEach(b => b.classList.remove('active'));
+    }
+  })();
+});
+
+/* ── Permission guard ── */
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const resp = await fetch('/api/user_profile');
+    if(!resp.ok){ window.location.href='/login'; return; }
+    const user = await resp.json();
+    const mods = user.permissions?.modules;
+    const acts = user.permissions?.actions;
+    if(mods && mods!=='all'){
+      document.querySelectorAll('.stylus-btn[onclick],.mob-nav-btn[data-link]').forEach(item=>{
+        const lk = (item.getAttribute('onclick')||'').match(/['"]([^'"]+)['"]/)?.[1]
+                || item.getAttribute('data-link')||'';
+        const key = lk.replace(/\//g,'').replace('_dashboard','');
+        if(!mods.some(m=>key.includes(m.replace('_dashboard','')))) item.remove();
+      });
+    }
+    if(acts && !acts.includes('edit'))
+      document.querySelectorAll('.btn-edit,.btn-add,.admin-controls').forEach(el=>el.remove());
+  } catch(e){}
+});
+
+function logout(){ window.location.href='/logout'; }
+</script>
+</body>
+</html>

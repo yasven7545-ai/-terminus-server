@@ -1,0 +1,86 @@
+[
+  {
+    "id": "cam1",
+    "name": "Main Gate - IN",
+    "zone": "Main Gate",
+    "status": "Online",
+    "last_alert": null
+  },
+  {
+    "id": "cam2",
+    "name": "Main Gate - OUT",
+    "zone": "Main Gate",
+    "status": "Online",
+    "last_alert": null
+  },
+  {
+    "id": "cam3",
+    "name": "Podium Entry",
+    "zone": "Podium Office Entry",
+    "status": "Online",
+    "last_alert": null
+  },
+  {
+    "id": "cam4",
+    "name": "Basement-1 Entry",
+    "zone": "Basement-1",
+    "status": "Online",
+    "last_alert": null
+  },
+  {
+    "id": "cam5",
+    "name": "Basement-2 Entry",
+    "zone": "Basement-2",
+    "status": "Offline",
+    "last_alert": null
+  },
+  {
+    "id": "cam6",
+    "name": "Service Gate",
+    "zone": "Service Gate",
+    "status": "Online",
+    "last_alert": null
+  },
+  {
+    "id": "cam7",
+    "name": "Mall Entrance",
+    "zone": "Mall Entrance",
+    "status": "Online",
+    "last_alert": null
+  },
+  {
+    "id": "cam8",
+    "name": "9th Floor Lobby",
+    "zone": "Ninth Floor Reception",
+    "status": "Online",
+    "last_alert": null
+  },
+  {
+    "id": "cam9",
+    "name": "Service Lift",
+    "zone": "Service Lift",
+    "status": "Online",
+    "last_alert": null
+  },
+  {
+    "id": "cam10",
+    "name": "Ramp - Ground",
+    "zone": "Ramp Turning Point",
+    "status": "Online",
+    "last_alert": null
+  },
+  {
+    "id": "cam11",
+    "name": "Dropping Point",
+    "zone": "Dropping Point",
+    "status": "Maintenance",
+    "last_alert": null
+  },
+  {
+    "id": "cam12",
+    "name": "Traffic Control",
+    "zone": "Traffic Control",
+    "status": "Online",
+    "last_alert": null
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "contracts": [
+    {
+      "contract_id": "OW-AMC-001",
+      "vendor": "ABC HVAC Services",
+      "equipment": "Chiller Plant",
+      "start_date": "2025-01-01",
+      "end_date": "2026-12-31",
+      "value": 150000,
+      "status": "Active",
+      "frequency": "Monthly"
+    },
+    {
+      "contract_id": "OW-AMC-002",
+      "vendor": "XYZ Electrical",
+      "equipment": "DG Set",
+      "start_date": "2025-06-01",
+      "end_date": "2026-05-31",
+      "value": 85000,
+      "status": "Active",
+      "frequency": "Quarterly"
+    }
+  ],
+  "last_updated": "2026-02-22T16:51:18.431381"
+}

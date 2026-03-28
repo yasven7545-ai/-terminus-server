@@ -1,0 +1,2036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>ONEWEST | PPM MAINTENANCE MANAGEMENT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;600;700&display=swap');
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-green: #00ff9d;
+            --neon-yellow: #fbbf24;
+            --neon-rose: #ff007a;
+            --neon-orange: #f97316;
+            --bg: #020617;
+            --sidebar-w: 280px;
+        }
+        /* ── TOPBAR ── */
+        .topbar{position:fixed;top:0;left:0;right:0;height:44px;background:rgba(2,6,23,.97);backdrop-filter:blur(18px);border-bottom:1px solid rgba(249,115,22,.18);display:flex;align-items:center;justify-content:space-between;padding:0 18px;z-index:500;gap:10px;padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right));}
+        .topbar-left{display:flex;align-items:center;gap:10px;min-width:0;flex-shrink:1;overflow:hidden;}
+        .topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+        .portal-btn-text{display:inline;}
+        @keyframes portalBlink{0%,100%{box-shadow:0 0 0 0 rgba(249,115,22,0);border-color:rgba(249,115,22,.3);}50%{box-shadow:0 0 0 5px rgba(249,115,22,.15);border-color:rgba(249,115,22,.85);}}
+        .portal-btn{display:flex;align-items:center;gap:6px;padding:5px 13px;border-radius:8px;background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.3);color:var(--neon-orange);font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;text-decoration:none;animation:portalBlink 2s ease-in-out infinite;transition:background .2s,color .2s;white-space:nowrap;}
+        .portal-btn:hover{background:var(--neon-orange);color:#000;animation:none;}
+        .theme-btn{display:flex;align-items:center;gap:5px;padding:5px 11px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#94a3b8;font-size:10px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
+        .theme-btn:hover{background:rgba(255,255,255,.12);color:white;}
+        /* ── LIGHT MODE ── */
+        body.light{--bg:#f1f5f9;color:#1e293b;background:var(--bg);}
+        body.light .topbar{background:rgba(241,245,249,.97);border-color:rgba(249,115,22,.2);}
+        body.light .ultra-glass{background:rgba(255,255,255,.92)!important;border-color:rgba(249,115,22,.15)!important;}
+        body.light .sidebar{background:rgba(255,255,255,.97)!important;}
+        body.light .sidebar-item{color:#475569;}
+        body.light .sidebar-item.active{color:#0f172a;}
+        body.light h2,body.light h3,body.light p{color:#1e293b;}
+        /* ── BLINKING DOT ── */
+        @keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+        .blink{animation:blink 1.4s ease-in-out infinite;}
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; height: 100%; }
+        body {
+            background: var(--bg);
+            color: #94a3b8;
+            font-family: 'Rajdhani', sans-serif;
+            overflow: hidden;
+        }
+        .app-shell { display: flex; height: 100vh; overflow: hidden; padding-top: 44px; }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: var(--sidebar-w);
+            min-width: var(--sidebar-w);
+            background: rgba(15, 23, 42, 0.97);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(249,115,22,0.18);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 16px;
+            z-index: 200;
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 150;
+        }
+
+        /* MAIN */
+        .main-content { flex: 1; min-width: 0; overflow-y: auto; overflow-x: hidden; padding: 24px; }
+
+        /* GLASS */
+        .ultra-glass {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(249, 115, 22, 0.12);
+        }
+
+        /* SIDEBAR ITEMS */
+        .sidebar-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #64748b;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            border-left: 3px solid transparent;
+        }
+        .sidebar-item:hover { color: #e2e8f0; background: rgba(255,255,255,0.04); }
+        .sidebar-item.active {
+            background: linear-gradient(90deg, rgba(249,115,22,0.18), transparent);
+            border-left-color: var(--neon-orange);
+            color: white;
+        }
+        .sidebar-item.amc-style { border-left-color: #8b5cf6; }
+        .sidebar-item.amc-style.active { background: linear-gradient(90deg, rgba(139,92,246,0.18), transparent); }
+
+        /* CALENDAR */
+        #calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-auto-rows: minmax(44px, 1fr);
+            gap: 3px;
+            width: 100%;
+        }
+        .calendar-day {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            border: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            transition: all 0.2s;
+            border-radius: 6px;
+            padding: 4px 2px;
+            user-select: none;
+        }
+        .calendar-day:hover { background: rgba(249,115,22,0.12); color: white; border-color: rgba(249,115,22,0.3); }
+        .calendar-day.has-task { color: var(--neon-orange); font-weight: 700; background: rgba(249,115,22,0.07); border-color: rgba(249,115,22,0.2); }
+        .calendar-day.today { border: 2px solid var(--neon-orange); background: rgba(249,115,22,0.1); color: white; font-weight: 700; }
+        .calendar-day.today.has-task { border-color: var(--neon-orange); }
+        .calendar-blank { min-height: 44px; border-radius: 6px; }
+        .task-dot { width: 5px; height: 5px; background: var(--neon-orange); border-radius: 50%; margin-top: 3px; box-shadow: 0 0 6px var(--neon-orange); flex-shrink: 0; }
+
+        /* SCROLLBAR */
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(249,115,22,0.4); border-radius: 10px; }
+
+        /* MOBILE TOGGLE — lives in topbar, hidden on desktop */
+        .mobile-toggle {
+            display: none;
+            align-items: center;
+            gap: 5px;
+            background: rgba(249,115,22,0.15);
+            border: 1px solid rgba(249,115,22,0.3);
+            color: var(--neon-orange);
+            padding: 6px 9px;
+            border-radius: 8px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        /* STATUS BADGES */
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 800; letter-spacing: 0.08em; }
+
+        /* BLINK ANIMATIONS */
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
+        .blinking { animation: blink 1.4s ease-in-out infinite; }
+        @keyframes blink-border { 0%,100%{border-color:rgba(249,115,22,0.8)} 50%{border-color:rgba(249,115,22,0.1)} }
+        .back-btn-blink {
+            animation: blink-border 1.4s ease-in-out infinite;
+            border: 1px solid rgba(249,115,22,0.8);
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .animate-spin { animation: spin 1s linear infinite; }
+        @keyframes pulse-glow { 0%,100%{box-shadow:0 0 0 0 rgba(249,115,22,0.3)} 50%{box-shadow:0 0 12px 4px rgba(249,115,22,0.2)} }
+        .online-pulse { animation: pulse-glow 2s infinite; }
+
+        /* STAT CARDS */
+        .stat-card { padding: 20px 24px; border-radius: 16px; }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .cal-grid { grid-template-columns: 1fr !important; grid-template-rows: auto 1fr !important; }
+        }
+        @media (max-width: 768px) {
+            body { overflow: hidden; }
+            /* Sidebar slides in from left */
+            .sidebar {
+                position: fixed;
+                top: 0; left: 0;
+                height: 100vh;
+                transform: translateX(-100%);
+                z-index: 400;
+            }
+            .sidebar.open { transform: translateX(0); box-shadow: 0 0 40px rgba(0,0,0,.8); }
+            .sidebar-overlay.open { display: block; }
+            /* Mobile toggle visible inside topbar */
+            .mobile-toggle { display: flex; }
+            /* Clock hidden on mobile topbar to save space */
+            #tb-clock { display: none; }
+            /* Portal btn: icon only */
+            .portal-btn-text { display: none; }
+            .portal-btn { padding: 5px 9px; }
+            /* Theme btn: shorter */
+            .theme-btn { padding: 5px 8px; font-size: 9px; }
+            /* Main padding clears fixed topbar */
+            .main-content { padding: 14px 10px 10px 10px; }
+            /* KPI row: 2×2 */
+            .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+            /* WO summary: 2×2 */
+            #wo-summary-strip { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+            /* In-House/Vendor: stack */
+            .inhouse-vendor-row { grid-template-columns: 1fr !important; }
+            /* Charts: stack */
+            .charts-grid { grid-template-columns: 1fr !important; }
+            .cal-grid { grid-template-columns: 1fr !important; grid-template-rows: auto 1fr !important; }
+            #calendar-grid { grid-auto-rows: minmax(36px, 1fr) !important; }
+            .calendar-day { min-height: 36px !important; font-size: 11px !important; }
+            .calendar-blank { min-height: 36px !important; }
+            .wo-header-actions { flex-direction: column; gap: 8px; align-items: stretch !important; }
+            .wo-header-actions select, .wo-header-actions button { width: 100%; justify-content: center; }
+            .modal-inner { width: 100% !important; max-width: 100% !important; margin: 0 !important; border-radius: 12px 12px 0 0 !important; max-height: 92vh !important; }
+            .modal-wrap { align-items: flex-end !important; padding: 0 !important; }
+            .modal-grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+            .wo-card-inner { flex-direction: column !important; }
+            .wo-card-right { align-items: flex-start !important; margin-top: 12px; }
+        }
+        @media (max-width: 480px) {
+            /* KPI: keep 2-col (single col is too tall) */
+            .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+            .stat-card { padding: 14px 14px !important; }
+            .stat-card h2 { font-size: 26px !important; }
+            #wo-summary-strip { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+            #calendar-grid { grid-auto-rows: minmax(32px, 1fr) !important; }
+            .calendar-day { min-height: 32px !important; font-size: 10px !important; }
+            .calendar-blank { min-height: 32px !important; }
+            /* Main content tighter */
+            .main-content { padding: 10px 8px 8px 8px; }
+            /* Topbar brand smaller */
+            .topbar-left { gap: 7px; }
+        }
+
+        /* Chart containers */
+        .chart-wrap { position: relative; min-height: 260px; }
+        canvas { max-height: 100% !important; max-width: 100% !important; }
+
+        /* Sections */
+        .section { display: none; }
+        .section.active { display: flex; flex-direction: column; min-height: 100%; }
+
+        /* AMC field style */
+        .field-label { display:block;font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px; }
+        .amc-field { width:100%;padding:10px 12px;background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:white;font-family:'Rajdhani',sans-serif;font-size:13px;outline:none; }
+        .amc-field:focus { border-color:var(--neon-orange); }
+
+        /* Assign modal */
+        .assign-field { width:100%;padding:10px 12px;background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:white;font-family:'Rajdhani',sans-serif;font-size:13px;outline:none;margin-bottom:8px; }
+        .assign-field:focus { border-color:var(--neon-orange); }
+    </style>
+</head>
+<body>
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <!-- Hamburger inside topbar for mobile -->
+    <button class="mobile-toggle" id="mobile-toggle">
+        <i data-lucide="menu" style="width:16px;height:16px;"></i>
+    </button>
+    <div style="font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:white;">ONE<span style="color:var(--neon-orange);">WEST</span> <span style="color:#475569;font-size:9px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.12em;">PPM</span></div>
+    <div style="width:1px;height:22px;background:rgba(255,255,255,.08);flex-shrink:0;"></div>
+    <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;">
+      <span class="blink" style="width:6px;height:6px;border-radius:50%;background:#22c55e;display:inline-block;"></span>
+      <span style="font-size:9px;font-weight:800;color:#22c55e;letter-spacing:.1em;">LIVE</span>
+    </div>
+    <div id="tb-clock" style="font-family:monospace;font-size:10px;color:#475569;"></div>
+  </div>
+  <div class="topbar-right">
+    <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">🌙 Dark</button>
+    <a href="/onewest" class="portal-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      <span class="portal-btn-text">Back to ONEWEST</span>
+    </a>
+  </div>
+</div>
+<div class="app-shell">
+
+    <!-- Sidebar Overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div style="text-align:center;margin-bottom:24px;">
+            <h1 style="font-family:'Orbitron',monospace;font-size:17px;font-weight:700;color:white;letter-spacing:-.02em;margin:0;">
+                ONE<span style="color:var(--neon-orange)">WEST</span>
+            </h1>
+            <p style="font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;color:#64748b;letter-spacing:.18em;text-transform:uppercase;margin:3px 0 0;">PPM MANAGEMENT</p>
+            <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;" class="online-pulse">
+                <span style="width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block;" class="blinking"></span>
+                <span style="font-size:9px;font-weight:800;color:#22c55e;letter-spacing:.12em;text-transform:uppercase;">System Online</span>
+            </div>
+        </div>
+
+        <nav style="flex:1;display:flex;flex-direction:column;gap:4px;">
+            <button data-section="overview" class="sidebar-item active">
+                <i data-lucide="layout-dashboard" style="width:16px;height:16px;flex-shrink:0;"></i> Overview
+            </button>
+            <button data-section="assets" class="sidebar-item">
+                <i data-lucide="database" style="width:16px;height:16px;flex-shrink:0;"></i> Assets
+            </button>
+            <button data-section="calendar" class="sidebar-item">
+                <i data-lucide="calendar-range" style="width:16px;height:16px;flex-shrink:0;"></i> Calendar
+            </button>
+            <button data-section="workflow" class="sidebar-item">
+                <i data-lucide="trello" style="width:16px;height:16px;flex-shrink:0;"></i> Work Orders
+            </button>
+            <button data-section="closed-wos" class="sidebar-item" style="border-left-color:#64748b;">
+                <i data-lucide="archive" style="width:16px;height:16px;flex-shrink:0;"></i> Closed WOs
+            </button>
+            <button data-section="amc-tracker" class="sidebar-item amc-style">
+                <i data-lucide="clipboard-check" style="width:16px;height:16px;flex-shrink:0;"></i> AMC Tracker
+            </button>
+        </nav>
+
+        <div style="margin-top:auto;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:10px;">
+            <!-- Asset Upload -->
+            <div style="padding:14px;border-radius:12px;background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.08);">
+                <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;margin:0 0 4px;">ONEWEST Assets Source</p>
+                <p id="excel-path-display" style="font-size:9px;font-family:monospace;color:var(--neon-orange);word-break:break-all;margin:0 0 10px;">OW/Assets.xlsx</p>
+                <label style="display:block;cursor:pointer;background:rgba(249,115,22,0.08);color:var(--neon-orange);text-align:center;padding:8px;border-radius:8px;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:all .2s;" 
+                    onmouseover="this.style.background='var(--neon-orange)';this.style.color='black';" 
+                    onmouseout="this.style.background='rgba(249,115,22,0.08)';this.style.color='var(--neon-orange)';">
+                    Upload Assets.xlsx
+                    <input type="file" id="file-upload" style="display:none;" accept=".xlsx,.xls">
+                </label>
+            </div>
+            <button id="triggerDailyEmail" style="width:100%;padding:10px;background:linear-gradient(90deg,#7c3aed,#db2777);color:white;border:none;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity .2s;" 
+                onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+                <i data-lucide="mail" style="width:14px;height:14px;"></i> Trigger Daily Mail
+            </button>
+            <button id="refresh-btn" style="width:100%;padding:10px;background:rgba(255,255,255,0.05);color:#94a3b8;border:none;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .2s;" 
+                onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                <i data-lucide="refresh-cw" style="width:12px;height:12px;"></i> Refresh Data
+            </button>
+            <!-- BACK BUTTON with blinking animation -->
+            <button id="back-btn" class="back-btn-blink blinking" style="width:100%;padding:10px;background:transparent;color:var(--neon-orange);border-radius:10px;font-size:10px;font-weight:700;text-transform:uppercase;cursor:pointer;transition:all .2s;" 
+                onmouseover="this.style.background='rgba(249,115,22,0.15)';this.style.color='white'" 
+                onmouseout="this.style.background='transparent';this.style.color='var(--neon-orange)'">
+                ← Back to ONEWEST Portal
+            </button>
+            <div id="live-clock" style="text-align:center;font-family:monospace;font-size:10px;color:#334155;padding:4px 0;"></div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content custom-scroll">
+
+        <!-- ===== OVERVIEW ===== -->
+        <div id="section-overview" class="section active" style="gap:18px;">
+            <!-- Row 1: KPI -->
+            <div class="stats-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;">
+                <div class="ultra-glass stat-card" style="border-radius:14px;border-bottom:3px solid var(--neon-orange);">
+                    <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;margin:0 0 6px;">Total Assets</p>
+                    <h2 id="ov-total" style="font-size:34px;font-weight:800;color:white;margin:0;">0</h2>
+                </div>
+                <div class="ultra-glass stat-card" style="border-radius:14px;border-bottom:3px solid var(--neon-blue);">
+                    <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;margin:0 0 6px;">Pending PPM</p>
+                    <h2 id="ov-pending" style="font-size:34px;font-weight:800;color:var(--neon-blue);margin:0;">0</h2>
+                </div>
+                <div class="ultra-glass stat-card" style="border-radius:14px;border-bottom:3px solid #e11d48;">
+                    <p style="font-size:9px;font-weight:700;color:#e11d48;letter-spacing:.1em;text-transform:uppercase;margin:0 0 6px;">Overdue</p>
+                    <h2 id="ov-overdue" style="font-size:34px;font-weight:800;color:#f43f5e;margin:0;">0</h2>
+                </div>
+                <div class="ultra-glass stat-card" style="border-radius:14px;border-bottom:3px solid #22c55e;">
+                    <p style="font-size:9px;font-weight:700;color:#22c55e;letter-spacing:.1em;text-transform:uppercase;margin:0 0 6px;">Compliance</p>
+                    <h2 id="ov-compliance" style="font-size:34px;font-weight:800;color:#4ade80;margin:0;">0.0%</h2>
+                </div>
+            </div>
+            <!-- Row 2: Clickable WO Counters -->
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;" id="wo-summary-strip">
+                <div class="ultra-glass" onclick="goWOs('all')" style="border-radius:12px;padding:13px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:transform .15s,box-shadow .15s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(249,115,22,.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+                    <div style="padding:8px;background:rgba(249,115,22,.1);border-radius:8px;flex-shrink:0;"><i data-lucide="clipboard-list" style="width:15px;height:15px;color:var(--neon-orange);"></i></div>
+                    <div style="flex:1;"><p style="font-size:9px;color:#475569;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin:0;">Total WOs</p><p id="wo-count-total" style="font-size:20px;font-weight:800;color:white;margin:0;">0</p></div>
+                    <i data-lucide="chevron-right" style="width:11px;height:11px;color:#334155;"></i>
+                </div>
+                <div class="ultra-glass" onclick="goWOs('open')" style="border-radius:12px;padding:13px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:transform .15s,box-shadow .15s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(0,243,255,.25)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+                    <div style="padding:8px;background:rgba(0,243,255,.1);border-radius:8px;flex-shrink:0;"><i data-lucide="clock" style="width:15px;height:15px;color:var(--neon-blue);"></i></div>
+                    <div style="flex:1;"><p style="font-size:9px;color:#475569;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin:0;">Open</p><p id="wo-count-open" style="font-size:20px;font-weight:800;color:var(--neon-blue);margin:0;">0</p></div>
+                    <i data-lucide="chevron-right" style="width:11px;height:11px;color:#334155;"></i>
+                </div>
+                <div class="ultra-glass" onclick="goWOs('overdue')" style="border-radius:12px;padding:13px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:transform .15s,box-shadow .15s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(244,63,94,.25)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+                    <div style="padding:8px;background:rgba(244,63,94,.1);border-radius:8px;flex-shrink:0;"><i data-lucide="alert-triangle" style="width:15px;height:15px;color:#f43f5e;"></i></div>
+                    <div style="flex:1;"><p style="font-size:9px;color:#475569;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin:0;">Overdue</p><p id="wo-count-overdue" style="font-size:20px;font-weight:800;color:#f43f5e;margin:0;">0</p></div>
+                    <i data-lucide="chevron-right" style="width:11px;height:11px;color:#334155;"></i>
+                </div>
+                <div class="ultra-glass" onclick="goWOs('completed')" style="border-radius:12px;padding:13px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:transform .15s,box-shadow .15s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(34,197,94,.25)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+                    <div style="padding:8px;background:rgba(34,197,94,.1);border-radius:8px;flex-shrink:0;"><i data-lucide="check-circle" style="width:15px;height:15px;color:#22c55e;"></i></div>
+                    <div style="flex:1;"><p style="font-size:9px;color:#475569;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin:0;">Completed</p><p id="wo-count-completed" style="font-size:20px;font-weight:800;color:#22c55e;margin:0;">0</p></div>
+                    <i data-lucide="chevron-right" style="width:11px;height:11px;color:#334155;"></i>
+                </div>
+            </div>
+            <!-- Row 3: In-House vs Vendor -->
+            <div class="inhouse-vendor-row" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                <div class="ultra-glass" style="border-radius:14px;padding:18px;border-left:4px solid var(--neon-orange);">
+                    <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;">
+                        <div style="padding:8px;background:rgba(249,115,22,.12);border-radius:9px;"><i data-lucide="wrench" style="width:16px;height:16px;color:var(--neon-orange);"></i></div>
+                        <div><p style="font-size:11px;font-weight:800;color:var(--neon-orange);text-transform:uppercase;letter-spacing:.07em;margin:0;">In-House PPM</p><p style="font-size:9px;color:#475569;margin:1px 0 0;">Electrical · Plumbing · HVAC · Civil</p></div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
+                        <div><p style="font-size:9px;color:#475569;font-weight:700;text-transform:uppercase;margin:0 0 3px;">Assets</p><p id="ih-assets" style="font-size:24px;font-weight:800;color:var(--neon-orange);margin:0;">0</p></div>
+                        <div><p style="font-size:9px;color:#475569;font-weight:700;text-transform:uppercase;margin:0 0 3px;">Open WOs</p><p id="ih-open" style="font-size:24px;font-weight:800;color:var(--neon-blue);margin:0;">0</p></div>
+                        <div><p style="font-size:9px;color:#e11d48;font-weight:700;text-transform:uppercase;margin:0 0 3px;">Overdue</p><p id="ih-overdue" style="font-size:24px;font-weight:800;color:#f43f5e;margin:0;">0</p></div>
+                    </div>
+                </div>
+                <div class="ultra-glass" style="border-radius:14px;padding:18px;border-left:4px solid #a78bfa;">
+                    <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;">
+                        <div style="padding:8px;background:rgba(167,139,250,.12);border-radius:9px;"><i data-lucide="building-2" style="width:16px;height:16px;color:#a78bfa;"></i></div>
+                        <div><p style="font-size:11px;font-weight:800;color:#a78bfa;text-transform:uppercase;letter-spacing:.07em;margin:0;">Vendor PPM</p><p style="font-size:9px;color:#475569;margin:1px 0 0;">AMC · OEM · Specialist Services</p></div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
+                        <div><p style="font-size:9px;color:#475569;font-weight:700;text-transform:uppercase;margin:0 0 3px;">Assets</p><p id="vd-assets" style="font-size:24px;font-weight:800;color:#a78bfa;margin:0;">0</p></div>
+                        <div><p style="font-size:9px;color:#475569;font-weight:700;text-transform:uppercase;margin:0 0 3px;">Open WOs</p><p id="vd-open" style="font-size:24px;font-weight:800;color:var(--neon-blue);margin:0;">0</p></div>
+                        <div><p style="font-size:9px;color:#e11d48;font-weight:700;text-transform:uppercase;margin:0 0 3px;">Overdue</p><p id="vd-overdue" style="font-size:24px;font-weight:800;color:#f43f5e;margin:0;">0</p></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Row 4: Three Charts -->
+            <div class="charts-grid" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
+                <div class="ultra-glass" style="border-radius:14px;padding:18px;">
+                    <h3 style="color:white;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin:0 0 12px;">PPM Status</h3>
+                    <div style="position:relative;height:180px;"><canvas id="statusChart"></canvas></div>
+                </div>
+                <div class="ultra-glass" style="border-radius:14px;padding:18px;">
+                    <h3 style="color:white;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin:0 0 12px;">Frequency Split</h3>
+                    <div style="position:relative;height:180px;"><canvas id="freqChart"></canvas></div>
+                </div>
+                <div class="ultra-glass" style="border-radius:14px;padding:18px;">
+                    <h3 style="color:white;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin:0 0 12px;">By Department</h3>
+                    <div style="position:relative;height:180px;"><canvas id="deptChart"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ASSETS ===== -->
+        <div id="section-assets" class="section" style="gap:16px;">
+            <div class="ultra-glass" style="border-radius:20px;overflow:hidden;">
+                <div style="padding:14px 20px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.08);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+                        <h2 style="color:white;font-weight:700;font-size:14px;letter-spacing:.05em;text-transform:uppercase;margin:0;">
+                            <i data-lucide="database" style="width:15px;height:15px;display:inline;vertical-align:middle;margin-right:6px;color:var(--neon-orange);"></i>
+                            ONEWEST Asset Register <span id="asset-count-badge" style="font-size:10px;font-weight:700;color:#475569;margin-left:6px;"></span>
+                        </h2>
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <input id="asset-search" type="text" placeholder="Search assets..." style="background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;width:200px;"
+                                onfocus="this.style.borderColor='var(--neon-orange)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+                            <select id="asset-freq-filter" style="background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;cursor:pointer;">
+                                <option value="all">All Frequencies</option>
+                                <option value="MONTHLY">Monthly</option>
+                                <option value="QUARTERLY">Quarterly</option>
+                                <option value="HALF-YEARLY">Half-Yearly</option>
+                                <option value="YEARLY">Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- In-House / Vendor Tabs -->
+                    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                        <button id="atab-all"     onclick="setAssetTab('all')"     style="padding:5px 14px;border-radius:7px;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;border:1px solid rgba(249,115,22,.5);background:rgba(249,115,22,.15);color:var(--neon-orange);transition:all .2s;">All</button>
+                        <button id="atab-inhouse" onclick="setAssetTab('inhouse')" style="padding:5px 14px;border-radius:7px;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;border:1px solid rgba(255,255,255,.1);background:transparent;color:#64748b;transition:all .2s;">🔧 In-House</button>
+                        <button id="atab-vendor"  onclick="setAssetTab('vendor')"  style="padding:5px 14px;border-radius:7px;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;border:1px solid rgba(255,255,255,.1);background:transparent;color:#64748b;transition:all .2s;">🏢 Vendor</button>
+                    </div>
+                </div>
+                <div class="custom-scroll" style="overflow-x:auto;">
+                    <table style="width:100%;border-collapse:collapse;min-width:600px;">
+                        <thead style="background:rgba(249,115,22,0.06);border-bottom:1px solid rgba(255,255,255,0.06);">
+                            <tr>
+                                <th style="padding:14px 16px;text-align:left;font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;">Asset ID</th>
+                                <th style="padding:14px 16px;text-align:left;font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;">Name</th>
+                                <th style="padding:14px 16px;text-align:left;font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;">Location</th>
+                                <th style="padding:14px 16px;text-align:left;font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;">Frequency</th>
+                                <th style="padding:14px 16px;text-align:left;font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;">Next Due</th>
+                            </tr>
+                        </thead>
+                        <tbody id="asset-table-body">
+                            <tr><td colspan="5" style="padding:40px;text-align:center;color:#475569;">Loading assets...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CALENDAR ===== -->
+        <div id="section-calendar" class="section" style="height:calc(100vh - 48px);">
+            <div class="cal-grid" style="display:grid;grid-template-columns:360px 1fr;gap:16px;height:100%;">
+                <!-- Calendar Panel -->
+                <div class="ultra-glass" style="border-radius:20px;padding:20px;display:flex;flex-direction:column;overflow:hidden;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-shrink:0;">
+                        <button id="prev-month" style="background:rgba(255,255,255,0.05);border:none;color:#64748b;cursor:pointer;padding:8px;border-radius:8px;transition:all .2s;display:flex;align-items:center;" 
+                            onmouseover="this.style.color='var(--neon-orange)';this.style.background='rgba(249,115,22,0.1)'" 
+                            onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,0.05)'">
+                            <i data-lucide="chevron-left" style="width:18px;height:18px;"></i>
+                        </button>
+                        <h2 id="calendar-month-year" style="color:white;font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;margin:0;font-family:'Orbitron',monospace;"></h2>
+                        <button id="next-month" style="background:rgba(255,255,255,0.05);border:none;color:#64748b;cursor:pointer;padding:8px;border-radius:8px;transition:all .2s;display:flex;align-items:center;" 
+                            onmouseover="this.style.color='var(--neon-orange)';this.style.background='rgba(249,115,22,0.1)'" 
+                            onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,0.05)'">
+                            <i data-lucide="chevron-right" style="width:18px;height:18px;"></i>
+                        </button>
+                    </div>
+                    <!-- Day Headers -->
+                    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center;margin-bottom:6px;flex-shrink:0;">
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">SUN</span>
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">MON</span>
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">TUE</span>
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">WED</span>
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">THU</span>
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">FRI</span>
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">SAT</span>
+                    </div>
+                    <div id="calendar-grid"></div>
+                </div>
+                <!-- Day Schedule Panel -->
+                <div class="ultra-glass" style="border-radius:20px;padding:24px;display:flex;flex-direction:column;min-width:0;overflow:hidden;">
+                    <h3 id="selected-day-label" style="color:white;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06);">Select a date to view schedule</h3>
+                    <div id="day-schedule-container" class="custom-scroll" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;">
+                        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#334155;text-align:center;">
+                            <i data-lucide="calendar" style="width:48px;height:48px;margin-bottom:12px;color:#1e293b;"></i>
+                            <p style="font-size:16px;font-weight:700;color:#475569;margin:0 0 8px;">No Date Selected</p>
+                            <p style="font-size:13px;margin:0;">Click any date to view scheduled maintenance tasks</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== WORK ORDERS ===== -->
+        <div id="section-workflow" class="section" style="height:calc(100vh - 48px);">
+            <div class="ultra-glass" style="border-radius:20px;overflow:hidden;display:flex;flex-direction:column;height:100%;">
+                <div style="padding:16px 20px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.08);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;" class="wo-header-actions">
+                        <h2 style="color:white;font-weight:700;font-size:14px;letter-spacing:.05em;text-transform:uppercase;margin:0;">ONEWEST Work Orders</h2>
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <select id="wo-filter" style="background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;cursor:pointer;" onchange="renderWorkOrders()">
+                                <option value="all">All Active</option>
+                                <option value="open">Open</option>
+                                <option value="overdue">Overdue</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="completed">Completed</option>
+                                <option value="pending-approval">Pending Approval</option>
+                                <option value="closed">🔒 Closed / Archived</option>
+                            </select>
+                            <div id="filter-counts" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+                            <button id="exportWOBtn" style="background:rgba(249,115,22,0.08);color:var(--neon-orange);border:1px solid rgba(249,115,22,0.2);border-radius:8px;padding:7px 12px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;letter-spacing:.06em;transition:all .2s;" 
+                                onmouseover="this.style.background='var(--neon-orange)';this.style.color='black'" onmouseout="this.style.background='rgba(249,115,22,0.08)';this.style.color='var(--neon-orange)'">
+                                <i data-lucide="file-down" style="width:12px;height:12px;"></i> Export
+                            </button>
+                            <button id="refreshWOBtn" style="background:rgba(255,255,255,0.05);color:#94a3b8;border:none;border-radius:8px;padding:7px 12px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;letter-spacing:.06em;transition:background .2s;" 
+                                onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                                <i data-lucide="refresh-cw" style="width:12px;height:12px;"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="wo-stream-container" class="custom-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;">
+                    <div style="display:flex;align-items:center;justify-content:center;height:100%;">
+                        <div style="text-align:center;">
+                            <i data-lucide="loader" style="width:40px;height:40px;margin-bottom:12px;color:var(--neon-orange);" class="animate-spin"></i>
+                            <p style="font-size:16px;font-weight:700;color:#475569;margin:0;">Loading work orders...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== AMC TRACKER ===== -->
+        <div id="section-amc-tracker" class="section" style="height:calc(100vh - 48px);">
+            <div class="ultra-glass" style="border-radius:20px;overflow:hidden;display:flex;flex-direction:column;height:100%;">
+                <div style="padding:16px 20px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                    <h2 style="color:white;font-weight:700;font-size:14px;letter-spacing:.05em;text-transform:uppercase;margin:0;">ONEWEST AMC Tracker</h2>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <select id="amc-filter" style="background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;cursor:pointer;">
+                            <option value="all">All Contracts</option>
+                            <option value="active">Active</option>
+                            <option value="expiring">Expiring Soon</option>
+                            <option value="expired">Expired</option>
+                        </select>
+                        <!-- Upload AMC source (Excel/PDF) -->
+                        <label style="display:flex;align-items:center;gap:4px;padding:7px 12px;background:rgba(249,115,22,.08);color:var(--neon-orange);border:1px solid rgba(249,115,22,.25);border-radius:8px;font-size:10px;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:all .2s;white-space:nowrap;"
+                            onmouseover="this.style.background='rgba(249,115,22,.22)'" onmouseout="this.style.background='rgba(249,115,22,.08)'" title="Upload AMC contracts spreadsheet or PDF">
+                            <i data-lucide="upload" style="width:12px;height:12px;"></i> Upload Source
+                            <input type="file" id="amc-file-upload" style="display:none;" accept=".xlsx,.xls,.pdf,.csv" onchange="handleAmcFileUpload(this)">
+                        </label>
+                        <!-- Add new contract manually -->
+                        <button id="amc-addBtn"
+                            onclick="openAmcEditModal({contract_id:'',asset_id:'',asset_name:'',vendor:'',start_date:'',end_date:'',value:'',status:'active',scope:'',notes:''})"
+                            style="background:rgba(34,197,94,.08);color:#22c55e;border:1px solid rgba(34,197,94,.25);border-radius:8px;padding:7px 12px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;letter-spacing:.06em;transition:all .2s;white-space:nowrap;"
+                            onmouseover="this.style.background='#22c55e';this.style.color='#000'" onmouseout="this.style.background='rgba(34,197,94,.08)';this.style.color='#22c55e'">
+                            <i data-lucide="plus" style="width:12px;height:12px;"></i> Add Contract
+                        </button>
+                        <button id="amc-exportBtn" style="background:rgba(139,92,246,0.08);color:#8b5cf6;border:1px solid rgba(139,92,246,0.2);border-radius:8px;padding:7px 12px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;letter-spacing:.06em;transition:all .2s;white-space:nowrap;" 
+                            onmouseover="this.style.background='#8b5cf6';this.style.color='white'" onmouseout="this.style.background='rgba(139,92,246,0.08)';this.style.color='#8b5cf6'">
+                            <i data-lucide="file-down" style="width:12px;height:12px;"></i> Export
+                        </button>
+                    </div>
+                </div>
+                <div id="amc-stream-container" class="custom-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;">
+                    <div style="display:flex;align-items:center;justify-content:center;height:100%;">
+                        <div style="text-align:center;">
+                            <i data-lucide="clipboard-check" style="width:40px;height:40px;margin-bottom:12px;color:#8b5cf6;"></i>
+                            <p style="font-size:16px;font-weight:700;color:#475569;margin:0;">Loading AMC contracts...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CLOSED WORK ORDERS ===== -->
+        <div id="section-closed-wos" class="section" style="height:calc(100vh - 48px);">
+            <div class="ultra-glass" style="border-radius:20px;overflow:hidden;display:flex;flex-direction:column;height:100%;">
+                <div style="padding:16px 20px;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.08);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                        <h2 style="color:white;font-weight:700;font-size:14px;letter-spacing:.05em;text-transform:uppercase;margin:0;display:flex;align-items:center;gap:8px;">
+                            <i data-lucide="archive" style="width:15px;height:15px;color:#64748b;"></i>
+                            Closed / Completed Work Orders
+                            <span id="closed-wo-count-badge" style="padding:2px 8px;border-radius:4px;background:rgba(100,116,139,.15);color:#64748b;font-size:10px;font-weight:800;border:1px solid rgba(100,116,139,.25);">0</span>
+                        </h2>
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <select id="closed-wo-filter" onchange="renderClosedWOs()" style="background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;cursor:pointer;">
+                                <option value="all">All Closed</option>
+                                <option value="completed">✅ Completed</option>
+                                <option value="closed">🔒 Archived</option>
+                            </select>
+                            <select id="closed-wo-ppm-filter" onchange="renderClosedWOs()" style="background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;cursor:pointer;">
+                                <option value="all">All Types</option>
+                                <option value="inhouse">🔧 In-House</option>
+                                <option value="vendor">🏢 Vendor</option>
+                            </select>
+                            <input id="closed-wo-search" type="text" placeholder="Search WO / Asset..." onkeyup="renderClosedWOs()" style="background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;width:170px;">
+                        </div>
+                    </div>
+                </div>
+                <div id="closed-wo-container" class="custom-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;"></div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- ===== WO DETAILS MODAL ===== -->
+<div id="wo-details-modal" class="modal-wrap" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:500;align-items:center;justify-content:center;padding:16px;">
+    <div class="modal-inner ultra-glass" style="width:100%;max-width:860px;max-height:90vh;display:flex;flex-direction:column;border-radius:20px;overflow:hidden;border:1px solid rgba(249,115,22,0.2);">
+        <div style="padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(30,41,59,0.6);display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+                <h3 id="modal-wo-id" style="font-size:18px;font-weight:800;color:white;margin:0 0 4px;">OW-PPM-2026-00</h3>
+                <p id="modal-asset-name" style="font-size:14px;color:var(--neon-orange);font-weight:600;margin:0 0 2px;"></p>
+                <p id="modal-location" style="font-size:12px;color:#64748b;margin:0;display:flex;align-items:center;gap:4px;"></p>
+            </div>
+            <button id="close-wo-modal-btn" style="background:none;border:none;color:#64748b;cursor:pointer;padding:4px;border-radius:6px;transition:color .2s;" 
+                onmouseover="this.style.color='white'" onmouseout="this.style.color='#64748b'">
+                <i data-lucide="x" style="width:22px;height:22px;"></i>
+            </button>
+        </div>
+        <div class="custom-scroll" style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:20px;">
+            <!-- Summary Tiles -->
+            <div class="modal-grid-4" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+                <div class="ultra-glass" style="border-radius:12px;padding:14px;">
+                    <p style="font-size:9px;color:#475569;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin:0 0 6px;">Priority</p>
+                    <p id="modal-priority" style="font-size:16px;font-weight:800;color:#fbbf24;margin:0;">HIGH</p>
+                </div>
+                <div class="ultra-glass" style="border-radius:12px;padding:14px;">
+                    <p style="font-size:9px;color:#475569;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin:0 0 6px;">Due Date</p>
+                    <p id="modal-due-date" style="font-size:16px;font-weight:800;color:white;margin:0;"></p>
+                </div>
+                <div class="ultra-glass" style="border-radius:12px;padding:14px;">
+                    <p style="font-size:9px;color:#475569;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin:0 0 6px;">Status</p>
+                    <p id="modal-status" style="font-size:16px;font-weight:800;color:var(--neon-orange);margin:0;">Open</p>
+                </div>
+                <div class="ultra-glass" style="border-radius:12px;padding:14px;">
+                    <p style="font-size:9px;color:#475569;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin:0 0 6px;">Checklist</p>
+                    <p id="modal-checklist-status" style="font-size:16px;font-weight:800;color:#f59e0b;margin:0;">0/0</p>
+                </div>
+            </div>
+
+            <!-- Assignment Section -->
+            <div class="ultra-glass" style="border-radius:14px;padding:20px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06);">
+                    <h4 style="color:white;font-weight:700;font-size:15px;margin:0;display:flex;align-items:center;gap:8px;">
+                        <i data-lucide="user-check" style="width:18px;height:18px;color:var(--neon-orange);"></i> Assign Technician
+                    </h4>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div>
+                        <label class="field-label">Supervisor</label>
+                        <select id="modal-supervisor" class="assign-field">
+                            <option value="">Select Supervisor</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="field-label">Technician</label>
+                        <select id="modal-technician" class="assign-field">
+                            <option value="">Select Technician</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="assign-btn" style="margin-top:8px;padding:10px 20px;background:rgba(249,115,22,0.12);color:var(--neon-orange);border:1px solid rgba(249,115,22,0.25);border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s;" 
+                    onmouseover="this.style.background='var(--neon-orange)';this.style.color='black'" onmouseout="this.style.background='rgba(249,115,22,0.12)';this.style.color='var(--neon-orange)'">
+                    <i data-lucide="user-plus" style="width:14px;height:14px;"></i> Assign & Notify
+                </button>
+            </div>
+
+            <!-- Checklist -->
+            <div class="ultra-glass" style="border-radius:14px;padding:20px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06);">
+                    <h4 style="color:white;font-weight:700;font-size:15px;margin:0;display:flex;align-items:center;gap:8px;">
+                        <i data-lucide="list-check" style="width:18px;height:18px;color:var(--neon-orange);"></i> Maintenance Checklist
+                    </h4>
+                    <span id="checklist-progress" style="padding:4px 12px;background:rgba(249,115,22,0.12);color:var(--neon-orange);border-radius:20px;font-size:12px;font-weight:700;">0%</span>
+                </div>
+                <div style="background:rgba(255,255,255,0.06);border-radius:4px;height:4px;margin-bottom:16px;">
+                    <div id="checklist-progress-bar" style="height:4px;border-radius:4px;background:var(--neon-orange);width:0%;transition:width .4s;"></div>
+                </div>
+                <div id="checklist-container" class="custom-scroll" style="display:flex;flex-direction:column;gap:10px;max-height:280px;overflow-y:auto;padding-right:4px;"></div>
+                <div style="margin-top:16px;">
+                    <label style="display:block;font-size:11px;color:#475569;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Technician Notes</label>
+                    <textarea id="technician-notes" placeholder="Document observations, issues encountered..." 
+                        style="width:100%;padding:12px;background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:white;font-family:'Rajdhani',sans-serif;font-size:13px;resize:none;outline:none;" rows="3" 
+                        onfocus="this.style.borderColor='var(--neon-orange)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'"></textarea>
+                </div>
+                <button id="save-checklist-btn" style="margin-top:12px;width:100%;padding:12px;background:rgba(249,115,22,0.12);color:var(--neon-orange);border:1px solid rgba(249,115,22,0.25);border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;" 
+                    onmouseover="this.style.background='var(--neon-orange)';this.style.color='black'" onmouseout="this.style.background='rgba(249,115,22,0.12)';this.style.color='var(--neon-orange)'">
+                    <i data-lucide="save" style="width:15px;height:15px;"></i> Save Checklist Progress
+                </button>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="ultra-glass" style="border-radius:14px;padding:20px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06);">
+                    <h4 style="color:white;font-weight:700;font-size:15px;margin:0;display:flex;align-items:center;gap:8px;">
+                        <i data-lucide="image" style="width:18px;height:18px;color:#f59e0b;"></i> Verification Images
+                    </h4>
+                    <span id="image-count" style="padding:4px 12px;background:rgba(245,158,11,0.12);color:#f59e0b;border-radius:20px;font-size:12px;font-weight:700;">0/5</span>
+                </div>
+                <div id="drop-zone" style="border:2px dashed rgba(255,255,255,0.12);border-radius:12px;padding:32px;text-align:center;cursor:pointer;transition:all .2s;" 
+                    onmouseover="this.style.borderColor='rgba(249,115,22,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.12)'">
+                    <i data-lucide="upload-cloud" style="width:40px;height:40px;margin-bottom:10px;color:var(--neon-orange);"></i>
+                    <p style="color:white;font-weight:600;margin:0 0 4px;">Drag & drop images here</p>
+                    <p style="color:#64748b;font-size:12px;margin:0 0 12px;">or click to select</p>
+                    <button type="button" style="background:rgba(249,115,22,0.15);color:var(--neon-orange);border:1px solid rgba(249,115,22,0.3);border-radius:8px;padding:8px 20px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">
+                        <i data-lucide="upload" style="width:13px;height:13px;display:inline-block;vertical-align:middle;margin-right:4px;"></i> Select Images
+                    </button>
+                    <p style="color:#334155;font-size:11px;margin:10px 0 0;">PNG, JPG up to 5MB each (max 5)</p>
+                    <input type="file" id="image-upload" style="display:none;" accept="image/*" multiple>
+                </div>
+                <div id="image-preview-container" style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:12px;"></div>
+            </div>
+
+            <!-- Supervisor Approval -->
+            <div id="supervisor-approval-section" style="display:none;border-radius:14px;padding:20px;border:2px solid rgba(245,158,11,0.3);background:rgba(245,158,11,0.04);" class="ultra-glass">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                    <i data-lucide="shield-check" style="width:22px;height:22px;color:#f59e0b;"></i>
+                    <h4 style="color:white;font-weight:700;font-size:15px;margin:0;">Supervisor Approval Required</h4>
+                </div>
+                <p style="color:#94a3b8;font-size:13px;margin:0 0 16px;">All required checklist items completed and verification images uploaded. Please review and approve to close this work order.</p>
+                <div style="margin-bottom:14px;">
+                    <label style="display:block;font-size:11px;color:#475569;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">Approval Notes</label>
+                    <textarea id="approval-notes" placeholder="Document approval comments..." 
+                        style="width:100%;padding:12px;background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:white;font-family:'Rajdhani',sans-serif;font-size:13px;resize:none;outline:none;" rows="3" 
+                        onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'"></textarea>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:10px;padding:14px;background:rgba(15,23,42,0.6);border-radius:10px;border:1px solid rgba(255,255,255,0.06);margin-bottom:14px;">
+                    <input type="checkbox" id="supervisor-approval" style="margin-top:2px;width:16px;height:16px;accent-color:#f59e0b;cursor:pointer;flex-shrink:0;">
+                    <label for="supervisor-approval" style="cursor:pointer;">
+                        <span style="color:white;font-weight:700;display:block;">I verify that all maintenance tasks have been completed satisfactorily</span>
+                        <span style="color:#64748b;font-size:12px;">By checking this box, I approve the closure of this work order.</span>
+                    </label>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <button id="reject-wo-btn" style="padding:12px;background:#e11d48;color:white;border:none;border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .2s;" 
+                        onmouseover="this.style.background='#be123c'" onmouseout="this.style.background='#e11d48'">
+                        <i data-lucide="x-circle" style="width:15px;height:15px;"></i> Reject & Return
+                    </button>
+                    <button id="close-work-order-btn" style="padding:12px;background:#16a34a;color:white;border:none;border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .2s;" 
+                        onmouseover="this.style.background='#15803d'" onmouseout="this.style.background='#16a34a'">
+                        <i data-lucide="check-circle" style="width:15px;height:15px;"></i> Approve & Close
+                    </button>
+                </div>
+            </div>
+
+            <div id="wo-status-message" style="display:none;border-radius:10px;padding:14px;text-align:center;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== AMC EDIT MODAL ===== -->
+<div id="amc-edit-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:500;align-items:center;justify-content:center;padding:16px;">
+    <div class="ultra-glass" style="width:100%;max-width:680px;max-height:90vh;display:flex;flex-direction:column;border-radius:20px;overflow:hidden;border:1px solid rgba(139,92,246,0.2);">
+        <div style="padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(30,41,59,0.6);display:flex;justify-content:space-between;align-items:center;">
+            <h3 style="color:white;font-weight:800;font-size:16px;margin:0;">Edit AMC Contract</h3>
+            <button id="close-amc-edit-modal-btn" style="background:none;border:none;color:#64748b;cursor:pointer;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#64748b'">
+                <i data-lucide="x" style="width:20px;height:20px;"></i>
+            </button>
+        </div>
+        <div class="custom-scroll" style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div><label class="field-label">Contract ID</label><input type="text" id="amc-contract-id" class="amc-field" placeholder="OW-AMC-2026-001"></div>
+                <div><label class="field-label">Asset ID</label><input type="text" id="amc-asset-id" class="amc-field" placeholder="Asset ID"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div><label class="field-label">Asset Name</label><input type="text" id="amc-asset-name" class="amc-field" placeholder="Asset Name"></div>
+                <div><label class="field-label">Vendor</label><input type="text" id="amc-vendor" class="amc-field" placeholder="Vendor Name"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div><label class="field-label">Start Date</label><input type="date" id="amc-start-date" class="amc-field"></div>
+                <div><label class="field-label">End Date</label><input type="date" id="amc-end-date" class="amc-field"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div>
+                    <label class="field-label">Service Frequency</label>
+                    <select id="amc-frequency" class="amc-field">
+                        <option value="Monthly">Monthly</option>
+                        <option value="Quarterly">Quarterly</option>
+                        <option value="Half-Yearly">Half-Yearly</option>
+                        <option value="Yearly">Yearly</option>
+                    </select>
+                </div>
+                <div><label class="field-label">Next Service Date</label><input type="date" id="amc-next-service" class="amc-field"></div>
+            </div>
+            <div>
+                <label class="field-label">Contract Status</label>
+                <select id="amc-status" class="amc-field">
+                    <option value="active">Active</option>
+                    <option value="expiring">Expiring Soon</option>
+                    <option value="expired">Expired</option>
+                </select>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
+                <button id="amc-cancel-edit-btn" style="padding:12px;background:#e11d48;color:white;border:none;border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;" 
+                    onmouseover="this.style.background='#be123c'" onmouseout="this.style.background='#e11d48'">
+                    <i data-lucide="x" style="width:14px;height:14px;"></i> Cancel
+                </button>
+                <button id="amc-save-edit-btn" style="padding:12px;background:#16a34a;color:white;border:none;border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;" 
+                    onmouseover="this.style.background='#15803d'" onmouseout="this.style.background='#16a34a'">
+                    <i data-lucide="check" style="width:14px;height:14px;"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================================
+// ONEWEST PPM MMS — COMPLETE FRONTEND
+// API PREFIX: /ow_api/ppm/*  and  /ow_api/workorders/*  etc.
+// ============================================================
+
+const API = {
+    ASSETS:       '/ow_api/ppm/assets',
+    STATS:        '/ow_api/ppm/dashboard/stats',
+    WORKORDERS:   '/ow_api/ppm/workorders',
+    WO_BY_DATE:   '/ow_api/workorders/by-date',
+    WO_CREATE:    '/ow_api/workflow/create',
+    WO_CLOSE:     '/ow_api/workflow/close',
+    WO_EXPORT:    '/ow_api/ppm/workorders/export',
+    AMC:          '/ow_api/amc/contracts',
+    AMC_UPDATE:   '/ow_api/amc/update',
+    AMC_EXPORT:   '/ow_api/amc/contracts/export',
+    DAILY_MAIL:   '/ow_api/trigger-daily-mail',
+    IMPORT_EXCEL: '/ow_api/ppm/import-excel',
+    TECHNICIANS:  '/ow_api/technicians',
+    SUPERVISORS:  '/ow_api/supervisors',
+};
+
+// ===== UTILITIES =====
+function parseDate(str) {
+    if (!str || str.toString().trim() === '') return null;
+    const s = str.toString().trim();
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) { const d = new Date(s); return isNaN(d) ? null : d; }
+    if (s.includes('/')) {
+        const [m, d, y] = s.split('/').map(x => x.trim());
+        const year = y && y.length === 2 ? 2000 + parseInt(y) : parseInt(y);
+        const date = new Date(year, parseInt(m) - 1, parseInt(d));
+        return isNaN(date) ? null : date;
+    }
+    const d = new Date(s);
+    return isNaN(d) ? null : d;
+}
+
+function toDateStr(date) {
+    if (!date) return '';
+    return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+}
+
+function formatDateDisplay(dateStr) {
+    if (!dateStr) return 'N/A';
+    const d = parseDate(dateStr);
+    if (!d) return dateStr;
+    return d.toLocaleDateString('en-US', { day:'2-digit', month:'short', year:'numeric' });
+}
+
+function isOverdue(woOrDateStr) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    let dueDateStr = typeof woOrDateStr === 'string' ? woOrDateStr : (woOrDateStr['Due Date'] || woOrDateStr.due_date || '');
+    const dueDate = parseDate(dueDateStr);
+    if (!dueDate) return false;
+    dueDate.setHours(0,0,0,0);
+    return dueDate < today;
+}
+
+function getWOStatus(wo) {
+    const raw = (wo.Status || wo.status || 'open').toString().toLowerCase().trim();
+    if (raw === 'completed' || raw === 'closed') return 'completed';
+    if (raw === 'in-progress' || raw === 'in progress') return 'in-progress';
+    if (raw === 'pending-approval' || raw === 'pending approval') return 'pending-approval';
+    if ((raw === 'open' || raw === 'overdue') && isOverdue(wo)) return 'overdue';
+    return 'open';
+}
+
+function calculateFrequency(lastService, nextDueDate) {
+    const lastDate = parseDate(lastService);
+    const dueDate  = parseDate(nextDueDate);
+    if (!lastDate || !dueDate) return { label:'UNKNOWN', color:'#64748b' };
+    const diffDays = Math.ceil(Math.abs(dueDate - lastDate) / (1000*60*60*24));
+    if (diffDays <= 45)  return { label:'MONTHLY',     color:'#22c55e' };
+    if (diffDays <= 120) return { label:'QUARTERLY',   color:'#eab308' };
+    if (diffDays <= 210) return { label:'HALF-YEARLY', color:'#f97316' };
+    return                      { label:'YEARLY',      color:'#f43f5e' };
+}
+
+// ===== CHECKLISTS =====
+const ASSET_CHECKLISTS = {
+    dg: [
+        { id:'dg_1', text:'Check fuel level and quality', required:true, completed:false, comments:'' },
+        { id:'dg_2', text:'Inspect battery terminals and voltage', required:true, completed:false, comments:'' },
+        { id:'dg_3', text:'Verify coolant level and condition', required:true, completed:false, comments:'' },
+        { id:'dg_4', text:'Check oil level and quality', required:true, completed:false, comments:'' },
+        { id:'dg_5', text:'Test automatic transfer switch', required:true, completed:false, comments:'' },
+        { id:'dg_6', text:'Inspect exhaust system', required:false, completed:false, comments:'' },
+        { id:'dg_7', text:'Verify control panel alarms', required:false, completed:false, comments:'' }
+    ],
+    elevator: [
+        { id:'el_1', text:'Inspect door operation and safety edges', required:true, completed:false, comments:'' },
+        { id:'el_2', text:'Check emergency stop button functionality', required:true, completed:false, comments:'' },
+        { id:'el_3', text:'Verify leveling accuracy at all floors', required:true, completed:false, comments:'' },
+        { id:'el_4', text:'Inspect machine room equipment', required:true, completed:false, comments:'' },
+        { id:'el_5', text:'Test emergency lighting and communication', required:true, completed:false, comments:'' },
+        { id:'el_6', text:'Check oil levels in hydraulic systems', required:false, completed:false, comments:'' }
+    ],
+    chiller: [
+        { id:'ch_1', text:'Check refrigerant pressure levels', required:true, completed:false, comments:'' },
+        { id:'ch_2', text:'Inspect condenser water flow', required:true, completed:false, comments:'' },
+        { id:'ch_3', text:'Verify compressor oil level', required:true, completed:false, comments:'' },
+        { id:'ch_4', text:'Check electrical connections and terminals', required:true, completed:false, comments:'' },
+        { id:'ch_5', text:'Inspect for refrigerant leaks', required:true, completed:false, comments:'' },
+        { id:'ch_6', text:'Verify control panel operation', required:false, completed:false, comments:'' }
+    ],
+    fire: [
+        { id:'fi_1', text:'Test fire alarm panel functionality', required:true, completed:false, comments:'' },
+        { id:'fi_2', text:'Check sprinkler heads and pipes', required:true, completed:false, comments:'' },
+        { id:'fi_3', text:'Verify extinguisher pressure and seals', required:true, completed:false, comments:'' },
+        { id:'fi_4', text:'Test smoke detectors in all zones', required:true, completed:false, comments:'' },
+        { id:'fi_5', text:'Check hydrant water pressure', required:true, completed:false, comments:'' },
+        { id:'fi_6', text:'Inspect fire pump operation', required:false, completed:false, comments:'' }
+    ],
+    default: [
+        { id:'gen_1', text:'Visual inspection of equipment condition', required:true, completed:false, comments:'' },
+        { id:'gen_2', text:'Check for unusual noises or vibrations', required:true, completed:false, comments:'' },
+        { id:'gen_3', text:'Verify safety guards and covers', required:true, completed:false, comments:'' },
+        { id:'gen_4', text:'Inspect for leaks or damage', required:true, completed:false, comments:'' },
+        { id:'gen_5', text:'Test emergency stop functionality', required:false, completed:false, comments:'' },
+        { id:'gen_6', text:'Verify control panel indicators', required:false, completed:false, comments:'' }
+    ]
+};
+
+function getChecklistForAsset(assetName) {
+    const n = (assetName || '').toLowerCase();
+    if (n.includes('dg') || n.includes('generator')) return 'dg';
+    if (n.includes('elevator') || n.includes('lift')) return 'elevator';
+    if (n.includes('chiller') || n.includes('hvac') || n.includes('ahu')) return 'chiller';
+    if (n.includes('fire') || n.includes('sprinkler') || n.includes('hydrant')) return 'fire';
+    return 'default';
+}
+
+// ===== STATE =====
+let assetsData = [];
+let viewDate = new Date();
+let charts = {};
+let _currentWorkOrders = [];
+let _currentAmcContracts = [];
+let _technicians = [];
+let _supervisors = [];
+let currentWO = null;
+let currentAmcContract = null;
+
+// ===== CLOSED WORK ORDERS =====
+function renderClosedWOs() {
+    const container = document.getElementById('closed-wo-container');
+    if (!container) return;
+    const statusF = (document.getElementById('closed-wo-filter')?.value) || 'all';
+    const ppmF    = (document.getElementById('closed-wo-ppm-filter')?.value) || 'all';
+    const searchQ = ((document.getElementById('closed-wo-search')?.value) || '').toLowerCase();
+
+    let filtered = _currentWorkOrders.filter(wo => {
+        const st = (wo.status || wo.Status || 'open').toLowerCase();
+        if (st !== 'completed' && st !== 'closed') return false;
+        if (statusF !== 'all' && st !== statusF) return false;
+        if (ppmF    !== 'all' && (wo.ppm_type||'inhouse') !== ppmF) return false;
+        if (searchQ) {
+            const hay = ((wo.Asset||wo.asset_name||'')+(wo['WO ID']||wo.work_order_id||'')+(wo.Location||wo.location||'')).toLowerCase();
+            if (!hay.includes(searchQ)) return false;
+        }
+        return true;
+    });
+
+    const badge = document.getElementById('closed-wo-count-badge');
+    if (badge) badge.textContent = filtered.length;
+
+    if (!filtered.length) {
+        container.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#334155;font-size:13px;">No closed work orders yet</div>`;
+        return;
+    }
+
+    container.innerHTML = filtered.map(wo => {
+        const st        = (wo.status||wo.Status||'completed').toLowerCase();
+        const scColor   = st==='closed' ? '#64748b' : '#22c55e';
+        const scBg      = st==='closed' ? 'rgba(100,116,139,.12)' : 'rgba(34,197,94,.12)';
+        const scLabel   = st==='closed' ? 'CLOSED' : 'COMPLETED';
+        const scIcon    = st==='closed' ? 'archive' : 'check-circle-2';
+        const woId      = wo['WO ID'] || wo.work_order_id || '';
+        const assetName = wo.Asset || wo.asset_name || 'Unknown Asset';
+        const loc       = wo.Location || wo.location || '—';
+        const dd        = wo['Due Date'] || wo.due_date || '—';
+        const pt        = wo.ppm_type || 'inhouse';
+        const ptBadge   = pt==='vendor'
+            ? `<span style="padding:1px 6px;border-radius:4px;font-size:9px;font-weight:800;color:#a78bfa;border:1px solid #a78bfa33;background:#a78bfa0d;">🏢 VENDOR</span>`
+            : `<span style="padding:1px 6px;border-radius:4px;font-size:9px;font-weight:800;color:var(--neon-orange);border:1px solid rgba(249,115,22,.25);background:rgba(249,115,22,.08);">🔧 IN-HOUSE</span>`;
+        const closedBy   = wo.closed_by || wo.approved_by || wo.supervisor || '—';
+        const closedAt   = wo.closed_at ? new Date(wo.closed_at).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+        const assignedTo = wo.assigned_to || wo.technician || '—';
+        const approvalNotes = wo.approval_notes || wo.supervisor_notes || '';
+
+        // Checklist
+        const cl      = wo.checklist || [];
+        const clDone  = cl.filter(i => i.completed).length;
+        const clTotal = cl.length;
+        const clPct   = clTotal > 0 ? Math.round(clDone/clTotal*100) : 0;
+        const clColor = clPct===100 ? '#22c55e' : clPct>=50 ? '#fbbf24' : '#f43f5e';
+
+        // Photos
+        const imgs = wo.images || [];
+
+        return `<div style="background:rgba(15,23,42,.7);border:1px solid rgba(255,255,255,.06);border-left:4px solid ${scColor};border-radius:14px;overflow:hidden;">
+            <div style="padding:14px 18px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+                <div style="display:flex;align-items:flex-start;gap:12px;flex:1;min-width:0;">
+                    <div style="padding:9px;border-radius:10px;background:${scBg};flex-shrink:0;"><i data-lucide="${scIcon}" style="width:17px;height:17px;color:${scColor};"></i></div>
+                    <div style="flex:1;min-width:0;">
+                        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:3px;">
+                            <span style="font-family:monospace;font-size:10px;color:var(--neon-orange);font-weight:700;">${woId}</span>
+                            <span style="padding:2px 6px;border-radius:4px;font-size:9px;font-weight:800;background:${scBg};color:${scColor};border:1px solid ${scColor}44;">${scLabel}</span>
+                            ${ptBadge}
+                        </div>
+                        <p style="color:white;font-weight:700;font-size:13px;margin:0 0 2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${assetName}</p>
+                        <p style="color:#64748b;font-size:11px;margin:0;">📍 ${loc} &nbsp;|&nbsp; Due: ${formatDateDisplay(dd)}</p>
+                    </div>
+                </div>
+                <button onclick="openWOModal('${woId}')" style="background:rgba(100,116,139,.1);color:#94a3b8;border:1px solid rgba(100,116,139,.2);border-radius:8px;padding:6px 12px;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;flex-shrink:0;transition:all .2s;"
+                    onmouseover="this.style.background='rgba(100,116,139,.25)'" onmouseout="this.style.background='rgba(100,116,139,.1)'">
+                    <i data-lucide="eye" style="width:11px;height:11px;"></i> View
+                </button>
+            </div>
+            <div style="padding:10px 18px 14px;border-top:1px solid rgba(255,255,255,.04);display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+                <div>
+                    <p style="font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin:0 0 6px;">Checklist</p>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
+                        <div style="flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,.06);">
+                            <div style="height:100%;border-radius:3px;background:${clColor};width:${clPct}%;"></div>
+                        </div>
+                        <span style="font-size:11px;font-weight:800;color:${clColor};">${clDone}/${clTotal}</span>
+                    </div>
+                    ${cl.slice(0,4).map(item=>`<div style="display:flex;align-items:center;gap:5px;margin-top:3px;">
+                        <span style="width:10px;height:10px;border-radius:2px;background:${item.completed?'#22c55e':'rgba(255,255,255,.08)'};flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;font-size:7px;color:#000;">${item.completed?'✓':''}</span>
+                        <span style="font-size:10px;color:${item.completed?'#94a3b8':'#475569'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${item.text}</span>
+                    </div>`).join('')}
+                    ${cl.length>4?`<p style="font-size:9px;color:#334155;margin:3px 0 0;">+${cl.length-4} more</p>`:''}
+                </div>
+                <div>
+                    <p style="font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;">Assignment</p>
+                    <div style="display:flex;flex-direction:column;gap:5px;">
+                        <div style="display:flex;align-items:center;gap:6px;"><i data-lucide="wrench" style="width:11px;height:11px;color:#64748b;flex-shrink:0;"></i><span style="font-size:11px;color:#94a3b8;">${assignedTo}</span></div>
+                        <div style="display:flex;align-items:center;gap:6px;"><i data-lucide="shield-check" style="width:11px;height:11px;color:#22c55e;flex-shrink:0;"></i><span style="font-size:11px;color:#94a3b8;">Closed by: <strong style="color:white;">${closedBy}</strong></span></div>
+                        <div style="display:flex;align-items:center;gap:6px;"><i data-lucide="calendar-check" style="width:11px;height:11px;color:#64748b;flex-shrink:0;"></i><span style="font-size:11px;color:#64748b;">${closedAt}</span></div>
+                        ${approvalNotes?`<div style="margin-top:4px;padding:5px 8px;background:rgba(34,197,94,.06);border-radius:5px;border:1px solid rgba(34,197,94,.12);font-size:10px;color:#94a3b8;"><span style="color:#22c55e;font-weight:700;">Note: </span>${approvalNotes}</div>`:''}
+                    </div>
+                </div>
+                <div>
+                    <p style="font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;">Photos <span style="color:#334155;">(${imgs.length})</span></p>
+                    ${imgs.length
+                        ? `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;">${imgs.slice(0,6).map(img=>`<img src="/uploads/OW/ppm/${img.filename||img}" style="width:100%;height:50px;object-fit:cover;border-radius:5px;border:1px solid rgba(255,255,255,.08);cursor:pointer;" onclick="window.open('/uploads/OW/ppm/${img.filename||img}','_blank')">`).join('')}</div>${imgs.length>6?`<p style="font-size:9px;color:#334155;margin:4px 0 0;">+${imgs.length-6} more</p>`:''}`
+                        : `<div style="height:52px;display:flex;align-items:center;justify-content:center;border:1px dashed rgba(255,255,255,.08);border-radius:6px;"><span style="font-size:10px;color:#334155;">No photos</span></div>`
+                    }
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+    lucide.createIcons({ element: container });
+}
+
+// ===== AMC FILE UPLOAD =====
+function handleAmcFileUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const ext = file.name.split('.').pop().toLowerCase();
+    if (ext === 'pdf') {
+        const fd = new FormData(); fd.append('file', file);
+        fetch('/ow_api/amc/upload', { method:'POST', body:fd })
+            .then(r => r.ok ? r.json() : null)
+            .then(d => { showToast(d&&d.success ? '📎 Saved' : '📎 Uploaded', file.name, '#f59e0b'); })
+            .catch(() => showToast('📎 Uploaded', file.name, '#f59e0b'));
+        input.value = ''; return;
+    }
+    const reader = new FileReader();
+    reader.onload = async e => {
+        try {
+            let rows = [];
+            if (ext === 'csv') {
+                const lines = e.target.result.split('\n');
+                const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
+                rows = lines.slice(1).filter(l => l.trim()).map(l => {
+                    const vals = l.split(',').map(v => v.trim().replace(/^"|"$/g,''));
+                    const obj = {}; headers.forEach((h,i) => obj[h]=vals[i]||''); return obj;
+                });
+            } else {
+                if (typeof XLSX === 'undefined') { showToast('⚠️ Excel parse unavailable','Use CSV or manual entry.','#f59e0b'); input.value=''; return; }
+                const wb = XLSX.read(e.target.result, { type:'array' });
+                const ws = wb.Sheets[wb.SheetNames[0]];
+                rows = XLSX.utils.sheet_to_json(ws, { defval:'' });
+            }
+            if (!rows.length) { showToast('⚠️ Empty file','No rows found.','#f59e0b'); return; }
+            const contracts = rows.map(r => ({
+                contract_id: r['Contract ID']||r['contract_id']||r['ID']||'',
+                asset_id:    r['Asset ID']||r['asset_id']||'',
+                asset_name:  r['Asset Name']||r['asset_name']||r['Equipment']||'',
+                vendor:      r['Vendor']||r['vendor']||r['Contractor']||'',
+                start_date:  r['Start Date']||r['start_date']||'',
+                end_date:    r['End Date']||r['end_date']||r['Expiry']||'',
+                value:       r['Value']||r['value']||r['Amount']||'',
+                status:      (r['Status']||r['status']||'active').toLowerCase(),
+                scope:       r['Scope']||r['scope']||r['Description']||'',
+                notes:       r['Notes']||r['notes']||'',
+            })).filter(c => c.asset_name||c.contract_id);
+            const res = await fetch('/ow_api/amc/bulk-import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contracts})});
+            if (res.ok) { showToast('✅ Imported '+contracts.length+' contracts','AMC list updated.','#22c55e'); renderAmcTracker(); }
+            else        { showToast('⚠️ Import failed','Server returned error.','#f59e0b'); }
+        } catch(err) { showToast('❌ Parse error', err.message, '#f43f5e'); }
+        input.value = '';
+    };
+    if (ext==='csv') reader.readAsText(file); else reader.readAsArrayBuffer(file);
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', async () => {
+    lucide.createIcons();
+    setupEventListeners();
+    await initDashboard();
+    updateTime();
+    setInterval(updateTime, 1000);
+    document.getElementById('mobile-toggle').addEventListener('click', () => {
+        document.getElementById('sidebar').classList.toggle('open');
+        document.getElementById('sidebar-overlay').classList.toggle('open');
+    });
+    document.getElementById('sidebar-overlay').addEventListener('click', () => {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebar-overlay').classList.remove('open');
+    });
+});
+
+function setupEventListeners() {
+    // Section nav
+    document.querySelectorAll('[data-section]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            showSection(btn.getAttribute('data-section'));
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('sidebar-overlay').classList.remove('open');
+            }
+        });
+    });
+    document.getElementById('file-upload')?.addEventListener('change', e => handleFileUpload(e.target));
+    document.getElementById('refresh-btn')?.addEventListener('click', initDashboard);
+    document.getElementById('back-btn')?.addEventListener('click', () => { location.href = '/onewest'; });
+    document.getElementById('asset-search')?.addEventListener('input', e => {
+        const q = e.target.value.toLowerCase();
+        const freq = document.getElementById('asset-freq-filter')?.value || 'all';
+        applyAssetFilters(q, freq);
+    });
+    document.getElementById('asset-freq-filter')?.addEventListener('change', e => {
+        const q = document.getElementById('asset-search')?.value.toLowerCase() || '';
+        applyAssetFilters(q, e.target.value);
+    });
+    document.getElementById('wo-filter')?.addEventListener('change', renderWorkOrders);
+    document.getElementById('amc-filter')?.addEventListener('change', renderAmcTracker);
+    document.getElementById('exportWOBtn')?.addEventListener('click', () => { window.location.href = API.WO_EXPORT; });
+    document.getElementById('refreshWOBtn')?.addEventListener('click', initDashboard);
+    document.getElementById('amc-exportBtn')?.addEventListener('click', () => { window.location.href = API.AMC_EXPORT; });
+    document.getElementById('triggerDailyEmail')?.addEventListener('click', triggerDailyMail);
+    document.getElementById('close-wo-modal-btn')?.addEventListener('click', closeModal);
+    document.getElementById('drop-zone')?.addEventListener('click', () => document.getElementById('image-upload').click());
+    document.getElementById('image-upload')?.addEventListener('change', handleImageUpload);
+    document.getElementById('save-checklist-btn')?.addEventListener('click', saveChecklistProgress);
+    document.getElementById('close-work-order-btn')?.addEventListener('click', closeWorkOrderWithApproval);
+    document.getElementById('reject-wo-btn')?.addEventListener('click', () => showStatusMessage('Work order returned for revision.', 'error'));
+    document.getElementById('assign-btn')?.addEventListener('click', assignWO);
+    document.getElementById('prev-month')?.addEventListener('click', () => navMonth(-1));
+    document.getElementById('next-month')?.addEventListener('click', () => navMonth(1));
+    document.getElementById('close-amc-edit-modal-btn')?.addEventListener('click', closeAmcModal);
+    document.getElementById('amc-cancel-edit-btn')?.addEventListener('click', closeAmcModal);
+    document.getElementById('amc-save-edit-btn')?.addEventListener('click', saveAmcContract);
+    document.getElementById('wo-details-modal')?.addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+    document.getElementById('amc-edit-modal')?.addEventListener('click', e => { if (e.target === e.currentTarget) closeAmcModal(); });
+}
+
+// ===== DASHBOARD INIT =====
+async function initDashboard() {
+    try {
+        showLoadingStates();
+        const [assetRes, statsRes, woRes, amcRes, techRes, supRes] = await Promise.all([
+            fetch(API.ASSETS).catch(() => ({ ok: false })),
+            fetch(API.STATS).catch(() => ({ ok: false })),
+            fetch(API.WORKORDERS).catch(() => ({ ok: false })),
+            fetch(API.AMC).catch(() => ({ ok: false })),
+            fetch(API.TECHNICIANS).catch(() => ({ ok: false })),
+            fetch(API.SUPERVISORS).catch(() => ({ ok: false })),
+        ]);
+
+        if (assetRes.ok) { const d = await assetRes.json(); assetsData = d.assets || []; }
+        if (woRes.ok)    { const d = await woRes.json();    _currentWorkOrders = d.work_orders || []; }
+        if (amcRes.ok)   { const d = await amcRes.json();   _currentAmcContracts = d.contracts || []; }
+        if (techRes.ok)  { const d = await techRes.json();  _technicians = d.technicians || []; }
+        if (supRes.ok)   { const d = await supRes.json();   _supervisors = d.supervisors || []; }
+
+        let statsData = { total_assets: assetsData.length, pending_ppm:0, ppm_overdue:0, compliance_rate:0 };
+        if (statsRes.ok) { const s = await statsRes.json(); statsData = { ...statsData, ...s }; }
+
+        renderAssetTable();
+        renderStats(statsData);
+        renderWorkOrders();
+        renderAmcTracker();
+        renderCharts();
+        renderCalendar();
+        lucide.createIcons();
+    } catch (err) {
+        console.error('ONEWEST dashboard init error:', err);
+        showErrorStates();
+    }
+}
+
+function showLoadingStates() {
+    setEl('asset-table-body', `<tr><td colspan="5" style="padding:40px;text-align:center;color:#475569;">Loading ONEWEST assets...</td></tr>`);
+    setEl('wo-stream-container', loadingHTML('Loading work orders...'));
+    setEl('amc-stream-container', loadingHTML('Loading AMC contracts...'));
+}
+function showErrorStates() {
+    setEl('asset-table-body', `<tr><td colspan="5" style="padding:40px;text-align:center;color:#475569;">No assets. Upload OW/Assets.xlsx</td></tr>`);
+    setEl('wo-stream-container', emptyHTML('No work orders', 'Create from Calendar View'));
+    setEl('amc-stream-container', emptyHTML('No AMC data', 'Check data source'));
+}
+function loadingHTML(msg) {
+    return `<div style="display:flex;align-items:center;justify-content:center;height:100%;"><div style="text-align:center;"><div style="width:36px;height:36px;border:3px solid rgba(249,115,22,.3);border-top-color:var(--neon-orange);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 14px;"></div><p style="font-size:15px;font-weight:700;color:#475569;margin:0;">${msg}</p></div></div>`;
+}
+function emptyHTML(title, sub) {
+    return `<div style="display:flex;align-items:center;justify-content:center;height:100%;"><div style="text-align:center;"><p style="font-size:16px;font-weight:700;color:#475569;margin:0 0 8px;">${title}</p><p style="font-size:13px;margin:0;color:#334155;">${sub}</p></div></div>`;
+}
+function setEl(id, html) { const el = document.getElementById(id); if (el) el.innerHTML = html; }
+function setInnerText(id, val) { const el = document.getElementById(id); if (el) el.innerText = val; }
+
+// ===== STATS =====
+function renderStats(apiStats) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    let countOpen=0, countOverdue=0, countCompleted=0, countInProgress=0;
+    _currentWorkOrders.forEach(wo => {
+        const st = getWOStatus(wo);
+        if (st === 'completed') countCompleted++;
+        else if (st === 'overdue') countOverdue++;
+        else if (st === 'in-progress') countInProgress++;
+        else countOpen++;
+    });
+    const total = assetsData.length || apiStats.total_assets || 0;
+    const pending = apiStats.pending_ppm || countOpen + countOverdue;
+    const overdue = apiStats.ppm_overdue || countOverdue;
+    const compliance = apiStats.compliance_rate != null ? apiStats.compliance_rate :
+        (_currentWorkOrders.length > 0 ? (countCompleted / _currentWorkOrders.length * 100) : 0);
+
+    setInnerText('ov-total', total.toLocaleString());
+    setInnerText('ov-pending', pending.toLocaleString());
+    setInnerText('ov-overdue', overdue.toLocaleString());
+    setInnerText('ov-compliance', `${compliance.toFixed(1)}%`);
+    setInnerText('wo-count-total', _currentWorkOrders.length.toLocaleString());
+    setInnerText('wo-count-open', countOpen.toLocaleString());
+    setInnerText('wo-count-overdue', countOverdue.toLocaleString());
+    setInnerText('wo-count-completed', countCompleted.toLocaleString());
+    updateSplitCards();
+
+    const countBar = document.getElementById('filter-counts');
+    if (countBar) {
+        const badges = [
+            { label:'Open', count:countOpen, color:'#fbbf24' },
+            { label:'Overdue', count:countOverdue, color:'#f43f5e' },
+            { label:'In Progress', count:countInProgress, color:'#60a5fa' },
+            { label:'Completed', count:countCompleted, color:'#22c55e' }
+        ].filter(b => b.count > 0);
+        countBar.innerHTML = badges.map(b => `<span style="padding:3px 8px;border-radius:4px;font-size:10px;font-weight:800;background:${b.color}22;color:${b.color};border:1px solid ${b.color}55;">${b.label}: ${b.count}</span>`).join('');
+    }
+}
+
+// ===== SECTION SWITCHER =====
+function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    const section = document.getElementById(`section-${id}`);
+    if (section) section.classList.add('active');
+    document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
+    const btn = document.querySelector(`[data-section="${id}"]`);
+    if (btn) btn.classList.add('active');
+    if (id === 'calendar')   renderCalendar();
+    if (id === 'workflow')   renderWorkOrders();
+    if (id === 'closed-wos') renderClosedWOs();
+    if (id === 'amc-tracker') renderAmcTracker();
+}
+
+// ===== ASSET TABLE =====
+let _assetTab = 'all';
+function setAssetTab(tab) {
+    _assetTab = tab;
+    ['all','inhouse','vendor'].forEach(t => {
+        const b = document.getElementById('atab-'+t); if (!b) return;
+        if (t===tab) { b.style.background='rgba(249,115,22,.15)'; b.style.color='var(--neon-orange)'; b.style.borderColor='rgba(249,115,22,.5)'; }
+        else          { b.style.background='transparent';           b.style.color='#64748b';            b.style.borderColor='rgba(255,255,255,.1)'; }
+    });
+    applyAssetFilters(document.getElementById('asset-search')?.value||'',(document.getElementById('asset-freq-filter')?.value)||'all');
+}
+function applyAssetFilters(query, freq) {
+    let filtered = assetsData.filter(a => {
+        if (_assetTab==='inhouse' && (a.ppm_type||'inhouse')==='vendor') return false;
+        if (_assetTab==='vendor'  && (a.ppm_type||'inhouse')!=='vendor') return false;
+        const q=(query||"").toLowerCase();
+        const matchQ = !q || (a.id||"").toLowerCase().includes(q) || (a.name||"").toLowerCase().includes(q) || (a.location||"").toLowerCase().includes(q);
+        if (!matchQ) return false;
+        if (freq==='all') return true;
+        return calculateFrequency(a.lastService, a.nextDueDate).label === freq;
+    });
+    const badge = document.getElementById('asset-count-badge');
+    if (badge) badge.textContent = '('+filtered.length+' assets)';
+    renderFilteredAssets(filtered);
+}
+function renderAssetTable() { applyAssetFilters('',"all"); }
+
+function renderFilteredAssets(assets) {
+    const body = document.getElementById('asset-table-body');
+    if (!body) return;
+    if (!assets || assets.length === 0) {
+        body.innerHTML = `<tr><td colspan="5" style="padding:40px;text-align:center;color:#475569;">No assets found</td></tr>`;
+        return;
+    }
+    body.innerHTML = assets.map(a => {
+        const freq = calculateFrequency(a.lastService, a.nextDueDate);
+        return `<tr style="border-bottom:1px solid rgba(255,255,255,0.04);transition:background .15s;" onmouseover="this.style.background='rgba(255,255,255,0.03)'" onmouseout="this.style.background='transparent'">
+            <td style="padding:14px 16px;font-family:monospace;color:var(--neon-orange);font-size:12px;white-space:nowrap;overflow:hidden;max-width:160px;text-overflow:ellipsis;" title="${a.id}">${a.id}</td>
+            <td style="padding:14px 16px;font-weight:700;color:white;font-size:13px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${a.name}">${a.name}</td>
+            <td style="padding:14px 16px;color:#64748b;font-size:13px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${a.location}">${a.location}</td>
+            <td style="padding:14px 16px;"><span style="padding:2px 8px;border-radius:4px;font-size:9px;font-weight:800;letter-spacing:.06em;color:${freq.color};border:1px solid ${freq.color}44;background:${freq.color}14;">${freq.label}</span></td>
+            <td style="padding:14px 16px;color:#94a3b8;font-family:monospace;font-size:12px;white-space:nowrap;">${a.nextDueDate || 'N/A'}</td>
+        </tr>`;
+    }).join('');
+}
+
+// ===== CHARTS =====
+function renderCharts() {
+    // Status distribution
+    let countOpen=0, countOverdue=0, countCompleted=0, countInProgress=0;
+    _currentWorkOrders.forEach(wo => {
+        const st = getWOStatus(wo);
+        if (st === 'completed') countCompleted++;
+        else if (st === 'overdue') countOverdue++;
+        else if (st === 'in-progress') countInProgress++;
+        else countOpen++;
+    });
+    const chartCfg = { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ color:'#94a3b8', font:{ family:'Rajdhani', size:11 }, boxWidth:12, padding:16 }}, tooltip:{ backgroundColor:'rgba(15,23,42,0.9)', titleColor:'white', bodyColor:'#94a3b8' }} };
+
+    if (charts.status) charts.status.destroy();
+    const sCtx = document.getElementById('statusChart');
+    if (sCtx) {
+        charts.status = new Chart(sCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Open','Overdue','In Progress','Completed'],
+                datasets: [{ data:[countOpen,countOverdue,countInProgress,countCompleted], backgroundColor:['rgba(0,243,255,0.7)','rgba(244,63,94,0.7)','rgba(251,191,36,0.7)','rgba(34,197,94,0.7)'], borderWidth:0, hoverOffset:6 }]
+            },
+            options: { ...chartCfg, cutout:'72%' }
+        });
+    }
+
+    // Frequency breakdown
+    let monthly=0, quarterly=0, halfYearly=0, yearly=0, unknown=0;
+    assetsData.forEach(a => {
+        const f = calculateFrequency(a.lastService, a.nextDueDate);
+        if (f.label === 'MONTHLY') monthly++;
+        else if (f.label === 'QUARTERLY') quarterly++;
+        else if (f.label === 'HALF-YEARLY') halfYearly++;
+        else if (f.label === 'YEARLY') yearly++;
+        else unknown++;
+    });
+
+    if (charts.freq) charts.freq.destroy();
+    const fCtx = document.getElementById('freqChart');
+    if (fCtx) {
+        charts.freq = new Chart(fCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Monthly','Quarterly','Half-Yearly','Yearly','Unknown'],
+                datasets: [{ data:[monthly,quarterly,halfYearly,yearly,unknown], backgroundColor:['rgba(34,197,94,0.7)','rgba(234,179,8,0.7)','rgba(249,115,22,0.7)','rgba(244,63,94,0.7)','rgba(100,116,139,0.4)'], borderWidth:0, borderRadius:4 }]
+            },
+            options: { ...chartCfg, plugins:{ ...chartCfg.plugins, legend:{ display:false }}, scales:{ x:{ grid:{ display:false }, ticks:{ color:'#64748b', font:{ family:'Rajdhani', size:10 } }}, y:{ grid:{ color:'rgba(255,255,255,0.04)' }, ticks:{ color:'#64748b', font:{ family:'Rajdhani', size:10 } }} }}
+        });
+    }
+    // Dept chart
+    const dMap = {}; (assetsData.length ? assetsData : _currentWorkOrders).forEach(a => { const d = (a.department||a.trade||a.category||'General')+""; if(d&&d.toLowerCase()!=='nan') dMap[d]=(dMap[d]||0)+1; });
+    const dL=Object.keys(dMap).slice(0,10), dD=dL.map(k=>dMap[k]);
+    const PAL=['rgba(249,115,22,.8)','rgba(0,212,255,.8)','rgba(167,139,250,.8)','rgba(34,197,94,.8)','rgba(251,191,36,.8)','rgba(244,63,94,.8)','rgba(20,184,166,.8)','rgba(96,165,250,.8)','rgba(248,113,113,.8)','rgba(52,211,153,.8)'];
+    if(charts.dept) charts.dept.destroy();
+    const dCtx=document.getElementById('deptChart');
+    if(dCtx&&dL.length) charts.dept=new Chart(dCtx,{type:'polarArea',data:{labels:dL,datasets:[{data:dD,backgroundColor:dL.map((_,i)=>PAL[i%PAL.length]),borderWidth:0}]},options:{...chartCfg,scales:{r:{grid:{color:'rgba(255,255,255,0.06)'},ticks:{display:false}}}}});
+}
+
+// ===== CALENDAR =====
+function renderCalendar() {
+    const grid  = document.getElementById('calendar-grid');
+    const title = document.getElementById('calendar-month-year');
+    if (!grid || !title) return;
+    grid.innerHTML = '';
+    const year = viewDate.getFullYear(), month = viewDate.getMonth();
+    title.innerText = viewDate.toLocaleString('default', { month:'long', year:'numeric' });
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+    const today = new Date();
+
+    for (let i = 0; i < firstDay; i++) {
+        const blank = document.createElement('div');
+        blank.className = 'calendar-blank';
+        grid.appendChild(blank);
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const dayTasks = assetsData.filter(a => {
+            if (!a.nextDueDate) return false;
+            const parsed = parseDate(a.nextDueDate);
+            return parsed && toDateStr(parsed) === dateStr;
+        });
+        const isToday = today.getFullYear()===year && today.getMonth()===month && today.getDate()===d;
+        const div = document.createElement('div');
+        div.className = 'calendar-day' + (dayTasks.length > 0 ? ' has-task' : '') + (isToday ? ' today' : '');
+        div.dataset.date = dateStr;
+        const num = document.createElement('span');
+        num.textContent = d;
+        num.style.cssText = 'display:block;line-height:1;';
+        div.appendChild(num);
+        if (dayTasks.length > 0) {
+            const dot = document.createElement('div');
+            dot.className = 'task-dot';
+            div.appendChild(dot);
+        }
+        if (dayTasks.length > 1) {
+            const badge = document.createElement('span');
+            badge.textContent = dayTasks.length;
+            badge.style.cssText = 'display:block;font-size:8px;font-weight:800;line-height:1;margin-top:1px;';
+            div.appendChild(badge);
+        }
+        div.addEventListener('click', () => showDaySchedule(dateStr));
+        grid.appendChild(div);
+    }
+    lucide.createIcons();
+}
+
+function navMonth(dir) { viewDate.setMonth(viewDate.getMonth() + dir); renderCalendar(); }
+
+function showDaySchedule(dateStr) {
+    const container = document.getElementById('day-schedule-container');
+    const label = document.getElementById('selected-day-label');
+    if (!container || !label) return;
+    const dateObj = new Date(dateStr + 'T00:00:00');
+    label.innerText = `SCHEDULE: ${dateObj.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' })}`;
+
+    const tasks = assetsData.filter(a => {
+        if (!a.nextDueDate) return false;
+        const parsed = parseDate(a.nextDueDate);
+        return parsed && toDateStr(parsed) === dateStr;
+    });
+
+    if (tasks.length === 0) {
+        container.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;">
+            <i data-lucide="check-circle" style="width:48px;height:48px;margin-bottom:12px;color:rgba(34,197,94,0.2);"></i>
+            <h3 style="color:#4ade80;font-weight:700;font-size:16px;margin:0 0 8px;">All Clear!</h3>
+            <p style="color:#64748b;font-size:13px;margin:0;">No maintenance tasks scheduled for this date.</p>
+        </div>`;
+        lucide.createIcons();
+        return;
+    }
+
+    container.innerHTML = tasks.map((t, i) => {
+        const freq = calculateFrequency(t.lastService, t.nextDueDate);
+        // Check if WO already created for this asset+date
+        const woExists = _currentWorkOrders.some(wo => (wo.asset_id || wo['Asset ID']) === t.id && (wo.due_date || wo['Due Date']) === dateStr);
+        return `<div style="background:rgba(15,23,42,0.6);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;transition:border-color .2s;" onmouseover="this.style.borderColor='rgba(249,115,22,0.2)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)'">
+            <div style="flex:1;min-width:0;">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;flex-wrap:wrap;">
+                    <h4 style="color:white;font-weight:700;font-size:14px;margin:0;overflow:hidden;text-overflow:ellipsis;">${i+1}. ${t.name}</h4>
+                    <span style="padding:2px 8px;border-radius:4px;font-size:9px;font-weight:800;color:${freq.color};border:1px solid ${freq.color}44;background:${freq.color}14;white-space:nowrap;">${freq.label}</span>
+                </div>
+                <p style="color:#64748b;font-size:12px;margin:0 0 6px;">${t.location}</p>
+                <p style="color:var(--neon-orange);font-size:11px;margin:0;">Last Service: ${t.lastService || 'N/A'}</p>
+            </div>
+            ${woExists
+                ? `<span style="background:rgba(34,197,94,0.12);color:#22c55e;border:1px solid rgba(34,197,94,0.3);border-radius:8px;padding:8px 12px;font-size:10px;font-weight:800;white-space:nowrap;flex-shrink:0;">✓ WO Created</span>`
+                : `<button class="create-wo-btn" style="background:var(--neon-orange);color:black;border:none;border-radius:8px;padding:8px 14px;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:800;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px;letter-spacing:.06em;flex-shrink:0;transition:opacity .2s;" 
+                    data-asset-id="${t.id}" data-asset-name="${t.name}" data-location="${t.location}" data-due-date="${dateStr}"
+                    onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+                    <i data-lucide="plus" style="width:12px;height:12px;"></i> Create WO
+                </button>`
+            }
+        </div>`;
+    }).join('');
+
+    container.querySelectorAll('.create-wo-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            await generateWorkOrder(btn.dataset.assetId, btn.dataset.assetName, btn.dataset.location, btn.dataset.dueDate, btn);
+        });
+    });
+    lucide.createIcons();
+}
+
+async function generateWorkOrder(assetId, assetName, location, dueDate, btn) {
+    const originalHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<div style="width:12px;height:12px;border:2px solid rgba(0,0,0,.3);border-top-color:black;border-radius:50%;animation:spin 1s linear infinite;display:inline-block;vertical-align:middle;margin-right:4px;"></div> Creating...';
+    try {
+        const assetType = getChecklistForAsset(assetName);
+        const res = await fetch(API.WO_CREATE, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ assetId, assetName, location, dueDate, assetType, property: 'ONEWEST' })
+        });
+        const data = await res.json();
+        if (data.success) {
+            showToast(`✅ Work Order Created: ${data.work_order_id}`, 'success');
+            await initDashboard();
+            renderCalendar();
+            showDaySchedule(dueDate);
+        } else {
+            showToast(`❌ Failed: ${data.error || 'Unknown error'}`, 'error');
+        }
+    } catch (err) {
+        showToast(`❌ Network error: ${err.message}`, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHTML;
+        lucide.createIcons({ element: btn });
+    }
+}
+
+// ===== WORK ORDERS =====
+function renderWorkOrders() {
+    const container = document.getElementById('wo-stream-container');
+    const filter = (document.getElementById('wo-filter')?.value || 'all');
+    if (!container) return;
+    // Build asset map for name backfill
+    const aMap = {}; (assetsData||[]).forEach(a => { const k=a.id||a.asset_code; if(k) aMap[k]=a; });
+    let filtered = _currentWorkOrders.filter(wo => {
+        const st = getWOStatus(wo);
+        if (filter==='all')       return st!=='completed' && st!=='closed';
+        if (filter==='closed')    return st==='closed' || (wo.status||"").toLowerCase()==='closed';
+        if (filter==='completed') return st==='completed';
+        return st===filter;
+    });
+    if (filtered.length === 0) {
+        container.innerHTML = emptyHTML('No work orders', filter==='all'?'Create work orders from the Calendar View':`No ${filter} work orders`);
+        return;
+    }
+    const SC = {
+        overdue:         {bg:'rgba(244,63,94,.12)',  text:'#f43f5e',          icon:'alert-triangle',border:'#f43f5e',         label:'OVERDUE'},
+        'in-progress':  {bg:'rgba(251,191,36,.12)', text:'#fbbf24',          icon:'play',          border:'#fbbf24',         label:'IN PROGRESS'},
+        completed:       {bg:'rgba(34,197,94,.12)',  text:'#22c55e',          icon:'check-circle',  border:'#22c55e',         label:'COMPLETED'},
+        closed:          {bg:'rgba(100,116,139,.12)',text:'#64748b',          icon:'archive',       border:'#64748b',         label:'CLOSED'},
+        'pending-approval':{bg:'rgba(251,191,36,.12)',text:'#fbbf24',        icon:'shield',        border:'#fbbf24',         label:'PENDING'},
+        open:            {bg:'rgba(249,115,22,.10)', text:'var(--neon-orange)',icon:'clock',         border:'var(--neon-orange)',label:'OPEN'}
+    };
+    container.innerHTML = filtered.map(wo => {
+        // Backfill unknown name
+        let assetName = wo.Asset||wo.asset_name||"";
+        if (!assetName||['unknown','unknown asset'].includes(assetName.toLowerCase())) {
+            const m=aMap[wo.asset_id||wo['Asset ID']||""];
+            if(m) assetName=m.name||m.asset_name||assetName;
+        }
+        assetName=assetName||'Unknown Asset';
+        const st=getWOStatus(wo), sc=SC[st]||SC.open;
+        const priority=wo.Priority||wo.priority||'Medium';
+        const pc=priority==='High'?'#f43f5e':priority==='Medium'?'#fbbf24':'#22c55e';
+        const woId=wo['WO ID']||wo.work_order_id||'';
+        const loc=wo.Location||wo.location||'Unknown Location';
+        const dd=wo['Due Date']||wo.due_date||'N/A';
+        const at=wo.assigned_to||wo['Assigned To']||'—';
+        const canView=st!=='completed'&&st!=='closed';
+        const pt=wo.ppm_type||'inhouse';
+        const ptB=pt==='vendor'
+            ?`<span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:800;color:#a78bfa;border:1px solid #a78bfa44;background:#a78bfa14;">🏢 VENDOR</span>`
+            :`<span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:800;color:var(--neon-orange);border:1px solid rgba(249,115,22,.3);background:rgba(249,115,22,.1);">🔧 IN-HOUSE</span>`;
+        return `<div style="background:rgba(15,23,42,.7);border:1px solid rgba(255,255,255,.06);border-left:4px solid ${sc.border};border-radius:12px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:14px;transition:transform .15s;" onmouseover="this.style.transform='scale(1.002)'" onmouseout="this.style.transform=''">
+            <div style="display:flex;align-items:flex-start;gap:12px;flex:1;min-width:0;">
+                <div style="padding:9px;border-radius:10px;background:${sc.bg};flex-shrink:0;"><i data-lucide="${sc.icon}" style="width:17px;height:17px;color:${sc.text};"></i></div>
+                <div style="flex:1;min-width:0;">
+                    <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:3px;">
+                        <span style="font-family:monospace;font-size:10px;color:var(--neon-orange);font-weight:700;">${woId}</span>
+                        <span style="padding:2px 6px;border-radius:4px;font-size:9px;font-weight:800;background:${sc.bg};color:${sc.text};border:1px solid ${sc.border}55;">${sc.label}</span>
+                        ${ptB}
+                        <span style="padding:2px 6px;border-radius:4px;font-size:9px;font-weight:800;color:${pc};border:1px solid ${pc}44;background:${pc}14;">${priority.toUpperCase()}</span>
+                    </div>
+                    <p style="color:white;font-weight:700;font-size:13px;margin:0 0 3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${assetName}</p>
+                    <p style="color:#64748b;font-size:11px;margin:0 0 2px;">📍 ${loc}</p>
+                    <p style="color:#475569;font-size:11px;margin:0;">Due: ${formatDateDisplay(dd)} &nbsp;|&nbsp; Assigned: <span style="color:#94a3b8;">${at}</span></p>
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+                ${canView?`<button onclick="openWOModal('${woId}')" style="background:rgba(249,115,22,.1);color:var(--neon-orange);border:1px solid rgba(249,115,22,.2);border-radius:8px;padding:7px 13px;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .2s;" onmouseover="this.style.background='var(--neon-orange)';this.style.color='black'" onmouseout="this.style.background='rgba(249,115,22,.1)';this.style.color='var(--neon-orange)'"><i data-lucide="external-link" style="width:11px;height:11px;"></i> Open</button>`
+                :'<span style="color:#22c55e;font-size:11px;font-weight:700;">✓ Done</span>'}
+            </div>
+        </div>`;
+    }).join('');
+    lucide.createIcons();
+}
+
+// ===== WO MODAL =====
+function openWOModal(woId) {
+    const wo = _currentWorkOrders.find(w => (w['WO ID'] || w.work_order_id) === woId);
+    if (!wo) return;
+    currentWO = { ...wo };
+
+    // Populate checklist if missing
+    if (!currentWO.checklist || currentWO.checklist.length === 0) {
+        const assetType = getChecklistForAsset(currentWO.Asset || currentWO.asset_name || '');
+        currentWO.checklist = JSON.parse(JSON.stringify(ASSET_CHECKLISTS[assetType] || ASSET_CHECKLISTS.default));
+    }
+    if (!currentWO.images) currentWO.images = [];
+
+    document.getElementById('modal-wo-id').textContent = currentWO['WO ID'] || currentWO.work_order_id || '';
+    document.getElementById('modal-asset-name').textContent = currentWO.Asset || currentWO.asset_name || '';
+    document.getElementById('modal-location').innerHTML = `<i data-lucide="map-pin" style="width:12px;height:12px;"></i> ${currentWO.Location || currentWO.location || ''}`;
+    document.getElementById('modal-priority').textContent = (currentWO.Priority || currentWO.priority || 'Medium').toUpperCase();
+    document.getElementById('modal-due-date').textContent = formatDateDisplay(currentWO['Due Date'] || currentWO.due_date || '');
+    document.getElementById('modal-status').textContent = (currentWO.Status || currentWO.status || 'open').toUpperCase();
+
+    // Load technicians & supervisors into dropdowns
+    const techSel = document.getElementById('modal-technician');
+    const supSel  = document.getElementById('modal-supervisor');
+    if (techSel) {
+        techSel.innerHTML = '<option value="">Select Technician</option>' + _technicians.map(t => `<option value="${t.name}" ${currentWO.assigned_to === t.name ? 'selected' : ''}>${t.name} — ${t.specialization || ''}</option>`).join('');
+    }
+    if (supSel) {
+        supSel.innerHTML = '<option value="">Select Supervisor</option>' + _supervisors.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+    }
+
+    renderChecklist();
+    renderImagePreviews();
+    updateSupervisorApprovalSection();
+
+    const modal = document.getElementById('wo-details-modal');
+    modal.style.display = 'flex';
+    lucide.createIcons({ element: modal });
+}
+
+function closeModal() {
+    document.getElementById('wo-details-modal').style.display = 'none';
+    currentWO = null;
+}
+
+function renderChecklist() {
+    if (!currentWO) return;
+    const container = document.getElementById('checklist-container');
+    const total = currentWO.checklist.length;
+    const done  = currentWO.checklist.filter(i => i.completed).length;
+    const pct   = total > 0 ? Math.round(done/total*100) : 0;
+
+    document.getElementById('modal-checklist-status').textContent = `${done}/${total}`;
+    document.getElementById('checklist-progress').textContent = `${pct}%`;
+    const bar = document.getElementById('checklist-progress-bar');
+    if (bar) bar.style.width = `${pct}%`;
+
+    container.innerHTML = currentWO.checklist.map((item, idx) => `
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:14px;background:rgba(15,23,42,0.6);border-radius:10px;border:1px solid ${item.completed ? 'rgba(34,197,94,0.2)' : 'rgba(255,255,255,0.06)'};transition:border-color .2s;">
+            <input type="checkbox" id="chk-${idx}" ${item.completed ? 'checked' : ''} style="margin-top:2px;width:16px;height:16px;accent-color:var(--neon-orange);cursor:pointer;flex-shrink:0;" onchange="toggleChecklist(${idx})">
+            <div style="flex:1;min-width:0;">
+                <label for="chk-${idx}" style="color:${item.completed ? '#22c55e' : 'white'};font-weight:600;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;">
+                    ${item.text}
+                    ${item.required ? '<span style="color:#f43f5e;font-size:9px;font-weight:800;letter-spacing:.08em;">REQUIRED</span>' : ''}
+                </label>
+                <input type="text" value="${item.comments}" placeholder="Add comment..." 
+                    style="margin-top:6px;width:100%;padding:6px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:6px;color:#94a3b8;font-family:'Rajdhani',sans-serif;font-size:12px;outline:none;"
+                    onchange="updateChecklistComment(${idx}, this.value)"
+                    onfocus="this.style.borderColor='var(--neon-orange)'" onblur="this.style.borderColor='rgba(255,255,255,0.06)'">
+            </div>
+        </div>`).join('');
+}
+
+function toggleChecklist(idx) {
+    if (!currentWO) return;
+    currentWO.checklist[idx].completed = !currentWO.checklist[idx].completed;
+    renderChecklist();
+    updateSupervisorApprovalSection();
+}
+function updateChecklistComment(idx, val) {
+    if (!currentWO) return;
+    currentWO.checklist[idx].comments = val;
+}
+
+function renderImagePreviews() {
+    if (!currentWO) return;
+    const container = document.getElementById('image-preview-container');
+    const countEl   = document.getElementById('image-count');
+    const images    = currentWO.images || [];
+    if (countEl) countEl.textContent = `${images.length}/5`;
+    if (!container) return;
+    container.innerHTML = images.map((img, i) => `
+        <div style="position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;background:rgba(255,255,255,0.04);">
+            <img src="${img}" alt="WO Image ${i+1}" style="width:100%;height:100%;object-fit:cover;">
+            <button onclick="removeImage(${i})" style="position:absolute;top:4px;right:4px;background:#e11d48;border:none;color:white;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;">×</button>
+        </div>`).join('');
+}
+function removeImage(idx) {
+    if (!currentWO) return;
+    currentWO.images.splice(idx, 1);
+    renderImagePreviews();
+    updateSupervisorApprovalSection();
+}
+
+function handleImageUpload(e) {
+    if (!currentWO) return;
+    const files = Array.from(e.target.files || []);
+    const remaining = 5 - (currentWO.images || []).length;
+    files.slice(0, remaining).forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+            if (!currentWO.images) currentWO.images = [];
+            currentWO.images.push(ev.target.result);
+            renderImagePreviews();
+            updateSupervisorApprovalSection();
+        };
+        reader.readAsDataURL(file);
+    });
+    e.target.value = '';
+}
+
+function updateSupervisorApprovalSection() {
+    if (!currentWO) return;
+    const section = document.getElementById('supervisor-approval-section');
+    const status  = getWOStatus(currentWO);
+    if (status === 'completed') { section.style.display = 'none'; return; }
+    const allRequiredDone = !currentWO.checklist || currentWO.checklist.every(item => !item.required || item.completed);
+    const hasImages = (currentWO.images || []).length > 0;
+    section.style.display = (allRequiredDone && hasImages) ? 'block' : 'none';
+}
+
+async function assignWO() {
+    if (!currentWO) return;
+    const tech = document.getElementById('modal-technician')?.value;
+    const sup  = document.getElementById('modal-supervisor')?.value;
+    if (!tech) { showStatusMessage('Please select a technician', 'error'); return; }
+    currentWO.assigned_to = tech;
+    currentWO.supervisor  = sup;
+    showStatusMessage(`Assigned to ${tech}${sup ? ` (Supervisor: ${sup})` : ''}`, 'success');
+    // Update in list
+    const idx = _currentWorkOrders.findIndex(w => (w['WO ID'] || w.work_order_id) === (currentWO['WO ID'] || currentWO.work_order_id));
+    if (idx !== -1) { _currentWorkOrders[idx].assigned_to = tech; _currentWorkOrders[idx].supervisor = sup; }
+}
+
+function saveChecklistProgress() {
+    if (!currentWO) return;
+    const idx = _currentWorkOrders.findIndex(w => (w['WO ID'] || w.work_order_id) === (currentWO['WO ID'] || currentWO.work_order_id));
+    if (idx !== -1) _currentWorkOrders[idx] = { ..._currentWorkOrders[idx], checklist: currentWO.checklist, technician_notes: document.getElementById('technician-notes')?.value || '' };
+    showStatusMessage('Checklist saved successfully!', 'success');
+}
+
+async function closeWorkOrderWithApproval() {
+    if (!document.getElementById('supervisor-approval').checked) {
+        showStatusMessage('Please check the approval confirmation box', 'error');
+        return;
+    }
+    const btn = document.getElementById('close-work-order-btn');
+    const origHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<div style="width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin 1s linear infinite;display:inline-block;vertical-align:middle;margin-right:6px;"></div> Closing...';
+    try {
+        const woId = currentWO['WO ID'] || currentWO.work_order_id;
+        const res = await fetch(API.WO_CLOSE, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                workOrderId: woId,
+                approvalNotes: document.getElementById('approval-notes')?.value || '',
+                supervisorApproval: true,
+                technician: currentWO.assigned_to,
+                images: currentWO.images || [],
+                checklist: currentWO.checklist || [],
+                property: 'ONEWEST'
+            })
+        });
+        const result = await res.json();
+        if (result.success) {
+            const idx = _currentWorkOrders.findIndex(w => (w['WO ID'] || w.work_order_id) === woId);
+            if (idx !== -1) { _currentWorkOrders[idx].Status = 'completed'; _currentWorkOrders[idx].status = 'completed'; }
+            renderStats({ total_assets: assetsData.length });
+            showStatusMessage('Work order closed successfully!', 'success');
+            setTimeout(() => { closeModal(); renderWorkOrders(); }, 1600);
+        } else {
+            showStatusMessage(result.error || 'Failed to close work order', 'error');
+        }
+    } catch (err) {
+        showStatusMessage(`Network error: ${err.message}`, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = origHTML;
+    }
+}
+
+function showStatusMessage(msg, type) {
+    const el = document.getElementById('wo-status-message');
+    if (!el) return;
+    const isSuccess = type === 'success';
+    el.style.cssText = `display:block;border-radius:10px;padding:14px;text-align:center;background:${isSuccess ? 'rgba(34,197,94,0.12)' : 'rgba(244,63,94,0.12)'};border:1px solid ${isSuccess ? 'rgba(34,197,94,0.3)' : 'rgba(244,63,94,0.3)'};color:${isSuccess ? '#22c55e' : '#f43f5e'};font-weight:700;font-size:13px;`;
+    el.innerHTML = `<span style="display:flex;align-items:center;justify-content:center;gap:8px;">${isSuccess ? '✅' : '⚠️'} ${msg}</span>`;
+    setTimeout(() => { el.style.display = 'none'; }, 5000);
+}
+
+// ===== AMC TRACKER =====
+function renderAmcTracker() {
+    const container = document.getElementById('amc-stream-container');
+    const filter = document.getElementById('amc-filter')?.value || 'all';
+    if (!container) return;
+
+    let contracts = _currentAmcContracts;
+    if (filter !== 'all') contracts = contracts.filter(c => (c.status || 'active').toLowerCase() === filter);
+
+    if (contracts.length === 0) {
+        container.innerHTML = emptyHTML('No AMC Contracts', filter === 'all' ? 'No contracts available' : `No ${filter} contracts`);
+        return;
+    }
+
+    const statusConfig = {
+        active:   { color:'#22c55e', bg:'rgba(34,197,94,0.12)',   label:'ACTIVE' },
+        expiring: { color:'#f59e0b', bg:'rgba(245,158,11,0.12)',  label:'EXPIRING' },
+        expired:  { color:'#f43f5e', bg:'rgba(244,63,94,0.12)',   label:'EXPIRED' }
+    };
+
+    container.innerHTML = contracts.map(c => {
+        const statusKey = (c.status || 'active').toLowerCase();
+        const sc = statusConfig[statusKey] || statusConfig.active;
+        const daysToExpiry = c.end_date ? Math.ceil((new Date(c.end_date) - new Date()) / (1000*60*60*24)) : null;
+
+        return `<div style="background:rgba(15,23,42,0.7);border:1px solid rgba(255,255,255,0.06);border-left:4px solid ${sc.color};border-radius:12px;padding:18px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;transition:transform .15s;" onmouseover="this.style.transform='scale(1.002)'" onmouseout="this.style.transform='scale(1)'">
+            <div style="flex:1;min-width:0;">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
+                    <span style="font-family:monospace;font-size:11px;color:var(--neon-orange);font-weight:700;">${c.contract_id || 'N/A'}</span>
+                    <span style="padding:2px 6px;border-radius:4px;font-size:9px;font-weight:800;background:${sc.bg};color:${sc.color};border:1px solid ${sc.color}44;">${sc.label}</span>
+                </div>
+                <p style="color:white;font-weight:700;font-size:14px;margin:0 0 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.asset_name || 'Unknown Asset'}</p>
+                <p style="color:#64748b;font-size:12px;margin:0 0 4px;">Vendor: <span style="color:#94a3b8;">${c.vendor || 'N/A'}</span> &nbsp;|&nbsp; Freq: <span style="color:#94a3b8;">${c.service_frequency || 'N/A'}</span></p>
+                <p style="color:#475569;font-size:11px;margin:0;">
+                    Valid: ${formatDateDisplay(c.start_date)} → ${formatDateDisplay(c.end_date)}
+                    ${daysToExpiry !== null ? `&nbsp;|&nbsp; <span style="color:${daysToExpiry < 30 ? '#f43f5e' : daysToExpiry < 90 ? '#f59e0b' : '#22c55e'};">${daysToExpiry > 0 ? daysToExpiry + 'd remaining' : 'Expired'}</span>` : ''}
+                </p>
+            </div>
+            <div style="display:flex;gap:8px;flex-shrink:0;">
+                <button onclick="openAmcEditModal(${JSON.stringify(c).replace(/"/g,'&quot;')})" style="background:rgba(139,92,246,0.1);color:#8b5cf6;border:1px solid rgba(139,92,246,0.2);border-radius:8px;padding:8px 12px;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .2s;" onmouseover="this.style.background='#8b5cf6';this.style.color='white'" onmouseout="this.style.background='rgba(139,92,246,0.1)';this.style.color='#8b5cf6'">
+                    <i data-lucide="edit" style="width:12px;height:12px;"></i> Edit
+                </button>
+            </div>
+        </div>`;
+    }).join('');
+    lucide.createIcons();
+}
+
+// ===== AMC MODAL =====
+function openAmcEditModal(contract) {
+    currentAmcContract = contract;
+    const fmt = d => { if (!d) return ''; const dt = parseDate(d); return dt ? toDateStr(dt) : ''; };
+    document.getElementById('amc-contract-id').value   = contract.contract_id || '';
+    document.getElementById('amc-asset-id').value      = contract.asset_id || '';
+    document.getElementById('amc-asset-name').value    = contract.asset_name || '';
+    document.getElementById('amc-vendor').value        = contract.vendor || '';
+    document.getElementById('amc-start-date').value    = fmt(contract.start_date);
+    document.getElementById('amc-end-date').value      = fmt(contract.end_date);
+    document.getElementById('amc-frequency').value     = contract.service_frequency || 'Quarterly';
+    document.getElementById('amc-next-service').value  = fmt(contract.next_service);
+    document.getElementById('amc-status').value        = contract.status || 'active';
+    const modal = document.getElementById('amc-edit-modal');
+    modal.style.display = 'flex';
+    lucide.createIcons({ element: modal });
+}
+
+function closeAmcModal() {
+    document.getElementById('amc-edit-modal').style.display = 'none';
+    currentAmcContract = null;
+}
+
+async function saveAmcContract() {
+    if (!currentAmcContract) return;
+    const updated = {
+        contract_id:        document.getElementById('amc-contract-id').value,
+        asset_id:           document.getElementById('amc-asset-id').value,
+        asset_name:         document.getElementById('amc-asset-name').value,
+        vendor:             document.getElementById('amc-vendor').value,
+        start_date:         document.getElementById('amc-start-date').value,
+        end_date:           document.getElementById('amc-end-date').value,
+        service_frequency:  document.getElementById('amc-frequency').value,
+        next_service:       document.getElementById('amc-next-service').value,
+        status:             document.getElementById('amc-status').value
+    };
+    const idx = _currentAmcContracts.findIndex(c => c.contract_id === currentAmcContract.contract_id);
+    if (idx !== -1) _currentAmcContracts[idx] = updated;
+    renderAmcTracker();
+    closeAmcModal();
+    try {
+        const res = await fetch(API.AMC_UPDATE, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(updated) });
+        const result = await res.json();
+        if (!result.success) {
+            showToast('Server save failed: ' + (result.error || 'Unknown'), 'error');
+            if (idx !== -1) _currentAmcContracts[idx] = currentAmcContract;
+            renderAmcTracker();
+        } else {
+            showToast('AMC contract updated successfully', 'success');
+        }
+    } catch (err) {
+        showToast('Network error: ' + err.message, 'error');
+    }
+}
+
+// ===== FILE UPLOAD =====
+function handleFileUpload(input) {
+    if (!input.files?.length) return;
+    const formData = new FormData();
+    formData.append('file', input.files[0]);
+    formData.append('property', 'ONEWEST');
+    fetch(API.IMPORT_EXCEL, { method:'POST', body:formData })
+        .then(r => r.json())
+        .then(d => {
+            if (d.status === 'success') {
+                showToast(`✅ ${d.message}`, 'success');
+                setTimeout(() => initDashboard(), 500);
+            } else {
+                showToast(`❌ ${d.message}`, 'error');
+            }
+        })
+        .catch(err => showToast(`❌ Upload failed: ${err.message}`, 'error'));
+}
+
+// ===== DAILY MAIL =====
+async function triggerDailyMail() {
+    if (!confirm('Send today\'s ONEWEST maintenance schedule email?')) return;
+    const btn = document.getElementById('triggerDailyEmail');
+    const orig = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = 'Sending...';
+    try {
+        const res = await fetch(API.DAILY_MAIL, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ property:'ONEWEST' }) });
+        const d = await res.json();
+        if (d.success) {
+            showToast(`✅ Daily mail sent! WOs: ${d.wo_count || 0}`, 'success');
+        } else {
+            showToast(`❌ Failed: ${d.error}`, 'error');
+        }
+    } catch (err) {
+        showToast(`❌ ${err.message}`, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = orig;
+    }
+}
+
+// ===== TOAST =====
+function showToast(msg, type) {
+    const existing = document.getElementById('global-toast');
+    if (existing) existing.remove();
+    const toast = document.createElement('div');
+    toast.id = 'global-toast';
+    const isSuccess = type === 'success';
+    toast.style.cssText = `position:fixed;bottom:24px;right:24px;z-index:9999;padding:14px 20px;border-radius:12px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;background:${isSuccess ? 'rgba(34,197,94,0.15)' : 'rgba(244,63,94,0.15)'};border:1px solid ${isSuccess ? 'rgba(34,197,94,0.4)' : 'rgba(244,63,94,0.4)'};color:${isSuccess ? '#22c55e' : '#f43f5e'};backdrop-filter:blur(20px);max-width:320px;word-break:break-word;`;
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => { if (toast.parentNode) toast.remove(); }, 4000);
+}
+
+// ===== CLOCK =====
+function updateTime() {
+    const t = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
+    const el=document.getElementById('live-clock'); if(el) el.innerText=t;
+    const tb=document.getElementById('tb-clock');   if(tb) tb.textContent=t;
+}
+
+// ── COUNTER → WO NAVIGATION ──
+function goWOs(filter) {
+    const sel=document.getElementById('wo-filter'); if(sel) sel.value=filter;
+    showSection('workflow');
+    renderWorkOrders();
+}
+
+// ── DARK/LIGHT TOGGLE ──
+function toggleTheme() {
+    const light = document.body.classList.toggle('light');
+    const btn = document.getElementById('theme-btn');
+    if (btn) btn.textContent = light ? '☀️ Light' : '🌙 Dark';
+    try { localStorage.setItem('owTheme', light?'light':'dark'); } catch(e){}
+}
+(function(){
+    try { if(localStorage.getItem('owTheme')==='light'){ document.body.classList.add('light'); const b=document.getElementById('theme-btn'); if(b) b.textContent='☀️ Light'; } } catch(e){}
+})();
+
+// ── UPDATE SPLIT CARDS ──
+function updateSplitCards() {
+    const ihA=assetsData.filter(a=>(a.ppm_type||'inhouse')!=='vendor').length;
+    const vdA=assetsData.filter(a=>a.ppm_type==='vendor').length;
+    let ihO=0,ihOv=0,vdO=0,vdOv=0;
+    _currentWorkOrders.forEach(wo=>{
+        const pt=wo.ppm_type||'inhouse', st=getWOStatus(wo);
+        if(st==='completed'||st==='closed') return;
+        if(pt==='vendor'){vdO++;if(st==='overdue')vdOv++;} else {ihO++;if(st==='overdue')ihOv++;}
+    });
+    const si=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+    si('ih-assets',ihA);si('ih-open',ihO);si('ih-overdue',ihOv);
+    si('vd-assets',vdA);si('vd-open',vdO);si('vd-overdue',vdOv);
+}
+</script>
+</body>
+</html>

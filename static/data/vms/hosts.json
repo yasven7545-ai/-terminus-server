@@ -1,0 +1,54 @@
+[
+  {
+    "id": "H001",
+    "name": "Mr. Kiran Kumar",
+    "unit": "101",
+    "floor": "1",
+    "phone": "+919963570009",
+    "email": "kiran@terminus-global.com",
+    "whatsapp": "+919963570009",
+    "type": "Owner",
+    "active": true,
+    "updated_by": "USER",
+    "updated_at": "2026-03-02T13:35:24"
+  },
+  {
+    "id": "H002",
+    "name": "Mr. Madhav Reddy",
+    "unit": "205",
+    "floor": "2",
+    "phone": "+918374502323",
+    "email": "madhav.reddy@terminus-global.com",
+    "whatsapp": "918374502323",
+    "type": "Owner",
+    "active": true,
+    "updated_by": "USER",
+    "updated_at": "2026-03-02T13:36:53"
+  },
+  {
+    "id": "H003",
+    "name": "Venu Ch",
+    "unit": "310",
+    "floor": "3",
+    "phone": "+917981397300",
+    "email": "yasven7545@gmail.com",
+    "whatsapp": "917981397300",
+    "type": "Staff",
+    "active": true,
+    "updated_by": "USER",
+    "updated_at": "2026-03-02T13:37:36"
+  },
+  {
+    "id": "H004",
+    "name": "MEP Desk",
+    "unit": "G-01",
+    "floor": "Ground",
+    "phone": "+918142295959",
+    "email": "maintenance.slnterminus@gmail.com",
+    "whatsapp": "917981397300",
+    "type": "Staff",
+    "active": true,
+    "updated_by": "USER",
+    "updated_at": "2026-03-02T13:38:04"
+  }
+]

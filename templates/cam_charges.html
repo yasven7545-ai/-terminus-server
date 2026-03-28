@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5"/>
+<title>CAM Billing — SLN Terminus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════ TOKENS ═══════════════════════ */
+:root{
+  --r:14px;--rsm:9px;--rxs:6px;
+  --ease:cubic-bezier(.4,0,.2,1);--bounce:cubic-bezier(.34,1.4,.64,1);
+  --hh:58px;--sbw:260px;
+  --teal:#00d9c8;--teal-g:rgba(0,217,200,.13);--teal-d:rgba(0,217,200,.06);
+  --coral:#ff6b6b;--coral-g:rgba(255,107,107,.13);--coral-d:rgba(255,107,107,.06);
+  --gold:#ffd166;--gold-g:rgba(255,209,102,.13);--gold-d:rgba(255,209,102,.06);
+  --mint:#06d6a0;--mint-g:rgba(6,214,160,.13);--mint-d:rgba(6,214,160,.06);
+  --sky:#4cc9f0;--sky-g:rgba(76,201,240,.13);
+  --violet:#a855f7;--violet-g:rgba(168,85,247,.13);
+  --rose:#f72585;
+}
+[data-theme="dark"]{
+  --bg:#050912;--bg2:#080d1c;--surf:#0c1428;--surf2:#101b35;
+  --card:#0e1930;--card2:#0b1526;
+  --bdr:rgba(255,255,255,.06);--bdr2:rgba(255,255,255,.1);
+  --tx:#e8f0ff;--tx2:#7a9ac0;--tx3:#2d4060;
+  --hdr-bg:rgba(5,9,18,.96);--sb-bg:rgba(7,11,24,.98);
+  --sh:0 20px 60px rgba(0,0,0,.7);
+}
+[data-theme="light"]{
+  --bg:#f0f4ff;--bg2:#e8eeff;--surf:#ffffff;--surf2:#f5f7ff;
+  --card:#ffffff;--card2:#f8faff;
+  --bdr:rgba(0,0,0,.07);--bdr2:rgba(0,0,0,.13);
+  --tx:#0d1830;--tx2:#4a5f80;--tx3:#b0c0d8;
+  --hdr-bg:rgba(240,244,255,.96);--sb-bg:rgba(248,250,255,.99);
+  --sh:0 8px 32px rgba(0,0,0,.1);
+}
+
+/* ═══════════════════════ RESET ═══════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--tx);
+  min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s;}
+button{cursor:pointer;font-family:inherit;border:none;background:none;}
+input,select,textarea{font-family:inherit;}
+a{text-decoration:none;color:inherit;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:4px;}
+
+/* ═══════════════════════ BG ═══════════════════════ */
+.bg-fx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.bg-orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.22;
+  animation:orb-drift 18s ease-in-out infinite alternate;}
+.bg-orb-1{width:600px;height:600px;top:-200px;left:-150px;
+  background:radial-gradient(circle,var(--teal),transparent 70%);animation-delay:0s;}
+.bg-orb-2{width:500px;height:500px;top:40%;right:-180px;
+  background:radial-gradient(circle,var(--violet),transparent 70%);animation-delay:-6s;}
+.bg-orb-3{width:400px;height:400px;bottom:-100px;left:40%;
+  background:radial-gradient(circle,var(--coral),transparent 70%);animation-delay:-12s;}
+[data-theme="light"] .bg-orb{opacity:.07;}
+@keyframes orb-drift{from{transform:translate(0,0) scale(1)}to{transform:translate(30px,20px) scale(1.08)}}
+.bg-grid{position:absolute;inset:0;opacity:.025;
+  background-image:linear-gradient(var(--tx) 1px,transparent 1px),linear-gradient(90deg,var(--tx) 1px,transparent 1px);
+  background-size:40px 40px;}
+[data-theme="light"] .bg-grid{opacity:.05;}
+
+/* ═══════════════════════ HEADER ═══════════════════════ */
+.header{
+  position:fixed;top:0;left:0;right:0;z-index:600;
+  height:var(--hh);background:var(--hdr-bg);
+  backdrop-filter:blur(24px) saturate(160%);
+  border-bottom:1px solid var(--bdr);
+  display:flex;align-items:center;padding:0 18px;gap:10px;
+  transition:background .3s,border-color .3s;
+}
+/* hamburger (mobile) */
+.mob-menu-btn{
+  display:none;width:34px;height:34px;border-radius:var(--rxs);
+  background:var(--surf2);border:1px solid var(--bdr2);
+  align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;
+}
+.mob-menu-btn svg{width:16px;height:16px;stroke:var(--tx2);fill:none;stroke-width:2;stroke-linecap:round;}
+/* brand */
+.brand-mark{
+  width:34px;height:34px;border-radius:var(--rsm);flex-shrink:0;
+  background:linear-gradient(135deg,var(--teal),#00a89b);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fraunces',serif;font-weight:900;font-size:16px;color:#000;
+  box-shadow:0 0 16px rgba(0,217,200,.4);position:relative;
+}
+.brand-mark::after{
+  content:'';position:absolute;inset:-3px;border-radius:12px;
+  border:1px solid rgba(0,217,200,.3);
+  animation:pulse-ring 2.5s ease infinite;
+}
+@keyframes pulse-ring{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0;transform:scale(1.2)}}
+.hdr-titles{min-width:0;}
+.hdr-title{
+  font-family:'Fraunces',serif;font-size:16px;font-weight:900;line-height:1.1;
+  background:linear-gradient(90deg,var(--teal),var(--mint),var(--sky));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap;
+}
+.hdr-sub{
+  font-family:'JetBrains Mono',monospace;font-size:8.5px;
+  color:var(--tx2);letter-spacing:1.8px;text-transform:uppercase;white-space:nowrap;
+}
+/* live badge */
+.live-badge{
+  display:flex;align-items:center;gap:5px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--mint);padding:4px 10px;border-radius:20px;
+  background:var(--mint-g);border:1px solid rgba(6,214,160,.22);
+  white-space:nowrap;
+}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--mint);
+  animation:live-pulse 2s ease infinite;}
+@keyframes live-pulse{0%{box-shadow:0 0 0 0 rgba(6,214,160,.6)}70%{box-shadow:0 0 0 6px rgba(6,214,160,0)}100%{box-shadow:0 0 0 0 rgba(6,214,160,0)}}
+/* right side */
+.hdr-right{display:flex;align-items:center;gap:7px;margin-left:auto;flex-shrink:0;}
+.hdr-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:6px 13px;border-radius:var(--rsm);
+  background:var(--surf2);border:1px solid var(--bdr2);
+  color:var(--tx2);font-size:12px;font-weight:600;
+  transition:all .2s;white-space:nowrap;cursor:pointer;
+}
+.hdr-btn:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-d);}
+.hdr-btn.primary{background:var(--teal);color:#000;border-color:var(--teal);font-weight:700;}
+.hdr-btn.primary:hover{background:#00c0b0;box-shadow:0 4px 18px rgba(0,217,200,.4);}
+.hdr-btn svg{width:12px;height:12px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;}
+.upload-wrap{position:relative;overflow:hidden;}
+.upload-wrap input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+/* theme toggle */
+.theme-toggle{
+  display:flex;align-items:center;gap:6px;
+  background:var(--surf2);border:1px solid var(--bdr2);
+  border-radius:20px;padding:5px 9px;cursor:pointer;
+  transition:all .2s;font-size:12px;color:var(--tx2);
+}
+.theme-toggle:hover{border-color:var(--teal);color:var(--teal);}
+.tt-track{width:28px;height:15px;border-radius:10px;background:var(--surf2);
+  border:1px solid var(--bdr2);position:relative;transition:background .3s;}
+[data-theme="light"] .tt-track{background:var(--teal);}
+.tt-thumb{width:11px;height:11px;border-radius:50%;background:var(--tx3);
+  position:absolute;top:1px;left:1px;transition:transform .3s,background .3s;}
+[data-theme="light"] .tt-thumb{transform:translateX(13px);background:#fff;}
+/* portal btn — gold blinking */
+.portal-btn{
+  display:flex;align-items:center;gap:7px;
+  padding:6px 14px;border-radius:var(--rsm);
+  border:1px solid rgba(255,209,102,.4);
+  color:var(--gold);font-size:12px;font-weight:700;
+  background:rgba(255,209,102,.08);transition:all .2s;white-space:nowrap;
+}
+.portal-btn:hover{background:rgba(255,209,102,.18);border-color:var(--gold);box-shadow:0 0 16px rgba(255,209,102,.25);}
+.portal-blink{width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;
+  animation:gold-blink 1.4s ease-in-out infinite;}
+@keyframes gold-blink{
+  0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,209,102,.8)}
+  50%{opacity:.25;box-shadow:0 0 0 8px rgba(255,209,102,0)}
+}
+
+/* ═══════════════════════ LAYOUT ═══════════════════════ */
+.layout{
+  display:flex;padding-top:var(--hh);min-height:100vh;position:relative;z-index:1;
+}
+/* overlay for mobile */
+.sb-overlay{
+  display:none;position:fixed;inset:0;z-index:450;
+  background:rgba(0,0,0,.7);backdrop-filter:blur(3px);
+}
+.sb-overlay.show{display:block;}
+
+/* ═══════════════════════ SIDEBAR ═══════════════════════ */
+.sidebar{
+  width:var(--sbw);flex-shrink:0;
+  background:var(--sb-bg);border-right:1px solid var(--bdr);
+  position:fixed;top:var(--hh);bottom:0;left:0;
+  overflow-y:auto;z-index:500;
+  transition:transform .28s var(--ease);
+  display:flex;flex-direction:column;
+}
+.sidebar::-webkit-scrollbar{width:3px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--bdr2);}
+.sb-head{padding:16px 14px 10px;}
+.sb-head-lbl{
+  font-family:'JetBrains Mono',monospace;font-size:8px;
+  letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:8px;
+}
+.sb-section{padding:6px 8px;flex:1;}
+.sb-item{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 10px;border-radius:var(--rsm);margin-bottom:2px;
+  cursor:pointer;transition:all .16s;border:1px solid transparent;
+  animation:sb-in .3s var(--ease) both;
+}
+@keyframes sb-in{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+.sb-item:hover{background:var(--surf2);}
+.sb-item.active{background:var(--teal-g);border-color:rgba(0,217,200,.25);}
+.sb-item.active .sb-item-num{background:var(--teal);color:#000;border-color:var(--teal);}
+.sb-item.active .sb-item-lbl{color:var(--teal);}
+.sb-item-num{
+  width:22px;height:22px;border-radius:6px;flex-shrink:0;
+  background:var(--surf2);border:1px solid var(--bdr2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:var(--tx2);
+  transition:all .16s;
+}
+.sb-item-ic{font-size:13px;flex-shrink:0;}
+.sb-item-lbl{font-size:12px;font-weight:500;color:var(--tx2);flex:1;transition:color .16s;}
+.sb-counter{
+  font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;
+  padding:2px 7px;border-radius:10px;background:var(--surf);border:1px solid var(--bdr2);
+  color:var(--tx2);flex-shrink:0;cursor:pointer;transition:all .16s;
+}
+.sb-counter:hover{background:var(--teal-g);border-color:rgba(0,217,200,.3);color:var(--teal);}
+.sb-counter.has-data{background:var(--coral-g);border-color:rgba(255,107,107,.3);color:var(--coral);}
+.sb-footer{
+  padding:12px 10px;border-top:1px solid var(--bdr);
+  font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--tx3);text-align:center;
+}
+/* divider label */
+.sb-divider{
+  padding:10px 12px 4px;
+  font-family:'JetBrains Mono',monospace;font-size:8px;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);
+}
+
+/* ═══════════════════════ MAIN CONTENT ═══════════════════════ */
+.main{
+  flex:1;min-width:0;margin-left:var(--sbw);
+  padding:22px 20px 80px;
+  transition:margin-left .28s var(--ease);
+}
+
+/* ═══════════════════════ STATUS BAR ═══════════════════════ */
+.status-bar{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;border-radius:var(--rsm);margin-bottom:20px;
+  background:var(--surf);border:1px solid var(--bdr);
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx2);
+  transition:all .3s;
+}
+.status-bar.ok  {border-color:rgba(6,214,160,.35);color:var(--mint);background:var(--mint-d);}
+.status-bar.err {border-color:rgba(255,107,107,.35);color:var(--coral);background:var(--coral-d);}
+.status-bar.wait{border-color:rgba(255,209,102,.35);color:var(--gold);background:var(--gold-d);}
+.s-dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex-shrink:0;animation:live-pulse 2s infinite;}
+
+/* ═══════════════════════ STAT CARDS ═══════════════════════ */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+@media(max-width:900px){.stats-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:480px){.stats-grid{grid-template-columns:repeat(2,1fr);gap:10px;}}
+.stat-card{
+  background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);
+  padding:18px 20px;position:relative;overflow:hidden;
+  transition:transform .25s var(--ease),border-color .25s,box-shadow .25s;
+  animation:card-up .5s var(--ease) both;cursor:pointer;
+}
+.stat-card:hover{transform:translateY(-3px);box-shadow:var(--sh);}
+.stat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  border-radius:var(--r) var(--r) 0 0;
+}
+.sc-teal::before {background:linear-gradient(90deg,var(--teal),var(--sky));}
+.sc-teal:hover   {border-color:rgba(0,217,200,.35);}
+.sc-mint::before {background:linear-gradient(90deg,var(--mint),var(--teal));}
+.sc-mint:hover   {border-color:rgba(6,214,160,.35);}
+.sc-coral::before{background:linear-gradient(90deg,var(--coral),#ff8c42);}
+.sc-coral:hover  {border-color:rgba(255,107,107,.35);}
+.sc-gold::before {background:linear-gradient(90deg,var(--gold),#ffb347);}
+.sc-gold:hover   {border-color:rgba(255,209,102,.35);}
+@keyframes card-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.stat-card:nth-child(1){animation-delay:.05s}
+.stat-card:nth-child(2){animation-delay:.1s}
+.stat-card:nth-child(3){animation-delay:.15s}
+.stat-card:nth-child(4){animation-delay:.2s}
+.stat-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;}
+.stat-ico{width:42px;height:42px;border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.stat-trend{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;letter-spacing:.05em;}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;color:var(--tx2);margin-bottom:5px;}
+.stat-val{font-family:'Fraunces',serif;font-size:26px;font-weight:700;line-height:1;}
+.stat-val.sm{font-size:19px;}
+.stat-sub{font-size:11px;color:var(--tx2);margin-top:5px;}
+
+/* ═══════════════════════ SCHEDULE PANEL ═══════════════════════ */
+.schedule-panel{
+  background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);
+  padding:18px 20px;margin-bottom:20px;
+  animation:card-up .5s var(--ease) .25s both;
+}
+.schedule-header{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;margin-bottom:16px;
+}
+.schedule-title{font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px;}
+.sch-meta{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+/* stats row */
+.sch-stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+.sch-stat{
+  flex:1;min-width:90px;background:var(--surf2);border:1px solid var(--bdr);
+  border-radius:var(--rsm);padding:9px 12px;
+}
+.sch-stat-lbl{font-size:8px;letter-spacing:.8px;text-transform:uppercase;
+  color:var(--tx3);font-family:'JetBrains Mono',monospace;margin-bottom:4px;}
+.sch-stat-val{font-size:16px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--tx);}
+/* email mgr */
+.email-mgr{margin-bottom:16px;}
+.email-mgr-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.email-mgr-title{font-size:11px;font-weight:600;color:var(--tx2);}
+.btn-add-email{
+  height:26px;padding:0 11px;border-radius:6px;font-size:10px;font-weight:600;
+  background:var(--violet-g);border:1px solid rgba(168,85,247,.35);color:var(--violet);
+  cursor:pointer;transition:all .18s;
+}
+.btn-add-email:hover{background:rgba(168,85,247,.22);}
+.add-email-form{
+  display:none;align-items:center;gap:8px;flex-wrap:wrap;
+  background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--rsm);
+  padding:10px 12px;margin-bottom:10px;
+}
+.add-email-form.show{display:flex;}
+.email-inp{
+  flex:1;min-width:160px;height:30px;background:var(--card);
+  border:1px solid var(--bdr2);border-radius:6px;padding:0 10px;
+  font-size:12px;color:var(--tx);outline:none;transition:border-color .2s;
+}
+.email-inp:focus{border-color:var(--violet);}
+.btn-e-save{
+  height:30px;padding:0 13px;border-radius:6px;font-size:11px;font-weight:600;
+  background:var(--teal-g);border:1px solid rgba(0,217,200,.35);color:var(--teal);cursor:pointer;transition:all .18s;
+}
+.btn-e-save:hover{background:rgba(0,217,200,.22);}
+.btn-e-cancel{
+  height:30px;padding:0 13px;border-radius:6px;font-size:11px;font-weight:600;
+  background:var(--surf2);border:1px solid var(--bdr2);color:var(--tx2);cursor:pointer;transition:all .18s;
+}
+.btn-e-cancel:hover{border-color:var(--coral);color:var(--coral);}
+.email-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.email-chip{
+  display:inline-flex;align-items:center;gap:5px;padding:4px 6px 4px 11px;
+  border-radius:20px;font-size:11px;font-family:'JetBrains Mono',monospace;
+  background:var(--surf2);border:1px solid var(--bdr2);color:var(--tx2);transition:border-color .15s;
+}
+.email-chip:hover{border-color:var(--teal);}
+.email-chip.from-excel{border-color:rgba(0,217,200,.2);color:var(--teal);}
+.chip-src{font-size:8.5px;opacity:.5;}
+.chip-btn{
+  width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+  font-size:10px;cursor:pointer;transition:all .15s;flex-shrink:0;
+}
+.chip-edit{background:rgba(0,217,200,.12);color:var(--teal);}
+.chip-edit:hover{background:rgba(0,217,200,.28);}
+.chip-del{background:rgba(255,107,107,.12);color:var(--coral);}
+.chip-del:hover{background:rgba(255,107,107,.28);}
+/* smtp badge */
+.smtp-badge{
+  font-size:10px;font-family:'JetBrains Mono',monospace;
+  padding:2px 8px;border-radius:10px;font-weight:600;border:1px solid;
+}
+.smtp-badge.ok  {background:var(--mint-g);border-color:rgba(6,214,160,.3);color:var(--mint);}
+.smtp-badge.warn{background:var(--gold-g);border-color:rgba(255,209,102,.3);color:var(--gold);}
+/* run now btn */
+.btn-run-now{
+  display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 12px;
+  border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;
+  background:var(--teal-g);border:1px solid rgba(0,217,200,.35);color:var(--teal);
+  transition:all .2s;
+}
+.btn-run-now:hover:not(:disabled){background:rgba(0,217,200,.22);}
+.btn-run-now:disabled{opacity:.4;cursor:not-allowed;}
+/* timeline */
+.schedule-timeline{display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding-bottom:4px;}
+.sch-step{display:flex;flex-direction:column;align-items:center;min-width:88px;flex-shrink:0;position:relative;}
+.sch-step:not(:last-child)::after{content:'';position:absolute;top:16px;left:50%;right:-50%;height:2px;background:var(--bdr2);z-index:0;}
+.sch-node{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace;
+  border:2px solid;z-index:1;position:relative;flex-shrink:0;background:var(--surf);}
+.sch-label{font-size:9.5px;font-weight:600;color:var(--tx2);margin-top:6px;text-align:center;line-height:1.3;}
+.sch-sublabel{font-size:8.5px;color:var(--tx3);font-family:'JetBrains Mono',monospace;text-align:center;}
+.sch-d1 {border-color:var(--gold);color:var(--gold);}
+.sch-d3 {border-color:var(--gold);color:var(--gold);}
+.sch-d7 {border-color:#ff8c42;color:#ff8c42;}
+.sch-inf{border-color:var(--violet);color:var(--violet);animation:pulse-badge 2s ease infinite;}
+@keyframes pulse-badge{0%,100%{box-shadow:0 0 0 0 rgba(168,85,247,.5)}50%{box-shadow:0 0 0 8px rgba(168,85,247,0)}}
+
+/* ═══════════════════════ CONTROLS ═══════════════════════ */
+.controls{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;}
+.controls-left{display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.controls-right{display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.search-box{position:relative;display:flex;align-items:center;}
+.search-box svg{position:absolute;left:10px;color:var(--tx2);width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;}
+.search-inp{
+  background:var(--surf);border:1px solid var(--bdr2);border-radius:20px;
+  color:var(--tx);padding:8px 13px 8px 32px;font-size:12.5px;width:210px;transition:all .3s;
+}
+.search-inp:focus{outline:none;border-color:var(--teal);width:250px;box-shadow:0 0 0 3px var(--teal-g);}
+.search-inp::placeholder{color:var(--tx2);}
+.filter-tabs{display:flex;gap:4px;}
+.ftab{padding:6px 13px;border-radius:20px;font-size:11.5px;font-weight:600;
+  cursor:pointer;border:1px solid var(--bdr2);background:var(--surf);
+  color:var(--tx2);transition:all .18s;white-space:nowrap;}
+.ftab.active{border-color:var(--teal);color:var(--teal);background:var(--teal-g);}
+.ftab:hover:not(.active){color:var(--tx);}
+.ftab-overdue.active{border-color:var(--coral);color:var(--coral);background:var(--coral-g);}
+.ftab-pending.active{border-color:var(--gold);color:var(--gold);background:var(--gold-g);}
+.ftab-settled.active{border-color:var(--mint);color:var(--mint);background:var(--mint-g);}
+.row-chip{font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--tx2);background:var(--surf2);border:1px solid var(--bdr);padding:5px 11px;border-radius:20px;}
+
+/* ═══════════════════════ TABLE ═══════════════════════ */
+.table-card{
+  background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);
+  overflow:hidden;box-shadow:var(--sh);animation:card-up .5s var(--ease) .3s both;
+}
+.table-card-hd{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  padding:14px 20px;border-bottom:1px solid var(--bdr);background:var(--surf2);
+}
+.table-card-title{font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px;}
+.tch-right{display:flex;align-items:center;gap:10px;}
+.updated-tag{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tx2);}
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;min-width:1100px;}
+thead{background:var(--surf2);position:sticky;top:0;z-index:10;}
+th{padding:10px 13px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:8.5px;
+  font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx2);
+  border-bottom:1px solid var(--bdr);white-space:nowrap;}
+th.r{text-align:right;}
+td{padding:12px 13px;font-size:12.5px;color:var(--tx);border-bottom:1px solid var(--bdr);vertical-align:middle;}
+tbody tr{transition:background .12s;}
+tbody tr:hover td{background:rgba(0,217,200,.02);}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr.row-overdue{background:rgba(255,107,107,.02);}
+tbody tr.row-overdue:hover td{background:rgba(255,107,107,.04);}
+td.mono{font-family:'JetBrains Mono',monospace;font-size:11.5px;}
+td.money{font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;text-align:right;}
+td.c{text-align:center;}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;
+  font-size:9.5px;font-weight:700;font-family:'JetBrains Mono',monospace;white-space:nowrap;}
+.badge-overdue{background:var(--coral-g);color:var(--coral);border:1px solid rgba(255,107,107,.3);}
+.badge-pending{background:var(--gold-g);color:var(--gold);border:1px solid rgba(255,209,102,.3);}
+.badge-settled{background:var(--mint-g);color:var(--mint);border:1px solid rgba(6,214,160,.3);}
+.severity-pill{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:10px;
+  font-size:9px;font-weight:700;font-family:'JetBrains Mono',monospace;white-space:nowrap;}
+.sev-warn  {background:rgba(255,209,102,.15);color:var(--gold);border:1px solid rgba(255,209,102,.3);}
+.sev-alert {background:rgba(255,140,66,.15);color:#ff8c42;border:1px solid rgba(255,140,66,.3);}
+.sev-danger{background:rgba(255,107,107,.15);color:var(--coral);border:1px solid rgba(255,107,107,.3);}
+.sev-crit  {background:rgba(247,37,133,.15);color:var(--rose);border:1px solid rgba(247,37,133,.3);animation:pulse-badge 1.5s ease infinite;}
+.btn-act{
+  padding:4px 10px;border-radius:var(--rxs);border:1px solid;cursor:pointer;
+  font-size:10.5px;font-weight:700;font-family:'Outfit',sans-serif;
+  display:inline-flex;align-items:center;gap:4px;transition:all .18s;white-space:nowrap;
+}
+.btn-act svg{width:10px;height:10px;}
+.btn-act.remind-overdue{background:var(--coral-g);color:var(--coral);border-color:rgba(255,107,107,.35);}
+.btn-act.remind-pending{background:var(--gold-g);color:var(--gold);border-color:rgba(255,209,102,.35);}
+.btn-act.remind-sent   {background:var(--mint-g);color:var(--mint);border-color:rgba(6,214,160,.35);}
+.btn-act:hover:not(.remind-sent){transform:translateY(-1px);filter:brightness(1.15);}
+.overdue-days{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--coral);font-weight:700;}
+.table-footer{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  padding:12px 20px;border-top:1px solid var(--bdr);background:var(--surf2);
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx2);
+}
+.foot-totals{display:flex;gap:16px;flex-wrap:wrap;}
+.foot-totals b{font-weight:700;margin-left:3px;}
+
+/* ═══════════════════════ MODAL ═══════════════════════ */
+.modal-overlay{
+  position:fixed;inset:0;z-index:800;
+  background:rgba(0,0,0,.85);backdrop-filter:blur(10px);
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  opacity:0;visibility:hidden;transition:all .28s;
+}
+.modal-overlay.open{opacity:1;visibility:visible;}
+.modal-box{
+  background:var(--card2);border:1px solid var(--bdr2);border-radius:var(--r);
+  width:100%;max-width:560px;max-height:94vh;overflow-y:auto;
+  box-shadow:0 30px 80px rgba(0,0,0,.7);
+  transform:translateY(24px) scale(.96);transition:transform .3s var(--bounce);
+}
+.modal-overlay.open .modal-box{transform:none;}
+.modal-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 22px;border-bottom:1px solid var(--bdr);
+  position:sticky;top:0;background:var(--card2);z-index:10;
+}
+.modal-hd-title{font-family:'Fraunces',serif;font-size:17px;font-weight:700;
+  display:flex;align-items:center;gap:10px;color:var(--tx);}
+.modal-hd-title .ico{width:34px;height:34px;border-radius:var(--rsm);
+  background:var(--coral-g);border:1px solid rgba(255,107,107,.3);
+  display:flex;align-items:center;justify-content:center;color:var(--coral);font-size:15px;}
+.modal-close{width:30px;height:30px;border-radius:var(--rxs);
+  background:var(--surf2);border:1px solid var(--bdr);color:var(--tx2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .18s;}
+.modal-close:hover{border-color:var(--coral);color:var(--coral);}
+.modal-body{padding:20px 22px;}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+@media(max-width:500px){.info-grid{grid-template-columns:1fr;}}
+.info-tile{background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--rsm);padding:11px 13px;}
+.info-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--tx2);margin-bottom:4px;}
+.info-val{font-weight:700;font-size:13px;color:var(--tx);}
+.info-val.red{color:var(--coral);}
+.info-val.mono{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--teal);}
+.severity-alert{
+  display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:var(--rsm);
+  margin-bottom:14px;font-size:12.5px;font-weight:600;
+}
+.severity-alert.warn  {background:var(--gold-g);color:var(--gold);border:1px solid rgba(255,209,102,.3);}
+.severity-alert.danger{background:var(--coral-g);color:var(--coral);border:1px solid rgba(255,107,107,.3);}
+.severity-alert.crit  {background:rgba(247,37,133,.1);color:var(--rose);border:1px solid rgba(247,37,133,.3);}
+.field{margin-bottom:13px;}
+.field label{display:block;margin-bottom:5px;font-family:'JetBrains Mono',monospace;
+  font-size:8.5px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;color:var(--tx2);}
+.field textarea{width:100%;background:var(--surf);border:1px solid var(--bdr2);
+  border-radius:var(--rsm);color:var(--tx);padding:11px 13px;font-size:12.5px;
+  line-height:1.65;resize:vertical;min-height:140px;transition:border-color .2s;}
+.field textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-g);}
+.field input{width:100%;background:var(--surf);border:1px solid var(--bdr2);
+  border-radius:var(--rsm);color:var(--tx);padding:9px 13px;font-size:12.5px;transition:border-color .2s;}
+.field input:focus{outline:none;border-color:var(--teal);}
+.modal-ft{display:flex;justify-content:flex-end;gap:9px;
+  padding:14px 22px;border-top:1px solid var(--bdr);background:var(--surf2);}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--rsm);
+  font-family:'Outfit',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.btn svg{width:12px;height:12px;}
+.btn-ghost{background:var(--surf2);color:var(--tx2);border:1px solid var(--bdr2);}
+.btn-ghost:hover{color:var(--tx);}
+.btn-coral{background:var(--coral);color:#fff;border:none;box-shadow:0 4px 18px rgba(255,107,107,.3);}
+.btn-coral:hover{background:#e85555;}
+
+/* edit email modal */
+.edit-modal{position:fixed;inset:0;z-index:900;display:none;
+  align-items:center;justify-content:center;padding:20px;
+  background:rgba(0,0,0,.8);backdrop-filter:blur(8px);}
+.edit-modal.open{display:flex;}
+.edit-modal-box{
+  background:var(--card2);border:1px solid var(--bdr2);border-radius:var(--r);
+  width:100%;max-width:380px;box-shadow:0 24px 60px rgba(0,0,0,.6);
+  transform:scale(.95);transition:transform .25s var(--bounce);
+}
+.edit-modal.open .edit-modal-box{transform:none;}
+.edit-modal-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid var(--bdr);
+}
+.edit-modal-title{font-weight:700;font-size:13px;}
+.edit-modal-body{padding:18px 20px;}
+
+/* ═══════════════════════ EMPTY STATE ═══════════════════════ */
+.empty{padding:70px 20px;text-align:center;color:var(--tx2);}
+.empty-icon{font-size:44px;margin-bottom:14px;opacity:.28;}
+.empty h3{font-family:'Fraunces',serif;font-size:18px;color:var(--tx);margin-bottom:7px;}
+.empty p{font-size:12.5px;max-width:300px;margin:0 auto 20px;line-height:1.7;}
+.upload-cta{
+  display:inline-flex;align-items:center;gap:7px;background:var(--teal);color:#000;
+  font-weight:700;padding:9px 20px;border-radius:var(--rsm);font-size:12.5px;
+  cursor:pointer;position:relative;overflow:hidden;box-shadow:0 4px 18px rgba(0,217,200,.35);
+}
+.upload-cta input{position:absolute;inset:0;opacity:0;cursor:pointer;}
+
+/* ═══════════════════════ TOAST ═══════════════════════ */
+.toast{
+  position:fixed;bottom:22px;right:22px;z-index:9000;
+  background:var(--card2);border:1px solid var(--bdr2);border-radius:var(--rsm);
+  padding:12px 16px;display:flex;align-items:center;gap:9px;
+  font-size:12.5px;font-weight:600;box-shadow:var(--sh);
+  opacity:0;transform:translateY(14px);transition:all .3s;pointer-events:none;max-width:320px;
+}
+.toast.show{opacity:1;transform:none;}
+.t-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.t-ok .t-dot {background:var(--mint);}
+.t-err .t-dot{background:var(--coral);}
+.t-info .t-dot{background:var(--gold);}
+
+/* ═══════════════════════ RESPONSIVE ═══════════════════════ */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .mob-menu-btn{display:flex;}
+  .main{margin-left:0;padding:16px 12px 70px;}
+  .live-badge,.hdr-btn.hide-sm{display:none;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .filter-tabs{gap:3px;}
+  .ftab{padding:5px 9px;font-size:10.5px;}
+  .schedule-panel{padding:14px 14px;}
+  .sch-stats{gap:7px;}
+  .sch-stat{min-width:70px;padding:7px 9px;}
+  .search-inp{width:150px;}
+  .search-inp:focus{width:170px;}
+  .header{padding:0 12px;gap:7px;}
+  .hdr-title{font-size:14px;}
+}
+@media(max-width:480px){
+  .stat-val{font-size:20px;}
+  .stat-val.sm{font-size:16px;}
+  .portal-btn span.port-txt{display:none;}
+  .hdr-btn span.hbtn-txt{display:none;}
+}
+
+/* ═══════════════════════ SPINNER ═══════════════════════ */
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.spin{animation:spin .7s linear infinite;display:inline-block;}
+</style>
+</head>
+<body>
+
+<!-- BG -->
+<div class="bg-fx">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+  <div class="bg-grid"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span class="t-dot"></span><span id="toastMsg"></span></div>
+
+<!-- REMINDER MODAL -->
+<div class="modal-overlay" id="reminderModal">
+  <div class="modal-box">
+    <div class="modal-hd">
+      <div class="modal-hd-title"><div class="ico">🔔</div>Manual Reminder</div>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="severityAlert"></div>
+      <div class="info-grid">
+        <div class="info-tile"><div class="info-lbl">Client</div><div class="info-val" id="mClient">—</div></div>
+        <div class="info-tile"><div class="info-lbl">Invoice No</div><div class="info-val mono" id="mInvoice">—</div></div>
+        <div class="info-tile"><div class="info-lbl">Outstanding</div><div class="info-val red" id="mAmount">—</div></div>
+        <div class="info-tile"><div class="info-lbl">Days Overdue</div><div class="info-val red" id="mOverdueDays">—</div></div>
+        <div class="info-tile" style="grid-column:1/-1"><div class="info-lbl">Recipient Email</div><div class="info-val mono" id="mEmail">—</div></div>
+      </div>
+      <div class="field"><label>Subject</label><input type="text" id="reminderSubject" placeholder="Reminder subject…"/></div>
+      <div class="field"><label>Message</label><textarea id="reminderMsg" rows="7"></textarea></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" id="modalCancel">Cancel</button>
+      <button class="btn btn-coral" id="sendBtn">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2L2 7l5 2 2 5 5-12z"/></svg>
+        Send Reminder
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT EMAIL MODAL -->
+<div class="edit-modal" id="editEmailModal">
+  <div class="edit-modal-box">
+    <div class="edit-modal-hd">
+      <div class="edit-modal-title">✎ Edit Email Address</div>
+      <button class="modal-close" onclick="closeEditEmail()">✕</button>
+    </div>
+    <div class="edit-modal-body">
+      <input type="email" id="editEmailInp" class="email-inp" style="width:100%;margin-bottom:12px;" placeholder="name@example.com"/>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-e-save" style="flex:1;height:34px;border-radius:8px;font-size:12px;" onclick="saveEditEmail()">Save</button>
+        <button class="btn-e-cancel" style="flex:1;height:34px;border-radius:8px;font-size:12px;" onclick="closeEditEmail()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR OVERLAY (mobile) -->
+<div class="sb-overlay" id="sbOverlay"></div>
+
+<!-- HEADER -->
+<header class="header">
+  <button class="mob-menu-btn" id="mobMenuBtn">
+    <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <div class="brand-mark">₹</div>
+  <div class="hdr-titles">
+    <div class="hdr-title">CAM Billing</div>
+    <div class="hdr-sub">SLN Terminus · Invoice Tracker</div>
+  </div>
+  <div class="live-badge"><div class="live-dot"></div><span id="syncLabel">LIVE</span></div>
+
+  <div class="hdr-right">
+    <!-- Theme toggle -->
+    <div class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">
+      <span>☀️</span>
+      <div class="tt-track"><div class="tt-thumb"></div></div>
+      <span>🌙</span>
+    </div>
+
+    <label class="hdr-btn upload-wrap hide-sm" title="Upload Excel">
+      <svg viewBox="0 0 16 16"><path d="M8 10V3M5 6l3-3 3 3"/><path d="M2 12h12"/></svg>
+      <span class="hbtn-txt">Upload</span>
+      <input type="file" id="excelFile" accept=".xlsx,.xls" onchange="handleUpload(this)"/>
+    </label>
+    <button class="hdr-btn hide-sm" id="refreshBtn" onclick="loadData()" title="Refresh">
+      <svg id="refreshIco" viewBox="0 0 16 16"><path d="M2 8a6 6 0 1 1 1.5 4"/><path d="M2 12V8h4"/></svg>
+      <span class="hbtn-txt">Refresh</span>
+    </button>
+    <button class="hdr-btn hide-sm" onclick="exportData()" title="Export">
+      <svg viewBox="0 0 16 16"><path d="M8 3v7M5 7l3 3 3-3"/><path d="M2 12h12"/></svg>
+      <span class="hbtn-txt">Export</span>
+    </button>
+    <!-- Portal button — gold blinking -->
+    <a href="/sln_terminus" class="portal-btn">
+      <div class="portal-blink"></div>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11" stroke-linecap="round"><path d="M10 12L6 8l4-4"/></svg>
+      <span class="port-txt">Back to Portal</span>
+    </a>
+  </div>
+</header>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-head">
+      <div class="sb-head-lbl">CAM Modules</div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-divider">Overview</div>
+      <div class="sb-item active" onclick="sbNav('all')" id="sbn-all">
+        <div class="sb-item-num">★</div>
+        <span class="sb-item-ic">📊</span>
+        <span class="sb-item-lbl">All Invoices</span>
+        <span class="sb-counter" id="ctr-all" onclick="sbCounterClick('all',event)">0</span>
+      </div>
+      <div class="sb-divider">Status</div>
+      <div class="sb-item" onclick="sbNav('overdue')" id="sbn-overdue">
+        <div class="sb-item-num">1</div>
+        <span class="sb-item-ic">🔴</span>
+        <span class="sb-item-lbl">Overdue</span>
+        <span class="sb-counter" id="ctr-overdue" onclick="sbCounterClick('overdue',event)">0</span>
+      </div>
+      <div class="sb-item" onclick="sbNav('pending')" id="sbn-pending">
+        <div class="sb-item-num">2</div>
+        <span class="sb-item-ic">🟡</span>
+        <span class="sb-item-lbl">Pending</span>
+        <span class="sb-counter" id="ctr-pending" onclick="sbCounterClick('pending',event)">0</span>
+      </div>
+      <div class="sb-item" onclick="sbNav('settled')" id="sbn-settled">
+        <div class="sb-item-num">3</div>
+        <span class="sb-item-ic">✅</span>
+        <span class="sb-item-lbl">Settled</span>
+        <span class="sb-counter" id="ctr-settled" onclick="sbCounterClick('settled',event)">0</span>
+      </div>
+      <div class="sb-divider">Schedule</div>
+      <div class="sb-item" onclick="sbNav('schedule')" id="sbn-schedule">
+        <div class="sb-item-num">4</div>
+        <span class="sb-item-ic">🤖</span>
+        <span class="sb-item-lbl">Auto-Reminder</span>
+      </div>
+      <div class="sb-divider">Actions</div>
+      <div class="sb-item" onclick="document.getElementById('excelFile').click()" id="sbn-upload">
+        <div class="sb-item-num">5</div>
+        <span class="sb-item-ic">📤</span>
+        <span class="sb-item-lbl">Upload Excel</span>
+      </div>
+      <div class="sb-item" onclick="exportData()" id="sbn-export">
+        <div class="sb-item-num">6</div>
+        <span class="sb-item-ic">📥</span>
+        <span class="sb-item-lbl">Export Excel</span>
+      </div>
+    </div>
+    <div class="sb-footer">
+      Auto-email: Daily 9:00 AM IST
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main" id="mainContent">
+
+    <!-- STATUS -->
+    <div class="status-bar" id="statusBar">
+      <span class="s-dot"></span>
+      <span id="statusMsg">Ready — upload an Excel file or click Refresh</span>
+    </div>
+
+    <!-- STAT CARDS (clickable) -->
+    <div class="stats-grid">
+      <div class="stat-card sc-teal" onclick="sbNav('all')" title="View all invoices">
+        <div class="stat-top">
+          <div class="stat-ico" style="background:var(--teal-g)">📋</div>
+          <span class="stat-trend" style="background:var(--teal-g);color:var(--teal)">TOTAL</span>
+        </div>
+        <div class="stat-label">Total Records</div>
+        <div class="stat-val" id="statRecords" style="color:var(--teal)">0</div>
+        <div class="stat-sub">Invoices in system</div>
+      </div>
+      <div class="stat-card sc-mint" onclick="sbNav('all')" title="View outstanding">
+        <div class="stat-top">
+          <div class="stat-ico" style="background:var(--mint-g)">💰</div>
+          <span class="stat-trend" style="background:var(--mint-g);color:var(--mint)">AMOUNT</span>
+        </div>
+        <div class="stat-label">Outstanding</div>
+        <div class="stat-val sm" id="statOutstanding" style="color:var(--mint)">₹0</div>
+        <div class="stat-sub">Total pending dues</div>
+      </div>
+      <div class="stat-card sc-coral" onclick="sbNav('overdue')" title="View overdue invoices">
+        <div class="stat-top">
+          <div class="stat-ico" style="background:var(--coral-g)">⚠️</div>
+          <span class="stat-trend" style="background:var(--coral-g);color:var(--coral)">ALERT</span>
+        </div>
+        <div class="stat-label">Overdue</div>
+        <div class="stat-val" id="statOverdue" style="color:var(--coral)">0</div>
+        <div class="stat-sub">Past due date</div>
+      </div>
+      <div class="stat-card sc-gold" onclick="sbNav('settled')" title="View settled invoices">
+        <div class="stat-top">
+          <div class="stat-ico" style="background:var(--gold-g)">✅</div>
+          <span class="stat-trend" style="background:var(--gold-g);color:var(--gold)">CLEAR</span>
+        </div>
+        <div class="stat-label">Settled</div>
+        <div class="stat-val" id="statSettled" style="color:var(--gold)">0</div>
+        <div class="stat-sub">Fully paid</div>
+      </div>
+    </div>
+
+    <!-- SCHEDULE PANEL (shown/hidden by sidebar nav) -->
+    <div class="schedule-panel" id="schedulePanel" style="display:none;">
+      <div class="schedule-header">
+        <div class="schedule-title">🤖 Daily 9 AM Auto-Email <span class="smtp-badge" id="smtpBadge">checking…</span></div>
+        <div class="sch-meta">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tx2);">
+            Next: <span id="nextAutoRun" style="color:var(--teal);">—</span>
+          </span>
+          <button class="btn-run-now" id="runNowBtn" onclick="runNow()">▶ Send Now</button>
+        </div>
+      </div>
+      <!-- live stats -->
+      <div class="sch-stats">
+        <div class="sch-stat"><div class="sch-stat-lbl">Last Run</div><div class="sch-stat-val" id="lastRunAt">—</div></div>
+        <div class="sch-stat"><div class="sch-stat-lbl">Sent</div><div class="sch-stat-val" id="lastSent" style="color:var(--teal)">—</div></div>
+        <div class="sch-stat"><div class="sch-stat-lbl">Reminders</div><div class="sch-stat-val" id="lastReminders" style="color:var(--gold)">—</div></div>
+        <div class="sch-stat"><div class="sch-stat-lbl">Recipients</div><div class="sch-stat-val" id="recipientCount" style="color:var(--violet)">—</div></div>
+      </div>
+      <!-- email management -->
+      <div class="email-mgr">
+        <div class="email-mgr-hd">
+          <span class="email-mgr-title">📧 Recipient Emails</span>
+          <button class="btn-add-email" onclick="showAddEmail()">+ Add Email</button>
+        </div>
+        <div class="add-email-form" id="addEmailForm">
+          <input type="email" id="newEmailInp" class="email-inp" placeholder="name@example.com"/>
+          <button class="btn-e-save" onclick="addEmail()">Add</button>
+          <button class="btn-e-cancel" onclick="hideAddEmail()">Cancel</button>
+        </div>
+        <div class="email-chips" id="emailChips">
+          <span style="font-size:11px;color:var(--tx3);">Loading…</span>
+        </div>
+      </div>
+      <!-- timeline — UPDATED: D+1 / D+3 / D+7 / Daily (1 week threshold) -->
+      <div style="border-top:1px solid var(--bdr);padding-top:14px;">
+        <div style="font-size:8.5px;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);
+                    font-family:'JetBrains Mono',monospace;margin-bottom:10px;">
+          Overdue Reminder Schedule
+        </div>
+        <div class="schedule-timeline">
+          <div class="sch-step">
+            <div class="sch-node sch-d1">D+1</div>
+            <div class="sch-label">Day 1</div>
+            <div class="sch-sublabel">1st reminder</div>
+          </div>
+          <div class="sch-step">
+            <div class="sch-node sch-d3">+3</div>
+            <div class="sch-label">Day 3</div>
+            <div class="sch-sublabel">2nd reminder</div>
+          </div>
+          <div class="sch-step">
+            <div class="sch-node sch-d7">+7</div>
+            <div class="sch-label">1 Week</div>
+            <div class="sch-sublabel">3rd reminder</div>
+          </div>
+          <div class="sch-step">
+            <div class="sch-node sch-inf">∞</div>
+            <div class="sch-label">Daily</div>
+            <div class="sch-sublabel">After 1 week</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:10px;color:var(--tx3);font-family:'JetBrains Mono',monospace;">
+          ⚡ After <strong style="color:var(--coral);">7 days</strong> overdue → email fires <strong style="color:var(--coral);">every day</strong> until outstanding = 0
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls" id="tableControls">
+      <div class="controls-left">
+        <div class="search-box">
+          <svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="4"/><path d="M11 11l2.5 2.5"/></svg>
+          <input type="text" class="search-inp" id="searchInput" placeholder="Search client, invoice…"/>
+        </div>
+        <div class="filter-tabs">
+          <button class="ftab active" data-filter="all">All</button>
+          <button class="ftab ftab-overdue" data-filter="overdue">🔴 Overdue</button>
+          <button class="ftab ftab-pending" data-filter="pending">🟡 Pending</button>
+          <button class="ftab ftab-settled" data-filter="settled">🟢 Settled</button>
+        </div>
+      </div>
+      <div class="controls-right">
+        <span class="row-chip" id="rowCount">0 records</span>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-card" id="tableCard">
+      <div class="table-card-hd">
+        <div class="table-card-title">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="color:var(--teal)"><rect x="1" y="1" width="14" height="14" rx="2"/><path d="M1 6h14M6 6v9"/></svg>
+          Invoice Records
+        </div>
+        <div class="tch-right">
+          <div class="updated-tag" id="lastUpdated">—</div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>Client</th><th>A/C Head</th><th>Period</th>
+              <th>Invoice No</th><th>Invoice Date</th><th class="r">Amount (₹)</th>
+              <th>Mode</th><th>Due Date</th><th>Overdue</th>
+              <th class="r">Received (₹)</th><th class="r">TDS (₹)</th>
+              <th class="r">Outstanding (₹)</th><th>Status</th><th>Email</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div class="table-footer">
+        <div class="foot-totals" id="footTotals">—</div>
+        <div id="footRefresh" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tx3);">—</div>
+      </div>
+    </div>
+
+  </main>
+</div><!-- /layout -->
+
+<script>
+/* ═══════════════════════════ STATE ═══════════════════════════ */
+let allData      = [];
+let filteredData = [];
+let activeFilter = 'all';
+let currentItem  = null;
+let lastRefresh  = null;
+let sentMap      = {};
+let activeSbSection = 'all';
+let _editingEmail   = '';
+
+const $ = id => document.getElementById(id);
+// ── theme ──────────────────────────────────────────────────────
+(function(){
+  const saved = localStorage.getItem('cam_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+})();
+function toggleTheme(){
+  const html = document.documentElement;
+  const dark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', dark ? 'light' : 'dark');
+  localStorage.setItem('cam_theme', dark ? 'light' : 'dark');
+}
+
+/* ═══════════════════════════ TOAST ═══════════════════════════ */
+let _tT;
+function toast(msg, type='ok'){
+  const el = $('toast');
+  el.className = 'toast show t-' + type;
+  $('toastMsg').textContent = msg;
+  clearTimeout(_tT); _tT = setTimeout(() => el.className = 'toast', 3800);
+}
+
+/* ═══════════════════════════ STATUS ═══════════════════════════ */
+function setStatus(msg, cls=''){
+  const b = $('statusBar');
+  b.className = 'status-bar' + (cls ? ' ' + cls : '');
+  $('statusMsg').textContent = msg;
+}
+
+/* ═══════════════════════════ DATE HELPERS ═══════════════════════════ */
+const MONTHS = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+function parseDate(s){
+  if(!s||s==='-'||s==='') return null;
+  s = String(s).trim();
+  let m = s.match(/^(\d{1,2})-([A-Za-z]{3})-(\d{2,4})$/);
+  if(m){ const yr=parseInt(m[3])<100?2000+parseInt(m[3]):parseInt(m[3]); return new Date(yr,MONTHS[m[2].toLowerCase()]??0,parseInt(m[1])); }
+  m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m) return new Date(parseInt(m[1]),parseInt(m[2])-1,parseInt(m[3]));
+  m = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if(m) return new Date(parseInt(m[3]),parseInt(m[2])-1,parseInt(m[1]));
+  return null;
+}
+function isOverdue(s){ const d=parseDate(s); if(!d) return false; const t=new Date(); t.setHours(0,0,0,0); return d<t; }
+function isSettled(r){ return (r.outstanding||0)<=0; }
+function daysPastDue(s){ const d=parseDate(s); if(!d) return 0; const t=new Date(); t.setHours(0,0,0,0); const diff=Math.floor((t-d)/86400000); return diff>0?diff:0; }
+
+/* ═══════════════════════════ SCHEDULE LOGIC (1 week = 7 days) ═══════════════════════════ */
+const REMINDER_DAYS = [1, 3, 7];   // ← was [1,3,7,10,15]
+function shouldAutoRemind(days){
+  if(days<=0) return false;
+  if(days>7) return true;           // ← daily after 7 days (1 week)
+  return REMINDER_DAYS.includes(days);
+}
+function getSeverityLabel(days){
+  if(days<=0)  return null;
+  if(days<=3)  return {cls:'sev-warn',   lbl:'⚠️ '+days+'d overdue'};
+  if(days<=7)  return {cls:'sev-alert',  lbl:'🟠 '+days+'d overdue'};
+  if(days<=14) return {cls:'sev-danger', lbl:'🔴 '+days+'d overdue'};
+  return              {cls:'sev-crit',   lbl:'🚨 '+days+'d — CRITICAL'};
+}
+function getSeverityAlertHtml(days){
+  if(days<=0) return '';
+  let cls='warn',icon='⚠️',msg=`This invoice is <b>${days} day${days>1?'s':''}</b> past due.`;
+  if(days>7){ cls='crit'; icon='🚨'; msg=`<b>CRITICAL:</b> ${days} days overdue. Daily reminders active until payment cleared.`; }
+  else if(days>3){ cls='danger'; icon='🔴'; msg=`Invoice is <b>${days} days overdue</b>. Escalate immediately.`; }
+  return `<div class="severity-alert ${cls}">${icon} <span>${msg}</span></div>`;
+}
+function fmtINR(n){
+  if(n===null||n===undefined||n==='') return '—';
+  const abs=Math.abs(Number(n));
+  if(isNaN(abs)) return '—';
+  return new Intl.NumberFormat('en-IN',{maximumFractionDigits:0}).format(abs);
+}
+
+/* ═══════════════════════════ SIDEBAR NAV ═══════════════════════════ */
+function sbNav(section){
+  activeSbSection = section;
+  // update sidebar highlight
+  ['all','overdue','pending','settled','schedule'].forEach(s => {
+    const el = $('sbn-'+s);
+    if(el) el.classList.toggle('active', s===section);
+  });
+  // show/hide schedule panel vs table
+  const showSch = section === 'schedule';
+  $('schedulePanel').style.display = showSch ? 'block' : 'none';
+  $('tableControls').style.display = showSch ? 'none' : 'flex';
+  $('tableCard').style.display     = showSch ? 'none' : 'block';
+  if(showSch){ loadSchedulerStatus(); loadEmailChips(); return; }
+  // sync filter tabs
+  const filterMap = {all:'all',overdue:'overdue',pending:'pending',settled:'settled'};
+  const f = filterMap[section] || 'all';
+  activeFilter = f;
+  document.querySelectorAll('.ftab').forEach(t => {
+    t.classList.toggle('active', t.dataset.filter===f);
+    if(t.dataset.filter==='overdue') t.classList.toggle('active', f==='overdue');
+    if(t.dataset.filter==='pending') t.classList.toggle('active', f==='pending');
+    if(t.dataset.filter==='settled') t.classList.toggle('active', f==='settled');
+  });
+  applyFilters();
+  // close mobile sidebar
+  if(window.innerWidth<=768){ closeMobileSb(); }
+}
+
+function sbCounterClick(section, e){
+  e.stopPropagation();
+  sbNav(section);
+}
+
+function updateSbCounters(){
+  const total   = allData.length;
+  const overdue = allData.filter(r=>isOverdue(r.dueDate)&&!isSettled(r)).length;
+  const pending = allData.filter(r=>!isOverdue(r.dueDate)&&!isSettled(r)).length;
+  const settled = allData.filter(r=>isSettled(r)).length;
+  const upd = (id, val, hasData) => {
+    const el=$(id); if(!el) return;
+    el.textContent = val;
+    el.classList.toggle('has-data', hasData && val>0);
+  };
+  upd('ctr-all',    total,   false);
+  upd('ctr-overdue',overdue, true);
+  upd('ctr-pending',pending, false);
+  upd('ctr-settled',settled, false);
+}
+
+/* ═══════════════════════════ MOBILE SIDEBAR ═══════════════════════════ */
+function openMobileSb(){
+  $('sidebar').classList.add('open');
+  $('sbOverlay').classList.add('show');
+}
+function closeMobileSb(){
+  $('sidebar').classList.remove('open');
+  $('sbOverlay').classList.remove('show');
+}
+
+/* ═══════════════════════════ LOAD DATA ═══════════════════════════ */
+async function loadData(){
+  $('syncLabel').textContent = 'SYNCING…';
+  setStatus('Loading from server…','wait');
+  const ico = $('refreshIco'); ico.classList.add('spin');
+  try{
+    const res = await fetch('/get_cam_charges');
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const j = await res.json();
+    if(!j.success) throw new Error(j.error||'Server error');
+    allData = j.data||[];
+    lastRefresh = new Date();
+    applyFilters(); updateStats();
+    setStatus(`Loaded ${allData.length} records from server`, allData.length?'ok':'');
+    $('syncLabel').textContent = 'LIVE';
+    const ts = lastRefresh.toLocaleTimeString();
+    $('footRefresh').textContent = 'Updated: '+ts;
+    $('lastUpdated').textContent = 'Updated: '+ts;
+    updateNextAutoRun();
+    if(allData.length) toast(`${allData.length} records loaded`,'ok');
+    else toast('No records — upload an Excel file','info');
+  }catch(err){
+    setStatus('Connection error: '+err.message,'err');
+    $('syncLabel').textContent = 'OFFLINE';
+    toast('Load failed: '+err.message,'err');
+  }finally{ ico.classList.remove('spin'); }
+}
+
+function updateNextAutoRun(){
+  const now=new Date(); const next=new Date(now);
+  if(now.getHours()>=9) next.setDate(next.getDate()+1);
+  next.setHours(9,0,0,0);
+  const el = $('nextAutoRun');
+  if(el) el.textContent = next.toLocaleDateString('en-IN',{day:'2-digit',month:'short'})+' 09:00 AM IST';
+}
+
+/* ═══════════════════════════ UPLOAD ═══════════════════════════ */
+async function handleUpload(input){
+  const file = input.files[0]; if(!file) return;
+  setStatus('Uploading '+file.name+'…','wait');
+  const fd = new FormData(); fd.append('file',file);
+  try{
+    const res = await fetch('/cam_charges_upload',{method:'POST',body:fd});
+    const j = await res.json();
+    if(!j.success) throw new Error(j.error||'Upload failed');
+    allData = j.data||[]; lastRefresh = new Date();
+    applyFilters(); updateStats();
+    setStatus(`Uploaded ${allData.length} records from ${file.name}`,'ok');
+    toast(`${allData.length} records uploaded ✓`,'ok');
+    $('lastUpdated').textContent = 'Updated: '+lastRefresh.toLocaleTimeString();
+  }catch(err){
+    setStatus('Upload failed: '+err.message,'err');
+    toast('Upload failed: '+err.message,'err');
+  }
+  input.value = '';
+}
+
+function exportData(){ window.location.href='/cam_charges_export'; toast('Downloading…','ok'); }
+
+/* ═══════════════════════════ FILTERS & STATS ═══════════════════════════ */
+function applyFilters(){
+  const q=($('searchInput').value||'').toLowerCase().trim();
+  filteredData = allData.filter(r=>{
+    const over = isOverdue(r.dueDate)&&!isSettled(r);
+    const matchFilter =
+      activeFilter==='all'     ? true :
+      activeFilter==='overdue' ? over :
+      activeFilter==='pending' ? (!isOverdue(r.dueDate)&&!isSettled(r)) :
+      activeFilter==='settled' ? isSettled(r) : true;
+    const matchSearch = !q||[r.clientName,r.invoiceNo,r.accountHead,r.period,r.mailId]
+      .some(v=>(v||'').toLowerCase().includes(q));
+    return matchFilter && matchSearch;
+  });
+  renderTable();
+}
+
+function updateStats(){
+  const total = allData.length;
+  const outstanding = allData.reduce((s,r)=>s+Math.abs(r.outstanding||0),0);
+  const overdue = allData.filter(r=>isOverdue(r.dueDate)&&!isSettled(r)).length;
+  const settled = allData.filter(r=>isSettled(r)).length;
+  $('statRecords').textContent     = total||'0';
+  $('statOutstanding').textContent = total?'₹'+fmtINR(outstanding):'₹0';
+  $('statOverdue').textContent     = String(overdue||0);
+  $('statSettled').textContent     = String(settled||0);
+  const shown=filteredData;
+  const shownAmt=shown.reduce((s,r)=>s+(r.amountNumeric||0),0);
+  const shownOs=shown.reduce((s,r)=>s+Math.abs(r.outstanding||0),0);
+  $('footTotals').innerHTML = shown.length
+    ? `<span>Shown: <b>${shown.length}</b></span><span>Billing: <b style="color:var(--teal)">₹${fmtINR(shownAmt)}</b></span><span>Outstanding: <b style="color:var(--coral)">₹${fmtINR(shownOs)}</b></span>`
+    : '—';
+  updateSbCounters();
+}
+
+/* ═══════════════════════════ RENDER TABLE ═══════════════════════════ */
+function renderTable(){
+  $('rowCount').textContent = filteredData.length+' record'+(filteredData.length!==1?'s':'');
+  const body = $('tableBody');
+  if(!filteredData.length){
+    const msg = allData.length?'No records match the current filter.':'No data loaded yet.';
+    body.innerHTML = `<tr><td colspan="16"><div class="empty">
+      <div class="empty-icon">🔍</div><h3>No Results</h3><p>${msg}</p>
+      ${!allData.length?`<label class="upload-cta">📤 Upload Excel<input type="file" accept=".xlsx,.xls" onchange="handleUpload(this)"/></label>`:''}
+    </div></td></tr>`;
+    updateStats(); return;
+  }
+  body.innerHTML = filteredData.map((r,i)=>{
+    const over=isOverdue(r.dueDate)&&!isSettled(r);
+    const settled=isSettled(r);
+    const days=over?daysPastDue(r.dueDate):0;
+    const sev=over?getSeverityLabel(days):null;
+    const auto=over&&shouldAutoRemind(days);
+    const badge=settled?`<span class="badge badge-settled">✔ Settled</span>`:over?`<span class="badge badge-overdue">⚠ Overdue</span>`:`<span class="badge badge-pending">⏳ Pending</span>`;
+    const sevPill=sev?`<span class="severity-pill ${sev.cls}">${sev.lbl}</span>`:'—';
+    const osTxt=settled?`<span style="color:var(--mint)">₹${fmtINR(r.outstanding)}</span>`:`<span style="color:var(--coral)">₹${fmtINR(r.outstanding)}</span>`;
+    const sent=sentMap[r.invoiceNo];
+    const actCls=sent?'remind-sent':over?'remind-overdue':'remind-pending';
+    const actLbl=sent?'✔ Sent':auto?'🤖 Auto':'🔔 Manual';
+    const actIco=sent?'<path d="M3 8l4 4 6-7"/>':`<path d="M8 1a5 5 0 0 1 5 5v3l1.5 2.5h-13L3 9V6a5 5 0 0 1 5-5z"/><path d="M6.5 13.5a1.5 1.5 0 0 0 3 0"/>`;
+    return `<tr class="${over?'row-overdue':''}" data-idx="${i}">
+      <td class="mono c" style="color:var(--tx2)">${i+1}</td>
+      <td style="font-weight:700">${r.clientName||'—'}</td>
+      <td class="mono" style="color:var(--tx2);font-size:11px">${r.accountHead||'—'}</td>
+      <td class="mono" style="color:var(--tx2);font-size:11px">${r.period||'—'}</td>
+      <td class="mono" style="color:var(--sky)">${r.invoiceNo||'—'}</td>
+      <td class="mono" style="color:var(--tx2);font-size:11px">${r.invoiceDate||'—'}</td>
+      <td class="money" style="color:var(--teal)">₹${fmtINR(r.amountNumeric)}</td>
+      <td style="font-size:11.5px;color:var(--tx2)">${r.modeOfPayment||'—'}</td>
+      <td class="mono ${over?'overdue-days':''}" style="font-size:11.5px">${r.dueDate||'—'}</td>
+      <td>${sevPill}</td>
+      <td class="money" style="color:var(--mint)">₹${fmtINR(r.amtReceived)}</td>
+      <td class="money" style="color:var(--gold)">₹${fmtINR(r.tds)}</td>
+      <td class="money">${osTxt}</td>
+      <td>${badge}</td>
+      <td class="mono" style="color:var(--violet);font-size:11px">${r.mailId||'—'}</td>
+      <td><button class="btn-act ${actCls}" onclick="openReminder(${i})" ${sent?'disabled':''} title="${auto?'Auto-reminder active':'Send manual reminder'}">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">${actIco}</svg>${actLbl}
+      </button></td>
+    </tr>`;
+  }).join('');
+  updateStats();
+}
+
+/* ═══════════════════════════ REMINDER MODAL ═══════════════════════════ */
+function openReminder(idx){
+  currentItem = filteredData[idx]; if(!currentItem) return;
+  const r=currentItem; const owed=Math.abs(r.outstanding||0); const days=daysPastDue(r.dueDate);
+  $('mClient').textContent      = r.clientName  ||'—';
+  $('mInvoice').textContent     = r.invoiceNo   ||'—';
+  $('mAmount').textContent      = owed?'₹'+fmtINR(owed):'—';
+  $('mOverdueDays').textContent = days>0?days+' days':'Not overdue';
+  $('mEmail').textContent       = r.mailId      ||'—';
+  $('severityAlert').innerHTML  = getSeverityAlertHtml(days);
+  $('reminderSubject').value = `CAM Invoice Reminder — ${r.invoiceNo||''} | SLN Terminus`;
+  $('reminderMsg').value =
+`Dear ${r.clientName||'Client'},
+
+Greetings from SLN Terminus Accounts Department.
+
+This is a reminder that your CAM invoice is pending payment:
+
+  Invoice No   : ${r.invoiceNo||'—'}
+  Period       : ${r.period||'—'}
+  Invoice Date : ${r.invoiceDate||'—'}
+  Due Date     : ${r.dueDate||'—'}
+  Total Amount : ₹${fmtINR(r.amountNumeric)}
+  Amt Received : ₹${fmtINR(r.amtReceived)}
+  Outstanding  : ₹${fmtINR(owed)}
+${days>0?`\nThis invoice is ${days} day${days>1?'s':''} past due. Immediate payment is requested.`:''}
+
+Kindly arrange payment at the earliest to avoid service disruptions.
+
+Regards,
+Accounts Department
+SLN Terminus, Hyderabad`;
+  $('reminderModal').classList.add('open');
+}
+function closeReminder(){ $('reminderModal').classList.remove('open'); }
+async function sendReminder(){
+  if(!currentItem) return;
+  const r=currentItem; const msg=$('reminderMsg').value.trim(); const sub=$('reminderSubject').value.trim();
+  if(!msg){toast('Message cannot be empty','err');return;}
+  if(!r.mailId){toast('No recipient email on record','err');return;}
+  const btn=$('sendBtn'); btn.disabled=true; btn.innerHTML='<span class="spin">⏳</span> Sending…';
+  try{
+    const res = await fetch('/send_reminder',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({mailId:r.mailId,invoiceNo:r.invoiceNo,subject:sub,message:msg})});
+    const j = await res.json();
+    if(!j.success) throw new Error(j.error||'Send failed');
+    sentMap[r.invoiceNo]=true; closeReminder(); renderTable();
+    toast(`✓ Reminder sent to ${r.mailId}`,'ok');
+  }catch(err){ toast('Send failed: '+err.message,'err'); }
+  finally{
+    btn.disabled=false;
+    btn.innerHTML=`<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M14 2L2 7l5 2 2 5 5-12z"/></svg> Send Reminder`;
+  }
+}
+
+/* ═══════════════════════════ SCHEDULER STATUS ═══════════════════════════ */
+async function loadSchedulerStatus(){
+  try{
+    const r = await fetch('/cam_scheduler_status'); if(!r.ok) return;
+    const d = await r.json(); if(!d.success) return;
+    const badge=$('smtpBadge');
+    if(d.smtp_configured){badge.textContent='● SMTP Active';badge.className='smtp-badge ok';}
+    else{badge.textContent='⚠ SMTP not set';badge.className='smtp-badge warn';}
+    const lr=d.last_run||{};
+    if(lr.ran_at){
+      const dt=new Date(lr.ran_at);
+      $('lastRunAt').textContent=dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short'})+' '+dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    }else{$('lastRunAt').textContent='Never';}
+    $('lastSent').textContent      = lr.emails_sent        !=null?lr.emails_sent:'—';
+    $('lastReminders').textContent = lr.reminders_included !=null?lr.reminders_included:'—';
+    if(d.next_run) $('nextAutoRun').textContent=d.next_run;
+  }catch(e){}
+}
+
+/* ═══════════════════════════ EMAIL CHIPS ═══════════════════════════ */
+async function loadEmailChips(){
+  try{
+    const r=await fetch('/cam_email_list'); if(!r.ok) return;
+    const d=await r.json(); if(!d.success) return;
+    $('recipientCount').textContent = d.emails.length;
+    const overSet=new Set((d.overrides||[]).map(e=>e.toLowerCase()));
+    const chips=$('emailChips');
+    if(!d.emails.length){
+      chips.innerHTML='<span style="font-size:11px;color:var(--tx3);">No emails found — add one or upload Excel with Mail_ID column</span>';
+      return;
+    }
+    chips.innerHTML = d.emails.map(email=>{
+      const isOv=overSet.has(email.toLowerCase());
+      const src=isOv?'':'<span class="chip-src">(excel)</span>';
+      const edit=isOv?`<button class="chip-btn chip-edit" onclick="openEditEmail('${email}')" title="Edit">✎</button>`:'';
+      const del=isOv?`<button class="chip-btn chip-del" onclick="deleteEmail('${email}')" title="Remove">×</button>`:'';
+      return `<div class="email-chip${!isOv?' from-excel':''}"><span>${email}</span>${src}${edit}${del}</div>`;
+    }).join('');
+  }catch(e){}
+}
+
+function showAddEmail(){ $('addEmailForm').classList.add('show'); $('newEmailInp').focus(); }
+function hideAddEmail(){ $('addEmailForm').classList.remove('show'); $('newEmailInp').value=''; }
+async function addEmail(){
+  const val=$('newEmailInp').value.trim();
+  if(!val||!val.includes('@')){ toast('Enter a valid email','err'); return; }
+  try{
+    const r=await fetch('/cam_email_add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:val})});
+    const d=await r.json(); if(!d.success) throw new Error(d.error);
+    await loadEmailChips(); hideAddEmail(); toast(`✓ ${val} added`,'ok');
+  }catch(e){ toast('Error: '+e.message,'err'); }
+}
+async function deleteEmail(email){
+  if(!confirm(`Remove ${email}?`)) return;
+  try{
+    const r=await fetch('/cam_email_delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+    const d=await r.json(); if(!d.success) throw new Error(d.error);
+    await loadEmailChips(); toast(`Removed: ${email}`,'ok');
+  }catch(e){ toast('Error: '+e.message,'err'); }
+}
+function openEditEmail(email){
+  _editingEmail=email; $('editEmailInp').value=email;
+  $('editEmailModal').classList.add('open');
+  setTimeout(()=>$('editEmailInp').select(),50);
+}
+function closeEditEmail(){ $('editEmailModal').classList.remove('open'); _editingEmail=''; }
+async function saveEditEmail(){
+  const nv=$('editEmailInp').value.trim();
+  if(!nv||!nv.includes('@')){ toast('Invalid email','err'); return; }
+  try{
+    const r=await fetch('/cam_email_update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({old_email:_editingEmail,new_email:nv})});
+    const d=await r.json(); if(!d.success) throw new Error(d.error);
+    closeEditEmail(); await loadEmailChips(); toast('✓ Email updated','ok');
+  }catch(e){ toast('Error: '+e.message,'err'); }
+}
+async function runNow(){
+  const btn=$('runNowBtn'); btn.disabled=true; btn.textContent='⏳ Sending…';
+  try{
+    const r=await fetch('/cam_run_now',{method:'POST'});
+    const d=await r.json(); if(!d.success) throw new Error(d.error);
+    const res=d.result||{};
+    toast(`✓ Sent to ${res.emails_sent||0} recipient(s)`,'ok');
+    await loadSchedulerStatus(); await loadEmailChips();
+  }catch(e){ toast('Error: '+e.message,'err'); }
+  finally{ btn.disabled=false; btn.textContent='▶ Send Now'; }
+}
+
+/* ═══════════════════════════ INIT ═══════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  // theme
+  $('themeToggle').addEventListener('click', toggleTheme);
+  // mobile sidebar
+  $('mobMenuBtn').addEventListener('click', openMobileSb);
+  $('sbOverlay').addEventListener('click', closeMobileSb);
+  // filter tabs
+  document.querySelectorAll('.ftab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      activeFilter = tab.dataset.filter;
+      // sync sidebar
+      const map={all:'all',overdue:'overdue',pending:'pending',settled:'settled'};
+      const s=map[activeFilter]||'all';
+      ['all','overdue','pending','settled'].forEach(x=>{ const el=$('sbn-'+x); if(el) el.classList.toggle('active',x===s); });
+      activeSbSection=s;
+      applyFilters();
+    });
+  });
+  // search
+  $('searchInput').addEventListener('input', applyFilters);
+  // reminder modal
+  $('modalClose').addEventListener('click', closeReminder);
+  $('modalCancel').addEventListener('click', closeReminder);
+  $('sendBtn').addEventListener('click', sendReminder);
+  $('reminderModal').addEventListener('click', e=>{ if(e.target===$('reminderModal')) closeReminder(); });
+  // edit email modal
+  $('editEmailModal').addEventListener('click', e=>{ if(e.target===$('editEmailModal')) closeEditEmail(); });
+  // new email enter key
+  $('newEmailInp').addEventListener('keydown', e=>{ if(e.key==='Enter') addEmail(); });
+  $('editEmailInp').addEventListener('keydown', e=>{ if(e.key==='Enter') saveEditEmail(); if(e.key==='Escape') closeEditEmail(); });
+  // keyboard
+  document.addEventListener('keydown', e=>{
+    if(e.key==='Escape'){ closeReminder(); closeEditEmail(); }
+  });
+  // boot
+  loadData();
+  updateNextAutoRun();
+  setInterval(loadData, 60000);
+});
+</script>
+</body>
+</html>

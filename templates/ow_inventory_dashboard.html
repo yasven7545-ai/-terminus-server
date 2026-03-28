@@ -1,0 +1,1564 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5"/>
+<title>ONEWEST — Inventory Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════
+   DESIGN TOKENS — DARK / LIGHT MODES
+═══════════════════════════════════════ */
+:root {
+  --hh: 58px;
+  --r:  10px;
+  --rl: 14px;
+  --ease: cubic-bezier(.4,0,.2,1);
+  --bounce: cubic-bezier(.34,1.4,.64,1);
+
+  /* accent palette */
+  --amber:   #f59e0b;
+  --amber-g: rgba(245,158,11,.13);
+  --emerald: #10b981;
+  --em-g:    rgba(16,185,129,.12);
+  --rose:    #f43f5e;
+  --rose-g:  rgba(244,63,94,.12);
+  --cyan:    #06b6d4;
+  --cyan-g:  rgba(6,182,212,.12);
+  --violet:  #8b5cf6;
+  --vio-g:   rgba(139,92,246,.12);
+  --orange:  #ea580c;
+  --ora-g:   rgba(234,88,12,.14);
+  --sky:     #0ea5e9;
+  --sky-g:   rgba(14,165,233,.12);
+
+  /* gradients */
+  --ga: linear-gradient(135deg,#f59e0b,#ea580c);
+  --gb: linear-gradient(135deg,#10b981,#06b6d4);
+  --gc: linear-gradient(135deg,#f43f5e,#8b5cf6);
+  --gd: linear-gradient(135deg,#8b5cf6,#06b6d4);
+}
+
+[data-theme="dark"] {
+  --bg:      #080c14;
+  --bg2:     #0d1220;
+  --card:    #111827;
+  --card2:   #151d2e;
+  --bdr:     #1e2a40;
+  --bdr2:    #253045;
+  --tx:      #e2eaf6;
+  --tx2:     #7a90b0;
+  --tx3:     #2e3f5a;
+  --sh:      0 8px 32px rgba(0,0,0,.55);
+  --header-bg: rgba(8,12,20,.92);
+  --surface: #0f1826;
+}
+[data-theme="light"] {
+  --bg:      #f0f4fc;
+  --bg2:     #e8eef8;
+  --card:    #ffffff;
+  --card2:   #f6f9ff;
+  --bdr:     #d4dcec;
+  --bdr2:    #c2cfe0;
+  --tx:      #0f1c32;
+  --tx2:     #4a6080;
+  --tx3:     #a0b4cc;
+  --sh:      0 4px 20px rgba(0,0,0,.08);
+  --header-bg: rgba(240,244,252,.92);
+  --surface: #eaf0fa;
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Outfit',sans-serif;
+  background:var(--bg);
+  color:var(--tx);
+  min-height:100vh;
+  overflow-x:hidden;
+  font-size:14px;
+  transition:background .3s,color .3s;
+}
+
+/* ── ANIMATED BACKGROUND ── */
+.bg-orbs {
+  position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden;
+}
+.orb {
+  position:absolute; border-radius:50%; filter:blur(80px); opacity:.07;
+  animation:float 18s ease-in-out infinite alternate;
+}
+[data-theme="light"] .orb { opacity:.04; }
+.orb-1 { width:420px;height:420px;background:var(--ga);top:-80px;left:-100px;animation-delay:0s; }
+.orb-2 { width:300px;height:300px;background:var(--gb);top:40%;right:-80px;animation-delay:-6s; }
+.orb-3 { width:360px;height:360px;background:var(--gc);bottom:-100px;left:30%;animation-delay:-12s; }
+@keyframes float { from{transform:translate(0,0) scale(1)} to{transform:translate(30px,20px) scale(1.08)} }
+
+/* ── TOPBAR ── */
+.topbar {
+  position:sticky; top:0; z-index:200; height:var(--hh);
+  background:var(--header-bg);
+  border-bottom:1px solid var(--bdr);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 20px; gap:12px;
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+}
+.topbar-left  { display:flex; align-items:center; gap:12px; }
+.topbar-right { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+
+.brand { display:flex; align-items:center; gap:10px; }
+.brand-mark {
+  width:36px; height:36px; border-radius:9px;
+  background:var(--ga); display:flex; align-items:center; justify-content:center;
+  font-size:16px; color:#fff; flex-shrink:0;
+  box-shadow:0 4px 14px rgba(245,158,11,.4);
+}
+.brand-text { display:flex; flex-direction:column; line-height:1; }
+.brand-name { font-family:'Syne',sans-serif; font-weight:800; font-size:.95rem; color:var(--tx); letter-spacing:.5px; }
+.brand-sub  { font-size:.62rem; color:var(--tx3); letter-spacing:1.2px; text-transform:uppercase; margin-top:2px; font-family:'DM Mono',monospace; }
+.divider-v  { width:1px; height:26px; background:var(--bdr2); flex-shrink:0; }
+.page-title { font-size:.78rem; font-weight:500; color:var(--tx2); white-space:nowrap; }
+
+/* back to portal */
+.portal-back {
+  display:inline-flex; align-items:center; gap:7px;
+  padding:6px 12px 6px 8px;
+  background:var(--ora-g); border:1px solid rgba(234,88,12,.3);
+  border-radius:20px; color:var(--orange); font-size:.75rem; font-weight:700;
+  text-decoration:none; transition:all .2s; white-space:nowrap;
+  animation:pulseback 2.2s ease-in-out infinite;
+}
+.portal-back:hover { background:var(--orange); color:#fff; border-color:var(--orange); animation:none; }
+.portal-back-dot {
+  width:8px; height:8px; border-radius:50%; background:var(--orange);
+  animation:blink-o 1.4s ease-in-out infinite;
+}
+@keyframes blink-o { 0%,100%{opacity:1;box-shadow:0 0 6px var(--orange)} 50%{opacity:.3;box-shadow:none} }
+@keyframes pulseback { 0%,100%{box-shadow:0 0 0 0 rgba(234,88,12,.3)} 50%{box-shadow:0 0 0 5px rgba(234,88,12,0)} }
+
+/* dark/light toggle */
+.theme-toggle {
+  display:flex; align-items:center; gap:6px;
+  background:var(--card2); border:1px solid var(--bdr);
+  border-radius:20px; padding:4px 10px;
+  cursor:pointer; font-size:.72rem; font-weight:600; color:var(--tx2);
+  transition:all .2s; user-select:none; white-space:nowrap;
+}
+.theme-toggle:hover { border-color:var(--amber); color:var(--amber); }
+.theme-toggle svg { width:14px; height:14px; }
+
+/* ── STATS BAR ── */
+.stats-bar {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:12px; padding:16px 20px;
+  background:var(--bg2); border-bottom:1px solid var(--bdr);
+  position:relative; z-index:1;
+}
+.stat-card {
+  background:var(--card); border:1px solid var(--bdr);
+  border-radius:var(--rl); padding:14px 16px;
+  display:flex; align-items:center; gap:12px;
+  transition:border-color .2s,transform .2s,box-shadow .2s;
+  cursor:default; animation:cardIn .5s var(--ease) both;
+}
+.stat-card:hover { transform:translateY(-2px); box-shadow:var(--sh); }
+.stat-card:nth-child(1){animation-delay:.05s}
+.stat-card:nth-child(2){animation-delay:.1s}
+.stat-card:nth-child(3){animation-delay:.15s}
+.stat-card:nth-child(4){animation-delay:.2s}
+@keyframes cardIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+
+.stat-icon {
+  width:40px; height:40px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px; flex-shrink:0;
+}
+.si-a { background:var(--amber-g); color:var(--amber); border:1px solid rgba(245,158,11,.2); }
+.si-g { background:var(--em-g);    color:var(--emerald); border:1px solid rgba(16,185,129,.2); }
+.si-y { background:var(--ora-g);   color:var(--orange);  border:1px solid rgba(234,88,12,.2); }
+.si-r { background:var(--rose-g);  color:var(--rose);    border:1px solid rgba(244,63,94,.2); }
+
+.stat-info { min-width:0; }
+.stat-val {
+  font-family:'DM Mono',monospace; font-size:1.4rem; font-weight:500;
+  color:var(--tx); line-height:1;
+  transition:color .3s;
+}
+.stat-lbl { font-size:.62rem; color:var(--tx3); text-transform:uppercase; letter-spacing:1px; margin-top:4px; font-family:'DM Mono',monospace; }
+
+/* ── WORKSPACE ── */
+.workspace {
+  display:grid; grid-template-columns:1fr 300px;
+  min-height:calc(100vh - var(--hh) - 89px);
+  position:relative; z-index:1;
+}
+
+/* ── TABLE PANEL ── */
+.panel-main { padding:20px; border-right:1px solid var(--bdr); min-width:0; }
+
+.panel-head {
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:10px; margin-bottom:16px;
+}
+.panel-title {
+  font-family:'Syne',sans-serif; font-size:.8rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:1.2px; color:var(--tx2);
+  display:flex; align-items:center; gap:8px;
+}
+.panel-title-bar {
+  width:3px; height:16px; border-radius:2px;
+  background:var(--ga); flex-shrink:0;
+}
+.toolbar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+
+.filter-select {
+  appearance:none;
+  background:var(--card2); border:1px solid var(--bdr2);
+  color:var(--tx); padding:7px 28px 7px 11px;
+  border-radius:var(--r); font-size:.78rem;
+  font-family:'Outfit',sans-serif; cursor:pointer; outline:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%237a90b0'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 9px center;
+  transition:border-color .2s; min-width:130px;
+}
+.filter-select:focus { border-color:var(--amber); outline:none; }
+.filter-select option { background:var(--card); }
+
+/* search */
+.search-wrap { position:relative; }
+.search-wrap svg { position:absolute; left:9px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:var(--tx3); pointer-events:none; }
+.search-input {
+  background:var(--card2); border:1px solid var(--bdr2);
+  color:var(--tx); padding:7px 11px 7px 30px;
+  border-radius:var(--r); font-size:.78rem;
+  font-family:'Outfit',sans-serif; outline:none; width:180px;
+  transition:border-color .2s, width .25s;
+}
+.search-input:focus { border-color:var(--amber); width:220px; }
+.search-input::placeholder { color:var(--tx3); }
+
+/* TABLE */
+.tbl-wrap {
+  width:100%; overflow-x:auto; border:1px solid var(--bdr);
+  border-radius:var(--rl); -webkit-overflow-scrolling:touch;
+}
+.tbl-wrap::-webkit-scrollbar { height:4px; }
+.tbl-wrap::-webkit-scrollbar-thumb { background:var(--bdr2); border-radius:2px; }
+
+table { width:100%; border-collapse:collapse; min-width:640px; }
+thead { background:var(--card2); }
+th {
+  padding:10px 14px; text-align:left;
+  font-size:.62rem; font-weight:700; color:var(--tx3);
+  text-transform:uppercase; letter-spacing:1px;
+  border-bottom:1px solid var(--bdr); white-space:nowrap;
+  font-family:'DM Mono',monospace;
+}
+th.sortable { cursor:pointer; user-select:none; }
+th.sortable:hover { color:var(--tx2); }
+th.sort-asc::after  { content:" ↑"; color:var(--amber); }
+th.sort-desc::after { content:" ↓"; color:var(--amber); }
+
+td {
+  padding:11px 14px; font-size:.82rem;
+  border-bottom:1px solid var(--bdr); color:var(--tx);
+  transition:background .1s;
+}
+tbody tr { transition:background .12s; }
+tbody tr:hover td { background:var(--card2); }
+tbody tr:last-child td { border-bottom:none; }
+tbody tr { animation:rowIn .3s var(--ease) both; }
+@keyframes rowIn { from{opacity:0;transform:translateX(-6px)} to{opacity:1;transform:none} }
+
+.td-code { font-family:'DM Mono',monospace; font-size:.75rem; color:var(--amber); font-weight:600; }
+.td-dept { color:var(--tx2); font-size:.76rem; }
+.td-num  { font-family:'DM Mono',monospace; font-weight:600; font-size:.88rem; }
+
+.badge {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:3px 9px; border-radius:5px;
+  font-size:.65rem; font-weight:700; letter-spacing:.5px;
+  font-family:'DM Mono',monospace;
+}
+.badge-success { background:var(--em-g); color:var(--emerald); border:1px solid rgba(16,185,129,.25); }
+.badge-warning { background:var(--ora-g); color:var(--orange);  border:1px solid rgba(234,88,12,.25); }
+.badge-danger  { background:var(--rose-g); color:var(--rose);   border:1px solid rgba(244,63,94,.25); }
+
+.badge-dot { width:5px; height:5px; border-radius:50%; background:currentColor; }
+
+.action-btn {
+  padding:4px 11px;
+  background:var(--amber-g); border:1px solid rgba(245,158,11,.3);
+  color:var(--amber); border-radius:6px;
+  font-size:.72rem; font-weight:700; cursor:pointer;
+  font-family:'DM Mono',monospace; transition:all .15s;
+}
+.action-btn:hover { background:var(--amber); color:#000; border-color:var(--amber); }
+
+/* empty state */
+.empty-state { text-align:center; padding:48px 20px; }
+.empty-emoji { font-size:3rem; animation:wobble 3s ease-in-out infinite; display:block; margin-bottom:12px; }
+@keyframes wobble { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)} }
+.empty-text { color:var(--tx3); font-size:.85rem; }
+
+/* pagination */
+.pagination { display:flex; align-items:center; gap:6px; margin-top:14px; flex-wrap:wrap; }
+.page-info { font-size:.75rem; color:var(--tx3); font-family:'DM Mono',monospace; margin-left:auto; }
+.pg-btn {
+  padding:5px 11px; border-radius:6px;
+  background:var(--card2); border:1px solid var(--bdr2);
+  color:var(--tx2); font-size:.75rem; cursor:pointer;
+  font-family:'DM Mono',monospace; transition:all .15s;
+}
+.pg-btn:hover:not(:disabled) { border-color:var(--amber); color:var(--amber); }
+.pg-btn.active { background:var(--amber); border-color:var(--amber); color:#000; font-weight:700; }
+.pg-btn:disabled { opacity:.35; cursor:not-allowed; }
+
+/* ── SIDEBAR ── */
+.panel-side { display:flex; flex-direction:column; background:var(--bg2); }
+
+.side-section { padding:16px; border-bottom:1px solid var(--bdr); }
+.side-title {
+  font-size:.65rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:1.2px; color:var(--tx3); margin-bottom:12px;
+  display:flex; align-items:center; gap:7px;
+  font-family:'DM Mono',monospace;
+}
+.side-title-icon { font-size:14px; }
+
+/* quick action buttons */
+.side-btn {
+  width:100%; display:flex; align-items:center; justify-content:center;
+  gap:8px; padding:10px; border-radius:var(--r); font-size:.8rem;
+  font-weight:700; cursor:pointer; border:none;
+  font-family:'Outfit',sans-serif; transition:all .18s; margin-bottom:7px;
+}
+.side-btn:last-child { margin-bottom:0; }
+.sb-movement { background:var(--ga); color:#fff; box-shadow:0 4px 14px rgba(245,158,11,.3); }
+.sb-movement:hover { opacity:.88; transform:translateY(-1px); box-shadow:0 6px 20px rgba(245,158,11,.4); }
+.sb-bulk     { background:var(--vio-g); color:var(--violet); border:1px solid rgba(139,92,246,.3); }
+.sb-bulk:hover { background:var(--violet); color:#fff; }
+.sb-pdf      { background:var(--rose-g); color:var(--rose); border:1px solid rgba(244,63,94,.3); }
+.sb-pdf:hover { background:var(--rose); color:#fff; }
+.sb-excel    { background:var(--em-g); color:var(--emerald); border:1px solid rgba(16,185,129,.3); }
+.sb-excel:hover { background:var(--emerald); color:#fff; }
+
+/* log panel */
+.log-section { padding:16px; flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.log-header  { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.log-title   { font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; color:var(--cyan); display:flex; align-items:center; gap:6px; font-family:'DM Mono',monospace; }
+.log-live    { width:6px; height:6px; border-radius:50%; background:var(--cyan); animation:blink-c 1.6s ease-in-out infinite; }
+@keyframes blink-c { 0%,100%{opacity:1;box-shadow:0 0 6px var(--cyan)} 50%{opacity:.2;box-shadow:none} }
+
+.log-filter-row { display:flex; gap:4px; margin-bottom:8px; }
+.log-filter-btn {
+  padding:3px 9px; border-radius:5px; font-size:.65rem; font-weight:700;
+  cursor:pointer; border:1px solid var(--bdr2); background:transparent;
+  color:var(--tx3); font-family:'DM Mono',monospace; transition:all .15s;
+}
+.log-filter-btn.active-in   { background:var(--em-g);   color:var(--emerald); border-color:rgba(16,185,129,.3); }
+.log-filter-btn.active-out  { background:var(--rose-g);  color:var(--rose);    border-color:rgba(244,63,94,.3); }
+.log-filter-btn.active-all  { background:var(--cyan-g);  color:var(--cyan);    border-color:rgba(6,182,212,.3); }
+.log-filter-btn:not(.active-in,.active-out,.active-all):hover { border-color:var(--bdr); color:var(--tx2); }
+
+.log-list { overflow-y:auto; flex:1; }
+.log-list::-webkit-scrollbar { width:3px; }
+.log-list::-webkit-scrollbar-thumb { background:var(--bdr2); border-radius:2px; }
+
+.log-item {
+  display:flex; align-items:flex-start; gap:8px;
+  padding:8px 10px; border-radius:7px;
+  border:1px solid transparent;
+  margin-bottom:5px; font-size:.76rem;
+  transition:background .12s; animation:logIn .3s var(--ease);
+}
+@keyframes logIn { from{opacity:0;transform:translateX(8px)} to{opacity:1;transform:none} }
+.log-item:last-child { margin-bottom:0; }
+.log-item.in  { background:rgba(16,185,129,.05); border-color:rgba(16,185,129,.12); }
+.log-item.out { background:rgba(244,63,94,.05);  border-color:rgba(244,63,94,.12); }
+.log-item.bulk{ background:rgba(139,92,246,.06); border-color:rgba(139,92,246,.12); }
+
+.log-badge {
+  font-family:'DM Mono',monospace; font-size:.6rem; font-weight:700;
+  padding:1px 6px; border-radius:3px; flex-shrink:0; margin-top:1px; letter-spacing:.5px;
+}
+.log-badge.in   { background:var(--em-g);  color:var(--emerald); }
+.log-badge.out  { background:var(--rose-g); color:var(--rose); }
+.log-badge.bulk { background:var(--vio-g); color:var(--violet); }
+
+.log-body { flex:1; min-width:0; }
+.log-item-name { font-weight:600; color:var(--tx); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.log-item-meta { color:var(--tx3); font-size:.68rem; margin-top:1px; display:flex; gap:6px; flex-wrap:wrap; font-family:'DM Mono',monospace; }
+.log-qty { font-family:'DM Mono',monospace; font-weight:700; font-size:.76rem; flex-shrink:0; margin-top:1px; }
+.log-qty.in  { color:var(--emerald); }
+.log-qty.out { color:var(--rose); }
+.log-qty.bulk{ color:var(--violet); }
+
+.log-empty { color:var(--tx3); font-size:.78rem; text-align:center; padding:24px 10px; }
+.log-empty-emoji { display:block; font-size:1.6rem; margin-bottom:6px; }
+
+/* alerts */
+.alerts-section { padding:16px; border-bottom:1px solid var(--bdr); }
+.alerts-header  { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.alerts-title   { font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; color:var(--rose); display:flex; align-items:center; gap:6px; font-family:'DM Mono',monospace; }
+.blink-dot      { width:6px; height:6px; border-radius:50%; background:var(--rose); animation:blink-r 1.4s ease-in-out infinite; }
+@keyframes blink-r { 0%,100%{opacity:1;box-shadow:0 0 6px var(--rose)} 50%{opacity:.2;box-shadow:none} }
+.alerts-count   { font-size:.65rem; background:var(--rose-g); color:var(--rose); border:1px solid rgba(244,63,94,.25); padding:2px 8px; border-radius:10px; font-weight:700; font-family:'DM Mono',monospace; }
+
+.alert-row {
+  display:flex; align-items:flex-start; justify-content:space-between;
+  gap:8px; padding:8px 10px; border-radius:6px;
+  background:rgba(244,63,94,.04); border:1px solid rgba(244,63,94,.1);
+  margin-bottom:5px; transition:background .15s;
+}
+.alert-row:hover { background:rgba(244,63,94,.08); }
+.alert-row:last-child { margin-bottom:0; }
+.alert-name { font-size:.76rem; color:var(--tx); font-weight:600; }
+.alert-dept { font-size:.68rem; color:var(--tx3); font-family:'DM Mono',monospace; }
+.alert-qty  { font-family:'DM Mono',monospace; font-size:.72rem; color:var(--rose); font-weight:700; white-space:nowrap; flex-shrink:0; }
+
+/* ── MODALS ── */
+.modal {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,.72); backdrop-filter:blur(8px);
+  z-index:2000; justify-content:center; align-items:center; padding:20px;
+}
+.modal.open { display:flex; }
+.modal-box {
+  background:var(--card); border:1px solid var(--bdr2);
+  border-radius:var(--rl); padding:28px; width:100%; max-width:480px;
+  box-shadow:var(--sh); animation:modalIn .22s var(--bounce);
+  max-height:90vh; overflow-y:auto;
+}
+.modal-box::-webkit-scrollbar { width:3px; }
+.modal-box::-webkit-scrollbar-thumb { background:var(--bdr2); border-radius:2px; }
+@keyframes modalIn { from{opacity:0;transform:scale(.95) translateY(-10px)} to{opacity:1;transform:none} }
+
+.modal-title {
+  font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:800;
+  margin-bottom:20px; display:flex; align-items:center; gap:10px;
+}
+.modal-title-icon { font-size:1.2rem; }
+
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.form-group { margin-bottom:14px; }
+.form-group label {
+  display:block; font-size:.63rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:1px; color:var(--tx3);
+  margin-bottom:5px; font-family:'DM Mono',monospace;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width:100%; background:var(--card2); border:1px solid var(--bdr2);
+  color:var(--tx); padding:9px 12px;
+  border-radius:var(--r); font-family:'Outfit',sans-serif; font-size:.85rem;
+  outline:none; transition:border-color .2s;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { border-color:var(--amber); }
+.form-group input::placeholder { color:var(--tx3); }
+.form-group select option { background:var(--card); }
+.form-group textarea { resize:vertical; min-height:70px; }
+
+.modal-actions { display:flex; gap:8px; margin-top:20px; }
+.modal-actions .mbtn { flex:1; }
+
+.mbtn {
+  display:inline-flex; align-items:center; justify-content:center; gap:7px;
+  padding:10px 18px; border-radius:var(--r);
+  font-family:'Outfit',sans-serif; font-size:.82rem; font-weight:700;
+  cursor:pointer; border:1px solid; transition:all .18s;
+}
+.mbtn-primary { background:var(--ga); color:#fff; border-color:transparent; box-shadow:0 4px 14px rgba(245,158,11,.3); }
+.mbtn-primary:hover { opacity:.9; transform:translateY(-1px); }
+.mbtn-secondary { background:transparent; border-color:var(--bdr2); color:var(--tx2); }
+.mbtn-secondary:hover { border-color:var(--tx2); color:var(--tx); }
+.mbtn-danger { background:var(--rose-g); border-color:rgba(244,63,94,.3); color:var(--rose); }
+.mbtn-danger:hover { background:var(--rose); color:#fff; }
+.mbtn-violet { background:var(--vio-g); border-color:rgba(139,92,246,.3); color:var(--violet); }
+.mbtn-violet:hover { background:var(--violet); color:#fff; }
+
+/* movement type selector */
+.type-selector { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.type-opt {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  padding:10px; border-radius:var(--r); border:2px solid var(--bdr2);
+  cursor:pointer; transition:all .18s; font-weight:700; font-size:.85rem;
+}
+.type-opt.in  { color:var(--emerald); }
+.type-opt.out { color:var(--rose); }
+.type-opt.in.selected  { background:var(--em-g);   border-color:var(--emerald); box-shadow:0 0 0 3px rgba(16,185,129,.15); }
+.type-opt.out.selected { background:var(--rose-g);  border-color:var(--rose);    box-shadow:0 0 0 3px rgba(244,63,94,.15); }
+
+/* bulk upload drop zone */
+.dropzone {
+  border:2px dashed var(--bdr2); border-radius:var(--rl);
+  padding:32px 20px; text-align:center; cursor:pointer;
+  transition:all .2s; margin-bottom:14px;
+}
+.dropzone:hover, .dropzone.dragging { border-color:var(--violet); background:var(--vio-g); }
+.dropzone-emoji { font-size:2.5rem; display:block; margin-bottom:8px; animation:bounce 2s ease-in-out infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+.dropzone-text  { color:var(--tx2); font-size:.85rem; }
+.dropzone-sub   { color:var(--tx3); font-size:.75rem; margin-top:4px; }
+
+/* bulk preview table */
+.bulk-preview {
+  max-height:200px; overflow-y:auto; border:1px solid var(--bdr);
+  border-radius:var(--r); margin-bottom:14px; display:none;
+}
+.bulk-preview table { width:100%; border-collapse:collapse; min-width:300px; }
+.bulk-preview th { padding:7px 10px; font-size:.6rem; font-weight:700; color:var(--tx3); text-transform:uppercase; letter-spacing:.5px; border-bottom:1px solid var(--bdr); background:var(--card2); font-family:'DM Mono',monospace; }
+.bulk-preview td { padding:7px 10px; font-size:.78rem; border-bottom:1px solid var(--bdr); }
+.bulk-preview tr:last-child td { border-bottom:none; }
+.bulk-row-valid   { color:var(--emerald); }
+.bulk-row-invalid { color:var(--rose); }
+
+/* progress bar */
+.progress-bar-wrap { display:none; margin-bottom:14px; }
+.progress-bar-label { font-size:.72rem; color:var(--tx2); margin-bottom:5px; display:flex; justify-content:space-between; }
+.progress-bar-track { height:6px; background:var(--bdr2); border-radius:3px; overflow:hidden; }
+.progress-bar-fill  { height:100%; background:var(--ga); border-radius:3px; transition:width .4s; width:0%; }
+
+/* ── TOAST ── */
+.toast {
+  position:fixed; top:70px; right:20px; z-index:3000;
+  display:flex; align-items:center; gap:10px;
+  padding:12px 16px; border-radius:var(--r);
+  background:var(--card); border:1px solid var(--bdr2);
+  box-shadow:var(--sh); font-size:.82rem; color:var(--tx);
+  transform:translateX(120%); transition:transform .3s var(--ease);
+  max-width:320px;
+}
+.toast.show { transform:translateX(0); }
+.toast.success { border-color:rgba(16,185,129,.4); }
+.toast.error   { border-color:rgba(244,63,94,.4); }
+.toast.info    { border-color:rgba(6,182,212,.4); }
+.toast-icon { font-size:1.1rem; }
+
+/* ── RESPONSIVE ── */
+@media (max-width:960px) {
+  .stats-bar  { grid-template-columns:repeat(2,1fr); }
+  .workspace  { grid-template-columns:1fr; }
+  .panel-main { border-right:none; border-bottom:1px solid var(--bdr); }
+  .panel-side { flex-direction:row; flex-wrap:wrap; }
+  .side-section { flex:1; min-width:200px; border-right:1px solid var(--bdr); border-bottom:none; }
+  .alerts-section { flex:1; min-width:200px; }
+  .log-section { min-height:200px; flex:1; min-width:200px; }
+}
+@media (max-width:600px) {
+  .topbar { padding:0 12px; }
+  .brand-sub,.page-title,.divider-v { display:none; }
+  .portal-back span { display:none; }
+  .portal-back { padding:6px 10px; }
+  .stats-bar  { grid-template-columns:repeat(2,1fr); padding:10px 12px; gap:8px; }
+  .stat-card  { padding:10px; }
+  .panel-main { padding:14px; }
+  .toolbar    { width:100%; }
+  .search-input { width:100%; }
+  .filter-select { width:100%; }
+  .form-row   { grid-template-columns:1fr; }
+  .modal-box  { padding:20px; }
+  .log-section { border-right:none; }
+  .panel-side { flex-direction:column; }
+  .side-section { border-right:none; border-bottom:1px solid var(--bdr); }
+}
+
+/* ── SPINNER ── */
+.spin { width:16px; height:16px; border:2px solid var(--bdr2); border-top-color:var(--amber); border-radius:50%; animation:spin-r .6s linear infinite; flex-shrink:0; }
+@keyframes spin-r { to{transform:rotate(360deg)} }
+
+/* ── SCROLL TOP BTN ── */
+.scroll-top {
+  position:fixed; bottom:22px; right:20px; z-index:500;
+  width:40px; height:40px; border-radius:50%;
+  background:var(--card); border:1px solid var(--bdr2);
+  color:var(--tx2); cursor:pointer; display:flex; align-items:center; justify-content:center;
+  box-shadow:var(--sh); transition:all .2s; opacity:0; pointer-events:none;
+}
+.scroll-top.visible { opacity:1; pointer-events:auto; }
+.scroll-top:hover { background:var(--amber); border-color:var(--amber); color:#000; }
+.scroll-top svg { width:16px; height:16px; }
+
+/* ── EXPORT PDF PRINT STYLES ── */
+@media print {
+  .topbar,.stats-bar,.portal-back,.scroll-top,.toast,
+  .side-section,.log-section,.alerts-section,
+  .toolbar,.pagination,.action-btn,
+  .bg-orbs { display:none !important; }
+  .workspace { grid-template-columns:1fr !important; }
+  .panel-main { padding:0 !important; border:none !important; }
+  body { background:#fff !important; color:#000 !important; }
+  table { border:1px solid #ccc; }
+  th,td { border:1px solid #ddd !important; color:#000 !important; padding:6px 10px !important; }
+  .badge { border:1px solid #ccc !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- animated bg -->
+<div class="bg-orbs" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- ══ TOPBAR ══ -->
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="brand">
+      <div class="brand-mark">🏭</div>
+      <div class="brand-text">
+        <span class="brand-name">ONEWEST</span>
+        <span class="brand-sub">Inventory · MMS</span>
+      </div>
+    </div>
+    <div class="divider-v"></div>
+    <span class="page-title">📦 Stock Dashboard</span>
+  </div>
+  <div class="topbar-right">
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+      <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <span id="theme-label">LIGHT</span>
+    </button>
+    <a href="/onewest" class="portal-back" title="Back to OneWest Portal">
+      <span class="portal-back-dot"></span>
+      <span>← Portal</span>
+    </a>
+  </div>
+</header>
+
+<!-- ══ STATS BAR ══ -->
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="stat-icon si-a">📦</div>
+    <div class="stat-info">
+      <div class="stat-val" id="totalItems">—</div>
+      <div class="stat-lbl">Total Items</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon si-g">✅</div>
+    <div class="stat-info">
+      <div class="stat-val" id="inStock">—</div>
+      <div class="stat-lbl">In Stock</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon si-y">⚠️</div>
+    <div class="stat-info">
+      <div class="stat-val" id="lowStock">—</div>
+      <div class="stat-lbl">Low Stock</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon si-r">🚨</div>
+    <div class="stat-info">
+      <div class="stat-val" id="outStock">—</div>
+      <div class="stat-lbl">Out of Stock</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ WORKSPACE ══ -->
+<div class="workspace">
+
+  <!-- LEFT: TABLE PANEL -->
+  <div class="panel-main">
+    <div class="panel-head">
+      <div class="panel-title">
+        <span class="panel-title-bar"></span>
+        Stock Inventory
+      </div>
+      <div class="toolbar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-input" id="searchInput" type="search" placeholder="Search items…" oninput="applyFilters()"/>
+        </div>
+        <select class="filter-select" id="deptFilter" onchange="applyFilters()">
+          <option value="all">🏢 All Departments</option>
+          <option value="Electrical">⚡ Electrical</option>
+          <option value="Plumbing">🔧 Plumbing</option>
+          <option value="Carpentry">🪚 Carpentry</option>
+          <option value="HVAC">❄️ HVAC</option>
+          <option value="Painting">🎨 Painting</option>
+          <option value="Security">🔐 Security</option>
+          <option value="Fire">🔥 Fire</option>
+          <option value="Stationery">✏️ Stationery</option>
+        </select>
+        <select class="filter-select" id="statusFilter" onchange="applyFilters()">
+          <option value="all">📊 All Status</option>
+          <option value="In Stock">✅ In Stock</option>
+          <option value="Low Stock">⚠️ Low Stock</option>
+          <option value="Out of Stock">🚨 Out of Stock</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="sortable" onclick="sortTable('item_code')">Code</th>
+            <th class="sortable" onclick="sortTable('item_name')">Item Name</th>
+            <th class="sortable" onclick="sortTable('department')">Dept</th>
+            <th>Unit</th>
+            <th class="sortable" onclick="sortTable('current_stock')">Stock</th>
+            <th>Min</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="inventoryTableBody">
+          <tr><td colspan="8" style="text-align:center;padding:36px;">
+            <div style="display:flex;align-items:center;justify-content:center;gap:10px;color:var(--tx3)">
+              <div class="spin"></div> Loading inventory…
+            </div>
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination" id="paginationWrap"></div>
+  </div>
+
+  <!-- RIGHT: SIDEBAR -->
+  <div class="panel-side">
+
+    <!-- QUICK ACTIONS -->
+    <div class="side-section">
+      <div class="side-title"><span class="side-title-icon">⚡</span> Quick Actions</div>
+      <button class="side-btn sb-movement" onclick="openMovementModal()">
+        📤 New Stock Movement
+      </button>
+      <button class="side-btn sb-bulk" onclick="openBulkModal()">
+        📋 Bulk Upload
+      </button>
+      <button class="side-btn sb-pdf" onclick="exportPDF()">
+        📄 Export PDF
+      </button>
+      <button class="side-btn sb-excel" onclick="exportExcel()">
+        📊 Export Excel
+      </button>
+    </div>
+
+    <!-- LOW STOCK ALERTS -->
+    <div class="alerts-section">
+      <div class="alerts-header">
+        <div class="alerts-title">
+          <span class="blink-dot"></span> Low Stock Alerts
+        </div>
+        <span class="alerts-count" id="alertsCount">0</span>
+      </div>
+      <div id="alertsList">
+        <div style="color:var(--tx3);font-size:.78rem;text-align:center;padding:20px;">Loading…</div>
+      </div>
+    </div>
+
+    <!-- TRANSACTION LOG -->
+    <div class="log-section">
+      <div class="log-header">
+        <div class="log-title"><span class="log-live"></span> Transaction Log</div>
+        <button onclick="clearLog()" style="font-size:.65rem;color:var(--tx3);background:none;border:none;cursor:pointer;font-family:'DM Mono',monospace;" title="Clear log">Clear</button>
+      </div>
+      <div class="log-filter-row">
+        <button class="log-filter-btn active-all" onclick="filterLog('all',this)">ALL</button>
+        <button class="log-filter-btn" onclick="filterLog('in',this)">IN</button>
+        <button class="log-filter-btn" onclick="filterLog('out',this)">OUT</button>
+        <button class="log-filter-btn" onclick="filterLog('bulk',this)">BULK</button>
+      </div>
+      <div class="log-list" id="logList">
+        <div class="log-empty">
+          <span class="log-empty-emoji">🪵</span>
+          No transactions yet.<br>Stock movements will appear here.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ MOVEMENT MODAL ══ -->
+<div class="modal" id="movementModal" onclick="closeOnBackdrop(event,'movementModal')">
+  <div class="modal-box">
+    <div class="modal-title">
+      <span class="modal-title-icon">📤</span>
+      <span id="movModalTitle">Stock Movement</span>
+    </div>
+
+    <div class="form-group" id="movItemCodeGroup">
+      <label>Item Code *</label>
+      <input type="text" id="movItemCode" placeholder="e.g. E-0001" oninput="lookupItem()"/>
+      <div id="movItemPreview" style="margin-top:6px;font-size:.75rem;color:var(--tx3);font-family:'DM Mono',monospace;min-height:16px;"></div>
+    </div>
+
+    <div class="form-group">
+      <label>Movement Type *</label>
+      <div class="type-selector">
+        <div class="type-opt in selected" id="typeIn" onclick="selectType('IN')">
+          ⬆️ Stock IN
+        </div>
+        <div class="type-opt out" id="typeOut" onclick="selectType('OUT')">
+          ⬇️ Stock OUT
+        </div>
+      </div>
+      <input type="hidden" id="movType" value="IN"/>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Quantity *</label>
+        <input type="number" id="movQty" min="1" value="1" placeholder="Qty"/>
+      </div>
+      <div class="form-group">
+        <label>Issued To / Received From</label>
+        <input type="text" id="movPerson" placeholder="Name or dept"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Remarks</label>
+      <textarea id="movRemarks" placeholder="Optional notes…"></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="mbtn mbtn-secondary" onclick="closeModal('movementModal')">Cancel</button>
+      <button class="mbtn mbtn-primary" onclick="submitMovement()">
+        <span id="movBtnText">✓ Confirm</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BULK UPLOAD MODAL ══ -->
+<div class="modal" id="bulkModal" onclick="closeOnBackdrop(event,'bulkModal')">
+  <div class="modal-box" style="max-width:560px">
+    <div class="modal-title">
+      <span class="modal-title-icon">📋</span> Bulk Upload
+    </div>
+    <p style="font-size:.8rem;color:var(--tx2);margin-bottom:16px;line-height:1.6;">
+      Upload an Excel file (<code style="font-family:'DM Mono',monospace;color:var(--amber)">.xlsx</code>) or CSV with columns:
+      <strong>Item_Code, Movement_Type (IN/OUT), Quantity, Remarks</strong>
+    </p>
+
+    <div class="dropzone" id="bulkDropzone"
+         ondragover="event.preventDefault();this.classList.add('dragging')"
+         ondragleave="this.classList.remove('dragging')"
+         ondrop="handleBulkDrop(event)"
+         onclick="document.getElementById('bulkFileInput').click()">
+      <span class="dropzone-emoji">📂</span>
+      <div class="dropzone-text">Drop your file here or <strong>click to browse</strong></div>
+      <div class="dropzone-sub">Accepts .xlsx, .xls, .csv · Max 5MB</div>
+    </div>
+    <input type="file" id="bulkFileInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="parseBulkFile(this)"/>
+
+    <div class="progress-bar-wrap" id="bulkProgress">
+      <div class="progress-bar-label">
+        <span id="bulkProgressLabel">Processing…</span>
+        <span id="bulkProgressPct">0%</span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="bulkProgressFill"></div>
+      </div>
+    </div>
+
+    <div class="bulk-preview" id="bulkPreview">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Item Code</th><th>Type</th><th>Qty</th><th>Remarks</th><th>Status</th></tr>
+        </thead>
+        <tbody id="bulkPreviewBody"></tbody>
+      </table>
+    </div>
+
+    <div id="bulkSummary" style="font-size:.78rem;color:var(--tx2);margin-bottom:14px;display:none;font-family:'DM Mono',monospace;"></div>
+
+    <div class="modal-actions">
+      <button class="mbtn mbtn-secondary" onclick="closeModal('bulkModal')">Cancel</button>
+      <button class="mbtn mbtn-violet" id="bulkSubmitBtn" onclick="submitBulk()" style="display:none">
+        🚀 Process All
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon"></span>
+  <span id="toastMsg"></span>
+</div>
+
+<!-- ══ SCROLL TOP ══ -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<script>
+/* ════════════════════════════════════════════════════════
+   ONEWEST INVENTORY DASHBOARD — Global page, persistent
+════════════════════════════════════════════════════════ */
+
+/* ── STATE ── */
+let _allItems    = [];   // all items from server
+let _filtered    = [];   // after filter/search
+let _sortKey     = '';
+let _sortDir     = 1;    // 1=asc -1=desc
+let _page        = 1;
+const PAGE_SIZE  = 25;
+let _logFilter   = 'all';
+let _bulkRows    = [];
+let _countTimer  = null;
+
+/* ── TRANSACTION LOG (in-memory, session) ── */
+const _txLog = [];
+
+/* ── THEME ── */
+function toggleTheme(){
+  const d=document.documentElement;
+  const now=d.getAttribute('data-theme');
+  const next=now==='dark'?'light':'dark';
+  d.setAttribute('data-theme',next);
+  localStorage.setItem('ow_inv_theme',next);
+  updateThemeIcon(next);
+}
+function updateThemeIcon(t){
+  const lbl=document.getElementById('theme-label');
+  const ico=document.getElementById('theme-icon');
+  if(t==='light'){
+    lbl.textContent='DARK';
+    ico.innerHTML='<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  }else{
+    lbl.textContent='LIGHT';
+    ico.innerHTML='<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+  }
+}
+(function initTheme(){
+  const t=localStorage.getItem('ow_inv_theme')||'dark';
+  document.documentElement.setAttribute('data-theme',t);
+  updateThemeIcon(t);
+})();
+
+/* ── TOAST ── */
+let _toastTimer;
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  const ic=document.getElementById('toastIcon');
+  const ms=document.getElementById('toastMsg');
+  const icons={success:'✅',error:'❌',info:'ℹ️'};
+  ic.textContent=icons[type]||'ℹ️';
+  t.className='toast '+type;
+  ms.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer=setTimeout(()=>t.classList.remove('show'),3800);
+}
+
+/* ── SCROLL TOP ── */
+window.addEventListener('scroll',()=>{
+  const btn=document.getElementById('scrollTop');
+  btn.classList.toggle('visible',window.scrollY>300);
+});
+
+/* ── LOAD INVENTORY ── */
+async function loadInventory(){
+  try{
+    const dept=document.getElementById('deptFilter').value;
+    const status=document.getElementById('statusFilter').value;
+    const res=await fetch(`/ow_api/inventory/items?department=${dept}&status=${status}`);
+    const data=await res.json();
+    if(data.success){
+      _allItems=data.items||[];
+      updateStats(data);
+      applyFilters();
+      loadAlerts();
+    }else{
+      showEmpty('Server error: '+(data.error||'unknown'));
+    }
+  }catch(e){
+    showEmpty('⚠️ Cannot connect to server');
+  }
+}
+
+function showEmpty(msg){
+  document.getElementById('inventoryTableBody').innerHTML=
+    `<tr><td colspan="8"><div class="empty-state">
+      <span class="empty-emoji">📭</span>
+      <div class="empty-text">${esc(msg)}</div>
+    </div></td></tr>`;
+}
+
+/* ── STATS ── */
+function updateStats(data){
+  // Compute from items if server doesn't return summary
+  const items=data.items||[];
+  const total = data.total      ?? items.length;
+  const inS   = data.in_stock   ?? items.filter(i=>i.status==='In Stock').length;
+  const lowS  = data.low_stock  ?? items.filter(i=>i.status==='Low Stock').length;
+  const outS  = data.out_of_stock ?? items.filter(i=>i.status==='Out of Stock').length;
+  animNum('totalItems', total);
+  animNum('inStock',    inS);
+  animNum('lowStock',   lowS);
+  animNum('outStock',   outS);
+}
+function animNum(id,target){
+  const el=document.getElementById(id);
+  if(!el) return;
+  const start=parseInt(el.textContent)||0;
+  const dur=600; const s=performance.now();
+  function step(now){
+    const p=Math.min((now-s)/dur,1);
+    el.textContent=Math.round(start+(target-start)*p);
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* ── FILTER / SEARCH / SORT ── */
+function applyFilters(){
+  const search=(document.getElementById('searchInput').value||'').toLowerCase().trim();
+  const dept=document.getElementById('deptFilter').value;
+  const status=document.getElementById('statusFilter').value;
+
+  _filtered=_allItems.filter(i=>{
+    if(dept!=='all' && i.department!==dept) return false;
+    if(status!=='all' && i.status!==status) return false;
+    if(search){
+      const hay=`${i.item_code} ${i.item_name} ${i.department}`.toLowerCase();
+      if(!hay.includes(search)) return false;
+    }
+    return true;
+  });
+
+  if(_sortKey) sortFiltered();
+  _page=1;
+  renderTable();
+}
+
+function sortTable(key){
+  if(_sortKey===key) _sortDir*=-1;
+  else { _sortKey=key; _sortDir=1; }
+  document.querySelectorAll('th').forEach(th=>th.classList.remove('sort-asc','sort-desc'));
+  const th=document.querySelector(`th[onclick="sortTable('${key}')"]`);
+  if(th) th.classList.add(_sortDir===1?'sort-asc':'sort-desc');
+  sortFiltered();
+  renderTable();
+}
+function sortFiltered(){
+  _filtered.sort((a,b)=>{
+    let av=a[_sortKey],bv=b[_sortKey];
+    if(typeof av==='number'&&typeof bv==='number') return (av-bv)*_sortDir;
+    return String(av).localeCompare(String(bv))*_sortDir;
+  });
+}
+
+/* ── RENDER TABLE ── */
+function renderTable(){
+  const tbody=document.getElementById('inventoryTableBody');
+  const total=_filtered.length;
+  const pages=Math.max(1,Math.ceil(total/PAGE_SIZE));
+  _page=Math.min(_page,pages);
+  const start=(_page-1)*PAGE_SIZE;
+  const slice=_filtered.slice(start,start+PAGE_SIZE);
+
+  if(!slice.length){
+    tbody.innerHTML=`<tr><td colspan="8"><div class="empty-state">
+      <span class="empty-emoji">🔍</span>
+      <div class="empty-text">No items match your filters</div>
+    </div></td></tr>`;
+    renderPagination(0,0,0);
+    return;
+  }
+
+  const deptEmoji={Electrical:'⚡',Plumbing:'🔧',Carpentry:'🪚',HVAC:'❄️',Painting:'🎨',Security:'🔐',Fire:'🔥',Stationery:'✏️'};
+  const statusBadge={
+    'In Stock'   :'<span class="badge badge-success"><span class="badge-dot"></span>In Stock</span>',
+    'Low Stock'  :'<span class="badge badge-warning"><span class="badge-dot"></span>Low Stock</span>',
+    'Out of Stock':'<span class="badge badge-danger"><span class="badge-dot"></span>Out of Stock</span>',
+  };
+
+  tbody.innerHTML=slice.map((item,idx)=>{
+    const em=deptEmoji[item.department]||'📦';
+    const bge=statusBadge[item.status]||`<span class="badge badge-warning">${esc(item.status)}</span>`;
+    const stockColor=item.status==='In Stock'?'color:var(--emerald)':item.status==='Low Stock'?'color:var(--orange)':'color:var(--rose)';
+    return `<tr style="animation-delay:${idx*0.03}s">
+      <td class="td-code">${esc(item.item_code)}</td>
+      <td><strong>${esc(item.item_name)}</strong></td>
+      <td class="td-dept">${em} ${esc(item.department)}</td>
+      <td class="td-dept">${esc(item.unit)}</td>
+      <td class="td-num" style="${stockColor}">${item.current_stock}</td>
+      <td class="td-num" style="color:var(--tx3)">${item.min_stock_level}</td>
+      <td>${bge}</td>
+      <td><button class="action-btn" onclick="openMovementModal('${esc(item.item_code)}')">Update</button></td>
+    </tr>`;
+  }).join('');
+
+  renderPagination(total,_page,pages);
+}
+
+/* ── PAGINATION ── */
+function renderPagination(total,page,pages){
+  const wrap=document.getElementById('paginationWrap');
+  if(total===0){ wrap.innerHTML=''; return; }
+  let html=`<button class="pg-btn" onclick="goPage(${page-1})" ${page<=1?'disabled':''}>←</button>`;
+  const show=[1,page-1,page,page+1,pages].filter(p=>p>=1&&p<=pages);
+  const uniq=[...new Set(show)].sort((a,b)=>a-b);
+  let prev=0;
+  uniq.forEach(p=>{
+    if(p-prev>1) html+=`<span style="color:var(--tx3);font-size:.8rem;font-family:'DM Mono',monospace">…</span>`;
+    html+=`<button class="pg-btn${p===page?' active':''}" onclick="goPage(${p})">${p}</button>`;
+    prev=p;
+  });
+  html+=`<button class="pg-btn" onclick="goPage(${page+1})" ${page>=pages?'disabled':''}>→</button>`;
+  html+=`<span class="page-info">${(page-1)*PAGE_SIZE+1}–${Math.min(page*PAGE_SIZE,total)} of ${total}</span>`;
+  wrap.innerHTML=html;
+}
+function goPage(p){
+  _page=p;
+  renderTable();
+  document.querySelector('.panel-main').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ── ALERTS ── */
+async function loadAlerts(){
+  try{
+    const res=await fetch('/ow_api/inventory/alerts');
+    const data=await res.json();
+    const el=document.getElementById('alertsList');
+    const cnt=document.getElementById('alertsCount');
+    const alerts=data.alerts||[];
+    cnt.textContent=alerts.length;
+
+    if(!alerts.length){
+      el.innerHTML='<div style="color:var(--emerald);font-size:.78rem;text-align:center;padding:16px;">✅ All items sufficiently stocked</div>';
+      return;
+    }
+    el.innerHTML=alerts.slice(0,12).map(a=>`
+      <div class="alert-row">
+        <div>
+          <div class="alert-name">${esc(a.item_code)} — ${esc(a.item_name)}</div>
+          <div class="alert-dept">${esc(a.department)}</div>
+        </div>
+        <div class="alert-qty">${a.current_stock}/${a.min_stock_level}</div>
+      </div>`).join('');
+  }catch(e){ console.warn('alerts err',e); }
+}
+
+/* ── LOOKUP ITEM ── */
+async function lookupItem(){
+  const code=document.getElementById('movItemCode').value.trim().toUpperCase();
+  const prev=document.getElementById('movItemPreview');
+  if(!code){ prev.textContent=''; return; }
+  const item=_allItems.find(i=>i.item_code.toUpperCase()===code);
+  if(item){
+    prev.innerHTML=`<span style="color:var(--emerald)">✅ ${esc(item.item_name)} — ${item.department} — Stock: <strong>${item.current_stock} ${item.unit}</strong></span>`;
+  }else{
+    prev.innerHTML=`<span style="color:var(--tx3)">Item not found in current inventory</span>`;
+  }
+}
+
+/* ── MOVEMENT TYPE SELECTOR ── */
+let _movType='IN';
+function selectType(t){
+  _movType=t;
+  document.getElementById('movType').value=t;
+  document.getElementById('typeIn').classList.toggle('selected',t==='IN');
+  document.getElementById('typeOut').classList.toggle('selected',t==='OUT');
+}
+
+/* ── OPEN MOVEMENT MODAL ── */
+function openMovementModal(itemCode=''){
+  document.getElementById('movItemCode').value=itemCode;
+  if(itemCode) lookupItem();
+  selectType('IN');
+  document.getElementById('movQty').value='1';
+  document.getElementById('movPerson').value='';
+  document.getElementById('movRemarks').value='';
+  document.getElementById('movBtnText').textContent='✓ Confirm';
+  document.getElementById('movementModal').classList.add('open');
+  setTimeout(()=>document.getElementById(itemCode?'movQty':'movItemCode').focus(),100);
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+}
+function closeOnBackdrop(e,id){
+  if(e.target===document.getElementById(id)) closeModal(id);
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySelectorAll('.modal.open').forEach(m=>m.classList.remove('open')); });
+
+/* ── SUBMIT MOVEMENT ── */
+async function submitMovement(){
+  const code=document.getElementById('movItemCode').value.trim();
+  const qty=parseInt(document.getElementById('movQty').value)||0;
+  const person=document.getElementById('movPerson').value.trim();
+  const remarks=document.getElementById('movRemarks').value.trim();
+
+  if(!code){ showToast('Item Code is required','error'); return; }
+  if(qty<1){ showToast('Quantity must be ≥ 1','error'); return; }
+
+  // OUT stock check
+  if(_movType==='OUT'){
+    const item=_allItems.find(i=>i.item_code.toUpperCase()===code.toUpperCase());
+    if(item && qty>item.current_stock){
+      showToast(`Insufficient stock! Only ${item.current_stock} available`,'error');
+      return;
+    }
+  }
+
+  const btn=document.getElementById('movBtnText');
+  btn.innerHTML='<span class="spin"></span> Processing…';
+
+  try{
+    const res=await fetch('/ow_api/inventory/movement',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ item_code:code, movement_type:_movType, quantity:qty, remarks:`${remarks}${person?' | '+person:''}` })
+    });
+    const data=await res.json();
+
+    if(data.success){
+      const item=_allItems.find(i=>i.item_code.toUpperCase()===code.toUpperCase());
+      addLog({
+        type:_movType.toLowerCase(),
+        name:`${code}${item?' — '+item.item_name:''}`,
+        qty:(_movType==='IN'?'+':'-')+qty,
+        dept:item?.department||'',
+        person, remarks,
+        ts:new Date()
+      });
+      showToast(`Stock ${_movType} recorded ✅ New stock: ${data.new_stock}`);
+      closeModal('movementModal');
+      loadInventory();
+    }else{
+      showToast('Error: '+(data.error||'unknown'),'error');
+      btn.textContent='✓ Confirm';
+    }
+  }catch(e){
+    showToast('Network error: '+e.message,'error');
+    btn.textContent='✓ Confirm';
+  }
+}
+
+/* ── TRANSACTION LOG ── */
+function addLog(entry){
+  _txLog.unshift(entry);
+  renderLog();
+}
+
+function renderLog(){
+  const list=document.getElementById('logList');
+  let items=_logFilter==='all'?_txLog:_txLog.filter(e=>e.type===_logFilter);
+
+  if(!items.length){
+    list.innerHTML=`<div class="log-empty">
+      <span class="log-empty-emoji">${_logFilter==='all'?'🪵':_logFilter==='in'?'📦':'📤'}</span>
+      No ${_logFilter==='all'?'':_logFilter.toUpperCase()+' '}transactions yet.
+    </div>`;
+    return;
+  }
+
+  list.innerHTML=items.slice(0,50).map(e=>{
+    const timeStr=e.ts?e.ts.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'}):'';
+    const dateStr=e.ts?e.ts.toLocaleDateString([],{month:'short',day:'numeric'}):'';
+    const label=e.type==='bulk'?'BULK':e.type.toUpperCase();
+    return `<div class="log-item ${e.type}">
+      <span class="log-badge ${e.type}">${label}</span>
+      <div class="log-body">
+        <div class="log-item-name">${esc(e.name)}</div>
+        <div class="log-item-meta">
+          ${e.dept?`<span>🏢 ${esc(e.dept)}</span>`:''}
+          ${e.person?`<span>👤 ${esc(e.person)}</span>`:''}
+          ${e.remarks?`<span title="${esc(e.remarks)}">💬 ${esc(e.remarks.slice(0,30))}${e.remarks.length>30?'…':''}</span>`:''}
+          <span>🕐 ${dateStr} ${timeStr}</span>
+        </div>
+      </div>
+      <span class="log-qty ${e.type}">${esc(e.qty)}</span>
+    </div>`;
+  }).join('');
+}
+
+function filterLog(type, btn){
+  _logFilter=type;
+  document.querySelectorAll('.log-filter-btn').forEach(b=>{
+    b.className='log-filter-btn';
+    if(b===btn) b.classList.add('active-'+type);
+  });
+  renderLog();
+}
+
+function clearLog(){
+  if(!_txLog.length) return;
+  if(!confirm('Clear all transaction log entries?')) return;
+  _txLog.length=0;
+  renderLog();
+  showToast('Log cleared','info');
+}
+
+/* ── BULK UPLOAD ── */
+function openBulkModal(){
+  _bulkRows=[];
+  document.getElementById('bulkPreview').style.display='none';
+  document.getElementById('bulkPreviewBody').innerHTML='';
+  document.getElementById('bulkSummary').style.display='none';
+  document.getElementById('bulkSubmitBtn').style.display='none';
+  document.getElementById('bulkProgress').style.display='none';
+  document.getElementById('bulkProgressFill').style.width='0%';
+  document.getElementById('bulkFileInput').value='';
+  document.getElementById('bulkDropzone').classList.remove('dragging');
+  document.getElementById('bulkModal').classList.add('open');
+}
+
+function handleBulkDrop(e){
+  e.preventDefault();
+  document.getElementById('bulkDropzone').classList.remove('dragging');
+  const file=e.dataTransfer.files[0];
+  if(file) parseBulkFile({files:[file]});
+}
+
+function parseBulkFile(input){
+  const file=input.files[0];
+  if(!file) return;
+  const ext=file.name.split('.').pop().toLowerCase();
+
+  if(ext==='csv'){
+    const reader=new FileReader();
+    reader.onload=ev=>parseCSVText(ev.target.result);
+    reader.readAsText(file);
+  }else if(['xlsx','xls'].includes(ext)){
+    // SheetJS via CDN
+    if(!window.XLSX){
+      const s=document.createElement('script');
+      s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+      s.onload=()=>{ parseXLSX(file); };
+      document.head.appendChild(s);
+    }else{ parseXLSX(file); }
+  }else{
+    showToast('Unsupported file type. Use .xlsx or .csv','error');
+  }
+}
+
+function parseXLSX(file){
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const wb=XLSX.read(ev.target.result,{type:'array'});
+    const ws=wb.Sheets[wb.SheetNames[0]];
+    const rows=XLSX.utils.sheet_to_json(ws,{defval:''});
+    processBulkRows(rows);
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function parseCSVText(text){
+  const lines=text.trim().split('\n');
+  const headers=lines[0].split(',').map(h=>h.trim().replace(/"/g,''));
+  const rows=lines.slice(1).map(line=>{
+    const vals=line.split(',').map(v=>v.trim().replace(/"/g,''));
+    const obj={};
+    headers.forEach((h,i)=>obj[h]=vals[i]||'');
+    return obj;
+  });
+  processBulkRows(rows);
+}
+
+function processBulkRows(rows){
+  _bulkRows=rows.map((r,idx)=>{
+    const code=(r.Item_Code||r.item_code||r['Item Code']||'').toString().trim();
+    const type=(r.Movement_Type||r.movement_type||r.Type||r.type||'IN').toString().trim().toUpperCase();
+    const qty=parseInt(r.Quantity||r.quantity||r.Qty||r.qty||0);
+    const rem=(r.Remarks||r.remarks||'').toString().trim();
+    const valid=!!code && (type==='IN'||type==='OUT') && qty>0;
+    const item=_allItems.find(i=>i.item_code.toUpperCase()===code.toUpperCase());
+    return { idx:idx+1, code, type, qty, rem, valid, itemName:item?.item_name||'' };
+  }).filter(r=>r.code||r.qty);
+
+  const tbody=document.getElementById('bulkPreviewBody');
+  tbody.innerHTML=_bulkRows.map(r=>`
+    <tr>
+      <td style="color:var(--tx3)">${r.idx}</td>
+      <td class="${r.valid?'bulk-row-valid':'bulk-row-invalid'}">${esc(r.code)}</td>
+      <td style="color:${r.type==='IN'?'var(--emerald)':'var(--rose)'}">${r.type}</td>
+      <td style="font-family:'DM Mono',monospace">${r.qty}</td>
+      <td style="color:var(--tx2);font-size:.72rem">${esc(r.rem.slice(0,20))}</td>
+      <td>${r.valid?'<span style="color:var(--emerald)">✅</span>':'<span style="color:var(--rose)">❌</span>'}</td>
+    </tr>`).join('');
+
+  const valid=_bulkRows.filter(r=>r.valid).length;
+  const invalid=_bulkRows.length-valid;
+  document.getElementById('bulkSummary').innerHTML=`
+    📊 <strong>${_bulkRows.length}</strong> rows found — 
+    <span style="color:var(--emerald)">✅ ${valid} valid</span>
+    ${invalid?`<span style="color:var(--rose); margin-left:8px">❌ ${invalid} invalid (will be skipped)</span>`:''}`;
+  document.getElementById('bulkSummary').style.display='block';
+  document.getElementById('bulkPreview').style.display='block';
+  if(valid>0) document.getElementById('bulkSubmitBtn').style.display='inline-flex';
+}
+
+async function submitBulk(){
+  const rows=_bulkRows.filter(r=>r.valid);
+  if(!rows.length){ showToast('No valid rows to process','error'); return; }
+
+  document.getElementById('bulkSubmitBtn').style.display='none';
+  const prog=document.getElementById('bulkProgress');
+  const fill=document.getElementById('bulkProgressFill');
+  const plbl=document.getElementById('bulkProgressLabel');
+  const ppct=document.getElementById('bulkProgressPct');
+  prog.style.display='block';
+
+  let done=0; let ok=0; let fail=0;
+  for(const row of rows){
+    try{
+      const res=await fetch('/ow_api/inventory/movement',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ item_code:row.code, movement_type:row.type, quantity:row.qty, remarks:row.rem||'Bulk upload' })
+      });
+      const data=await res.json();
+      if(data.success){ ok++; }else{ fail++; }
+    }catch(e){ fail++; }
+
+    done++;
+    const pct=Math.round(done/rows.length*100);
+    fill.style.width=pct+'%';
+    ppct.textContent=pct+'%';
+    plbl.textContent=`Processing ${done}/${rows.length}…`;
+    await new Promise(r=>setTimeout(r,80));
+  }
+
+  // log it
+  addLog({
+    type:'bulk',
+    name:`Bulk Upload — ${rows.length} rows (${ok} ✅ ${fail} ❌)`,
+    qty:`×${rows.length}`,
+    dept:'', person:'', remarks:`${ok} succeeded, ${fail} failed`,
+    ts:new Date()
+  });
+
+  plbl.textContent=`Done! ${ok} succeeded, ${fail} failed.`;
+  fill.style.background=fail?'linear-gradient(135deg,var(--amber),var(--rose))':'linear-gradient(135deg,var(--emerald),var(--cyan))';
+  showToast(`Bulk upload: ${ok}/${rows.length} processed ✅`);
+  setTimeout(()=>{ closeModal('bulkModal'); loadInventory(); },1800);
+}
+
+/* ── EXPORT EXCEL ── */
+function exportExcel(){
+  window.open('/ow_api/inventory/export','_blank');
+  showToast('Excel export started 📊');
+  addLog({ type:'out', name:'Export — Excel download', qty:'📊', dept:'', person:'', remarks:'', ts:new Date() });
+}
+
+/* ── EXPORT PDF (print-based) ── */
+function exportPDF(){
+  // Build a print-ready popup
+  const rows=_filtered.length?_filtered:_allItems;
+  const now=new Date().toLocaleString();
+  const deptEmoji={Electrical:'⚡',Plumbing:'🔧',Carpentry:'🪚',HVAC:'❄️',Painting:'🎨',Security:'🔐',Fire:'🔥',Stationery:'✏️'};
+
+  const tableRows=rows.map(item=>`
+    <tr>
+      <td>${esc(item.item_code)}</td>
+      <td>${esc(item.item_name)}</td>
+      <td>${(deptEmoji[item.department]||'')}&nbsp;${esc(item.department)}</td>
+      <td>${esc(item.unit)}</td>
+      <td style="font-weight:700">${item.current_stock}</td>
+      <td>${item.min_stock_level}</td>
+      <td style="color:${item.status==='In Stock'?'#059669':item.status==='Low Stock'?'#d97706':'#e11d48'}">${esc(item.status)}</td>
+    </tr>`).join('');
+
+  const stats=`
+    <div style="display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap;">
+      <div style="background:#fef3c7;border-radius:8px;padding:10px 16px;min-width:100px;">
+        <div style="font-size:22px;font-weight:700">${document.getElementById('totalItems').textContent}</div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#92400e">Total</div>
+      </div>
+      <div style="background:#d1fae5;border-radius:8px;padding:10px 16px;min-width:100px;">
+        <div style="font-size:22px;font-weight:700;color:#065f46">${document.getElementById('inStock').textContent}</div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#065f46">In Stock</div>
+      </div>
+      <div style="background:#ffedd5;border-radius:8px;padding:10px 16px;min-width:100px;">
+        <div style="font-size:22px;font-weight:700;color:#9a3412">${document.getElementById('lowStock').textContent}</div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#9a3412">Low Stock</div>
+      </div>
+      <div style="background:#fee2e2;border-radius:8px;padding:10px 16px;min-width:100px;">
+        <div style="font-size:22px;font-weight:700;color:#991b1b">${document.getElementById('outStock').textContent}</div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#991b1b">Out of Stock</div>
+      </div>
+    </div>`;
+
+  const logRows=_txLog.slice(0,30).map(e=>`
+    <tr>
+      <td>${e.type.toUpperCase()}</td>
+      <td>${esc(e.name)}</td>
+      <td>${esc(e.qty)}</td>
+      <td>${e.ts?e.ts.toLocaleString():''}</td>
+      <td>${esc(e.person||'—')}</td>
+      <td>${esc(e.remarks||'—')}</td>
+    </tr>`).join('');
+
+  const win=window.open('','_blank','width=900,height=700');
+  win.document.write(`<!doctype html><html><head>
+    <meta charset="utf-8"/>
+    <title>ONEWEST Inventory Report</title>
+    <style>
+      body{font-family:Georgia,serif;padding:24px;color:#111;font-size:12px}
+      h1{font-size:20px;font-weight:700;margin-bottom:4px;color:#111}
+      .sub{color:#666;font-size:11px;margin-bottom:20px}
+      .section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #f59e0b;padding-bottom:5px;margin:22px 0 10px;color:#333}
+      table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:20px}
+      th{background:#f8f9fa;padding:8px 10px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.6px;border:1px solid #ddd;color:#555}
+      td{padding:7px 10px;border:1px solid #eee}
+      tr:nth-child(even) td{background:#fafafa}
+      .footer{margin-top:30px;padding-top:12px;border-top:1px solid #eee;font-size:10px;color:#999;text-align:center}
+      @media print{body{padding:0}}
+    </style>
+  </head><body>
+    <h1>🏭 ONEWEST — Inventory Report</h1>
+    <div class="sub">Generated: ${now} &nbsp;|&nbsp; ${rows.length} items ${_filtered.length!==_allItems.length?'(filtered)':''}</div>
+    ${stats}
+    <div class="section-title">📦 Stock Inventory</div>
+    <table>
+      <thead><tr><th>Code</th><th>Item Name</th><th>Department</th><th>Unit</th><th>Stock</th><th>Min</th><th>Status</th></tr></thead>
+      <tbody>${tableRows}</tbody>
+    </table>
+    ${_txLog.length?`
+    <div class="section-title">🪵 Transaction Log (Last 30)</div>
+    <table>
+      <thead><tr><th>Type</th><th>Item</th><th>Qty</th><th>Time</th><th>Person</th><th>Remarks</th></tr></thead>
+      <tbody>${logRows}</tbody>
+    </table>`:''}
+    <div class="footer">ONEWEST Property Management &nbsp;|&nbsp; Confidential</div>
+    <script>setTimeout(()=>window.print(),400);<\/script>
+  </body></html>`);
+  win.document.close();
+  addLog({ type:'out', name:'Export — PDF Report', qty:'📄', dept:'', person:'', remarks:`${rows.length} items`, ts:new Date() });
+  showToast('PDF export opened 📄');
+}
+
+/* ── AUTO-REFRESH ── */
+let _autoRefreshTimer;
+function startAutoRefresh(){
+  clearInterval(_autoRefreshTimer);
+  _autoRefreshTimer=setInterval(loadInventory,60000);
+}
+
+/* ── ESC HELPER ── */
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ── INIT ── */
+window.onload=()=>{
+  loadInventory();
+  startAutoRefresh();
+  renderLog();
+};
+</script>
+</body>
+</html>

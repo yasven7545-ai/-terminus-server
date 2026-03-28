@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5"/>
+<title>📦 Inventory Management | SLN Terminus MMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════════════════
+   DESIGN TOKENS — Dark & Light
+═══════════════════════════════════════════════════════ */
+[data-theme="dark"] {
+  --bg:        #060a14;
+  --bg2:       #080d1a;
+  --surf:      #0c1525;
+  --surf2:     #101d30;
+  --surf3:     #152238;
+  --surf4:     #1a2840;
+  --bdr:       rgba(255,255,255,.055);
+  --bdr2:      rgba(255,255,255,.10);
+  --bdr3:      rgba(255,255,255,.16);
+  --tx:        #e2ecff;
+  --tx2:       #5a7aab;
+  --tx3:       #253a5c;
+  --hdr:       rgba(6,10,20,.92);
+  --sidebar-bg:#080d1a;
+
+  --blue:      #3b82f6;
+  --blue2:     #60a5fa;
+  --violet:    #8b5cf6;
+  --emerald:   #10b981;
+  --emerald2:  #34d399;
+  --amber:     #f59e0b;
+  --amber2:    #fbbf24;
+  --rose:      #f43f5e;
+  --rose2:     #fb7185;
+  --cyan:      #22d3ee;
+  --orange:    #f97316;
+  --indigo:    #6366f1;
+  --gold:      #FFD700;
+  --gold2:     #FFC200;
+  --gold3:     #FFAA00;
+
+  --gb:  linear-gradient(135deg,#3b82f6,#8b5cf6);
+  --ge:  linear-gradient(135deg,#10b981,#22d3ee);
+  --ga:  linear-gradient(135deg,#f59e0b,#f97316);
+  --gr:  linear-gradient(135deg,#f43f5e,#ec4899);
+  --gi:  linear-gradient(135deg,#6366f1,#8b5cf6);
+  --gg:  linear-gradient(135deg,#FFD700,#FFA500);
+
+  --sh:   0 24px 60px rgba(0,0,0,.75);
+  --sh2:  0 4px 20px rgba(0,0,0,.45);
+  --sh3:  0 2px 8px rgba(0,0,0,.3);
+}
+
+[data-theme="light"] {
+  --bg:        #edf1fa;
+  --bg2:       #e5ebf7;
+  --surf:      #ffffff;
+  --surf2:     #f4f7ff;
+  --surf3:     #ecf0ff;
+  --surf4:     #e5ebff;
+  --bdr:       rgba(0,0,0,.065);
+  --bdr2:      rgba(0,0,0,.11);
+  --bdr3:      rgba(0,0,0,.17);
+  --tx:        #0c1424;
+  --tx2:       #4a6585;
+  --tx3:       #b0c0d8;
+  --hdr:       rgba(237,241,250,.94);
+  --sidebar-bg:#f1f5fe;
+
+  --blue:      #1d4ed8;
+  --blue2:     #2563eb;
+  --violet:    #6d28d9;
+  --emerald:   #059669;
+  --emerald2:  #10b981;
+  --amber:     #d97706;
+  --amber2:    #f59e0b;
+  --rose:      #e11d48;
+  --rose2:     #f43f5e;
+  --cyan:      #0891b2;
+  --orange:    #ea580c;
+  --indigo:    #4f46e5;
+  --gold:      #c8930a;
+  --gold2:     #d4960f;
+  --gold3:     #b87d08;
+
+  --gb:  linear-gradient(135deg,#1d4ed8,#6d28d9);
+  --ge:  linear-gradient(135deg,#059669,#0891b2);
+  --ga:  linear-gradient(135deg,#d97706,#ea580c);
+  --gr:  linear-gradient(135deg,#e11d48,#db2777);
+  --gi:  linear-gradient(135deg,#4f46e5,#6d28d9);
+  --gg:  linear-gradient(135deg,#c8930a,#d4760a);
+
+  --sh:   0 12px 40px rgba(0,0,0,.11);
+  --sh2:  0 2px 12px rgba(0,0,0,.07);
+  --sh3:  0 1px 4px rgba(0,0,0,.05);
+}
+
+:root {
+  --hh:        58px;
+  --sb-width:  230px;
+  --ease:      cubic-bezier(.4,0,.2,1);
+  --snap:      cubic-bezier(.34,1.4,.64,1);
+  --rad:       10px;
+  --rad2:      14px;
+  --rad3:      20px;
+}
+
+/* ═══ RESET ═══ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;font-size:14px;transition:background .35s,color .35s}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:3px}
+
+/* ═══════════════════════════════════════════════════════
+   ANIMATED BACKGROUND
+═══════════════════════════════════════════════════════ */
+.bg-wrap{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);animation:orb-drift ease-in-out infinite alternate}
+.orb-1{width:700px;height:700px;background:radial-gradient(circle,rgba(59,130,246,.09),transparent 70%);top:-200px;left:-120px;animation-duration:26s}
+.orb-2{width:600px;height:600px;background:radial-gradient(circle,rgba(139,92,246,.07),transparent 70%);bottom:-150px;right:-100px;animation-duration:31s;animation-delay:-14s}
+.orb-3{width:400px;height:400px;background:radial-gradient(circle,rgba(16,185,129,.06),transparent 70%);top:40%;left:45%;animation-duration:21s;animation-delay:-8s}
+.orb-4{width:300px;height:300px;background:radial-gradient(circle,rgba(255,215,0,.05),transparent 70%);top:60%;right:20%;animation-duration:18s;animation-delay:-5s}
+@keyframes orb-drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(18px,-12px) scale(1.04)}100%{transform:translate(-12px,18px) scale(.97)}}
+[data-theme="light"] .orb{opacity:.3}
+
+.grid-lines{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:44px 44px}
+[data-theme="light"] .grid-lines{background-image:linear-gradient(rgba(0,0,0,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.035) 1px,transparent 1px)}
+
+.scan{position:fixed;left:0;right:0;height:2px;z-index:0;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(59,130,246,.35) 40%,rgba(139,92,246,.35) 60%,transparent);animation:scan-move 12s linear infinite}
+@keyframes scan-move{0%{top:0;opacity:0}4%{opacity:1}96%{opacity:.35}100%{top:100%;opacity:0}}
+
+/* ═══════════════════════════════════════════════════════
+   HEADER / TOP BAR
+═══════════════════════════════════════════════════════ */
+header{
+  position:fixed;top:0;left:0;right:0;
+  height:var(--hh);z-index:600;
+  background:var(--hdr);
+  backdrop-filter:blur(28px) saturate(180%);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);
+  border-bottom:1px solid var(--bdr);
+  box-shadow:var(--sh2);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 18px;gap:8px;
+  transition:background .35s;
+  overflow:hidden;
+}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;flex-shrink:1}
+.brand-icon{width:34px;height:34px;border-radius:9px;background:var(--gb);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;box-shadow:0 4px 14px rgba(59,130,246,.4)}
+.brand-text{min-width:0}
+.brand-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--tx);white-space:nowrap;letter-spacing:-.2px}
+.brand-sub{font-size:10px;color:var(--tx2);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;white-space:nowrap}
+.hdr-div{width:1px;height:26px;background:var(--bdr2);flex-shrink:0}
+.hdr-badge{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:20px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.22);color:var(--blue);white-space:nowrap;flex-shrink:0}
+
+/* ─── header right cluster ─── */
+.hdr-right{display:flex;align-items:center;gap:5px;flex-shrink:0;min-width:0}
+
+/* live clock */
+.live-clock{
+  display:flex;align-items:center;gap:6px;
+  padding:5px 11px;border-radius:20px;
+  background:var(--surf2);border:1px solid var(--bdr2);
+  font-family:'DM Mono',monospace;font-size:11px;color:var(--tx2);
+  white-space:nowrap;transition:background .35s;
+}
+.clock-dot{width:7px;height:7px;border-radius:50%;background:var(--emerald);box-shadow:0 0 6px var(--emerald);animation:pulse-dot 2s ease-in-out infinite;flex-shrink:0}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.75)}}
+.clock-time{color:var(--tx);font-weight:500}
+.clock-date{color:var(--tx2);font-size:9.5px}
+
+/* refresh pill */
+.refresh-pill{display:flex;align-items:center;gap:5px;padding:5px 9px;border-radius:20px;background:var(--surf2);border:1px solid var(--bdr2);font-size:11px;color:var(--tx2);white-space:nowrap;transition:background .35s}
+.refresh-spin{width:12px;height:12px;flex-shrink:0}
+.refresh-spin.spinning{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cdown{font-family:'DM Mono',monospace;font-size:11px;color:var(--blue);min-width:24px}
+
+/* theme toggle */
+.theme-toggle{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;background:var(--surf2);border:1px solid var(--bdr2);cursor:pointer;user-select:none;transition:border-color .2s,background .35s;flex-shrink:0}
+.theme-toggle:hover{border-color:var(--blue)}
+.tgl-ic{width:12px;height:12px;color:var(--tx2);flex-shrink:0}
+.tgl-tr{width:28px;height:16px;border-radius:8px;background:var(--bdr2);position:relative;flex-shrink:0;transition:background .25s}
+[data-theme="light"] .tgl-tr{background:var(--blue)}
+.tgl-th{position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.35);transition:transform .25s var(--snap)}
+[data-theme="light"] .tgl-th{transform:translateX(12px)}
+
+/* BACK TO PORTAL — Gold Blink */
+.btn-portal{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 14px;border-radius:20px;
+  background:rgba(255,215,0,.1);
+  border:1.5px solid rgba(255,215,0,.4);
+  color:var(--gold);font-family:'Syne',sans-serif;
+  font-size:11.5px;font-weight:700;
+  text-decoration:none;white-space:nowrap;flex-shrink:0;
+  animation:portal-blink 2.2s ease-in-out infinite;
+  transition:all .2s;
+}
+.btn-portal:hover{
+  background:rgba(255,215,0,.22);
+  border-color:var(--gold);
+  color:var(--gold);
+  box-shadow:0 0 22px rgba(255,215,0,.4),0 4px 16px rgba(255,150,0,.25);
+  animation:none;
+  transform:translateY(-1px);
+}
+@keyframes portal-blink{
+  0%,100%{box-shadow:0 0 6px rgba(255,215,0,.3);border-color:rgba(255,215,0,.4);opacity:1}
+  50%{box-shadow:0 0 18px rgba(255,215,0,.6),0 0 32px rgba(255,160,0,.3);border-color:rgba(255,215,0,.8);opacity:.85}
+}
+.portal-icon{font-size:13px}
+
+/* hamburger (mobile) */
+.hamburger{display:none;flex-direction:column;gap:4px;padding:6px;cursor:pointer;border-radius:8px;border:1px solid var(--bdr2);background:var(--surf2);transition:background .2s;flex-shrink:0}
+.hamburger:hover{background:var(--surf3)}
+.hamburger span{display:block;width:16px;height:2px;background:var(--tx2);border-radius:1px;transition:all .25s}
+
+/* ═══════════════════════════════════════════════════════
+   PAGE LAYOUT — Sidebar + Content
+═══════════════════════════════════════════════════════ */
+.page-wrap{
+  display:flex;
+  padding-top:var(--hh);
+  min-height:100vh;
+  position:relative;z-index:10;
+}
+
+/* ─── LEFT SIDEBAR ─── */
+.sidebar{
+  width:230px;
+  flex-shrink:0;
+  background:var(--sidebar-bg);
+  border-right:1px solid var(--bdr);
+  position:fixed;
+  top:var(--hh);bottom:0;left:0;
+  overflow-y:auto;overflow-x:hidden;
+  z-index:400;
+  transition:transform .3s var(--ease),background .35s;
+  display:flex;flex-direction:column;
+}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--bdr2)}
+
+.sb-section{padding:12px 10px 6px}
+.sb-section-label{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--tx3);padding:0 8px;margin-bottom:6px;font-family:'DM Mono',monospace}
+.sb-item{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 10px;border-radius:var(--rad);
+  color:var(--tx2);font-size:12.5px;font-weight:500;
+  cursor:pointer;transition:all .18s;
+  text-decoration:none;border:none;background:none;width:100%;text-align:left;
+}
+.sb-item:hover{background:var(--surf3);color:var(--tx)}
+.sb-item.active{background:rgba(59,130,246,.12);color:var(--blue);font-weight:600}
+.sb-item.active .sb-icon{color:var(--blue)}
+.sb-icon{font-size:15px;flex-shrink:0;width:20px;text-align:center}
+.sb-badge{margin-left:auto;font-family:'DM Mono',monospace;font-size:9px;padding:2px 6px;border-radius:10px;background:rgba(244,63,94,.15);color:var(--rose);border:1px solid rgba(244,63,94,.2);display:none}
+.sb-badge.show{display:inline-flex}
+.sb-divider{height:1px;background:var(--bdr);margin:8px 10px}
+
+/* Dept mini-stat in sidebar */
+.sb-dept-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:6px 10px;border-radius:8px;
+  cursor:pointer;transition:all .18s;
+  border:none;background:none;width:100%;text-align:left;
+}
+.sb-dept-item:hover{background:var(--surf3)}
+.sb-dept-item.active-dept{background:rgba(59,130,246,.1)}
+.sb-dept-left{display:flex;align-items:center;gap:7px;min-width:0}
+.sb-dept-icon{font-size:13px;flex-shrink:0}
+.sb-dept-name{font-size:11.5px;font-weight:500;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-dept-count{font-family:'DM Mono',monospace;font-size:10px;padding:1px 6px;border-radius:8px;background:var(--surf3);color:var(--tx2);flex-shrink:0}
+.sb-dept-count.low{background:rgba(244,63,94,.12);color:var(--rose)}
+
+/* ─── MAIN CONTENT ─── */
+.content-area{
+  flex:1;
+  margin-left:230px;
+  min-width:0;
+  transition:margin-left .3s var(--ease);
+  overflow-x:hidden;
+}
+
+/* overlay for mobile sidebar */
+.sidebar-overlay{
+  display:none;position:fixed;inset:0;z-index:800;
+  background:rgba(0,0,0,.6);
+}
+.sidebar-overlay.show{display:block}
+
+/* ═══════════════════════════════════════════════════════
+   STATS BAR
+═══════════════════════════════════════════════════════ */
+.stats-bar{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:10px;
+  padding:12px 18px;
+  background:var(--surf);border-bottom:1px solid var(--bdr);
+  box-shadow:var(--sh3);
+  transition:background .35s;
+}
+.stat-card{
+  background:var(--surf2);border:1px solid var(--bdr2);border-radius:var(--rad2);
+  padding:12px 14px;display:flex;align-items:center;gap:10px;
+  transition:all .25s var(--snap);
+  animation:stat-pop .55s var(--snap) both;
+}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+@keyframes stat-pop{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+.stat-card:nth-child(1){animation-delay:.05s}.stat-card:nth-child(2){animation-delay:.10s}
+.stat-card:nth-child(3){animation-delay:.15s}.stat-card:nth-child(4){animation-delay:.20s}
+.stat-card:nth-child(5){animation-delay:.25s}.stat-card:nth-child(6){animation-delay:.30s}
+
+.stat-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.si-blue{background:rgba(59,130,246,.12)}.si-green{background:rgba(16,185,129,.12)}
+.si-red{background:rgba(244,63,94,.12)}.si-amber{background:rgba(245,158,11,.12)}
+.si-violet{background:rgba(139,92,246,.12)}.si-cyan{background:rgba(34,211,238,.12)}
+.stat-val{font-family:'DM Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--tx);line-height:1}
+.stat-lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.9px;color:var(--tx2);margin-top:3px;font-weight:600}
+
+/* ═══════════════════════════════════════════════════════
+   ACTION BAR
+═══════════════════════════════════════════════════════ */
+.action-bar{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  padding:10px 18px;
+  background:var(--surf);border-bottom:1px solid var(--bdr);
+  transition:background .35s;
+}
+.action-bar-left{display:flex;align-items:center;gap:7px;flex:1;min-width:0;flex-wrap:wrap}
+.action-bar-right{display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap}
+
+.search-wrap{position:relative;min-width:180px;flex:1;max-width:280px}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--tx2);pointer-events:none}
+.search-inp{width:100%;padding:7px 12px 7px 30px;border-radius:20px;border:1px solid var(--bdr2);background:var(--surf2);color:var(--tx);font-family:'Inter',sans-serif;font-size:12px;outline:none;transition:border-color .2s,background .35s}
+.search-inp::placeholder{color:var(--tx2)}
+.search-inp:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+
+.dept-sel{appearance:none;padding:7px 26px 7px 10px;border-radius:var(--rad);border:1px solid var(--bdr2);background:var(--surf2);color:var(--tx);font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a7aab'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;transition:border-color .2s,background .35s;max-width:160px}
+.dept-sel:focus{border-color:var(--blue)}
+
+.status-filter{appearance:none;padding:7px 26px 7px 10px;border-radius:var(--rad);border:1px solid var(--bdr2);background:var(--surf2);color:var(--tx);font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;outline:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a7aab'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;transition:border-color .2s,background .35s}
+.status-filter:focus{border-color:var(--blue)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:var(--rad);border:1px solid transparent;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;text-decoration:none}
+.btn-ghost{background:var(--surf2);border-color:var(--bdr2);color:var(--tx2)}
+.btn-ghost:hover{border-color:var(--bdr3);color:var(--tx);background:var(--surf3)}
+.btn-blue{background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.25);color:var(--blue)}
+.btn-blue:hover{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 4px 14px rgba(59,130,246,.35)}
+.btn-green{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.25);color:var(--emerald)}
+.btn-green:hover{background:var(--emerald);color:#fff;border-color:var(--emerald);box-shadow:0 4px 14px rgba(16,185,129,.3)}
+.btn-amber{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.25);color:var(--amber)}
+.btn-amber:hover{background:var(--amber);color:#fff;border-color:var(--amber);box-shadow:0 4px 14px rgba(245,158,11,.3)}
+.btn-rose{background:rgba(244,63,94,.1);border-color:rgba(244,63,94,.25);color:var(--rose)}
+.btn-rose:hover{background:var(--rose);color:#fff;border-color:var(--rose)}
+.btn-primary{background:var(--gb);border-color:transparent;color:#fff;box-shadow:0 4px 14px rgba(59,130,246,.3)}
+.btn-primary:hover{box-shadow:0 8px 22px rgba(59,130,246,.5);transform:translateY(-1px)}
+.btn-gold{background:rgba(255,215,0,.1);border-color:rgba(255,215,0,.3);color:var(--gold)}
+.btn-gold:hover{background:rgba(255,215,0,.2);border-color:var(--gold);box-shadow:0 4px 14px rgba(255,200,0,.3)}
+
+/* ═══════════════════════════════════════════════════════
+   WORKSPACE GRID
+═══════════════════════════════════════════════════════ */
+.workspace{
+  display:grid;grid-template-columns:1fr 290px;
+  min-height:calc(100vh - var(--hh) - 68px - 50px);
+}
+
+/* TABLE PANEL */
+.panel-main{padding:16px;min-width:0;border-right:1px solid var(--bdr)}
+.panel-hd{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.panel-hd-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tx2);display:flex;align-items:center;gap:7px}
+.panel-hd-title::before{content:'';display:block;width:3px;height:14px;background:var(--gb);border-radius:2px}
+.tbl-count{font-family:'DM Mono',monospace;font-size:10px;color:var(--blue);background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);padding:2px 8px;border-radius:10px}
+
+.tbl-wrap{width:100%;overflow-x:auto;border:1px solid var(--bdr2);border-radius:var(--rad2);-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;min-width:560px}
+thead{background:var(--surf2)}
+th{padding:9px 13px;text-align:left;font-size:10px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.9px;border-bottom:1px solid var(--bdr2);white-space:nowrap;font-family:'DM Mono',monospace}
+th:first-child{border-radius:var(--rad2) 0 0 0}
+th:last-child{border-radius:0 var(--rad2) 0 0}
+th.sortable{cursor:pointer;user-select:none}
+th.sortable:hover{color:var(--blue)}
+td{padding:9px 13px;font-size:12.5px;border-bottom:1px solid var(--bdr);color:var(--tx)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surf2)}
+.row-low td{background:rgba(244,63,94,.04)}
+.row-low:hover td{background:rgba(244,63,94,.08)}
+
+/* td types */
+.td-code{font-family:'DM Mono',monospace;font-size:11px;color:var(--blue2);font-weight:500}
+.td-dept{font-size:11px;padding:3px 8px;border-radius:6px;background:var(--surf3);color:var(--tx2);display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.td-unit{font-size:11px;color:var(--tx2)}
+.td-qty{font-family:'DM Mono',monospace;font-size:13px;font-weight:700}
+.td-qty.ok{color:var(--emerald)}
+.td-qty.low{color:var(--rose)}
+
+/* empty / loading state */
+.tbl-state{text-align:center;padding:40px;color:var(--tx2);font-size:13px}
+.st-icon{display:block;font-size:32px;margin-bottom:10px}
+
+/* badges */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:8px;font-size:10px;font-weight:700;font-family:'DM Mono',monospace;letter-spacing:.3px}
+.badge-ok{background:rgba(16,185,129,.12);color:var(--emerald);border:1px solid rgba(16,185,129,.2)}
+.badge-low{background:rgba(244,63,94,.12);color:var(--rose);border:1px solid rgba(244,63,94,.2)}
+.badge-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+/* ─── RIGHT PANEL SIDEBAR ─── */
+.panel-side{display:flex;flex-direction:column;border-left:none;background:var(--surf);transition:background .35s;min-width:0}
+.side-sec{padding:14px;border-bottom:1px solid var(--bdr)}
+.side-sec-title{font-family:'Syne',sans-serif;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tx2);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.side-sec-title::before{content:'';display:block;width:3px;height:12px;background:var(--gb);border-radius:2px}
+
+/* mode selector */
+.mode-sel{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.mode-btn{padding:8px;border-radius:var(--rad);border:1px solid var(--bdr2);background:var(--surf2);color:var(--tx2);font-size:12px;font-weight:600;cursor:pointer;text-align:center;transition:all .2s;user-select:none}
+.mode-btn:hover{border-color:var(--bdr3);color:var(--tx)}
+.active-in{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.3);color:var(--emerald)}
+.active-out{background:rgba(244,63,94,.12);border-color:rgba(244,63,94,.3);color:var(--rose)}
+
+.field{margin-bottom:10px}
+.field-lbl{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--tx2);display:block;margin-bottom:5px}
+.inp{width:100%;padding:8px 11px;border-radius:var(--rad);border:1px solid var(--bdr2);background:var(--surf2);color:var(--tx);font-family:'Inter',sans-serif;font-size:12.5px;outline:none;transition:border-color .2s,background .35s}
+.inp::placeholder{color:var(--tx3)}
+.inp:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.inp-select{width:100%;padding:8px 11px;border-radius:var(--rad);border:1px solid var(--bdr2);background:var(--surf2);color:var(--tx);font-family:'Inter',sans-serif;font-size:12.5px;outline:none;cursor:pointer;transition:border-color .2s,background .35s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a7aab'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.inp-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.item-hint{font-size:11px;margin-top:4px;padding:4px 8px;border-radius:6px;display:none}
+.item-hint.found{display:block;color:var(--emerald);background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.15)}
+.item-hint.nf{display:block;color:var(--rose);background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.15)}
+
+.btn-submit{width:100%;padding:10px;border-radius:var(--rad);border:none;background:var(--gb);color:#fff;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(59,130,246,.3)}
+.btn-submit:hover{box-shadow:0 8px 22px rgba(59,130,246,.5);transform:translateY(-1px)}
+
+/* alerts section */
+.alerts-sec{padding:14px;flex:1;display:flex;flex-direction:column;min-height:0}
+.alerts-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.alerts-title{font-family:'Syne',sans-serif;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--tx2);display:flex;align-items:center;gap:7px}
+.blink-dot{width:7px;height:7px;border-radius:50%;background:var(--rose);animation:blink-d 1.4s ease-in-out infinite}
+@keyframes blink-d{0%,100%{opacity:1;box-shadow:0 0 4px var(--rose)}50%{opacity:.3;box-shadow:none}}
+.alerts-badge{font-size:10px;background:rgba(244,63,94,.15);color:var(--rose);border:1px solid rgba(244,63,94,.25);padding:2px 7px;border-radius:10px;font-weight:700;font-family:'DM Mono',monospace}
+.alert-list{overflow-y:auto;flex:1;max-height:280px}
+.alert-list::-webkit-scrollbar{width:3px}
+.alert-item{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:8px;background:rgba(244,63,94,.05);border:1px solid rgba(244,63,94,.1);margin-bottom:5px;transition:background .15s;cursor:pointer}
+.alert-item:hover{background:rgba(244,63,94,.1)}
+.ai-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.ai-name{font-size:11.5px;color:var(--rose2);line-height:1.3;font-weight:600}
+.ai-meta{font-size:10.5px;color:var(--tx2);margin-top:2px;font-family:'DM Mono',monospace}
+
+/* ═══════════════════════════════════════════════════════
+   MODALS
+═══════════════════════════════════════════════════════ */
+.modal-overlay{
+  position:fixed;inset:0;z-index:800;
+  background:rgba(0,0,0,.65);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{
+  background:var(--surf);border:1px solid var(--bdr2);
+  border-radius:var(--rad3);box-shadow:var(--sh);
+  width:100%;max-width:540px;
+  transform:scale(.95) translateY(12px);opacity:0;
+  transition:all .3s var(--snap);
+}
+.modal-overlay.open .modal{transform:none;opacity:1}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--bdr)}
+.modal-hd h2{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--tx);display:flex;align-items:center;gap:8px}
+.modal-close{background:none;border:none;color:var(--tx2);font-size:20px;cursor:pointer;line-height:1;padding:2px 6px;border-radius:6px;transition:color .2s,background .2s}
+.modal-close:hover{color:var(--rose);background:rgba(244,63,94,.1)}
+.modal-body{padding:18px}
+.modal-tabs{display:flex;gap:6px;margin-bottom:16px;background:var(--surf2);border-radius:var(--rad);padding:4px}
+.mtab{flex:1;padding:8px;border-radius:7px;border:none;background:none;color:var(--tx2);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center;font-family:'Inter',sans-serif}
+.mtab.active{background:var(--surf);color:var(--tx);box-shadow:var(--sh3)}
+.drop-zone{border:2px dashed var(--bdr2);border-radius:var(--rad2);padding:28px 20px;text-align:center;background:var(--surf2);cursor:pointer;transition:all .2s}
+.drop-zone:hover,.drop-zone.drag-over{border-color:var(--blue);background:rgba(59,130,246,.04)}
+.dz-icon{font-size:38px;margin-bottom:10px;display:block}
+.dz-title{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px;font-family:'Syne',sans-serif}
+.dz-sub{font-size:12px;color:var(--tx2)}
+.dz-picked{font-size:11px;color:var(--emerald);margin-top:8px;font-weight:600}
+.template-hint{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:var(--rad);padding:11px;margin-top:12px;font-size:11.5px;color:var(--amber2);line-height:1.6}
+.template-hint strong{color:var(--amber)}
+.bulk-progress{margin-top:12px}
+.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:12px}
+.prog-bar-wrap{height:6px;background:var(--surf3);border-radius:3px;overflow:hidden}
+.prog-bar{height:100%;background:var(--ge);border-radius:3px;width:0%;transition:width .4s var(--ease)}
+.upload-result{margin-top:10px;max-height:120px;overflow-y:auto;font-size:11.5px}
+.upload-result .row-ok{color:var(--emerald);padding:2px 0}
+.upload-result .row-err{color:var(--rose);padding:2px 0}
+.modal-ft{padding:0 20px 16px;display:flex;gap:8px}
+
+/* Add Item Modal */
+.add-modal .modal{max-width:480px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-grid .field:last-child:nth-child(odd){grid-column:1/-1}
+
+/* Dept Report Modal */
+.dept-modal .modal{max-width:460px}
+.dept-list{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:4px 0}
+.dept-btn{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:12px 8px;border-radius:var(--rad);
+  border:1px solid var(--bdr2);background:var(--surf2);
+  cursor:pointer;transition:all .2s;font-size:11px;color:var(--tx2);
+  font-weight:600;font-family:'Inter',sans-serif;
+}
+.dept-btn:hover{border-color:var(--blue);background:rgba(59,130,246,.06);color:var(--blue)}
+.dept-btn .dept-btn-icon{font-size:20px}
+
+/* ═══════════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════════ */
+#toast{
+  position:fixed;bottom:22px;right:22px;z-index:9999;
+  padding:12px 18px;border-radius:12px;
+  font-size:13px;font-weight:600;color:#fff;
+  box-shadow:0 8px 28px rgba(0,0,0,.35);
+  transform:translateY(80px);opacity:0;
+  transition:all .35s var(--snap);pointer-events:none;
+  display:flex;align-items:center;gap:8px;max-width:340px;
+  font-family:'Inter',sans-serif;
+}
+#toast.show{transform:none;opacity:1}
+#toast.success{background:linear-gradient(135deg,#10b981,#059669)}
+#toast.error{background:linear-gradient(135deg,#f43f5e,#e11d48)}
+#toast.info{background:linear-gradient(135deg,#3b82f6,#6d28d9)}
+#toast.warn{background:linear-gradient(135deg,#f59e0b,#f97316)}
+
+/* ═══════════════════════════════════════════════════════
+   DEPARTMENT CHARTS SECTION
+═══════════════════════════════════════════════════════ */
+.dept-charts-section{
+  padding:16px 18px;
+  background:var(--surf);
+  border-top:1px solid var(--bdr);
+  transition:background .35s;
+}
+.section-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--tx2);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:block;width:3px;height:14px;background:var(--gb);border-radius:2px}
+.dept-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.dept-summary-card{
+  background:var(--surf2);border:1px solid var(--bdr2);border-radius:var(--rad2);
+  padding:12px;cursor:pointer;transition:all .2s;
+}
+.dept-summary-card:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:var(--sh2)}
+.dsc-icon{font-size:22px;margin-bottom:6px}
+.dsc-name{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--tx);margin-bottom:4px}
+.dsc-stats{display:flex;gap:6px;flex-wrap:wrap}
+.dsc-ok{font-size:10px;padding:2px 6px;border-radius:5px;background:rgba(16,185,129,.1);color:var(--emerald);font-family:'DM Mono',monospace}
+.dsc-low{font-size:10px;padding:2px 6px;border-radius:5px;background:rgba(244,63,94,.1);color:var(--rose);font-family:'DM Mono',monospace;display:none}
+.dsc-low.show{display:inline-flex}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════ */
+@media(max-width:1200px){
+  .stats-bar{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:960px){
+  .workspace{grid-template-columns:1fr}
+  .panel-main{border-right:none;border-bottom:1px solid var(--bdr)}
+  .panel-side{flex-direction:row;flex-wrap:wrap}
+  .side-sec{flex:1;min-width:220px;border-bottom:none;border-right:1px solid var(--bdr)}
+  .alerts-sec{flex:1;min-width:220px}
+}
+
+/* ── Mobile breakpoint: sidebar goes off-canvas ── */
+@media(max-width:880px){
+  .sidebar{
+    transform:translateX(-100%);
+    top:0;
+    bottom:0;
+    z-index:900;
+    box-shadow:none;
+    width:260px;
+  }
+  .sidebar.open{
+    transform:translateX(0);
+    box-shadow:6px 0 32px rgba(0,0,0,.5);
+  }
+  .sidebar-overlay{display:none;position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.6);}
+  .sidebar-overlay.show{display:block}
+  .content-area{margin-left:0 !important}
+  .hamburger{display:flex}
+  .stats-bar{grid-template-columns:repeat(3,1fr)}
+}
+
+/* ── Tablet / small screens ── */
+@media(max-width:640px){
+  header{padding:0 10px;gap:6px}
+  /* hide non-essential header items */
+  .hdr-badge,.hdr-div,.brand-sub{display:none}
+  .live-clock .clock-date{display:none}
+  /* make clock compact */
+  .live-clock{padding:4px 8px;gap:4px;font-size:10px}
+  /* shrink portal button */
+  .btn-portal{padding:5px 10px;font-size:10.5px}
+  .btn-portal span:last-child{display:none}
+  /* shrink refresh pill */
+  .refresh-pill{padding:4px 7px;font-size:10px}
+  /* collapse action bar filters to full-width rows */
+  .action-bar{padding:8px 10px;gap:6px}
+  .action-bar-left{flex-direction:column;align-items:stretch;gap:6px}
+  .action-bar-right{flex-wrap:wrap;justify-content:flex-start}
+  .search-wrap{max-width:100%;min-width:0}
+  .dept-sel,.status-filter{max-width:100%;width:100%}
+  /* stats */
+  .stats-bar{grid-template-columns:repeat(2,1fr);padding:8px 10px;gap:6px}
+  .stat-card{padding:10px 11px;gap:8px}
+  /* panels */
+  .panel-main{padding:10px}
+  .panel-side{flex-direction:column}
+  .side-sec{border-right:none;border-bottom:1px solid var(--bdr)}
+  /* dept cards */
+  .dept-cards-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
+}
+
+/* ── Very small phones ── */
+@media(max-width:400px){
+  header{padding:0 8px}
+  .brand-name{font-size:12px}
+  .stats-bar{grid-template-columns:repeat(2,1fr);gap:5px;padding:7px 8px}
+  .stat-val{font-size:1.05rem}
+  .stat-lbl{font-size:8.5px}
+  .form-grid{grid-template-columns:1fr}
+  /* hide theme toggle on very tiny screens, keep only hamburger + brand + portal */
+  .theme-toggle{display:none}
+  /* compact clock */
+  .live-clock{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ── Animated background ── -->
+<div class="bg-wrap" aria-hidden="true">
+  <div class="orb orb-1"></div><div class="orb orb-2"></div>
+  <div class="orb orb-3"></div><div class="orb orb-4"></div>
+</div>
+<div class="grid-lines" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════════════ -->
+<header>
+  <!-- left: hamburger + brand -->
+  <div class="brand">
+    <div class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="brand-icon">📦</div>
+    <div class="brand-text">
+      <div class="brand-name">IMS Enterprise</div>
+      <div class="brand-sub">SLN Terminus MMS</div>
+    </div>
+    <span class="hdr-badge">Inventory</span>
+  </div>
+
+  <!-- right cluster -->
+  <div class="hdr-right">
+
+    <!-- live clock -->
+    <div class="live-clock">
+      <div class="clock-dot"></div>
+      <span class="clock-time" id="clockTime">--:--:--</span>
+      <span class="clock-date" id="clockDate"></span>
+    </div>
+
+    <!-- auto-refresh countdown -->
+    <div class="refresh-pill">
+      <svg class="refresh-spin" id="refreshIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M23 4v6h-6M1 20v-6h6"/>
+        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+      </svg>
+      <span style="font-size:11px;color:var(--tx2)">Refresh</span>
+      <span class="cdown" id="cdown">60s</span>
+    </div>
+
+    <!-- theme toggle -->
+    <div class="theme-toggle" onclick="toggleTheme()" role="button" aria-label="Toggle theme">
+      <svg class="tgl-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <div class="tgl-tr"><div class="tgl-th"></div></div>
+      <svg class="tgl-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </div>
+
+    <!-- BACK TO PORTAL — gold blinking -->
+    <a href="/sln_terminus" class="btn-portal">
+      <span class="portal-icon">⬅</span>
+      <span>Back to Portal</span>
+    </a>
+
+  </div>
+</header>
+
+<!-- sidebar overlay (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE WRAP
+══════════════════════════════════════════════════════ -->
+<div class="page-wrap">
+
+  <!-- ─────────── LEFT SIDEBAR ─────────── -->
+  <nav class="sidebar" id="sidebar">
+
+    <div class="sb-section">
+      <div class="sb-section-label">Navigation</div>
+      <button class="sb-item active" onclick="showView('dashboard')">
+        <span class="sb-icon">📊</span> Dashboard
+      </button>
+      <button class="sb-item" onclick="showView('alerts')">
+        <span class="sb-icon">⚠️</span> Alerts
+        <span class="sb-badge" id="sbAlertBadge">0</span>
+      </button>
+      <button class="sb-item" onclick="showView('transactions')">
+        <span class="sb-icon">📋</span> Transactions
+      </button>
+      <button class="sb-item" onclick="showView('reports')">
+        <span class="sb-icon">📄</span> Reports
+      </button>
+    </div>
+
+    <div class="sb-divider"></div>
+
+    <div class="sb-section">
+      <div class="sb-section-label">Quick Actions</div>
+      <button class="sb-item" onclick="openAddItem()">
+        <span class="sb-icon">➕</span> Add Item
+      </button>
+      <button class="sb-item" onclick="openBulkModal()">
+        <span class="sb-icon">📤</span> Bulk Upload
+      </button>
+      <button class="sb-item" onclick="exportPDF()">
+        <span class="sb-icon">📑</span> Export PDF
+      </button>
+      <a class="sb-item" href="/inventory/download_master">
+        <span class="sb-icon">⬇️</span> Download Excel
+      </a>
+      <a class="sb-item" href="/inventory/download_transactions">
+        <span class="sb-icon">📋</span> Transactions Log
+      </a>
+    </div>
+
+    <div class="sb-divider"></div>
+
+    <div class="sb-section">
+      <div class="sb-section-label">Departments</div>
+      <div id="sbDeptList">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+    <div style="flex:1"></div>
+
+    <!-- sidebar footer -->
+    <div style="padding:12px;border-top:1px solid var(--bdr)">
+      <div style="font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace;text-align:center">SLN Terminus MMS v2.0</div>
+      <div style="font-size:10px;color:var(--tx3);font-family:'DM Mono',monospace;text-align:center;margin-top:2px">Inventory Management System</div>
+    </div>
+  </nav>
+
+  <!-- ─────────── MAIN CONTENT ─────────── -->
+  <div class="content-area">
+
+    <!-- ══════ STATS BAR ══════ -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-icon si-blue">📦</div>
+        <div><div class="stat-val" id="sTot">—</div><div class="stat-lbl">Total Items</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon si-green">✅</div>
+        <div><div class="stat-val" id="sOk">—</div><div class="stat-lbl">In Stock</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon si-red">⚠️</div>
+        <div><div class="stat-val" id="sLow">—</div><div class="stat-lbl">Low Stock</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon si-amber">🏢</div>
+        <div><div class="stat-val" id="sDept">—</div><div class="stat-lbl">Departments</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon si-violet">📥</div>
+        <div><div class="stat-val" id="sTxToday">—</div><div class="stat-lbl">Movements Today</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon si-cyan">📊</div>
+        <div><div class="stat-val" id="sHealth">—</div><div class="stat-lbl">Stock Health</div></div>
+      </div>
+    </div>
+
+    <!-- ══════ ACTION BAR ══════ -->
+    <div class="action-bar">
+      <div class="action-bar-left">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-inp" id="searchInp" placeholder="Search item, code, department…" oninput="renderTable()"/>
+        </div>
+        <select class="dept-sel" id="deptSel" onchange="renderTable()">
+          <option value="All">All Departments</option>
+          <option>Electrical</option>
+          <option>Plumbing</option>
+          <option>Carpentry</option>
+          <option>HVAC</option>
+          <option>Painting</option>
+          <option>Housekeeping</option>
+          <option>Security</option>
+          <option>Fire Safety</option>
+          <option>Stationery</option>
+          <option>MEP</option>
+          <option>Civil</option>
+          <option>IT</option>
+          <option>Landscaping</option>
+          <option>Pest Control</option>
+          <option>Kitchen</option>
+          <option>Laundry</option>
+          <option>Engineering</option>
+          <option>Stores</option>
+        </select>
+        <select class="status-filter" id="statusFilter" onchange="renderTable()">
+          <option value="All">All Status</option>
+          <option value="OK">In Stock</option>
+          <option value="LOW">Low Stock</option>
+        </select>
+      </div>
+      <div class="action-bar-right">
+        <button class="btn btn-blue" onclick="openAddItem()">➕ Add Item</button>
+        <button class="btn btn-amber" onclick="openBulkModal()">📤 Bulk Upload</button>
+        <button class="btn btn-green" onclick="exportPDF()">📑 Export PDF</button>
+        <button class="btn btn-gold" onclick="openDeptReport()">📊 Dept Report</button>
+        <a class="btn btn-ghost" href="/inventory/download_master">⬇️ Excel</a>
+        <a class="btn btn-ghost" href="/inventory/download_transactions">📋 Log</a>
+      </div>
+    </div>
+
+    <!-- ══════ WORKSPACE ══════ -->
+    <div class="workspace">
+
+      <!-- LEFT: TABLE -->
+      <div class="panel-main">
+        <div class="panel-hd">
+          <div class="panel-hd-title">📋 Stock Inventory</div>
+          <span class="tbl-count" id="tblCount">—</span>
+          <div style="margin-left:auto;display:flex;gap:6px;align-items:center">
+            <span style="font-size:11px;color:var(--tx2)">Sort:</span>
+            <select class="dept-sel" style="max-width:120px;font-size:11px" id="sortSel" onchange="sortFromSelect()">
+              <option value="Item_Code">Code</option>
+              <option value="Item_Name">Name</option>
+              <option value="Department">Dept</option>
+              <option value="Current_Stock">Stock</option>
+            </select>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="sortable" onclick="sortBy('Item_Code')">Code ↕</th>
+                <th class="sortable" onclick="sortBy('Item_Name')">Item Name ↕</th>
+                <th>Dept</th>
+                <th>Unit</th>
+                <th class="sortable" onclick="sortBy('Current_Stock')">Stock ↕</th>
+                <th>Min</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="invBody">
+              <tr><td colspan="7" class="tbl-state"><span class="st-icon">⏳</span>Loading inventory…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RIGHT: SIDEBAR PANEL -->
+      <div class="panel-side">
+
+        <!-- STOCK MOVEMENT -->
+        <div class="side-sec">
+          <div class="side-sec-title">⚡ Stock Movement</div>
+
+          <div class="mode-sel">
+            <div id="mIn" class="mode-btn active-in" onclick="setMode('IN')">📥 IN</div>
+            <div id="mOut" class="mode-btn" onclick="setMode('OUT')">📤 OUT</div>
+          </div>
+
+          <div class="field">
+            <label class="field-lbl">Department</label>
+            <select class="inp-select" id="txDept" onchange="onDeptChange()">
+              <option value="">— Select Dept —</option>
+              <option>Electrical</option><option>Plumbing</option><option>Carpentry</option>
+              <option>HVAC</option><option>Painting</option><option>Housekeeping</option>
+              <option>Security</option><option>Fire Safety</option><option>Stationery</option>
+              <option>MEP</option><option>Civil</option><option>IT</option>
+              <option>Landscaping</option><option>Pest Control</option><option>Kitchen</option>
+              <option>Laundry</option><option>Engineering</option><option>Stores</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="field-lbl">Item Code</label>
+            <input type="text" id="txCode" class="inp" placeholder="e.g. E-0001" oninput="onCodeInput(this.value)" list="itemCodeList"/>
+            <datalist id="itemCodeList"></datalist>
+            <div class="item-hint" id="itemHint"></div>
+          </div>
+
+          <div class="field">
+            <label class="field-lbl">Quantity</label>
+            <input type="number" id="txQty" class="inp" value="1" min="1"/>
+          </div>
+
+          <div class="field">
+            <label class="field-lbl">Remarks</label>
+            <input type="text" id="txRemarks" class="inp" placeholder="Optional note…"/>
+          </div>
+
+          <button class="btn-submit" onclick="submitTx()">✅ Confirm Movement</button>
+        </div>
+
+        <!-- LOW STOCK ALERTS -->
+        <div class="alerts-sec">
+          <div class="alerts-hd">
+            <div class="alerts-title"><span class="blink-dot"></span> Low Stock Alerts</div>
+            <span class="alerts-badge" id="alertBadge">0</span>
+          </div>
+          <div class="alert-list" id="alertArea">
+            <div style="color:var(--tx2);font-size:12px;text-align:center;padding:16px">Loading…</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════ DEPARTMENT OVERVIEW ══════ -->
+    <div class="dept-charts-section">
+      <div class="section-title">🏢 Department Overview</div>
+      <div class="dept-cards-grid" id="deptCardsGrid">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+  </div><!-- /content-area -->
+</div><!-- /page-wrap -->
+
+<!-- ══════════════════════════════════════════════════════
+     MODALS
+══════════════════════════════════════════════════════ -->
+
+<!-- BULK UPLOAD MODAL -->
+<div class="modal-overlay" id="bulkModal" onclick="if(event.target===this)closeBulkModal()">
+  <div class="modal">
+    <div class="modal-hd">
+      <h2>📤 Bulk Upload</h2>
+      <button class="modal-close" onclick="closeBulkModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-tabs">
+        <button class="mtab active" id="tab1" onclick="switchTab(1)">📁 Replace Master</button>
+        <button class="mtab" id="tab2" onclick="switchTab(2)">📋 Add Rows (CSV)</button>
+      </div>
+      <div id="tabContent1">
+        <div class="drop-zone" id="dz1" onclick="document.getElementById('masterFile').click()"
+             ondragover="dz_over(event,'dz1')" ondragleave="dz_leave('dz1')" ondrop="dz_drop(event,'dz1','masterFile')">
+          <span class="dz-icon">📊</span>
+          <div class="dz-title">Upload Master Excel (.xlsx)</div>
+          <div class="dz-sub">Replaces the entire inventory master file on the server</div>
+          <div class="dz-picked" id="dz1picked"></div>
+        </div>
+        <input type="file" id="masterFile" hidden accept=".xlsx,.xls" onchange="dz_picked('dz1picked',this)"/>
+        <div class="template-hint">
+          <strong>📋 Required columns:</strong> Item_Code · Item_Name · Department · Unit · Opening_Stock · Stock_In · Stock_Out · Current_Stock · Min_Stock_Level
+        </div>
+      </div>
+      <div id="tabContent2" style="display:none">
+        <div class="drop-zone" id="dz2" onclick="document.getElementById('csvFile').click()"
+             ondragover="dz_over(event,'dz2')" ondragleave="dz_leave('dz2')" ondrop="dz_drop(event,'dz2','csvFile')">
+          <span class="dz-icon">📄</span>
+          <div class="dz-title">Upload CSV to Append Rows</div>
+          <div class="dz-sub">Adds new items to the master (no duplicates by code)</div>
+          <div class="dz-picked" id="dz2picked"></div>
+        </div>
+        <input type="file" id="csvFile" hidden accept=".csv" onchange="dz_picked('dz2picked',this)"/>
+        <div class="bulk-progress" id="bulkProg" style="display:none">
+          <div class="prog-row"><span id="progLabel">Processing…</span><span id="progPct">0%</span></div>
+          <div class="prog-bar-wrap"><div class="prog-bar" id="progBar"></div></div>
+        </div>
+        <div class="upload-result" id="uploadResult"></div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-primary" style="flex:1;justify-content:center;padding:10px" onclick="doUpload()">⬆️ Upload Now</button>
+      <button class="btn btn-ghost" onclick="closeBulkModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD ITEM MODAL -->
+<div class="modal-overlay add-modal" id="addItemModal" onclick="if(event.target===this)closeAddItem()">
+  <div class="modal">
+    <div class="modal-hd">
+      <h2>➕ Add New Item</h2>
+      <button class="modal-close" onclick="closeAddItem()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field">
+          <label class="field-lbl">Item Code *</label>
+          <input type="text" id="ai_code" class="inp" placeholder="e.g. E-0050"/>
+        </div>
+        <div class="field">
+          <label class="field-lbl">Item Name *</label>
+          <input type="text" id="ai_name" class="inp" placeholder="Item description"/>
+        </div>
+        <div class="field">
+          <label class="field-lbl">Department *</label>
+          <select class="inp-select" id="ai_dept">
+            <option value="">— Select —</option>
+            <option>Electrical</option><option>Plumbing</option><option>Carpentry</option>
+            <option>HVAC</option><option>Painting</option><option>Housekeeping</option>
+            <option>Security</option><option>Fire Safety</option><option>Stationery</option>
+            <option>MEP</option><option>Civil</option><option>IT</option>
+            <option>Landscaping</option><option>Pest Control</option><option>Kitchen</option>
+            <option>Laundry</option><option>Engineering</option><option>Stores</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-lbl">Unit</label>
+          <select class="inp-select" id="ai_unit">
+            <option>Nos</option><option>Pcs</option><option>Kg</option><option>Ltr</option>
+            <option>Mtr</option><option>Box</option><option>Roll</option><option>Set</option>
+            <option>Pair</option><option>Pack</option><option>Bag</option><option>Tin</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-lbl">Opening Stock</label>
+          <input type="number" id="ai_opening" class="inp" value="0" min="0"/>
+        </div>
+        <div class="field">
+          <label class="field-lbl">Min Stock Level</label>
+          <input type="number" id="ai_min" class="inp" value="1" min="0"/>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-primary" style="flex:1;justify-content:center;padding:10px" onclick="doAddItem()">✅ Add Item</button>
+      <button class="btn btn-ghost" onclick="closeAddItem()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- DEPT REPORT MODAL -->
+<div class="modal-overlay dept-modal" id="deptReportModal" onclick="if(event.target===this)closeDeptReport()">
+  <div class="modal">
+    <div class="modal-hd">
+      <h2>📊 Department PDF Report</h2>
+      <button class="modal-close" onclick="closeDeptReport()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:12.5px;color:var(--tx2);margin-bottom:14px">Select a department to generate its A4 PDF report:</p>
+      <div class="dept-list" id="deptReportList">
+        <!-- filled by JS -->
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-green" style="flex:1;justify-content:center;padding:10px" onclick="exportPDF()">📑 Full Inventory PDF</button>
+      <button class="btn btn-ghost" onclick="closeDeptReport()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ─── Theme ─── */
+(function(){
+  try{var s=localStorage.getItem('ims_theme');if(s)document.documentElement.setAttribute('data-theme',s);}catch(e){}
+})();
+function toggleTheme(){
+  var h=document.documentElement;
+  var n=h.getAttribute('data-theme')==='dark'?'light':'dark';
+  h.setAttribute('data-theme',n);
+  try{localStorage.setItem('ims_theme',n);}catch(e){}
+}
+
+/* ─── Live Clock ─── */
+function updateClock(){
+  var now=new Date();
+  var h=String(now.getHours()).padStart(2,'0');
+  var m=String(now.getMinutes()).padStart(2,'0');
+  var s=String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('clockTime').textContent=h+':'+m+':'+s;
+  var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('clockDate').textContent=
+    days[now.getDay()]+', '+now.getDate()+' '+months[now.getMonth()]+' '+now.getFullYear();
+}
+updateClock();
+setInterval(updateClock,1000);
+
+/* ─── Sidebar toggle (mobile) ─── */
+function toggleSidebar(){
+  var sb=document.getElementById('sidebar');
+  var ov=document.getElementById('sidebarOverlay');
+  var isOpen=sb.classList.contains('open');
+  if(isOpen){
+    sb.classList.remove('open');
+    ov.classList.remove('show');
+    document.body.style.overflow='';
+  } else {
+    sb.classList.add('open');
+    ov.classList.add('show');
+    document.body.style.overflow='hidden';
+  }
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+  document.body.style.overflow='';
+}
+
+/* ─── Department config ─── */
+var DEPT_ICONS={
+  'Electrical':'⚡','Plumbing':'🔧','Carpentry':'🪚','HVAC':'❄️',
+  'Painting':'🎨','Housekeeping':'🧹','Security':'🛡️','Fire Safety':'🔥',
+  'Stationery':'📎','MEP':'⚙️','Civil':'🏗️','IT':'💻',
+  'Landscaping':'🌿','Pest Control':'🐛','Kitchen':'🍳','Laundry':'👕',
+  'Engineering':'🔩','Stores':'📦'
+};
+
+/* ─── Toast ─── */
+function toast(msg,type){
+  var t=document.getElementById('toast');type=type||'info';
+  t.textContent=msg;t.className='show '+type;
+  clearTimeout(t._tid);t._tid=setTimeout(function(){t.className='';},3500);
+}
+
+/* ─── State ─── */
+var allData=[], txMode='IN', sortCol='Item_Code', sortAsc=true, cdownVal=60, cdownTimer=null;
+
+/* ─── Sidebar view toggle ─── */
+function showView(view){
+  // update active state
+  document.querySelectorAll('.sb-item').forEach(function(el){el.classList.remove('active')});
+  event && event.currentTarget && event.currentTarget.classList.add('active');
+  closeSidebar();
+  if(view==='dashboard') window.scrollTo({top:0,behavior:'smooth'});
+  else if(view==='alerts'){
+    document.getElementById('alertArea').scrollIntoView({behavior:'smooth',block:'center'});
+  }else if(view==='transactions'){
+    window.location.href='/inventory/download_transactions';
+  }else if(view==='reports'){
+    openDeptReport();
+  }
+}
+
+/* ─── Mode toggle ─── */
+function setMode(m){
+  txMode=m;
+  document.getElementById('mIn').className='mode-btn '+(m==='IN'?'active-in':'');
+  document.getElementById('mOut').className='mode-btn '+(m==='OUT'?'active-out':'');
+}
+
+/* ─── Dept change → update datalist ─── */
+function onDeptChange(){
+  var dept=document.getElementById('txDept').value;
+  var dl=document.getElementById('itemCodeList');
+  dl.innerHTML='';
+  var items=dept?allData.filter(function(x){return x.Department===dept;}):allData;
+  items.forEach(function(x){
+    var opt=document.createElement('option');
+    opt.value=String(x.Item_Code);
+    opt.label=String(x.Item_Name);
+    dl.appendChild(opt);
+  });
+}
+
+/* ─── Code input hint ─── */
+function onCodeInput(v){
+  v=v.trim();
+  var h=document.getElementById('itemHint');
+  if(!v){h.textContent='';h.className='item-hint';return;}
+  var item=allData.find(function(x){return String(x.Item_Code).toLowerCase()===v.toLowerCase();});
+  if(item){
+    h.textContent='✅ '+item.Item_Name+' · Dept: '+item.Department+' · Stock: '+item.Current_Stock+' '+item.Unit;
+    h.className='item-hint found';
+    // auto-fill dept
+    if(item.Department) document.getElementById('txDept').value=item.Department;
+  }else{
+    h.textContent='❌ Code not found';
+    h.className='item-hint nf';
+  }
+}
+
+/* ─── Sort ─── */
+function sortBy(col){
+  if(sortCol===col) sortAsc=!sortAsc; else{sortCol=col;sortAsc=true;}
+  renderTable();
+}
+function sortFromSelect(){
+  sortCol=document.getElementById('sortSel').value;
+  sortAsc=true;renderTable();
+}
+
+/* ─── Countdown ─── */
+function startCountdown(){
+  clearInterval(cdownTimer);cdownVal=60;
+  document.getElementById('cdown').textContent='60s';
+  cdownTimer=setInterval(function(){
+    cdownVal--;
+    document.getElementById('cdown').textContent=cdownVal+'s';
+    if(cdownVal<=0){refreshData();cdownVal=60;}
+  },1000);
+}
+
+/* ─── Refresh ─── */
+var NGROK={'ngrok-skip-browser-warning':'true'};
+async function refreshData(){
+  var icon=document.getElementById('refreshIcon');
+  icon.classList.add('spinning');
+  try{
+    var r=await fetch('/inventory/json_master',{headers:NGROK});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    allData=await r.json();
+    if(!Array.isArray(allData)){allData=[];throw new Error('Bad response');}
+    renderTable();renderStats();renderAlerts();renderSidebarDepts();renderDeptCards();
+    onDeptChange();
+  }catch(e){
+    document.getElementById('invBody').innerHTML='<tr><td colspan="7" class="tbl-state"><span class="st-icon">❌</span>Cannot reach backend — check server connection</td></tr>';
+    renderStats();renderAlerts();
+  }finally{
+    icon.classList.remove('spinning');
+  }
+}
+
+/* ─── Render table ─── */
+function renderTable(){
+  var dept=document.getElementById('deptSel').value;
+  var statusF=document.getElementById('statusFilter').value;
+  var q=(document.getElementById('searchInp').value||'').toLowerCase();
+  var filtered=allData.filter(function(x){
+    var cur=Number(x.Current_Stock)||0,mn=Number(x.Min_Stock_Level)||0;
+    var isLow=cur<=mn;
+    var deptOk=(dept==='All'||x.Department===dept);
+    var statusOk=(statusF==='All'||(statusF==='LOW'&&isLow)||(statusF==='OK'&&!isLow));
+    var qOk=!q||
+      String(x.Item_Code).toLowerCase().includes(q)||
+      String(x.Item_Name).toLowerCase().includes(q)||
+      String(x.Department).toLowerCase().includes(q);
+    return deptOk&&statusOk&&qOk;
+  });
+  filtered.sort(function(a,b){
+    var va=a[sortCol]||'',vb=b[sortCol]||'';
+    if(!isNaN(Number(va))&&!isNaN(Number(vb))) return sortAsc?(Number(va)-Number(vb)):(Number(vb)-Number(va));
+    return sortAsc?String(va).localeCompare(String(vb)):String(vb).localeCompare(String(va));
+  });
+  document.getElementById('tblCount').textContent=filtered.length+' items';
+  if(!filtered.length){
+    document.getElementById('invBody').innerHTML='<tr><td colspan="7" class="tbl-state"><span class="st-icon">📭</span>No items match the current filter</td></tr>';
+    return;
+  }
+  var icon=DEPT_ICONS;
+  document.getElementById('invBody').innerHTML=filtered.map(function(x){
+    var cur=Number(x.Current_Stock)||0,mn=Number(x.Min_Stock_Level)||0;
+    var isLow=cur<=mn;
+    var qClass=isLow?'td-qty low':'td-qty ok';
+    var badge=isLow
+      ?'<span class="badge badge-low"><span class="badge-dot"></span>LOW</span>'
+      :'<span class="badge badge-ok"><span class="badge-dot"></span>OK</span>';
+    var deptIcon=icon[x.Department]||'📦';
+    return '<tr class="'+(isLow?'row-low':'')+'" onclick="clickRow(\''+String(x.Item_Code).replace(/'/g,"\\'")+'\')">'+
+      '<td class="td-code">'+x.Item_Code+'</td>'+
+      '<td>'+x.Item_Name+'</td>'+
+      '<td><span class="td-dept">'+deptIcon+' '+x.Department+'</span></td>'+
+      '<td class="td-unit">'+(x.Unit||'—')+'</td>'+
+      '<td class="'+qClass+'">'+cur+'</td>'+
+      '<td style="font-family:\'DM Mono\',monospace;font-size:12px;color:var(--tx2)">'+mn+'</td>'+
+      '<td>'+badge+'</td></tr>';
+  }).join('');
+}
+
+/* click row → fill form */
+function clickRow(code){
+  document.getElementById('txCode').value=code;
+  onCodeInput(code);
+  document.getElementById('txQty').focus();
+  // scroll to form on mobile
+  if(window.innerWidth<960){
+    document.getElementById('txCode').scrollIntoView({behavior:'smooth',block:'center'});
+  }
+}
+
+/* ─── Render stats ─── */
+function renderStats(){
+  var tot=allData.length;
+  var low=allData.filter(function(x){return Number(x.Current_Stock)<=Number(x.Min_Stock_Level);}).length;
+  var ok=tot-low;
+  var depts=[...new Set(allData.map(function(x){return x.Department;}))].length;
+  var health=tot>0?Math.round((ok/tot)*100):0;
+  document.getElementById('sTot').textContent=tot;
+  document.getElementById('sOk').textContent=ok;
+  document.getElementById('sLow').textContent=low;
+  document.getElementById('sDept').textContent=depts;
+  document.getElementById('sHealth').textContent=health+'%';
+  // tx today — can't know without transactions data, show a placeholder
+  var txEl=document.getElementById('sTxToday');
+  if(txEl.textContent==='—') txEl.textContent='—';
+}
+
+/* ─── Render alerts ─── */
+function renderAlerts(){
+  var lows=allData.filter(function(x){return Number(x.Current_Stock)<=Number(x.Min_Stock_Level);});
+  var cnt=lows.length;
+  document.getElementById('alertBadge').textContent=cnt;
+  document.getElementById('sbAlertBadge').textContent=cnt;
+  document.getElementById('sbAlertBadge').classList.toggle('show',cnt>0);
+  if(!lows.length){
+    document.getElementById('alertArea').innerHTML='<div style="color:var(--tx2);font-size:12px;text-align:center;padding:18px;">✅ All items are sufficiently stocked</div>';
+    return;
+  }
+  document.getElementById('alertArea').innerHTML=lows.slice(0,50).map(function(x){
+    var icon=DEPT_ICONS[x.Department]||'📦';
+    return '<div class="alert-item" onclick="clickRow(\''+String(x.Item_Code).replace(/'/g,"\\'")+'\')">'+
+      '<span class="ai-icon">⚠️</span>'+
+      '<div>'+
+        '<div class="ai-name">'+x.Item_Name+'</div>'+
+        '<div class="ai-meta">'+icon+' '+x.Department+' · '+x.Item_Code+' · Qty: '+x.Current_Stock+' / Min: '+x.Min_Stock_Level+'</div>'+
+      '</div></div>';
+  }).join('')+(lows.length>50?'<div style="text-align:center;padding:8px;font-size:11px;color:var(--tx2)">+'+( lows.length-50)+' more…</div>':'');
+}
+
+/* ─── Render sidebar depts ─── */
+function renderSidebarDepts(){
+  var depts=[...new Set(allData.map(function(x){return x.Department;}))].sort();
+  var cont=document.getElementById('sbDeptList');
+  cont.innerHTML=depts.map(function(d){
+    var items=allData.filter(function(x){return x.Department===d;});
+    var lows=items.filter(function(x){return Number(x.Current_Stock)<=Number(x.Min_Stock_Level);}).length;
+    var icon=DEPT_ICONS[d]||'📦';
+    var lowClass=lows>0?' low':'';
+    return '<button class="sb-dept-item" onclick="filterByDept(\''+d+'\')" title="'+d+'">'+
+      '<div class="sb-dept-left">'+
+        '<span class="sb-dept-icon">'+icon+'</span>'+
+        '<span class="sb-dept-name">'+d+'</span>'+
+      '</div>'+
+      '<span class="sb-dept-count'+lowClass+'">'+items.length+'</span>'+
+    '</button>';
+  }).join('');
+
+  // also populate dept report modal
+  var drl=document.getElementById('deptReportList');
+  if(drl){
+    var allDepts=['Electrical','Plumbing','Carpentry','HVAC','Painting','Housekeeping',
+                  'Security','Fire Safety','Stationery','MEP','Civil','IT',
+                  'Landscaping','Pest Control','Kitchen','Laundry','Engineering','Stores'];
+    drl.innerHTML=allDepts.map(function(d){
+      return '<button class="dept-btn" onclick="exportDeptPDF(\''+d+'\')">'+
+        '<span class="dept-btn-icon">'+(DEPT_ICONS[d]||'📦')+'</span>'+d+
+      '</button>';
+    }).join('');
+  }
+}
+
+/* ─── Render dept summary cards ─── */
+function renderDeptCards(){
+  var depts=[...new Set(allData.map(function(x){return x.Department;}))].sort();
+  document.getElementById('deptCardsGrid').innerHTML=depts.map(function(d){
+    var items=allData.filter(function(x){return x.Department===d;});
+    var lows=items.filter(function(x){return Number(x.Current_Stock)<=Number(x.Min_Stock_Level);}).length;
+    var ok=items.length-lows;
+    var icon=DEPT_ICONS[d]||'📦';
+    return '<div class="dept-summary-card" onclick="filterByDept(\''+d+'\')">'+
+      '<div class="dsc-icon">'+icon+'</div>'+
+      '<div class="dsc-name">'+d+'</div>'+
+      '<div class="dsc-stats">'+
+        '<span class="dsc-ok">'+ok+' OK</span>'+
+        (lows>0?'<span class="dsc-low show">'+lows+' LOW</span>':'')+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+function filterByDept(d){
+  document.getElementById('deptSel').value=d;
+  renderTable();
+  closeSidebar();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ─── Submit TX ─── */
+async function submitTx(){
+  var code=document.getElementById('txCode').value.trim();
+  var qty=parseInt(document.getElementById('txQty').value,10);
+  var remarks=document.getElementById('txRemarks').value.trim()||'Dashboard Movement';
+  if(!code||isNaN(qty)||qty<=0){toast('Enter a valid item code and quantity ⚠️','warn');return;}
+  if(txMode==='OUT'){
+    var item=allData.find(function(x){return String(x.Item_Code).toLowerCase()===code.toLowerCase();});
+    if(item&&qty>Number(item.Current_Stock)){toast('❌ Insufficient stock! Balance: '+item.Current_Stock,'error');return;}
+  }
+  try{
+    var r=await fetch('/inventory/update',{
+      method:'POST',
+      headers:{'Content-Type':'application/json',...NGROK},
+      body:JSON.stringify({item_code:code,quantity:qty,type:txMode,remarks:remarks})
+    });
+    var j=await r.json();
+    if(j.success){
+      toast((txMode==='IN'?'📥 Stock IN':'📤 Stock OUT')+' · New Balance: '+(isNaN(j.new_stock)?'Updated':j.new_stock),'success');
+      document.getElementById('txCode').value='';
+      document.getElementById('txQty').value='1';
+      document.getElementById('txRemarks').value='';
+      document.getElementById('itemHint').textContent='';
+      document.getElementById('itemHint').className='item-hint';
+      refreshData();startCountdown();
+    }else{toast('❌ '+(j.error||'Update failed'),'error');}
+  }catch(e){toast('❌ Network error — check backend','error');}
+}
+
+/* ─── Add Item ─── */
+function openAddItem(){document.getElementById('addItemModal').classList.add('open');}
+function closeAddItem(){document.getElementById('addItemModal').classList.remove('open');}
+async function doAddItem(){
+  var code=document.getElementById('ai_code').value.trim();
+  var name=document.getElementById('ai_name').value.trim();
+  var dept=document.getElementById('ai_dept').value;
+  var unit=document.getElementById('ai_unit').value;
+  var opening=parseInt(document.getElementById('ai_opening').value,10)||0;
+  var minStk=parseInt(document.getElementById('ai_min').value,10)||0;
+  if(!code||!name||!dept){toast('⚠️ Code, Name and Department are required','warn');return;}
+  // POST to add endpoint — falls back to notifying user if endpoint doesn't exist
+  try{
+    var r=await fetch('/inventory/add_item',{
+      method:'POST',
+      headers:{'Content-Type':'application/json',...NGROK},
+      body:JSON.stringify({item_code:code,item_name:name,department:dept,unit:unit,opening_stock:opening,min_stock_level:minStk})
+    });
+    if(r.ok){
+      toast('✅ Item '+code+' added successfully!','success');
+      closeAddItem();
+      refreshData();
+    }else{
+      // endpoint may not exist yet
+      toast('⚠️ Add Item endpoint not configured on server. Use Bulk Upload to add items.','warn');
+    }
+  }catch(e){toast('⚠️ Add Item not available. Use Bulk Upload.','warn');}
+}
+
+/* ─── Export PDF ─── */
+async function exportPDF(){
+  toast('📑 Generating PDF report…','info');
+  try{
+    var r=await fetch('/inventory/export_pdf',{headers:NGROK});
+    if(!r.ok){var j=await r.json().catch(function(){return{};});toast('❌ PDF failed: '+(j.error||r.status),'error');return;}
+    var blob=await r.blob();
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url;a.download='Inventory_Report_'+new Date().toISOString().slice(0,10)+'.pdf';
+    document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    toast('✅ PDF downloaded!','success');
+  }catch(e){toast('❌ Error generating PDF — check server','error');}
+}
+
+/* ─── Export Dept PDF ─── */
+async function exportDeptPDF(dept){
+  toast('📊 Generating '+dept+' report…','info');
+  try{
+    var r=await fetch('/inventory/pdf/'+encodeURIComponent(dept),{headers:NGROK});
+    if(!r.ok){toast('⚠️ Dept PDF endpoint not available. Use Export PDF for full report.','warn');return;}
+    var blob=await r.blob();
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url;a.download=dept+'_Inventory_'+new Date().toISOString().slice(0,10)+'.pdf';
+    document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    toast('✅ '+dept+' PDF downloaded!','success');
+    closeDeptReport();
+  }catch(e){toast('❌ Error — check server','error');}
+}
+
+/* ─── Bulk Upload Modal ─── */
+function openBulkModal(){document.getElementById('bulkModal').classList.add('open');}
+function closeBulkModal(){document.getElementById('bulkModal').classList.remove('open');}
+function switchTab(n){
+  document.getElementById('tab1').classList.toggle('active',n===1);
+  document.getElementById('tab2').classList.toggle('active',n===2);
+  document.getElementById('tabContent1').style.display=n===1?'':'none';
+  document.getElementById('tabContent2').style.display=n===2?'':'none';
+}
+function dz_over(e,id){e.preventDefault();document.getElementById(id).classList.add('drag-over');}
+function dz_leave(id){document.getElementById(id).classList.remove('drag-over');}
+function dz_drop(e,id,inputId){
+  e.preventDefault();dz_leave(id);
+  var files=e.dataTransfer.files;if(!files.length)return;
+  var inp=document.getElementById(inputId);
+  var dt=new DataTransfer();dt.items.add(files[0]);inp.files=dt.files;
+  dz_picked(id+'picked',inp);
+}
+function dz_picked(labelId,input){
+  if(!input.files.length)return;
+  document.getElementById(labelId).textContent='📎 '+input.files[0].name+' ('+Math.round(input.files[0].size/1024)+' KB)';
+}
+async function doUpload(){
+  var activeTab=document.getElementById('tab1').classList.contains('active')?1:2;
+  if(activeTab===1){
+    var f=document.getElementById('masterFile').files[0];
+    if(!f){toast('⚠️ Choose an Excel file first','warn');return;}
+    var fd=new FormData();fd.append('file',f);
+    toast('⬆️ Uploading master…','info');
+    try{
+      var r=await fetch('/inventory/upload_master',{method:'POST',body:fd,headers:NGROK});
+      if(r.ok){toast('✅ Master file replaced successfully!','success');closeBulkModal();refreshData();startCountdown();}
+      else{toast('❌ Upload failed','error');}
+    }catch(e){toast('❌ Network error','error');}
+  }else{
+    var f2=document.getElementById('csvFile').files[0];
+    if(!f2){toast('⚠️ Choose a CSV file first','warn');return;}
+    var reader=new FileReader();
+    reader.onload=async function(ev){
+      var lines=ev.target.result.split('\n').filter(function(l){return l.trim();});
+      if(lines.length<2){toast('❌ CSV has no data rows','error');return;}
+      var headers=lines[0].split(',').map(function(h){return h.trim();});
+      var rows=lines.slice(1);
+      var prog=document.getElementById('bulkProg');
+      var bar=document.getElementById('progBar');
+      var lbl=document.getElementById('progLabel');
+      var pct=document.getElementById('progPct');
+      var res=document.getElementById('uploadResult');
+      prog.style.display='';res.innerHTML='';
+      var ok=0;
+      for(var i=0;i<rows.length;i++){
+        var cols=rows[i].split(',');
+        var obj={};
+        headers.forEach(function(h,j){obj[h]=cols[j]?(cols[j].trim()):''});
+        var p=Math.round((i+1)/rows.length*100);
+        bar.style.width=p+'%';pct.textContent=p+'%';lbl.textContent='Row '+(i+1)+' of '+rows.length;
+        res.innerHTML+='<div class="row-ok">✅ Row '+(i+1)+': '+obj['Item_Code']+' — '+obj['Item_Name']+'</div>';
+        ok++;
+        await new Promise(function(r){setTimeout(r,40);});
+      }
+      toast('✅ Parsed '+ok+' rows. Upload master to apply.','success');
+    };
+    reader.readAsText(f2);
+  }
+}
+
+/* ─── Dept Report Modal ─── */
+function openDeptReport(){document.getElementById('deptReportModal').classList.add('open');renderSidebarDepts();}
+function closeDeptReport(){document.getElementById('deptReportModal').classList.remove('open');}
+
+/* ─── Keyboard shortcuts ─── */
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){closeBulkModal();closeAddItem();closeDeptReport();}
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter') submitTx();
+  if((e.ctrlKey||e.metaKey)&&e.key==='k'){
+    e.preventDefault();
+    document.getElementById('searchInp').focus();
+    document.getElementById('searchInp').select();
+  }
+});
+
+/* ─── Init ─── */
+document.addEventListener('DOMContentLoaded',function(){
+  refreshData();
+  startCountdown();
+  // populate dept report list immediately with all known depts
+  var drl=document.getElementById('deptReportList');
+  var allDepts=['Electrical','Plumbing','Carpentry','HVAC','Painting','Housekeeping',
+                'Security','Fire Safety','Stationery','MEP','Civil','IT',
+                'Landscaping','Pest Control','Kitchen','Laundry','Engineering','Stores'];
+  drl.innerHTML=allDepts.map(function(d){
+    return '<button class="dept-btn" onclick="exportDeptPDF(\''+d+'\')">'+
+      '<span class="dept-btn-icon">'+(DEPT_ICONS[d]||'📦')+'</span>'+d+
+    '</button>';
+  }).join('');
+});
+</script>
+</body>
+</html>

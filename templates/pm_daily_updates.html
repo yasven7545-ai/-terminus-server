@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Manager Daily Updates</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --text: #ffffff;
+            --border: #34495e;
+            --hover: #34495e;
+            --red: #e74c3c;
+            --amber: #f39c12;
+            --green: #2ecc71;
+            --gray: #95a5a6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--primary);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .back-button {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #2980b9;
+        }
+
+        .filter-bar {
+            background-color: var(--primary);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .filter-item label {
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .filter-item select, .filter-item input {
+            padding: 5px 10px;
+            border: 1px solid var(--border);
+            background-color: var(--dark);
+            color: var(--text);
+            border-radius: 4px;
+            min-width: 120px;
+        }
+
+        .data-grid {
+            background-color: var(--primary);
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: var(--secondary);
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            position: sticky;
+            top: 60px;
+            z-index: 99;
+            border-bottom: 2px solid var(--border);
+        }
+
+        th:first-child, td:first-child {
+            position: sticky;
+            left: 0;
+            background-color: var(--secondary);
+            z-index: 98;
+        }
+
+        th:nth-child(2), td:nth-child(2) {
+            position: sticky;
+            left: 60px;
+            background-color: var(--secondary);
+            z-index: 97;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background-color: var(--hover);
+        }
+
+        .emergency {
+            background-color: var(--red);
+            color: white;
+            font-weight: bold;
+        }
+
+        .pending {
+            background-color: var(--amber);
+            color: black;
+            font-weight: bold;
+        }
+
+        .approved {
+            background-color: var(--green);
+            color: white;
+            font-weight: bold;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn-edit {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-delete {
+            background-color: var(--red);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #c0392b;
+        }
+
+        .procurement-tab {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+        }
+
+        .procurement-tab.show {
+            display: block;
+        }
+
+        .procurement-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select {
+            padding: 8px;
+            border: 1px solid var(--border);
+            background-color: var(--dark);
+            color: var(--text);
+            border-radius: 4px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--primary);
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .close {
+            color: var(--text);
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .audit-log {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: var(--dark);
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .audit-entry {
+            padding: 5px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background-color: var(--primary);
+            margin-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header-title {
+                font-size: 1.2rem;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-item {
+                width: 100%;
+            }
+
+            th, td {
+                padding: 8px 5px;
+                font-size: 0.85rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .procurement-form {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10px;
+            }
+        }
+
+        /* Status indicators */
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .status-pending {
+            background-color: var(--amber);
+        }
+
+        .status-approved {
+            background-color: var(--green);
+        }
+
+        .status-rejected {
+            background-color: var(--red);
+        }
+
+        .status-not-required {
+            background-color: var(--gray);
+        }
+
+        /* Cost implication indicators */
+        .cost-yes {
+            color: var(--red);
+            font-weight: bold;
+        }
+
+        .cost-no {
+            color: var(--green);
+            font-weight: bold;
+        }
+
+        /* ETC validation */
+        .past-date {
+            color: var(--red);
+            font-style: italic;
+        }
+
+        .future-date {
+            color: var(--green);
+        }
+
+        /* Add new row button */
+        .add-row {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 0;
+            transition: background-color 0.3s;
+        }
+
+        .add-row:hover {
+            background-color: #2980b9;
+        }
+
+        /* Export buttons */
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            background-color: var(--primary);
+            color: white;
+            border: 1px solid var(--border);
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .export-btn:hover {
+            background-color: var(--secondary);
+        }
+
+        /* Validation error styling */
+        .error {
+            border: 1px solid var(--red) !important;
+            background-color: rgba(231, 76, 60, 0.2) !important;
+        }
+
+        .error-message {
+            color: var(--red);
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        /* Read-only fields */
+        .readonly {
+            background-color: var(--dark);
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Procurement status badges */
+        .proc-status {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .proc-initiated {
+            background-color: var(--amber);
+            color: black;
+        }
+
+        .proc-po-raised {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .proc-delivered {
+            background-color: var(--green);
+            color: white;
+        }
+
+        /* Approval status badges */
+        .approval-status {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .approval-pending {
+            background-color: var(--amber);
+            color: black;
+        }
+
+        .approval-approved {
+            background-color: var(--green);
+            color: white;
+        }
+
+        .approval-rejected {
+            background-color: var(--red);
+            color: white;
+        }
+
+        .approval-not-required {
+            background-color: var(--gray);
+            color: white;
+        }
+
+        /* Work type badges */
+        .work-type {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .work-regular {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .work-breakdown {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .work-emergency {
+            background-color: #c0392b;
+            color: white;
+        }
+
+        .work-frequency {
+            background-color: #3498db;
+            color: white;
+        }
+
+        /* GM Action button */
+        .gm-action {
+            background-color: var(--primary);
+            color: white;
+            border: 1px solid var(--border);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background-color 0.3s;
+        }
+
+        .gm-action:hover {
+            background-color: var(--secondary);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Loading spinner */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 4px solid var(--secondary);
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Custom styling for the design you requested */
+        .custom-header {
+            background-color: #2c3e50;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .custom-filter-bar {
+            background-color: #2c3e50;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .custom-data-grid {
+            background-color: #2c3e50;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .custom-th {
+            background-color: #3498db;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            position: sticky;
+            top: 60px;
+            z-index: 99;
+            border-bottom: 2px solid #34495e;
+        }
+
+        .custom-td {
+            padding: 12px;
+            border-bottom: 1px solid #34495e;
+            vertical-align: top;
+        }
+
+        .custom-tr:hover {
+            background-color: #34495e;
+        }
+
+        .custom-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background-color 0.3s;
+        }
+
+        .custom-btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .custom-btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .custom-btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .custom-btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .custom-add-row {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 0;
+            transition: background-color 0.3s;
+        }
+
+        .custom-add-row:hover {
+            background-color: #2980b9;
+        }
+
+        .custom-export-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .custom-export-btn {
+            background-color: #2c3e50;
+            color: white;
+            border: 1px solid #34495e;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .custom-export-btn:hover {
+            background-color: #3498db;
+        }
+
+        .custom-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .custom-modal-content {
+            background-color: #2c3e50;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .custom-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #34495e;
+        }
+
+        .custom-close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .custom-modal-body {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .custom-footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #2c3e50;
+            margin-top: 20px;
+            border-top: 1px solid #34495e;
+        }
+
+        .custom-status-pending {
+            background-color: #f39c12;
+            color: black;
+            font-weight: bold;
+        }
+
+        .custom-status-approved {
+            background-color: #2ecc71;
+            color: white;
+            font-weight: bold;
+        }
+
+        .custom-status-rejected {
+            background-color: #e74c3c;
+            color: white;
+            font-weight: bold;
+        }
+
+        .custom-status-not-required {
+            background-color: #95a5a6;
+            color: white;
+            font-weight: bold;
+        }
+
+        .custom-cost-yes {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .custom-cost-no {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        .custom-work-regular {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .custom-work-breakdown {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .custom-work-emergency {
+            background-color: #c0392b;
+            color: white;
+        }
+
+        .custom-work-frequency {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .custom-proc-initiated {
+            background-color: #f39c12;
+            color: black;
+        }
+
+        .custom-proc-po-raised {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .custom-proc-delivered {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .custom-gm-action {
+            background-color: #2c3e50;
+            color: white;
+            border: 1px solid #34495e;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background-color 0.3s;
+        }
+
+        .custom-gm-action:hover {
+            background-color: #3498db;
+        }
+
+        .custom-empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #95a5a6;
+        }
+
+        .custom-empty-state i {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .custom-loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .custom-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="custom-header">
+        <div class="header-title">Property Manager Daily Updates</div>
+        <button class="back-button" onclick="window.location.href='/sln_terminus'">Back to Home</button>
+    </div>
+
+    <div class="container">
+        <div class="custom-filter-bar">
+            <div class="filter-item">
+                <label for="filter-date">Date:</label>
+                <input type="date" id="filter-date" value="2026-01-23">
+            </div>
+            <div class="filter-item">
+                <label for="filter-work-type">Work Type:</label>
+                <select id="filter-work-type">
+                    <option value="">All</option>
+                    <option value="Regular">Regular</option>
+                    <option value="Breakdown">Breakdown</option>
+                    <option value="Emergency">Emergency</option>
+                    <option value="Frequency">Frequency</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label for="filter-cost">Cost Implication:</label>
+                <select id="filter-cost">
+                    <option value="">All</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label for="filter-approval">Approval Status:</label>
+                <select id="filter-approval">
+                    <option value="">All</option>
+                    <option value="Not Required">Not Required</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <button class="custom-btn custom-btn-primary" onclick="applyFilters()">Apply Filters</button>
+            </div>
+        </div>
+
+        <div class="custom-export-buttons">
+            <button class="custom-export-btn" onclick="exportCSV()">Export CSV</button>
+            <button class="custom-export-btn" onclick="exportJSON()">Export JSON</button>
+            <button class="custom-export-btn" onclick="exportPDF()">Export PDF</button>
+        </div>
+
+        <div class="custom-data-grid">
+            <table id="updates-table" class="custom-table">
+                <thead>
+                    <tr>
+                        <th class="custom-th">Sno</th>
+                        <th class="custom-th">Description</th>
+                        <th class="custom-th">Cost Implication</th>
+                        <th class="custom-th">Estimated Cost</th>
+                        <th class="custom-th">Currency</th>
+                        <th class="custom-th">Work Type</th>
+                        <th class="custom-th">Approval Status</th>
+                        <th class="custom-th">ETC</th>
+                        <th class="custom-th">Procurement</th>
+                        <th class="custom-th">GM Action</th>
+                    </tr>
+                </thead>
+                <tbody id="updates-body">
+                    <!-- Data will be populated here -->
+                </tbody>
+            </table>
+        </div>
+
+        <button class="custom-add-row" onclick="addNewRow()">+ Add New Row</button>
+
+        <div class="custom-footer">
+            <p>© 2026 Property Management System | Last updated: Friday, January 23, 2026</p>
+        </div>
+    </div>
+
+    <!-- Modal for detailed view -->
+    <div class="custom-modal" id="detail-modal">
+        <div class="custom-modal-content">
+            <div class="custom-modal-header">
+                <h3>Update Details</h3>
+                <span class="custom-close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="custom-modal-body">
+                <div id="detail-content">
+                    <!-- Content will be populated here -->
+                </div>
+                <div class="procurement-tab" id="procurement-tab">
+                    <h4>Procurement Details</h4>
+                    <div class="procurement-form">
+                        <div class="form-group">
+                            <label for="proc-id">Procurement ID:</label>
+                            <input type="text" id="proc-id" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="vendor-name">Vendor Name:</label>
+                            <input type="text" id="vendor-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quotation-count">Quotation Count:</label>
+                            <input type="number" id="quotation-count" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="selected-vendor">Selected Vendor:</label>
+                            <input type="text" id="selected-vendor" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="po-number">PO Number:</label>
+                            <input type="text" id="po-number">
+                        </div>
+                        <div class="form-group">
+                            <label for="proc-status">Procurement Status:</label>
+                            <select id="proc-status" required>
+                                <option value="">Select Status</option>
+                                <option value="Initiated">Initiated</option>
+                                <option value="PO Raised">PO Raised</option>
+                                <option value="Delivered">Delivered</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <button class="custom-btn custom-btn-primary" onclick="saveProcurement()">Save Procurement</button>
+                        <button class="custom-btn custom-btn-danger" onclick="cancelProcurement()">Cancel</button>
+                    </div>
+                </div>
+                <div class="audit-log">
+                    <h4>Audit Log</h4>
+                    <div class="audit-entry">Created by John Doe on 2026-01-23 at 09:30 AM</div>
+                    <div class="audit-entry">Status changed from Pending to Approved by Jane Smith on 2026-01-23 at 10:15 AM</div>
+                    <div class="audit-entry">Procurement initiated on 2026-01-23 at 10:30 AM</div>
+                </div>
+                <div style="margin-top: 15px; display: flex; gap: 10px;">
+                    <button class="custom-btn custom-btn-primary" onclick="editRow()">Edit</button>
+                    <button class="custom-btn custom-btn-danger" onclick="deleteRow()">Delete</button>
+                    <button class="custom-btn" onclick="closeModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading spinner -->
+    <div class="custom-loading" id="loading-spinner">
+        <div class="custom-spinner"></div>
+        <p>Loading data...</p>
+    </div>
+
+    <script>
+        // Global variables
+        let currentRowId = null;
+        let editMode = false;
+        let updatesData = [];
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set today's date in filter
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('filter-date').value = today;
+            
+            // Load data from server
+            loadData();
+            
+            // Apply initial filters
+            applyFilters();
+            
+            // Add event listeners for filters
+            document.getElementById('filter-date').addEventListener('change', applyFilters);
+            document.getElementById('filter-work-type').addEventListener('change', applyFilters);
+            document.getElementById('filter-cost').addEventListener('change', applyFilters);
+            document.getElementById('filter-approval').addEventListener('change', applyFilters);
+        });
+
+        // Load data from server
+        function loadData() {
+            showLoading();
+            fetch('/api/property-manager-updates')
+                .then(response => response.json())
+                .then(data => {
+                    updatesData = data;
+                    renderTable();
+                    hideLoading();
+                })
+                .catch(error => {
+                    console.error('Error loading data:', error);
+                    hideLoading();
+                    alert('Failed to load data. Please try again.');
+                });
+        }
+
+        // Render table with data
+        function renderTable() {
+            const tbody = document.getElementById('updates-body');
+            tbody.innerHTML = '';
+            
+            if (updatesData.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="10" class="custom-empty-state">
+                            <i class="fas fa-folder-open"></i>
+                            <p>No updates found.</p>
+                            <button class="custom-add-row" onclick="addNewRow()">Add First Update</button>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            updatesData.forEach((update, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${update.sno}</td>
+                    <td>${update.description}</td>
+                    <td class="${update.costImplication === 'Yes' ? 'custom-cost-yes' : 'custom-cost-no'}">${update.costImplication}</td>
+                    <td>${update.estimatedCost !== null ? update.estimatedCost.toFixed(2) : '-'}</td>
+                    <td>${update.currency || '-'}</td>
+                    <td><span class="work-type ${getWorkTypeClass(update.workType)}">${update.workType}</span></td>
+                    <td><span class="approval-status ${getApprovalStatusClass(update.approvalStatus)}">${update.approvalStatus}</span></td>
+                    <td class="${new Date(update.etC) < new Date() ? 'past-date' : 'future-date'}">${update.etC}</td>
+                    <td><span class="proc-status ${getProcurementStatusClass(update.procurementRequired)}">${update.procurementRequired}</span></td>
+                    <td><button class="custom-gm-action" onclick="sendGMAction(${update.id})">Send Message</button></td>
+                `;
+                row.onclick = () => showDetail(update.id);
+                tbody.appendChild(row);
+            });
+        }
+
+function renderUpdates(updates) {
+    const tableBody = document.getElementById('updates-table-body');
+    tableBody.innerHTML = ''; // పాత డేటాని క్లియర్ చేస్తుంది
+
+    updates.forEach(update => {
+        const row = document.createElement('tr');
+        
+        // Status color ని బట్టి క్లాస్ సెట్ చేయడం
+        const statusClass = update.status ? update.status.toLowerCase() : 'pending';
+
+        row.innerHTML = `
+            <td>${update.id}</td>
+            <td>${update.category}</td>
+            <td>${update.description}</td>
+            <td><span class="status-pill ${statusClass}">${update.status}</span></td>
+            <td>${update.timestamp}</td>
+            <td class="actions">
+                <button class="btn btn-secondary" onclick="sendWhatsApp('${update.category}', '${update.description}')" style="background-color: #25D366; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                    <i class="fab fa-whatsapp"></i> Send
+                </button>
+                <button class="btn btn-accent" onclick="deleteUpdate(${update.id})" style="background-color: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-left: 5px;">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+function sendWhatsApp(category, desc) {
+    const phone = "917981397300
+    const message = `*Daily Update*\n*Category:* ${category}\n*Details:* ${desc}`;
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+}
+
+
+function addUpdate() {
+    const category = document.getElementById('category').value;
+    const description = document.getElementById('description').value;
+    const status = document.getElementById('status').value;
+
+    if (!category || !description) {
+        alert('Please fill all fields');
+        return;
+    }
+
+    const newUpdate = { category, description, status };
+
+    fetch('/api/property-manager-updates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newUpdate)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+
+            document.getElementById('category').value = '';
+            document.getElementById('description').value = '';
+            
+
+            fetchUpdates(); 
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+
+        // Get work type class
+        function getWorkTypeClass(workType) {
+            switch(workType) {
+                case 'Regular': return 'custom-work-regular';
+                case 'Breakdown': return 'custom-work-breakdown';
+                case 'Emergency': return 'custom-work-emergency';
+                case 'Frequency': return 'custom-work-frequency';
+                default: return 'custom-work-regular';
+            }
+        }
+
+        // Get approval status class
+        function getApprovalStatusClass(approvalStatus) {
+            switch(approvalStatus) {
+                case 'Not Required': return 'custom-status-not-required';
+                case 'Pending': return 'custom-status-pending';
+                case 'Approved': return 'custom-status-approved';
+                case 'Rejected': return 'custom-status-rejected';
+                default: return 'custom-status-not-required';
+            }
+        }
+
+        // Get procurement status class
+        function getProcurementStatusClass(procurementStatus) {
+            switch(procurementStatus) {
+                case 'No': return 'custom-proc-initiated';
+                case 'Initiated': return 'custom-proc-initiated';
+                case 'PO Raised': return 'custom-proc-po-raised';
+                case 'Delivered': return 'custom-proc-delivered';
+                default: return 'custom-proc-initiated';
+            }
+        }
+
+        // Apply filters to the table
+        function applyFilters() {
+            const dateFilter = document.getElementById('filter-date').value;
+            const workTypeFilter = document.getElementById('filter-work-type').value;
+            const costFilter = document.getElementById('filter-cost').value;
+            const approvalFilter = document.getElementById('filter-approval').value;
+            
+            const filteredData = updatesData.filter(update => {
+                let showRow = true;
+                
+                // Date filter
+                if (dateFilter && update.etC !== dateFilter) {
+                    showRow = false;
+                }
+                
+                // Work type filter
+                if (workTypeFilter && update.workType !== workTypeFilter) {
+                    showRow = false;
+                }
+                
+                // Cost implication filter
+                if (costFilter && update.costImplication !== costFilter) {
+                    showRow = false;
+                }
+                
+                // Approval status filter
+                if (approvalFilter && update.approvalStatus !== approvalFilter) {
+                    showRow = false;
+                }
+                
+                return showRow;
+            });
+            
+            // Render filtered data
+            const tbody = document.getElementById('updates-body');
+            tbody.innerHTML = '';
+            
+            if (filteredData.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="10" class="custom-empty-state">
+                            <i class="fas fa-search"></i>
+                            <p>No updates match your filters.</p>
+                            <button class="custom-btn custom-btn-primary" onclick="resetFilters()">Reset Filters</button>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            filteredData.forEach((update, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${update.sno}</td>
+                    <td>${update.description}</td>
+                    <td class="${update.costImplication === 'Yes' ? 'custom-cost-yes' : 'custom-cost-no'}">${update.costImplication}</td>
+                    <td>${update.estimatedCost !== null ? update.estimatedCost.toFixed(2) : '-'}</td>
+                    <td>${update.currency || '-'}</td>
+                    <td><span class="work-type ${getWorkTypeClass(update.workType)}">${update.workType}</span></td>
+                    <td><span class="approval-status ${getApprovalStatusClass(update.approvalStatus)}">${update.approvalStatus}</span></td>
+                    <td class="${new Date(update.etC) < new Date() ? 'past-date' : 'future-date'}">${update.etC}</td>
+                    <td><span class="proc-status ${getProcurementStatusClass(update.procurementRequired)}">${update.procurementRequired}</span></td>
+                    <td><button class="custom-gm-action" onclick="sendGMAction(${update.id})">Send Message</button></td>
+                `;
+                row.onclick = () => showDetail(update.id);
+                tbody.appendChild(row);
+            });
+        }
+
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('filter-date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('filter-work-type').value = '';
+            document.getElementById('filter-cost').value = '';
+            document.getElementById('filter-approval').value = '';
+            applyFilters();
+        }
+
+        // Show detail modal
+        function showDetail(id) {
+            currentRowId = id;
+            editMode = false;
+            
+            // Find the update data
+            const update = updatesData.find(u => u.id === id);
+            if (!update) return;
+            
+            // Populate modal content
+            const detailContent = document.getElementById('detail-content');
+            detailContent.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                    <div class="form-group">
+                        <label>Sno:</label>
+                        <input type="text" value="${update.sno}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <textarea rows="3" readonly>${update.description}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Cost Implication:</label>
+                        <input type="text" value="${update.costImplication}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Estimated Cost:</label>
+                        <input type="text" value="${update.estimatedCost !== null ? update.estimatedCost.toFixed(2) : '-'}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Currency:</label>
+                        <input type="text" value="${update.currency || '-'}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Work Type:</label>
+                        <input type="text" value="${update.workType}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Approval Status:</label>
+                        <input type="text" value="${update.approvalStatus}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>ETC:</label>
+                        <input type="text" value="${update.etC}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Procurement:</label>
+                        <input type="text" value="${update.procurementRequired}" readonly>
+                    </div>
+                </div>
+            `;
+            
+            // Show or hide procurement tab based on cost implication
+            const procurementTab = document.getElementById('procurement-tab');
+            if (update.costImplication === 'Yes') {
+                procurementTab.classList.add('show');
+                // Populate procurement form with existing data if available
+                document.getElementById('proc-id').value = update.procurementId || '';
+                document.getElementById('vendor-name').value = update.vendorName || '';
+                document.getElementById('quotation-count').value = update.quotationCount || 0;
+                document.getElementById('selected-vendor').value = update.selectedVendor || '';
+                document.getElementById('po-number').value = update.poNumber || '';
+                document.getElementById('proc-status').value = update.procurementStatus || '';
+            } else {
+                procurementTab.classList.remove('show');
+            }
+            
+            // Show modal
+            document.getElementById('detail-modal').style.display = 'flex';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('detail-modal').style.display = 'none';
+            currentRowId = null;
+            editMode = false;
+        }
+
+        // Send GM action
+        function sendGMAction(id) {
+            // In a real application, this would open a messaging interface
+            alert(`Sending GM action for update ${id}. This would typically open a WhatsApp/Email interface.`);
+        }
+
+        // Add new row
+        function addNewRow() {
+            // Create a new row with default values
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>5</td>
+                <td><input type="text" placeholder="Enter description..." maxlength="300" required></td>
+                <td>
+                    <select onchange="toggleCostFields(this)">
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </td>
+                <td><input type="number" step="0.01" min="0" placeholder="0.00" disabled></td>
+                <td>
+                    <select disabled>
+                        <option value="INR">INR</option>
+                        <option value="USD">USD</option>
+                        <option value="AED">AED</option>
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        <option value="Regular">Regular</option>
+                        <option value="Breakdown">Breakdown</option>
+                        <option value="Emergency">Emergency</option>
+                        <option value="Frequency">Frequency</option>
+                    </select>
+                </td>
+                <td><span class="approval-status custom-status-not-required">Not Required</span></td>
+                <td><input type="date" value="${new Date().toISOString().split('T')[0]}"></td>
+                <td><span class="proc-status custom-proc-initiated">No</span></td>
+                <td><button class="custom-gm-action">Send Message</button></td>
+            `;
+            
+            // Add the new row to the table
+            const tbody = document.getElementById('updates-body');
+            tbody.appendChild(newRow);
+            
+            // Focus on the description field
+            newRow.querySelector('input[type="text"]').focus();
+        }
+
+        // Toggle cost fields based on cost implication
+        function toggleCostFields(selectElement) {
+            const row = selectElement.closest('tr');
+            const costValue = selectElement.value;
+            
+            // Get the cost and currency fields
+            const costField = row.cells[3].querySelector('input');
+            const currencyField = row.cells[4].querySelector('select');
+            const approvalStatus = row.cells[6];
+            const procurementStatus = row.cells[8];
+            
+            if (costValue === 'Yes') {
+                // Enable cost and currency fields
+                costField.disabled = false;
+                currencyField.disabled = false;
+                
+                // Set default approval status to Pending
+                approvalStatus.innerHTML = '<span class="approval-status custom-status-pending">Pending</span>';
+                
+                // Set procurement status to Initiated
+                procurementStatus.innerHTML = '<span class="proc-status custom-proc-initiated">Initiated</span>';
+            } else {
+                // Disable cost and currency fields
+                costField.disabled = true;
+                currencyField.disabled = true;
+                
+                // Set approval status to Not Required
+                approvalStatus.innerHTML = '<span class="approval-status custom-status-not-required">Not Required</span>';
+                
+                // Set procurement status to No
+                procurementStatus.innerHTML = '<span class="proc-status custom-proc-initiated">No</span>';
+            }
+        }
+
+        // Validate row data
+        function validateRow(row) {
+            const cells = row.getElementsByTagName('td');
+            const description = cells[1].querySelector('input')?.value || cells[1].textContent;
+            const costImplication = cells[2].querySelector('select')?.value || cells[2].textContent;
+            const estimatedCost = cells[3].querySelector('input')?.value || cells[3].textContent;
+            const etd = cells[7].querySelector('input')?.value || cells[7].textContent;
+            
+            // Validate description (minimum 10 characters)
+            if (description.length < 10) {
+                alert('Description must be at least 10 characters long.');
+                return false;
+            }
+            
+            // Validate ETC (cannot be past date)
+            const today = new Date().toISOString().split('T')[0];
+            if (etd < today) {
+                alert('ETC cannot be a past date.');
+                return false;
+            }
+            
+            // If cost implication is Yes, validate cost
+            if (costImplication === 'Yes') {
+                if (!estimatedCost || parseFloat(estimatedCost) <= 0) {
+                    alert('Estimated cost must be greater than 0 when cost implication is Yes.');
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        // Save row data
+        function saveRow(row) {
+            // Validate the row
+            if (!validateRow(row)) {
+                return false;
+            }
+            
+            // Get the data from inputs
+            const descriptionInput = row.cells[1].querySelector('input');
+            const costImplicationSelect = row.cells[2].querySelector('select');
+            const costInput = row.cells[3].querySelector('input');
+            const currencySelect = row.cells[4].querySelector('select');
+            const workTypeSelect = row.cells[5].querySelector('select');
+            const etdInput = row.cells[7].querySelector('input');
+            
+            // Create update object
+            const update = {
+                sno: row.cells[0].textContent,
+                description: descriptionInput.value,
+                costImplication: costImplicationSelect.value,
+                estimatedCost: costInput.value ? parseFloat(costInput.value) : null,
+                currency: currencySelect.value,
+                workType: workTypeSelect.value,
+                approvalStatus: costImplicationSelect.value === 'Yes' ? 'Pending' : 'Not Required',
+                etC: etdInput.value,
+                procurementRequired: costImplicationSelect.value === 'Yes' ? 'Initiated' : 'No',
+                createdBy: 'Current User', // Would be set by server
+                createdOn: new Date().toISOString()
+            };
+            
+            // Send to server
+            showLoading();
+            fetch('/api/property-manager-updates', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(update),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update local data
+                    updatesData.push(data.update);
+                    renderTable();
+                    hideLoading();
+                    alert('Update saved successfully!');
+                } else {
+                    hideLoading();
+                    alert('Failed to save update: ' + data.error);
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                alert('Error saving update: ' + error.message);
+            });
+            
+            return true;
+        }
+
+        // Edit row
+        function editRow() {
+            if (!currentRowId) return;
+            
+            const update = updatesData.find(u => u.id === currentRowId);
+            if (!update) return;
+            
+            // Create edit form
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><input type="text" value="${update.sno}" readonly></td>
+                <td><input type="text" value="${update.description}" maxlength="300" required></td>
+                <td>
+                    <select onchange="toggleCostFields(this)">
+                        <option value="No" ${update.costImplication === 'No' ? 'selected' : ''}>No</option>
+                        <option value="Yes" ${update.costImplication === 'Yes' ? 'selected' : ''}>Yes</option>
+                    </select>
+                </td>
+                <td><input type="number" step="0.01" min="0" value="${update.estimatedCost !== null ? update.estimatedCost : 0}" ${update.costImplication === 'No' ? 'disabled' : ''}></td>
+                <td>
+                    <select ${update.costImplication === 'No' ? 'disabled' : ''}>
+                        <option value="INR" ${update.currency === 'INR' ? 'selected' : ''}>INR</option>
+                        <option value="USD" ${update.currency === 'USD' ? 'selected' : ''}>USD</option>
+                        <option value="AED" ${update.currency === 'AED' ? 'selected' : ''}>AED</option>
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        <option value="Regular" ${update.workType === 'Regular' ? 'selected' : ''}>Regular</option>
+                        <option value="Breakdown" ${update.workType === 'Breakdown' ? 'selected' : ''}>Breakdown</option>
+                        <option value="Emergency" ${update.workType === 'Emergency' ? 'selected' : ''}>Emergency</option>
+                        <option value="Frequency" ${update.workType === 'Frequency' ? 'selected' : ''}>Frequency</option>
+                    </select>
+                </td>
+                <td><span class="approval-status ${getApprovalStatusClass(update.approvalStatus)}">${update.approvalStatus}</span></td>
+                <td><input type="date" value="${update.etC}"></td>
+                <td><span class="proc-status ${getProcurementStatusClass(update.procurementRequired)}">${update.procurementRequired}</span></td>
+                <td>
+                    <button class="custom-btn custom-btn-primary" onclick="saveEditedRow(${update.id})">Save</button>
+                    <button class="custom-btn custom-btn-danger" onclick="cancelEdit()">Cancel</button>
+                </td>
+            `;
+            
+            // Replace the modal content with the edit form
+            const detailContent = document.getElementById('detail-content');
+            detailContent.innerHTML = '';
+            detailContent.appendChild(row);
+            
+            // Show procurement tab if needed
+            const procurementTab = document.getElementById('procurement-tab');
+            if (update.costImplication === 'Yes') {
+                procurementTab.classList.add('show');
+                document.getElementById('proc-id').value = update.procurementId || '';
+                document.getElementById('vendor-name').value = update.vendorName || '';
+                document.getElementById('quotation-count').value = update.quotationCount || 0;
+                document.getElementById('selected-vendor').value = update.selectedVendor || '';
+                document.getElementById('po-number').value = update.poNumber || '';
+                document.getElementById('proc-status').value = update.procurementStatus || '';
+            } else {
+                procurementTab.classList.remove('show');
+            }
+            
+            editMode = true;
+        }
+
+        // Save edited row
+        function saveEditedRow(id) {
+            // Find the update to edit
+            const index = updatesData.findIndex(u => u.id === id);
+            if (index === -1) return;
+            
+            // Get the data from inputs
+            const row = document.querySelector(`#detail-content tr`);
+            const snoInput = row.cells[0].querySelector('input');
+            const descriptionInput = row.cells[1].querySelector('input');
+            const costImplicationSelect = row.cells[2].querySelector('select');
+            const costInput = row.cells[3].querySelector('input');
+            const currencySelect = row.cells[4].querySelector('select');
+            const workTypeSelect = row.cells[5].querySelector('select');
+            const etdInput = row.cells[7].querySelector('input');
+            
+            // Validate the row
+            if (!validateRow(row)) {
+                return;
+            }
+            
+            // Create update object
+            const update = {
+                id: id,
+                sno: snoInput.value,
+                description: descriptionInput.value,
+                costImplication: costImplicationSelect.value,
+                estimatedCost: costInput.value ? parseFloat(costInput.value) : null,
+                currency: currencySelect.value,
+                workType: workTypeSelect.value,
+                approvalStatus: costImplicationSelect.value === 'Yes' ? 'Pending' : 'Not Required',
+                etC: etdInput.value,
+                procurementRequired: costImplicationSelect.value === 'Yes' ? 'Initiated' : 'No',
+                createdBy: 'Current User', // Would be set by server
+                createdOn: new Date().toISOString()
+            };
+            
+            // Send to server
+            showLoading();
+            fetch(`/api/property-manager-updates/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(update),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update local data
+                    updatesData[index] = data.update;
+                    renderTable();
+                    hideLoading();
+                    closeModal();
+                    alert('Update saved successfully!');
+                } else {
+                    hideLoading();
+                    alert('Failed to save update: ' + data.error);
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                alert('Error saving update: ' + error.message);
+            });
+        }
+
+        // Cancel edit
+        function cancelEdit() {
+            closeModal();
+        }
+
+        // Delete row
+        function deleteRow() {
+            if (!currentRowId) return;
+            
+            if (confirm('Are you sure you want to delete this update?')) {
+                showLoading();
+                fetch(`/api/property-manager-updates/${currentRowId}`, {
+                    method: 'DELETE',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove from local data
+                        const index = updatesData.findIndex(u => u.id === currentRowId);
+                        if (index !== -1) {
+                            updatesData.splice(index, 1);
+                            renderTable();
+                        }
+                        hideLoading();
+                        closeModal();
+                        alert('Update deleted successfully!');
+                    } else {
+                        hideLoading();
+                        alert('Failed to delete update: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    hideLoading();
+                    alert('Error deleting update: ' + error.message);
+                });
+            }
+        }
+
+        // Save procurement
+        function saveProcurement() {
+            if (!currentRowId) return;
+            
+            // Get procurement data
+            const procId = document.getElementById('proc-id').value;
+            const vendorName = document.getElementById('vendor-name').value;
+            const quotationCount = parseInt(document.getElementById('quotation-count').value);
+            const selectedVendor = document.getElementById('selected-vendor').value;
+            const poNumber = document.getElementById('po-number').value;
+            const procStatus = document.getElementById('proc-status').value;
+            
+            // Validate required fields
+            if (!vendorName || !quotationCount || !selectedVendor || !procStatus) {
+                alert('Please fill all required procurement fields.');
+                return;
+            }
+            
+            // Send to server
+            showLoading();
+            fetch(`/api/property-manager-updates/${currentRowId}/procurement`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    procurementId: procId,
+                    vendorName: vendorName,
+                    quotationCount: quotationCount,
+                    selectedVendor: selectedVendor,
+                    poNumber: poNumber,
+                    procurementStatus: procStatus
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update local data
+                    const index = updatesData.findIndex(u => u.id === currentRowId);
+                    if (index !== -1) {
+                        updatesData[index].procurementId = data.update.procurementId;
+                        updatesData[index].vendorName = data.update.vendorName;
+                        updatesData[index].quotationCount = data.update.quotationCount;
+                        updatesData[index].selectedVendor = data.update.selectedVendor;
+                        updatesData[index].poNumber = data.update.poNumber;
+                        updatesData[index].procurementStatus = data.update.procurementStatus;
+                        updatesData[index].procurementRequired = data.update.procurementRequired;
+                    }
+                    renderTable();
+                    hideLoading();
+                    closeModal();
+                    alert('Procurement details saved successfully!');
+                } else {
+                    hideLoading();
+                    alert('Failed to save procurement: ' + data.error);
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                alert('Error saving procurement: ' + error.message);
+            });
+        }
+
+        // Cancel procurement
+        function cancelProcurement() {
+            if (confirm('Are you sure you want to cancel procurement?')) {
+                closeModal();
+            }
+        }
+
+        // Export functions
+        function exportCSV() {
+            showLoading();
+            fetch('/api/property-manager-updates/export/csv')
+                .then(response => response.text())
+                .then(data => {
+                    const blob = new Blob([data], { type: 'text/csv;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', 'property_manager_updates.csv');
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    hideLoading();
+                })
+                .catch(error => {
+                    hideLoading();
+                    alert('Error exporting CSV: ' + error.message);
+                });
+        }
+
+        function exportJSON() {
+            showLoading();
+            fetch('/api/property-manager-updates/export/json')
+                .then(response => response.json())
+                .then(data => {
+                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json;charset=utf-8;' });
+                    const link = document.createElement('a');
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', 'property_manager_updates.json');
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    hideLoading();
+                })
+                .catch(error => {
+                    hideLoading();
+                    alert('Error exporting JSON: ' + error.message);
+                });
+        }
+
+        function exportPDF() {
+            alert('Export to PDF functionality is not implemented yet. In a real application, this would generate a PDF file with the current data.');
+            hideLoading();
+        }
+
+        // Helper functions for loading state
+        function showLoading() {
+            document.getElementById('loading-spinner').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-spinner').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

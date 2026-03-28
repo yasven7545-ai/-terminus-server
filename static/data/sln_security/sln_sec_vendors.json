@@ -1,0 +1,53 @@
+[
+  {
+    "Vendor Name": "Contact person",
+    "Company": "Company/firm name",
+    "Phone": "+91 XXXXXXXXXX",
+    "Work Order No.": "WO reference",
+    "Purpose / Work": "Nature of work",
+    "Zone / Area": "Work zone",
+    "Status": "Inside / Exited",
+    "Entry Date": "DD-MM-YYYY",
+    "Entry Time": "HH:MM",
+    "Exit Time": "HH:MM",
+    "Tools / Equipment": "Items brought in",
+    "Supervisor Contact": "In-house contact",
+    "Remarks": "Notes",
+    "id": "VEN-75FD06EC",
+    "imported_at": "2026-03-23 15:16:04"
+  },
+  {
+    "Vendor Name": "Contact person",
+    "Company": "Company/firm name",
+    "Phone": "+91 XXXXXXXXXX",
+    "Work Order No.": "WO reference",
+    "Purpose / Work": "Nature of work",
+    "Zone / Area": "Work zone",
+    "Status": "Inside / Exited",
+    "Entry Date": "DD-MM-YYYY",
+    "Entry Time": "HH:MM",
+    "Exit Time": "HH:MM",
+    "Tools / Equipment": "Items brought in",
+    "Supervisor Contact": "In-house contact",
+    "Remarks": "Notes",
+    "id": "VEN-1B09AEBC",
+    "imported_at": "2026-03-23 15:11:07"
+  },
+  {
+    "Vendor Name": "Contact person",
+    "Company": "Company/firm name",
+    "Phone": "+91 XXXXXXXXXX",
+    "Work Order No.": "WO reference",
+    "Purpose / Work": "Nature of work",
+    "Zone / Area": "Work zone",
+    "Status": "Inside / Exited",
+    "Entry Date": "DD-MM-YYYY",
+    "Entry Time": "HH:MM",
+    "Exit Time": "HH:MM",
+    "Tools / Equipment": "Items brought in",
+    "Supervisor Contact": "In-house contact",
+    "Remarks": "Notes",
+    "id": "VEN-D4BBE9B0",
+    "imported_at": "2026-03-23 15:09:06"
+  }
+]

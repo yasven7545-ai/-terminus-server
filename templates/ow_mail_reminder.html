@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ONEWEST Mail Reminder — Property Operations System</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+:root {
+--bg-primary: #0f172a;
+--bg-secondary: #1e293b;
+--bg-tertiary: #334155;
+--text-primary: #f1f5f9;
+--text-secondary: #94a3b8;
+--text-muted: #64748b;
+--accent-primary: #f97316;
+--accent-secondary: #ea580c;
+--accent-glow: rgba(249, 115, 22, 0.3);
+--success: #10b981;
+--warning: #f59e0b;
+--danger: #ef4444;
+--info: #3b82f6;
+--border-color: #334155;
+--shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+--shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+--shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+--radius-sm: 6px;
+--radius-md: 8px;
+--radius-lg: 12px;
+--radius-xl: 16px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+background: linear-gradient(135deg, var(--bg-primary) 0%, #1a1f2e 100%);
+color: var(--text-primary);
+line-height: 1.6;
+min-height: 100vh;
+padding: 20px;
+}
+.container { max-width: 1400px; margin: 0 auto; }
+
+/* Header */
+.header {
+background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-xl);
+padding: 24px 32px;
+margin-bottom: 24px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+box-shadow: var(--shadow-lg);
+position: relative;
+overflow: hidden;
+flex-wrap: wrap;
+gap: 16px;
+}
+.header::before {
+content: '';
+position: absolute;
+top: 0; left: 0; right: 0;
+height: 4px;
+background: linear-gradient(90deg, var(--accent-primary), var(--info), var(--success));
+animation: header-line 3s infinite alternate;
+}
+@keyframes header-line {
+0% { transform: translateX(-100%); }
+100% { transform: translateX(100%); }
+}
+.header-left { display: flex; align-items: center; gap: 16px; }
+.header-icon {
+width: 56px; height: 56px;
+background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+border-radius: var(--radius-md);
+display: flex; align-items: center; justify-content: center;
+box-shadow: 0 0 20px var(--accent-glow);
+}
+.header-title h1 {
+font-size: 1.85rem; font-weight: 800;
+background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+margin-bottom: 4px;
+}
+.header-subtitle { color: var(--text-secondary); font-size: 0.9rem; }
+
+/* Back Button with Blink Animation */
+.back-btn {
+display: inline-flex; align-items: center; gap: 10px;
+padding: 12px 24px;
+background: var(--bg-tertiary);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-md);
+color: var(--text-primary);
+text-decoration: none;
+font-weight: 600;
+font-size: 0.875rem;
+transition: all 0.3s ease;
+animation: ow_mail_rem_blink 2s infinite;
+}
+.back-btn:hover {
+background: var(--accent-primary);
+border-color: var(--accent-primary);
+color: #000;
+transform: translateY(-2px);
+box-shadow: 0 4px 12px var(--accent-glow);
+}
+@keyframes ow_mail_rem_blink {
+0%, 100% { box-shadow: 0 0 5px var(--accent-primary); }
+50% { box-shadow: 0 0 0 transparent; }
+}
+
+/* Workflow Tracker */
+.workflow-tracker {
+background: var(--bg-secondary);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-xl);
+padding: 24px;
+margin-bottom: 24px;
+}
+.workflow-steps {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 12px;
+padding: 20px 0;
+overflow-x: auto;
+}
+.workflow-step {
+flex: 1;
+min-width: 140px;
+display: flex;
+flex-direction: column;
+align-items: center;
+text-align: center;
+padding: 16px;
+background: var(--bg-tertiary);
+border-radius: var(--radius-md);
+border: 2px solid var(--border-color);
+transition: all 0.3s ease;
+}
+.workflow-step.active {
+border-color: var(--accent-primary);
+background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(234, 88, 12, 0.05));
+box-shadow: 0 0 20px var(--accent-glow);
+}
+.workflow-step.completed {
+border-color: var(--success);
+background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05));
+}
+.step-number {
+width: 40px; height: 40px;
+border-radius: 50%;
+background: var(--bg-secondary);
+border: 2px solid var(--border-color);
+display: flex; align-items: center; justify-content: center;
+font-weight: 700; font-size: 1rem;
+margin-bottom: 10px;
+}
+.workflow-step.active .step-number {
+background: var(--accent-primary);
+border-color: var(--accent-primary);
+color: #000;
+}
+.workflow-step.completed .step-number {
+background: var(--success);
+border-color: var(--success);
+color: #fff;
+}
+.step-label { font-weight: 600; font-size: 0.875rem; margin-bottom: 4px; }
+.step-desc { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 8px; }
+.step-time { font-size: 0.7rem; color: var(--text-muted); font-family: 'Courier New', monospace; }
+.workflow-connector { color: var(--text-muted); padding: 0 8px; }
+
+/* Main Grid */
+.main-grid {
+display: grid;
+grid-template-columns: 1fr 380px;
+gap: 24px;
+align-items: start;
+}
+@media (max-width: 1024px) { .main-grid { grid-template-columns: 1fr; } }
+
+/* Cards */
+.card {
+background: var(--bg-secondary);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-xl);
+padding: 28px;
+box-shadow: var(--shadow-md);
+transition: all 0.3s ease;
+}
+.card:hover {
+box-shadow: var(--shadow-lg);
+border-color: var(--accent-primary);
+transform: translateY(-2px);
+}
+.card-header {
+display: flex; align-items: center; justify-content: space-between;
+margin-bottom: 24px;
+padding-bottom: 16px;
+border-bottom: 1px solid var(--border-color);
+}
+.card-title {
+display: flex; align-items: center; gap: 12px;
+font-size: 1.125rem; font-weight: 600;
+}
+.card-icon {
+width: 36px; height: 36px;
+background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+border-radius: var(--radius-sm);
+display: flex; align-items: center; justify-content: center;
+}
+.badge {
+padding: 4px 12px;
+border-radius: 20px;
+font-size: 0.75rem;
+font-weight: 600;
+text-transform: uppercase;
+}
+.badge-primary { background: rgba(249, 115, 22, 0.15); color: var(--accent-primary); }
+.badge-success { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+
+/* Form */
+.form-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 20px;
+margin-bottom: 24px;
+}
+@media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+.form-group.full-width { grid-column: 1 / -1; }
+.form-label {
+font-size: 0.875rem; font-weight: 500;
+color: var(--text-secondary);
+display: flex; align-items: center; gap: 6px;
+}
+.required { color: var(--danger); }
+.form-input, .form-select, .form-textarea {
+width: 100%;
+padding: 12px 16px;
+background: var(--bg-tertiary);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-md);
+color: var(--text-primary);
+font-size: 0.9rem;
+font-family: inherit;
+transition: all 0.3s ease;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+outline: none;
+border-color: var(--accent-primary);
+box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* Task Table */
+.table-container {
+background: var(--bg-tertiary);
+border-radius: var(--radius-lg);
+overflow: hidden;
+margin-bottom: 20px;
+border: 1px solid var(--border-color);
+overflow-x: auto;
+}
+.task-table {
+width: 100%;
+border-collapse: collapse;
+min-width: 800px;
+}
+.task-table th {
+background: var(--bg-secondary);
+padding: 14px 16px;
+text-align: left;
+font-size: 0.75rem;
+font-weight: 600;
+text-transform: uppercase;
+color: var(--text-secondary);
+border-bottom: 1px solid var(--border-color);
+}
+.task-table td {
+padding: 14px 16px;
+border-bottom: 1px solid var(--border-color);
+}
+.task-table tr:last-child td { border-bottom: none; }
+.task-table tr:hover td { background: rgba(249, 115, 22, 0.05); }
+.task-table input, .task-table select {
+width: 100%;
+padding: 10px 12px;
+background: var(--bg-secondary);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-sm);
+color: var(--text-primary);
+font-size: 0.875rem;
+}
+.btn-icon {
+width: 32px; height: 32px;
+padding: 0; border: none;
+border-radius: var(--radius-sm);
+cursor: pointer;
+display: flex; align-items: center; justify-content: center;
+}
+.btn-icon-danger {
+background: rgba(239, 68, 68, 0.15);
+color: var(--danger);
+}
+.btn-icon-danger:hover {
+background: var(--danger);
+color: #fff;
+transform: scale(1.1);
+}
+
+/* Buttons */
+.btn {
+padding: 12px 24px;
+border: none;
+border-radius: var(--radius-md);
+font-weight: 600;
+font-size: 0.875rem;
+cursor: pointer;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 10px;
+transition: all 0.3s ease;
+}
+.btn-primary {
+background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+color: #fff;
+box-shadow: 0 4px 12px var(--accent-glow);
+}
+.btn-secondary {
+background: var(--bg-tertiary);
+color: var(--text-primary);
+border: 1px solid var(--border-color);
+}
+.btn-success {
+background: linear-gradient(135deg, var(--success), #059669);
+color: #fff;
+}
+.btn-danger {
+background: linear-gradient(135deg, var(--danger), #dc2626);
+color: #fff;
+}
+.btn-outline {
+background: transparent;
+border: 1px solid var(--border-color);
+color: var(--text-secondary);
+}
+.action-bar {
+display: flex;
+gap: 12px;
+margin-top: 28px;
+flex-wrap: wrap;
+padding-top: 24px;
+border-top: 1px solid var(--border-color);
+}
+@media (max-width: 768px) {
+.action-bar { flex-direction: column; }
+.action-bar > .btn { width: 100%; }
+}
+
+/* Remarks */
+.remarks-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+gap: 16px;
+margin-top: 24px;
+}
+@media (max-width: 640px) { .remarks-grid { grid-template-columns: 1fr; } }
+.remark-card {
+background: var(--bg-tertiary);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-lg);
+padding: 20px;
+transition: all 0.3s ease;
+position: relative;
+}
+.remark-card::before {
+content: '';
+position: absolute;
+top: 0; left: 0; right: 0;
+height: 3px;
+background: var(--accent-primary);
+}
+.remark-card.gm::before { background: var(--warning); }
+.remark-card.pm::before { background: var(--accent-primary); }
+.remark-card.fm::before { background: var(--info); }
+.remark-card.finance::before { background: var(--success); }
+.remark-card.procurement::before { background: var(--danger); }
+.remark-card.management::before { background: var(--text-muted); }
+.remark-card:hover {
+transform: translateY(-2px);
+box-shadow: var(--shadow-md);
+border-color: var(--accent-primary);
+}
+.remark-header {
+display: flex; align-items: center; gap: 10px;
+margin-bottom: 12px;
+font-weight: 600;
+font-size: 0.875rem;
+}
+.remark-icon { width: 24px; height: 24px; }
+
+/* Sidebar */
+.sidebar-card {
+background: var(--bg-secondary);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-xl);
+padding: 20px;
+margin-bottom: 20px;
+}
+.sidebar-header {
+display: flex; align-items: center; justify-content: space-between;
+margin-bottom: 16px;
+padding-bottom: 12px;
+border-bottom: 1px solid var(--border-color);
+}
+.sidebar-title {
+display: flex; align-items: center; gap: 10px;
+font-weight: 600;
+font-size: 0.9rem;
+}
+.empty-state {
+text-align: center;
+padding: 32px 20px;
+color: var(--text-muted);
+font-size: 0.875rem;
+background: var(--bg-tertiary);
+border-radius: var(--radius-md);
+border: 1px dashed var(--border-color);
+}
+.log-item {
+padding: 14px;
+background: var(--bg-tertiary);
+border-radius: var(--radius-md);
+margin-bottom: 10px;
+border-left: 3px solid var(--accent-primary);
+}
+.log-item:hover {
+transform: translateX(4px);
+background: var(--bg-secondary);
+}
+.log-title { font-weight: 600; font-size: 0.875rem; margin-bottom: 4px; }
+.log-meta { font-size: 0.75rem; color: var(--text-muted); }
+
+/* Placeholders */
+.placeholder-grid {
+display: flex; flex-wrap: wrap; gap: 8px;
+}
+.placeholder-tag {
+padding: 6px 12px;
+background: var(--bg-tertiary);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-sm);
+font-family: 'Courier New', monospace;
+font-size: 0.75rem;
+color: var(--accent-primary);
+cursor: pointer;
+transition: all 0.3s ease;
+}
+.placeholder-tag:hover {
+background: var(--accent-primary);
+color: #000;
+}
+
+/* Preview */
+.preview-section {
+background: var(--bg-secondary);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-xl);
+padding: 24px;
+margin-top: 24px;
+display: none;
+}
+.preview-section.active { display: block; }
+.preview-content {
+background: var(--bg-primary);
+border: 1px solid var(--border-color);
+border-radius: var(--radius-md);
+padding: 20px;
+font-family: 'Courier New', monospace;
+font-size: 0.85rem;
+color: var(--text-secondary);
+white-space: pre-wrap;
+max-height: 500px;
+overflow-y: auto;
+}
+
+/* Fix Variant Selector Buttons */
+.variant-selector {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+}
+
+.variant-btn {
+    flex: 1;
+    min-width: 200px;
+    padding: 16px 20px;
+    background: var(--bg-tertiary) !important;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    font-family: inherit;
+}
+
+.variant-btn:hover {
+    border-color: var(--accent-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--accent-glow);
+    background: var(--bg-secondary) !important;
+}
+
+.variant-btn.active {
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(234, 88, 12, 0.1)) !important;
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+    box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.variant-icon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+}
+
+.variant-label {
+    font-weight: 600;
+    font-size: 0.875rem;
+    display: block;
+}
+
+.variant-desc {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    display: block;
+}
+
+/* Fix button text wrapping */
+.variant-btn span {
+    display: block;
+    width: 100%;
+}
+/* Responsive */
+@media (max-width: 768px) {
+body { padding: 12px; }
+.header { flex-direction: column; align-items: stretch; }
+.header-left { flex-direction: column; text-align: center; }
+.back-btn { justify-content: center; }
+.workflow-steps { flex-direction: column; }
+.workflow-connector { transform: rotate(90deg); }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<!-- Header -->
+<div class="header">
+<div class="header-left">
+<div class="header-icon">
+<i data-lucide="mail" width="24" height="24" color="#fff"></i>
+</div>
+<div class="header-title">
+<h1>ONEWEST Mail Reminder</h1>
+<div class="header-subtitle">Property Operations & Facilities Email System</div>
+</div>
+</div>
+<a href="onewest.html" class="back-btn">
+<i data-lucide="arrow-left" width="18"></i>
+<span>Back to Portal</span>
+</a>
+</div>
+
+<!-- Workflow Tracker -->
+<div class="workflow-tracker">
+<div class="card-header" style="margin-bottom: 16px;">
+<div class="card-title">
+<div class="card-icon">
+<i data-lucide="git-branch" width="18" height="18" color="#fff"></i>
+</div>
+<span>Approval Workflow Status</span>
+</div>
+<span class="badge badge-primary" id="workflowStatusBadge">In Progress</span>
+</div>
+<div class="workflow-steps">
+<div class="workflow-step active" data-step="1">
+<div class="step-number">1</div>
+<div class="step-label">PM Request</div>
+<div class="step-desc">Property Manager</div>
+<div class="step-time" id="step1Time">-</div>
+</div>
+<div class="workflow-connector"><i data-lucide="arrow-right" width="20"></i></div>
+<div class="workflow-step" data-step="2">
+<div class="step-number">2</div>
+<div class="step-label">GM Approval</div>
+<div class="step-desc">General Manager</div>
+<div class="step-time" id="step2Time">-</div>
+</div>
+<div class="workflow-connector"><i data-lucide="arrow-right" width="20"></i></div>
+<div class="workflow-step" data-step="3">
+<div class="step-number">3</div>
+<div class="step-label">Dept Action</div>
+<div class="step-desc">Procurement/Finance</div>
+<div class="step-time" id="step3Time">-</div>
+</div>
+<div class="workflow-connector"><i data-lucide="arrow-right" width="20"></i></div>
+<div class="workflow-step" data-step="4">
+<div class="step-number">4</div>
+<div class="step-label">Completion</div>
+<div class="step-desc">Work Done</div>
+<div class="step-time" id="step4Time">-</div>
+</div>
+</div>
+<div style="margin-top: 20px; padding: 16px; background: var(--bg-tertiary); border-radius: var(--radius-md);">
+<div class="form-grid" style="margin-bottom: 0;">
+<div class="form-group">
+<label class="form-label"><i data-lucide="refresh-cw" width="14"></i> Current Workflow Stage</label>
+<select class="form-select" id="workflowStage" onchange="updateWorkflowStage()">
+<option value="1">Stage 1: PM Request</option>
+<option value="2">Stage 2: GM Approval</option>
+<option value="3">Stage 3: Department Action</option>
+<option value="4">Stage 4: Completed</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label"><i data-lucide="tag" width="14"></i> Work Status</label>
+<select class="form-select" id="workStatus" onchange="updateWorkStatus()">
+<option value="pending_approval">Pending GM Approval</option>
+<option value="approved">GM Approved</option>
+<option value="in_progress">In Progress</option>
+<option value="pending_material">Pending Material</option>
+<option value="pending_procurement">Pending Procurement</option>
+<option value="completed">Completed</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Main Grid -->
+<div class="main-grid">
+<!-- Left Column: Form -->
+<div class="card">
+<div class="card-header">
+<div class="card-title">
+<div class="card-icon">
+<i data-lucide="edit-3" width="18" height="18" color="#fff"></i>
+</div>
+<span>Email Composer</span>
+</div>
+<span class="badge badge-primary" id="saveStatusBadge">Unsaved</span>
+</div>
+
+<!-- Variant Selector -->
+<div class="variant-selector">
+<button class="variant-btn active" onclick="selectVariant('daily')">
+<i data-lucide="calendar" class="variant-icon"></i>
+<span class="variant-label">Daily Reminder</span>
+<span class="variant-desc">Routine daily tasks</span>
+</button>
+<button class="variant-btn" onclick="selectVariant('completion')">
+<i data-lucide="check-circle" class="variant-icon"></i>
+<span class="variant-label">Completion Update</span>
+<span class="variant-desc">Task completed</span>
+</button>
+<button class="variant-btn" onclick="selectVariant('escalation')">
+<i data-lucide="alert-triangle" class="variant-icon"></i>
+<span class="variant-label">Escalation</span>
+<span class="variant-desc">Urgent attention</span>
+</button>
+
+</div>
+
+
+
+
+<!-- Form Fields -->
+<div class="form-grid">
+<div class="form-group">
+<label class="form-label"><i data-lucide="building" width="14"></i> Property Name</label>
+<input type="text" class="form-input" id="property" value="ONEWEST" readonly>
+</div>
+<div class="form-group required">
+<label class="form-label"><i data-lucide="calendar" width="14"></i> Date</label>
+<input type="date" class="form-input" id="date">
+</div>
+<div class="form-group required">
+<label class="form-label"><i data-lucide="user" width="14"></i> Recipient Role</label>
+<select class="form-select" id="role">
+<option value="">— Select Role —</option>
+<option value="General Manager">General Manager</option>
+<option value="Procurement Manager">Procurement Manager</option>
+<option value="Facilities Manager">Facilities Manager</option>
+<option value="Operations Manager">Operations Manager</option>
+<option value="Property Manager">Property Manager</option>
+<option value="Engineering Head">Engineering Head</option>
+<option value="Housekeeping Supervisor">Housekeeping Supervisor</option>
+<option value="Security Head">Security Head</option>
+<option value="Finance Controller">Finance Controller</option>
+<option value="All Departments">All Departments</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label"><i data-lucide="mail" width="14"></i> Recipient Email (optional)</label>
+<input type="email" class="form-input" id="email" placeholder="custom@email.com">
+</div>
+<div class="form-group full-width required">
+<label class="form-label"><i data-lucide="type" width="14"></i> Subject Line</label>
+<input type="text" class="form-input" id="subject" placeholder="Daily Operations & Facilities Update">
+</div>
+</div>
+
+<!-- Task Table with Corrected Headers -->
+<div class="form-group">
+<label class="form-label"><i data-lucide="list" width="14"></i> Property Manager Activities</label>
+<div class="table-container">
+<table class="task-table" id="taskTable">
+<thead>
+<tr>
+<th width="5%">#</th>
+<th width="25%">Work Activity</th>
+<th width="25%">Concerned Department</th>
+<th width="15%">Date</th>
+<th width="15%">Due Time</th>
+<th width="15%">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><input type="text" placeholder="Describe work activity"></td>
+<td><input type="text" placeholder="e.g. Procurement, Finance, GM"></td>
+<td><input type="date"></td>
+<td><input type="time"></td>
+<td>
+<select>
+<option value="pending_approval">Pending GM Approval</option>
+<option value="approved">GM Approved</option>
+<option value="in_progress">In Progress</option>
+<option value="pending_material">Pending Material</option>
+<option value="pending_procurement">Pending Procurement</option>
+<option value="completed">Completed</option>
+</select>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<button class="btn btn-secondary" onclick="addTaskRow()" style="width: 100%;">
+<i data-lucide="plus" width="16"></i>
+<span>Add Work Activity</span>
+</button>
+</div>
+
+<div class="form-grid">
+<div class="form-group">
+<label class="form-label"><i data-lucide="percent" width="14"></i> Overall Completion %</label>
+<input type="text" class="form-input" id="completion" placeholder="e.g., 75%">
+</div>
+<div class="form-group required">
+<label class="form-label"><i data-lucide="clock" width="14"></i> Next Check-in / Deadline</label>
+<input type="datetime-local" class="form-input" id="deadline">
+</div>
+</div>
+
+<div class="form-group">
+<label class="form-label"><i data-lucide="file-text" width="14"></i> Additional Body Note</label>
+<textarea class="form-textarea" id="bodyNote" placeholder="Additional notes..." style="min-height: 100px;"></textarea>
+</div>
+
+<!-- Remarks Section with All 6 Departments -->
+<div style="margin-top: 32px;">
+<div class="card-header" style="margin-bottom: 20px;">
+<div class="card-title">
+<div class="card-icon">
+<i data-lucide="message-square" width="18" height="18" color="#fff"></i>
+</div>
+<span>Remarks by Concerned Department</span>
+</div>
+<span class="badge badge-primary">Required</span>
+</div>
+<div class="remarks-grid">
+<div class="remark-card gm">
+<div class="remark-header">
+<i data-lucide="user-check" class="remark-icon" width="20" height="20"></i>
+<span>General Manager</span>
+</div>
+<textarea class="form-textarea" id="remarkGM" placeholder="GM approval notes..." style="min-height: 80px;"></textarea>
+</div>
+<div class="remark-card pm">
+<div class="remark-header">
+<i data-lucide="building-2" class="remark-icon" width="20" height="20"></i>
+<span>Property Manager</span>
+</div>
+<textarea class="form-textarea" id="remarkPM" placeholder="PM operational notes..." style="min-height: 80px;"></textarea>
+</div>
+<div class="remark-card fm">
+<div class="remark-header">
+<i data-lucide="wrench" class="remark-icon" width="20" height="20"></i>
+<span>Facilities Manager</span>
+</div>
+<textarea class="form-textarea" id="remarkFM" placeholder="FM maintenance notes..." style="min-height: 80px;"></textarea>
+</div>
+<div class="remark-card finance">
+<div class="remark-header">
+<i data-lucide="dollar-sign" class="remark-icon" width="20" height="20"></i>
+<span>Financial Team</span>
+</div>
+<textarea class="form-textarea" id="remarkFinance" placeholder="Budget approval notes..." style="min-height: 80px;"></textarea>
+</div>
+<div class="remark-card procurement">
+<div class="remark-header">
+<i data-lucide="shopping-cart" class="remark-icon" width="20" height="20"></i>
+<span>Procurement</span>
+</div>
+<textarea class="form-textarea" id="remarkProcurement" placeholder="Purchase order details..." style="min-height: 80px;"></textarea>
+</div>
+<div class="remark-card management">
+<div class="remark-header">
+<i data-lucide="briefcase" class="remark-icon" width="20" height="20"></i>
+<span>Management/Board</span>
+</div>
+<textarea class="form-textarea" id="remarkManagement" placeholder="Board approval notes..." style="min-height: 80px;"></textarea>
+</div>
+</div>
+</div>
+
+<div class="form-grid" style="margin-top: 24px;">
+<div class="form-group required">
+<label class="form-label"><i data-lucide="user" width="14"></i> Sender Name</label>
+<input type="text" class="form-input" id="sender" placeholder="Your name">
+</div>
+<div class="form-group required">
+<label class="form-label"><i data-lucide="badge" width="14"></i> Sender Title / Department</label>
+<select class="form-select" id="senderTitle">
+<option value="">— Select Title —</option>
+<option value="General Manager">General Manager (GM)</option>
+<option value="Property Manager">Property Manager (PM)</option>
+<option value="Facilities Manager">Facilities Manager (FM)</option>
+<option value="Operations Manager">Operations Manager (OM)</option>
+<option value="Engineering Head">Engineering Head</option>
+<option value="Housekeeping Supervisor">Housekeeping Supervisor</option>
+<option value="Security Head">Security Head</option>
+<option value="Finance Controller">Finance Controller</option>
+<option value="Procurement Manager">Procurement Manager</option>
+<option value="Maintenance Supervisor">Maintenance Supervisor</option>
+<option value="Technical Director">Technical Director</option>
+</select>
+</div>
+</div>
+
+<!-- Action Buttons -->
+<div class="action-bar">
+<button class="btn btn-primary" onclick="sendEmail()">
+<i data-lucide="send" width="18"></i>
+<span>Send Email</span>
+</button>
+<button class="btn btn-success" onclick="saveRecord()">
+<i data-lucide="save" width="18"></i>
+<span>Save Record</span>
+</button>
+<button class="btn btn-secondary" onclick="previewEmail()">
+<i data-lucide="eye" width="18"></i>
+<span>Preview</span>
+</button>
+<button class="btn btn-outline" onclick="copyToClipboard()">
+<i data-lucide="copy" width="18"></i>
+<span>Copy</span>
+</button>
+<button class="btn btn-danger" onclick="clearForm()">
+<i data-lucide="trash-2" width="18"></i>
+<span>Clear</span>
+</button>
+</div>
+</div>
+
+<!-- Right Column: Sidebar -->
+<div class="sidebar">
+<div class="sidebar-card">
+<div class="sidebar-header">
+<div class="sidebar-title">
+<i data-lucide="folder" width="18" height="18"></i>
+<span>Recent Records</span>
+</div>
+<span class="badge badge-primary" id="recordCount">0</span>
+</div>
+<div id="savedRecords" class="empty-state">
+<i data-lucide="inbox" width="32" height="32" style="margin-bottom: 8px; opacity: 0.5;"></i>
+<div>No recent records<br>Save your first template</div>
+</div>
+</div>
+
+<div class="sidebar-card">
+<div class="sidebar-header">
+<div class="sidebar-title">
+<i data-lucide="send" width="18" height="18"></i>
+<span>Send Activity</span>
+</div>
+<span class="badge badge-success" id="logCount">0</span>
+</div>
+<div id="sendLog" class="empty-state">
+<i data-lucide="mail" width="32" height="32" style="margin-bottom: 8px; opacity: 0.5;"></i>
+<div>No send history</div>
+</div>
+</div>
+
+<div class="sidebar-card">
+<div class="sidebar-header">
+<div class="sidebar-title">
+<i data-lucide="key" width="18" height="18"></i>
+<span>Email Placeholders</span>
+</div>
+</div>
+<div class="placeholder-grid">
+<span class="placeholder-tag" onclick="insertPlaceholder('[DATE]')">[DATE]</span>
+<span class="placeholder-tag" onclick="insertPlaceholder('[PROPERTY_NAME]')">[PROPERTY_NAME]</span>
+<span class="placeholder-tag" onclick="insertPlaceholder('[RECIPIENT_ROLE]')">[RECIPIENT_ROLE]</span>
+<span class="placeholder-tag" onclick="insertPlaceholder('[TASK_LIST]')">[TASK_LIST]</span>
+<span class="placeholder-tag" onclick="insertPlaceholder('[COMPLETION_%]')">[COMPLETION_%]</span>
+<span class="placeholder-tag" onclick="insertPlaceholder('[DEADLINE]')">[DEADLINE]</span>
+<span class="placeholder-tag" onclick="insertPlaceholder('[REMARKS]')">[REMARKS]</span>
+<span class="placeholder-tag" onclick="insertPlaceholder('[SENDER_NAME]')">[SENDER_NAME]</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Preview Section -->
+<div class="preview-section" id="previewSection">
+<div class="card-header">
+<div class="card-title">
+<div class="card-icon">
+<i data-lucide="file-text" width="18" height="18" color="#fff"></i>
+</div>
+<span>Email Preview</span>
+</div>
+<div>
+<button class="btn btn-outline" onclick="closePreview()">
+<i data-lucide="x" width="16"></i>
+<span>Close</span>
+</button>
+<button class="btn btn-secondary" onclick="copyPreview()">
+<i data-lucide="copy" width="16"></i>
+<span>Copy</span>
+</button>
+</div>
+</div>
+<div class="preview-content" id="previewContent">
+Complete the form and click Preview to generate the email content...
+</div>
+</div>
+</div>
+
+<script>
+// Initialize Lucide icons
+lucide.createIcons();
+
+// Set default date
+document.getElementById('date').valueAsDate = new Date();
+
+// State management
+let historyStack = [];
+let currentState = {};
+
+function saveState() {
+const state = {
+property: document.getElementById('property').value,
+date: document.getElementById('date').value,
+role: document.getElementById('role').value,
+email: document.getElementById('email').value,
+subject: document.getElementById('subject').value,
+tasks: getTasks(),
+completion: document.getElementById('completion').value,
+deadline: document.getElementById('deadline').value,
+bodyNote: document.getElementById('bodyNote').value,
+remarks: getRemarks(),
+sender: document.getElementById('sender').value,
+senderTitle: document.getElementById('senderTitle').value,
+workflowStage: document.getElementById('workflowStage').value,
+workStatus: document.getElementById('workStatus').value
+};
+document.getElementById('saveStatusBadge').textContent = 'Saved';
+document.getElementById('saveStatusBadge').className = 'badge badge-success';
+setTimeout(() => {
+document.getElementById('saveStatusBadge').className = 'badge badge-primary';
+document.getElementById('saveStatusBadge').textContent = 'Auto-saved';
+}, 3000);
+historyStack.push(JSON.stringify(currentState));
+if (historyStack.length > 10) historyStack.shift();
+currentState = state;
+}
+
+function selectVariant(variant) {
+document.querySelectorAll('.variant-btn').forEach(btn => btn.classList.remove('active'));
+event.currentTarget.classList.add('active');
+const subjects = {
+'daily': 'Daily Operations & Facilities Update',
+'completion': 'Task Completion Update',
+'escalation': 'URGENT: Escalation Notice'
+};
+document.getElementById('subject').value = subjects[variant];
+saveState();
+}
+
+function addTaskRow() {
+const tbody = document.querySelector('#taskTable tbody');
+const rowCount = tbody.rows.length + 1;
+const row = document.createElement('tr');
+row.innerHTML = `
+<td>${rowCount}</td>
+<td><input type="text" placeholder="Describe work activity" oninput="saveState()"></td>
+<td><input type="text" placeholder="e.g. Procurement, Finance, GM" oninput="saveState()"></td>
+<td><input type="date" oninput="saveState()"></td>
+<td><input type="time" oninput="saveState()"></td>
+<td>
+<select onchange="saveState()">
+<option value="pending_approval">Pending GM Approval</option>
+<option value="approved">GM Approved</option>
+<option value="in_progress">In Progress</option>
+<option value="pending_material">Pending Material</option>
+<option value="pending_procurement">Pending Procurement</option>
+<option value="completed">Completed</option>
+</select>
+</td>
+`;
+tbody.appendChild(row);
+lucide.createIcons();
+saveState();
+}
+
+function removeRow(btn) {
+btn.closest('tr').remove();
+const tbody = document.querySelector('#taskTable tbody');
+Array.from(tbody.rows).forEach((row, index) => {
+row.cells[0].textContent = index + 1;
+});
+saveState();
+}
+
+function getTasks() {
+const tasks = [];
+document.querySelectorAll('#taskTable tbody tr').forEach(row => {
+const inputs = row.querySelectorAll('input, select');
+tasks.push({
+activity: inputs[0].value,
+department: inputs[1].value,
+date: inputs[2].value,
+dueTime: inputs[3].value,
+status: inputs[4].value
+});
+});
+return tasks;
+}
+
+function getRemarks() {
+return {
+gm: document.getElementById('remarkGM').value,
+pm: document.getElementById('remarkPM').value,
+fm: document.getElementById('remarkFM').value,
+finance: document.getElementById('remarkFinance').value,
+procurement: document.getElementById('remarkProcurement').value,
+management: document.getElementById('remarkManagement').value
+};
+}
+
+function updateWorkflowStage() {
+const stage = document.getElementById('workflowStage').value;
+const steps = document.querySelectorAll('.workflow-step');
+steps.forEach((step, index) => {
+step.classList.remove('active', 'completed');
+if (index + 1 < parseInt(stage)) {
+step.classList.add('completed');
+document.getElementById(`step${index + 1}Time`).textContent = new Date().toLocaleTimeString();
+} else if (index + 1 == parseInt(stage)) {
+step.classList.add('active');
+document.getElementById(`step${index + 1}Time`).textContent = 'In Progress...';
+} else {
+document.getElementById(`step${index + 1}Time`).textContent = '-';
+}
+});
+const badge = document.getElementById('workflowStatusBadge');
+if (stage == '4') {
+badge.textContent = 'Completed';
+badge.className = 'badge badge-success';
+} else {
+badge.textContent = 'In Progress';
+badge.className = 'badge badge-primary';
+}
+saveState();
+}
+
+function updateWorkStatus() {
+saveState();
+}
+
+function sendEmail() {
+const payload = {
+variant: document.querySelector('.variant-btn.active').textContent.toLowerCase().split(' ')[0].trim(),
+date: document.getElementById('date').value,
+property: document.getElementById('property').value,
+role: document.getElementById('role').value,
+email: document.getElementById('email').value,
+subject: document.getElementById('subject').value,
+tasks: getTasks(),
+completion: document.getElementById('completion').value,
+deadline: document.getElementById('deadline').value,
+body: document.getElementById('bodyNote').value,
+remarks: getRemarks(),
+sender: document.getElementById('sender').value,
+senderTitle: document.getElementById('senderTitle').value,
+workflowStage: document.getElementById('workflowStage').value,
+workStatus: document.getElementById('workStatus').value
+};
+fetch('/ow_mail/send-quick', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(payload)
+})
+.then(r => r.json())
+.then(data => {
+if (data.success) {
+alert(`Email sent to ${data.recipients?.length || 1} recipient(s)`);
+} else {
+alert('Error: ' + data.error);
+}
+})
+.catch(err => alert('Network error: ' + err.message));
+}
+
+function saveRecord() {
+const payload = {
+variant: document.querySelector('.variant-btn.active').textContent.toLowerCase().split(' ')[0].trim(),
+date: document.getElementById('date').value,
+property: document.getElementById('property').value,
+role: document.getElementById('role').value,
+email: document.getElementById('email').value,
+subject: document.getElementById('subject').value,
+tasks: getTasks(),
+completion: document.getElementById('completion').value,
+deadline: document.getElementById('deadline').value,
+body: document.getElementById('bodyNote').value,
+remarks: getRemarks(),
+sender: document.getElementById('sender').value,
+senderTitle: document.getElementById('senderTitle').value,
+workflowStage: document.getElementById('workflowStage').value,
+workStatus: document.getElementById('workStatus').value
+};
+fetch('/ow_mail/records', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(payload)
+})
+.then(r => r.json())
+.then(data => {
+if (data.success) {
+alert('Record saved successfully');
+loadSavedRecords();
+} else {
+alert('Error: ' + data.error);
+}
+})
+.catch(err => alert('Network error: ' + err.message));
+}
+
+function previewEmail() {
+const tasks = getTasks();
+const taskList = tasks.length > 0
+? tasks.map((t, i) => `${i+1}. ${t.activity || 'N/A'} - Dept: ${t.department || 'N/A'} - ${t.status}`).join('\n')
+: 'No tasks defined';
+const remarks = getRemarks();
+const remarkList = Object.keys(remarks)
+.filter(key => remarks[key])
+.map(key => `${key.toUpperCase()}: ${remarks[key]}`)
+.join('\n');
+const preview = `
+SUBJECT: ${document.getElementById('subject').value || 'N/A'}
+DATE: ${document.getElementById('date').value || 'N/A'}
+RECIPIENT: ${document.getElementById('role').value || 'N/A'}
+WORKFLOW STAGE: ${document.getElementById('workflowStage').value}
+WORK STATUS: ${document.getElementById('workStatus').value}
+
+PROPERTY MANAGER ACTIVITIES:
+${taskList}
+
+COMPLETION: ${document.getElementById('completion').value || 'N/A'}
+DEADLINE: ${document.getElementById('deadline').value || 'N/A'}
+
+REMARKS:
+${remarkList || 'No remarks provided'}
+
+SENDER: ${document.getElementById('sender').value || 'N/A'}
+DEPARTMENT: ${document.getElementById('senderTitle').value || 'N/A'}
+
+ADDITIONAL NOTES:
+${document.getElementById('bodyNote').value || 'None'}
+`.trim();
+document.getElementById('previewContent').textContent = preview;
+document.getElementById('previewSection').classList.add('active');
+document.getElementById('previewSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+function closePreview() {
+document.getElementById('previewSection').classList.remove('active');
+}
+
+function copyToClipboard() {
+const text = document.getElementById('previewContent').textContent;
+navigator.clipboard.writeText(text).then(() => {
+alert('Copied to clipboard');
+});
+}
+
+function copyPreview() {
+copyToClipboard();
+}
+
+function clearForm() {
+if (confirm('Are you sure you want to clear all fields?')) {
+document.getElementById('role').value = '';
+document.getElementById('email').value = '';
+document.getElementById('subject').value = '';
+document.getElementById('completion').value = '';
+document.getElementById('bodyNote').value = '';
+document.getElementById('sender').value = '';
+document.getElementById('senderTitle').value = '';
+document.getElementById('deadline').value = '';
+['remarkGM', 'remarkPM', 'remarkFM', 'remarkFinance', 'remarkProcurement', 'remarkManagement'].forEach(id => {
+document.getElementById(id).value = '';
+});
+const tbody = document.querySelector('#taskTable tbody');
+tbody.innerHTML = `
+<tr>
+<td>1</td>
+<td><input type="text" placeholder="Describe work activity" oninput="saveState()"></td>
+<td><input type="text" placeholder="e.g. Procurement, Finance, GM" oninput="saveState()"></td>
+<td><input type="date" oninput="saveState()"></td>
+<td><input type="time" oninput="saveState()"></td>
+<td>
+<select onchange="saveState()">
+<option value="pending_approval">Pending GM Approval</option>
+<option value="approved">GM Approved</option>
+<option value="in_progress">In Progress</option>
+<option value="pending_material">Pending Material</option>
+<option value="pending_procurement">Pending Procurement</option>
+<option value="completed">Completed</option>
+</select>
+</td>
+</tr>
+`;
+lucide.createIcons();
+saveState();
+}
+}
+
+function insertPlaceholder(placeholder) {
+const bodyNote = document.getElementById('bodyNote');
+const start = bodyNote.selectionStart;
+const end = bodyNote.selectionEnd;
+const text = bodyNote.value;
+bodyNote.value = text.substring(0, start) + placeholder + text.substring(end);
+bodyNote.focus();
+bodyNote.setSelectionRange(start + placeholder.length, start + placeholder.length);
+saveState();
+}
+
+async function loadSavedRecords() {
+try {
+const response = await fetch('/ow_mail/records');
+const result = await response.json();
+if (result.success) {
+document.getElementById('recordCount').textContent = result.total;
+if (result.total > 0) {
+document.getElementById('savedRecords').innerHTML = result.records.slice(-5).map(r =>
+`<div class="log-item">
+<div class="log-title">${r.subject || 'Untitled'}</div>
+<div class="log-meta">${r.date || 'N/A'} · ${r.variant || 'N/A'}</div>
+</div>`
+).join('');
+}
+}
+} catch (error) {
+console.error('Failed to load records:', error);
+}
+}
+
+async function loadSendLog() {
+try {
+const response = await fetch('/ow_mail/send-log');
+const result = await response.json();
+if (result.success && result.log.length > 0) {
+document.getElementById('logCount').textContent = result.log.length;
+document.getElementById('sendLog').innerHTML = result.log.slice(-5).map(log =>
+`<div class="log-item">
+<div class="log-title">${log.variant.toUpperCase()}</div>
+<div class="log-meta">${log.sent_at || 'N/A'} · ${log.status || 'N/A'}</div>
+</div>`
+).join('');
+}
+} catch (error) {
+console.error('Failed to load log:', error);
+}
+}
+
+// Auto-save on input
+document.querySelectorAll('input, select, textarea').forEach(el => {
+el.addEventListener('input', saveState);
+el.addEventListener('change', saveState);
+});
+
+// Initialize
+loadSavedRecords();
+loadSendLog();
+saveState();
+updateWorkflowStage();
+</script>
+</body>
+</html>

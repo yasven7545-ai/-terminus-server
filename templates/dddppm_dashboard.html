@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PPM Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg-color:#1a1a2e;
+    --card-bg:#282845;
+    --text-color:#f0f0f0;
+    --highlight:#00E676;
+    --sidebar:#161628;
+    --gray:#b0b0b0;
+    --green:#00E676;
+    --yellow:#FFC107;
+    --blue:#2196F3;
+    --red:#FF4444;
+}
+
+body{
+    margin:0;
+    font-family:Roboto,sans-serif;
+    background:var(--bg-color);
+    color:var(--text-color);
+    display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+    width:260px;
+    background:var(--sidebar);
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    min-height:100vh;
+}
+
+.logo h1{
+    color:var(--highlight);
+    margin:0 0 20px;
+}
+
+.stats-card{
+    background:var(--card-bg);
+    padding:15px;
+    border-radius:8px;
+    text-align:center;
+}
+
+.stats-card .value{
+    font-size:2.3rem;
+    font-weight:700;
+}
+
+.stats-card .label{
+    font-size:.8rem;
+    color:var(--gray);
+}
+
+/* MAIN */
+.main-content{
+    flex:1;
+    padding:30px;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.header h2{
+    margin:0;
+    font-size:2rem;
+}
+
+.grid{
+    display:grid;
+    gap:20px;
+}
+
+.top-row{ grid-template-columns:2fr 1fr; }
+.bottom-row{ grid-template-columns:1fr 1fr; margin-top:20px; }
+
+.card{
+    background:var(--card-bg);
+    padding:20px;
+    border-radius:8px;
+    min-height:260px;
+    box-shadow:0 4px 12px rgba(0,0,0,.35);
+}
+
+.card h3{
+    margin:0 0 15px;
+    border-bottom:1px solid #3A3A58;
+    padding-bottom:10px;
+}
+
+/* CALENDAR */
+.calendar-container{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:6px;
+    font-size:.8rem;
+}
+
+.calendar-header{
+    background:#3A3A58;
+    padding:6px 0;
+    text-align:center;
+    font-weight:700;
+    color:var(--highlight);
+    border-radius:4px;
+}
+
+.calendar-day{
+    background:#3A3A58;
+    padding:10px 5px;
+    border-radius:4px;
+    text-align:center;
+}
+
+.day-label{
+    font-size:1.2rem;
+    font-weight:700;
+    margin-bottom:4px;
+}
+
+.task-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    display:inline-block;
+    margin:2px;
+}
+
+.color-Green{background:var(--green);}
+.color-Yellow{background:var(--yellow);}
+.color-Blue{background:var(--blue);}
+.color-Red{background:var(--red);}
+
+.legend{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    margin-top:15px;
+    padding-top:15px;
+    border-top:1px solid #3A3A58;
+    font-size:.8rem;
+}
+
+.legend-item{
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+
+/* CHART PLACEHOLDERS */
+.chart-box{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--gray);
+    font-size:.9rem;
+    border:1px dashed #3A3A58;
+    border-radius:6px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <div class="logo"><h1>PPM Management</h1></div>
+
+    <div class="stats-card"><div class="value" id="totalAssets">--</div><div class="label">Total Assets</div></div>
+    <div class="stats-card"><div class="value" id="openWO">--</div><div class="label">Open Work Orders</div></div>
+    <div class="stats-card"><div class="value" id="closedWO">--</div><div class="label">Completed WOs</div></div>
+    <div class="stats-card"><div class="value" id="monthlyTasks">--</div><div class="label">Scheduled Tasks (Month)</div></div>
+</div>
+
+<!-- MAIN -->
+<div class="main-content">
+    <div class="header">
+        <h2>PPM Overview Dashboard</h2>
+    </div>
+
+    <div class="grid top-row">
+        <div class="card">
+            <h3>Running Month PPM Schedule</h3>
+            <div class="calendar-container" id="calendarView"></div>
+
+            <div class="legend">
+                <div class="legend-item"><span class="task-dot color-Green"></span>Monthly</div>
+                <div class="legend-item"><span class="task-dot color-Yellow"></span>Quarterly</div>
+                <div class="legend-item"><span class="task-dot color-Blue"></span>Half-Yearly</div>
+                <div class="legend-item"><span class="task-dot color-Red"></span>Yearly</div>
+            </div>
+        </div>
+
+        <div class="card" style="text-align:center">
+            <h3>PPM Compliance Status</h3>
+            <div style="font-size:4rem;font-weight:700;color:var(--highlight)" id="complianceRate">--%</div>
+            <div class="label">Completed / Scheduled</div>
+        </div>
+    </div>
+
+    <div class="grid bottom-row">
+        <div class="card">
+            <h3>Monthly Work Order Status</h3>
+            <div class="chart-box">Bar Chart Placeholder</div>
+        </div>
+
+        <div class="card">
+            <h3>Yearly Work Order Growth Trend</h3>
+            <div class="chart-box">Line Chart Placeholder</div>
+        </div>
+    </div>
+</div>
+
+<!-- DATA FROM FLASK -->
+<script>
+const assetsData = {{ assets_json | safe }};
+const scheduleData = {{ schedule_json | safe }};
+const woData = {{ wo_json | safe }};
+</script>
+
+<script>
+const FREQ_COLOR={
+    "Monthly":"Green",
+    "Quarterly":"Yellow",
+    "Half Yearly":"Blue",
+    "Yearly":"Red"
+};
+
+function buildWeeklySummary(data){
+    const map={};
+    data.forEach(r=>{
+        const w=Number(r.Week);
+        if(!map[w]) map[w]={Week:w,Total_Tasks:0,Green:0,Yellow:0,Blue:0,Red:0};
+        map[w].Total_Tasks++;
+        const c=FREQ_COLOR[r.Frequency];
+        if(c) map[w][c]++;
+    });
+    return Object.values(map).sort((a,b)=>a.Week-b.Week);
+}
+
+function calculateStats(){
+    let open=0, closed=0;
+    woData.forEach(w=>w.Status==="Open"?open++:closed++);
+
+    const weekly=buildWeeklySummary(scheduleData);
+    const totalTasks=weekly.reduce((s,w)=>s+w.Total_Tasks,0);
+    const compliance=totalTasks?Math.round((closed/totalTasks)*100):0;
+
+    document.getElementById("totalAssets").textContent=assetsData.length;
+    document.getElementById("openWO").textContent=open;
+    document.getElementById("closedWO").textContent=closed;
+    document.getElementById("monthlyTasks").textContent=totalTasks;
+    document.getElementById("complianceRate").textContent=compliance+"%";
+}
+
+function renderCalendar(){
+    const weekly=buildWeeklySummary(scheduleData);
+    const el=document.getElementById("calendarView");
+    el.innerHTML="";
+
+    ["MON","TUE","WED","THU","FRI","SAT","SUN"].forEach(d=>{
+        const h=document.createElement("div");
+        h.className="calendar-header";
+        h.textContent=d;
+        el.appendChild(h);
+    });
+
+    for(let d=1;d<=28;d++){
+        const cell=document.createElement("div");
+        cell.className="calendar-day";
+        cell.innerHTML=`<div class="day-label">${d}</div>`;
+        const w=weekly[Math.floor((d-1)/7)];
+        if(w){
+            ["Green","Yellow","Blue","Red"].forEach(c=>{
+                if(w[c]>0){
+                    const dot=document.createElement("span");
+                    dot.className=`task-dot color-${c}`;
+                    cell.appendChild(dot);
+                }
+            });
+        }
+        el.appendChild(cell);
+    }
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+    calculateStats();
+    renderCalendar();
+});
+</script>
+
+</body>
+</html>

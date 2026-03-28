@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Field Tech Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; }
+        .input-field { background: #1e293b; border: 1px solid #334155; border-radius: 0.5rem; width: 100%; padding: 0.75rem; color: white; }
+        .btn-primary { background: #2563eb; padding: 1rem; border-radius: 0.5rem; font-weight: bold; width: 100%; text-align: center; }
+    </style>
+</head>
+<body class="p-4">
+    <header class="flex items-center justify-between mb-6">
+        <h1 class="text-xl font-bold">TECH <span class="text-blue-500 underline">EXECUTION</span></h1>
+        <a href="/pm_ops" class="text-xs text-slate-400">Exit</a>
+    </header>
+
+    <form id="techForm" class="space-y-6" enctype="multipart/form-data">
+        <section>
+            <label class="block text-sm font-medium mb-2 text-slate-400">Assigned Task / Work Order</label>
+            <select name="wo_id" class="input-field" required>
+                <option value="">-- Select Active WO --</option>
+                {% for task in tasks %}
+                <option value="{{ task.id }}">{{ task.id }} - {{ task.description }}</option>
+                {% endfor %}
+            </select>
+        </section>
+
+        <section class="bg-blue-900/20 p-4 rounded-lg border border-blue-500/30">
+            <label class="block text-sm font-bold mb-2 text-blue-400">MANDATORY: PHOTO PROOF</label>
+            <input type="file" name="photo" accept="image/*" capture="environment" class="text-sm text-slate-300 mb-2" required>
+            <p class="text-[10px] text-slate-400">Tip: Capture asset nameplate or the repaired component.</p>
+        </section>
+
+        <section>
+            <label class="block text-sm font-medium mb-2 text-slate-400">Execution Outcome</label>
+            <div class="grid grid-cols-2 gap-4">
+                <label class="flex items-center justify-center p-3 border border-slate-700 rounded-lg cursor-pointer hover:bg-slate-800">
+                    <input type="radio" name="status" value="completed" class="hidden" checked>
+                    <span class="text-sm">Work Completed</span>
+                </label>
+                <label class="flex items-center justify-center p-3 border border-slate-700 rounded-lg cursor-pointer hover:bg-slate-800">
+                    <input type="radio" name="status" value="inprogress" class="hidden">
+                    <span class="text-sm">Need Parts/AMC</span>
+                </label>
+            </div>
+        </section>
+
+        <section>
+            <label class="block text-sm font-medium mb-2 text-slate-400">Technician Notes / Checklist</label>
+            <textarea name="notes" placeholder="Describe the fix or the anomaly found..." class="input-field h-24" required></textarea>
+        </section>
+
+        <button type="submit" id="submitBtn" class="btn-primary flex items-center justify-center gap-2">
+            <span>SUBMIT TO PM DASHBOARD</span>
+        </button>
+    </form>
+
+    <div id="responseMsg" class="mt-4 text-center text-sm hidden"></div>
+
+    <script>
+        document.getElementById('techForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const msg = document.getElementById('responseMsg');
+            
+            btn.disabled = true;
+            btn.innerHTML = "Uploading Proof...";
+            btn.style.opacity = "0.5";
+
+            const formData = new FormData(e.target);
+            try {
+                const response = await fetch('/api/tech/submit-work', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                
+                msg.classList.remove('hidden');
+                if (result.success) {
+                    msg.innerHTML = "✅ " + result.message;
+                    msg.className = "mt-4 text-green-400 font-bold";
+                    setTimeout(() => window.location.reload(), 2000);
+                } else {
+                    msg.innerHTML = "❌ " + result.message;
+                    msg.className = "mt-4 text-red-400 font-bold";
+                    btn.disabled = false;
+                    btn.style.opacity = "1";
+                    btn.innerHTML = "RETRY SUBMISSION";
+                }
+            } catch (err) {
+                msg.innerHTML = "Connection Error. Try again.";
+                btn.disabled = false;
+            }
+        };
+    </script>
+</body>
+</html>

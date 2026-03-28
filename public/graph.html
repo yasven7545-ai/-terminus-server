@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Graph | SLN Terminus Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>SLN Terminus</h2>
+    <a href="index.html">🏠 Home</a>
+    <a href="reports.html">📊 Reports</a>
+    <a href="graph.html" class="active">📈 Graph</a>
+    <a href="upload.html">📤 Upload</a>
+  </div>
+
+  <div class="main-content">
+    <h1>Vacant Graph</h1>
+    <canvas id="vacantChart" width="600" height="300"></canvas>
+  </div>
+
+  <script>
+    async function loadChart() {
+      const res = await fetch("/api/vacant-data");
+      const data = await res.json();
+
+      const labels = data.map(d => d.Name || d.ID || "Item");
+      const values = data.map(d => d.Vacant || d.Value || 0);
+
+      new Chart(document.getElementById("vacantChart"), {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [{
+            label: "Vacant Values",
+            data: values,
+            backgroundColor: "rgba(88,166,255,0.6)",
+            borderColor: "#58a6ff",
+            borderWidth: 1
+          }]
+        },
+        options: { scales: { y: { beginAtZero: true } } }
+      });
+    }
+
+    loadChart();
+  </script>
+</body>
+</html>

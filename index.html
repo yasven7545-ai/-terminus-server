@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Space Occupancy Manager</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+--primary: #4361ee;
+--secondary: #3f37c9;
+--success: #4cc9f0;
+--warning: #f72585;
+--dark: #1d3557;
+--light: #f8f9fa;
+--glass-bg: rgba(255, 255, 255, 0.15);
+--glass-border: rgba(255, 255, 255, 0.18);
+--text-primary: #e6e6e6;
+--text-secondary: #a0a0a0;
+--card-bg: rgba(30, 30, 46, 0.7);
+--occupied: #4ade80;
+--vacant: #f87171;
+--fit-out: #fbbf24;
+--border-radius: 16px;
+--transition: all 0.3s ease;
+}
+.dark-mode {
+--glass-bg: rgba(30, 30, 46, 0.7);
+--glass-border: rgba(255, 255, 255, 0.1);
+--text-primary: #f0f0f0;
+--text-secondary: #b0b0b0;
+--card-bg: rgba(20, 20, 35, 0.8);
+}
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+body {
+background: linear-gradient(135deg, #0f172a, #1e293b);
+color: var(--text-primary);
+min-height: 100vh;
+padding: 20px;
+transition: var(--transition);
+}
+.container {
+max-width: 1400px;
+margin: 0 auto;
+}
+header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 20px 0;
+margin-bottom: 30px;
+border-bottom: 1px solid var(--glass-border);
+}
+.logo {
+display: flex;
+align-items: center;
+gap: 12px;
+}
+.logo i {
+font-size: 28px;
+color: var(--primary);
+}
+.logo h1 {
+font-size: 24px;
+font-weight: 700;
+background: linear-gradient(to right, var(--primary), var(--success));
+-webkit-background-clip: text;
+background-clip: text;
+color: transparent;
+}
+.controls {
+display: flex;
+gap: 15px;
+align-items: center;
+}
+.search-container {
+position: relative;
+}
+.search-container input {
+background: var(--glass-bg);
+border: 1px solid var(--glass-border);
+border-radius: 30px;
+padding: 10px 20px 10px 40px;
+width: 250px;
+color: var(--text-primary);
+backdrop-filter: blur(10px);
+transition: var(--transition);
+}
+.search-container input:focus {
+outline: none;
+border-color: var(--primary);
+box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+}
+.search-container i {
+position: absolute;
+left: 15px;
+top: 50%;
+transform: translateY(-50%);
+color: var(--text-secondary);
+}
+.theme-toggle {
+background: var(--glass-bg);
+border: 1px solid var(--glass-border);
+border-radius: 50%;
+width: 40px;
+height: 40px;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+backdrop-filter: blur(10px);
+transition: var(--transition);
+}
+.theme-toggle:hover {
+background: rgba(67, 97, 238, 0.2);
+transform: rotate(20deg);
+}
+.stats-container {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 20px;
+margin-bottom: 30px;
+}
+.stat-card {
+background: var(--card-bg);
+border: 1px solid var(--glass-border);
+border-radius: var(--border-radius);
+padding: 20px;
+backdrop-filter: blur(10px);
+transition: var(--transition);
+}
+.stat-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+.stat-card h3 {
+font-size: 14px;
+color: var(--text-secondary);
+margin-bottom: 10px;
+}
+.stat-card .value {
+font-size: 28px;
+font-weight: 700;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.stat-card.occupied .value {
+color: var(--occupied);
+}
+.stat-card.vacant .value {
+color: var(--vacant);
+}
+.stat-card.fit-out .value {
+color: var(--fit-out);
+}
+.floor-nav {
+display: flex;
+overflow-x: auto;
+gap: 15px;
+padding: 10px 0 20px;
+scrollbar-width: thin;
+scrollbar-color: var(--primary) transparent;
+}
+.floor-nav::-webkit-scrollbar {
+height: 6px;
+}
+.floor-nav::-webkit-scrollbar-thumb {
+background: var(--primary);
+border-radius: 10px;
+}
+.floor-btn {
+background: var(--glass-bg);
+border: 1px solid var(--glass-border);
+border-radius: 30px;
+padding: 8px 20px;
+color: var(--text-primary);
+font-weight: 600;
+cursor: pointer;
+white-space: nowrap;
+backdrop-filter: blur(10px);
+transition: var(--transition);
+}
+.floor-btn.active, .floor-btn:hover {
+background: var(--primary);
+border-color: var(--primary);
+}
+.table-container {
+background: var(--card-bg);
+border: 1px solid var(--glass-border);
+border-radius: var(--border-radius);
+padding: 25px;
+backdrop-filter: blur(10px);
+margin-bottom: 30px;
+overflow-x: auto;
+}
+.table-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px;
+}
+table {
+width: 100%;
+border-collapse: collapse;
+min-width: 800px;
+}
+th, td {
+padding: 12px 15px;
+text-align: left;
+border-bottom: 1px solid var(--glass-border);
+}
+th {
+background: var(--glass-bg);
+font-weight: 600;
+color: var(--text-secondary);
+position: sticky;
+top: 0;
+}
+tr:hover {
+background: rgba(67, 97, 238, 0.1);
+}
+.rupee::before {
+content: "₹";
+}
+.amount-cell {
+font-weight: 600;
+color: var(--success);
+}
+.edit-btn {
+background: var(--primary);
+color: white;
+border: none;
+border-radius: 6px;
+padding: 6px 12px;
+font-size: 14px;
+cursor: pointer;
+transition: var(--transition);
+display: inline-flex;
+align-items: center;
+gap: 5px;
+}
+.edit-btn:hover {
+background: var(--secondary);
+}
+.copy-btn {
+background: var(--secondary);
+color: white;
+border: none;
+border-radius: 6px;
+padding: 6px 12px;
+font-size: 14px;
+cursor: pointer;
+transition: var(--transition);
+display: inline-flex;
+align-items: center;
+gap: 5px;
+margin-left: 5px;
+}
+.copy-btn:hover {
+background: var(--primary);
+}
+.upload-btn {
+background: var(--success);
+color: white;
+border: none;
+border-radius: 6px;
+padding: 6px 12px;
+font-size: 14px;
+cursor: pointer;
+transition: var(--transition);
+display: inline-flex;
+align-items: center;
+gap: 5px;
+margin-left: 5px;
+}
+.upload-btn:hover {
+background: #34d399;
+}
+.modal {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.7);
+display: flex;
+align-items: center;
+justify-content: center;
+z-index: 1000;
+opacity: 0;
+visibility: hidden;
+transition: var(--transition);
+}
+.modal.active {
+opacity: 1;
+visibility: visible;
+}
+.modal-content {
+background: var(--card-bg);
+border: 1px solid var(--glass-border);
+border-radius: var(--border-radius);
+width: 90%;
+max-width: 600px;
+max-height: 90vh;
+overflow-y: auto;
+backdrop-filter: blur(10px);
+padding: 30px;
+position: relative;
+}
+.modal-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px;
+padding-bottom: 15px;
+border-bottom: 1px solid var(--glass-border);
+}
+.modal-title {
+font-size: 22px;
+font-weight: 700;
+}
+.close-modal {
+background: none;
+border: none;
+color: var(--text-secondary);
+font-size: 24px;
+cursor: pointer;
+transition: var(--transition);
+}
+.close-modal:hover {
+color: var(--text-primary);
+}
+.form-group {
+margin-bottom: 20px;
+}
+.form-group label {
+display: block;
+margin-bottom: 8px;
+font-weight: 600;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+width: 100%;
+padding: 12px 15px;
+background: var(--glass-bg);
+border: 1px solid var(--glass-border);
+border-radius: 8px;
+color: var(--text-primary);
+font-size: 15px;
+transition: var(--transition);
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+outline: none;
+border-color: var(--primary);
+box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+}
+.form-footer {
+display: flex;
+justify-content: flex-end;
+gap: 10px;
+margin-top: 20px;
+}
+.btn {
+background: var(--primary);
+color: white;
+border: none;
+border-radius: 8px;
+padding: 8px 16px;
+font-weight: 600;
+cursor: pointer;
+transition: var(--transition);
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.btn:hover {
+background: var(--secondary);
+transform: translateY(-2px);
+}
+.btn-outline {
+background: transparent;
+border: 1px solid var(--primary);
+color: var(--primary);
+}
+.btn-outline:hover {
+background: rgba(67, 97, 238, 0.1);
+}
+footer {
+text-align: center;
+padding: 20px 0;
+color: var(--text-secondary);
+font-size: 14px;
+border-top: 1px solid var(--glass-border);
+margin-top: 30px;
+}
+@media (max-width: 768px) {
+.stats-container {
+grid-template-columns: 1fr;
+}
+.search-container input {
+width: 180px;
+}
+th, td {
+padding: 8px 10px;
+font-size: 14px;
+}
+.edit-btn, .copy-btn, .upload-btn {
+padding: 4px 8px;
+font-size: 12px;
+}
+}
+@media (max-width: 480px) {
+.controls {
+flex-direction: column;
+align-items: flex-start;
+}
+.search-container {
+width: 100%;
+}
+.search-container input {
+width: 100%;
+}
+.table-container {
+padding: 15px;
+}
+th, td {
+padding: 6px 8px;
+font-size: 12px;
+}
+.edit-btn, .copy-btn, .upload-btn {
+padding: 3px 6px;
+font-size: 11px;
+}
+}
+</style>
+</head>
+<body class="dark-mode">
+<div class="container">
+<header>
+<div class="logo">
+<i class="fas fa-building"></i>
+<h1>Space Occupancy Manager</h1>
+</div>
+<div class="controls">
+<div class="search-container">
+<i class="fas fa-search"></i>
+<input type="text" id="searchInput" placeholder="Search spaces, owners...">
+</div>
+<div class="theme-toggle" id="themeToggle">
+<i class="fas fa-moon"></i>
+</div>
+</div>
+</header>
+<div class="stats-container">
+<div class="stat-card occupied">
+<h3>OCCUPIED SPACES</h3>
+<div class="value"><i class="fas fa-home"></i> <span id="occupiedCount">37</span></div>
+</div>
+<div class="stat-card vacant">
+<h3>VACANT SPACES</h3>
+<div class="value"><i class="fas fa-door-open"></i> <span id="vacantCount">8</span></div>
+</div>
+<div class="stat-card fit-out">
+<h3>FIT-OUT SPACES</h3>
+<div class="value"><i class="fas fa-tools"></i> <span id="fitOutCount">0</span></div>
+</div>
+<div class="stat-card">
+<h3>TOTAL SPACES</h3>
+<div class="value"><i class="fas fa-layer-group"></i> <span id="totalCount">45</span></div>
+</div>
+</div>
+<div class="floor-nav" id="floorNav">
+<!-- Floor buttons will be generated here -->
+</div>
+<div class="table-container">
+<div class="table-header">
+<div class="floor-title" id="currentFloorTitle">L4 - Office Level</div>
+<div class="floor-actions">
+<button class="btn btn-outline" id="addSpaceBtn">
+<i class="fas fa-plus"></i> Add Space
+</button>
+<button class="btn" id="refreshBtn">
+<i class="fas fa-sync-alt"></i> Refresh
+</button>
+</div>
+</div>
+<table id="spacesTable">
+<thead>
+<tr>
+<th>SL No</th>
+<th>Office Name</th>
+<th>Unit No</th>
+<th>Occupied Area</th>
+<th>Area</th>
+<th>CAM Rate</th>
+<th>Amount</th>
+<th>CAM Rate From / Revised On</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody id="tableBody">
+<!-- Table rows will be generated here -->
+</tbody>
+</table>
+</div>
+<footer>
+<p>Space Occupancy Visualization System | Auto-refresh every 30 seconds</p>
+</footer>
+</div>
+<!-- Modal for adding/editing spaces -->
+<div class="modal" id="spaceModal">
+<div class="modal-content">
+<div class="modal-header">
+<h2 class="modal-title" id="modalTitle">Add New Space</h2>
+<button class="close-modal" id="closeModal">&times;</button>
+</div>
+<form id="spaceForm">
+<input type="hidden" id="spaceId">
+<div class="form-group">
+<label for="floorSelect">Floor Level</label>
+<select id="floorSelect" required>
+<option value="">Select Floor</option>
+<option value="B1">B1 - Parking</option>
+<option value="B2">B2 - Parking</option>
+<option value="B3">B3 - Parking</option>
+<option value="B4">B4 - Parking</option>
+<option value="LG">LG - Mall Level</option>
+<option value="L1">L1 - Mall Level</option>
+<option value="L2">L2 - Mall Level</option>
+<option value="L3">L3 - Mall Level</option>
+<option value="L4" selected>L4 - Office</option>
+<option value="L5">L5 - Office</option>
+<option value="L6">L6 - Office</option>
+<option value="L7">L7 - Office</option>
+<option value="L8">L8 - Office</option>
+<option value="L9">L9 - Banquet Hall</option>
+<option value="L10">L10 - Executive Apartments</option>
+<option value="L11">L11 - Executive Apartments</option>
+<option value="L12">L12 - Executive Apartments</option>
+<option value="L13">L13 - Terrace</option>
+</select>
+</div>
+<div class="form-group">
+<label for="officeName">Office Name</label>
+<input type="text" id="officeName" required>
+</div>
+<div class="form-group">
+<label for="unitNo">Unit No</label>
+<input type="text" id="unitNo" required>
+</div>
+<div class="form-group">
+<label for="occupiedArea">Occupied Area</label>
+<input type="number" id="occupiedArea" step="0.01" min="0" required>
+</div>
+<div class="form-group">
+<label for="area">Area</label>
+<input type="number" id="area" step="0.01" min="0" required>
+</div>
+<div class="form-group">
+<label for="camRate">CAM Rate</label>
+<input type="number" id="camRate" step="0.01" min="0" required>
+</div>
+<div class="form-group">
+<label for="camRateDate">CAM Rate From / Revised On</label>
+<input type="date" id="camRateDate" required>
+</div>
+<div class="form-group">
+<label for="attachments">Attachments</label>
+<input type="file" id="attachments" multiple>
+<small>Upload relevant documents (max 5MB each)</small>
+</div>
+<div class="form-footer">
+<button type="button" class="btn btn-outline" id="cancelBtn">Cancel</button>
+<button type="submit" class="btn">Save Changes</button>
+</div>
+</form>
+</div>
+</div>
+<script>
+// Sample data structure with all floor levels and the exact details provided
+const buildingData = {
+floors: [
+{ id: 'B1', name: 'B1 - Parking', type: 'parking' },
+{ id: 'B2', name: 'B2 - Parking', type: 'parking' },
+{ id: 'B3', name: 'B3 - Parking', type: 'parking' },
+{ id: 'B4', name: 'B4 - Parking', type: 'parking' },
+{ id: 'LG', name: 'LG - Mall Level', type: 'mall' },
+{ id: 'L1', name: 'L1 - Mall Level', type: 'mall' },
+{ id: 'L2', name: 'L2 - Mall Level', type: 'mall' },
+{ id: 'L3', name: 'L3 - Mall Level', type: 'mall' },
+{ id: 'L4', name: 'L4 - Office', type: 'office' },
+{ id: 'L5', name: 'L5 - Office', type: 'office' },
+{ id: 'L6', name: 'L6 - Office', type: 'office' },
+{ id: 'L7', name: 'L7 - Office', type: 'office' },
+{ id: 'L8', name: 'L8 - Office', type: 'office' },
+{ id: 'L9', name: 'L9 - Banquet Hall', type: 'banquet' },
+{ id: 'L10', name: 'L10 - Executive Apartments', type: 'apartment' },
+{ id: 'L11', name: 'L11 - Executive Apartments', type: 'apartment' },
+{ id: 'L12', name: 'L12 - Executive Apartments', type: 'apartment' },
+{ id: 'L13', name: 'L13 - Terrace', type: 'terrace' }
+],
+spaces: [
+// L4 Spaces
+{ id: '1', floorId: 'L4', officeName: 'Sai Life Sciences Ltd', unitNo: 'L4-01 & 02', occupiedArea: 25150.56, area: 25150.56, camRate: 10, camRateDate: '2023-01-15' },
+{ id: '2', floorId: 'L4', officeName: 'Glaxo Smithkline Consumer Pvt Ltd', unitNo: 'L4-03-01', occupiedArea: 5592, area: 5592, camRate: 12, camRateDate: '2023-03-20' },
+{ id: '3', floorId: 'L4', officeName: 'DataTracks Services Private Limited', unitNo: 'L4-03-03', occupiedArea: 1600, area: 1600, camRate: 12, camRateDate: '2022-11-10' },
+{ id: '4', floorId: 'L4', officeName: 'TROUW NUTRITION INDIA PRIVATE LIMITED', unitNo: 'L4-04', occupiedArea: 10585, area: 10585, camRate: 12, camRateDate: '2023-05-01' },
+{ id: '5', floorId: 'L4', officeName: 'IDFC First Bharat Limited', unitNo: 'L4-05', occupiedArea: 8199, area: 8199, camRate: 12, camRateDate: '2023-02-28' },
+{ id: '6', floorId: 'L4', officeName: 'EUCLID INNOVATIONS PRIVATE LTD', unitNo: 'L4-06-01', occupiedArea: 4450, area: 4450, camRate: 12, camRateDate: '2023-04-15' },
+{ id: '7', floorId: 'L4', officeName: 'Blue Creative Soft Technologies Pvt Ltd', unitNo: 'L4-06-02', occupiedArea: 2515, area: 2515, camRate: 14, camRateDate: '2023-01-01' },
+// L5 Spaces
+{ id: '8', floorId: 'L5', officeName: 'Tata Communications Limited', unitNo: 'L5-01', occupiedArea: 15115, area: 15115, camRate: 12, camRateDate: '2023-01-15' },
+{ id: '9', floorId: 'L5', officeName: 'Syntax Systems Private Limited', unitNo: 'L5-02', occupiedArea: 7723, area: 7723, camRate: 10, camRateDate: '2023-03-20' },
+{ id: '10', floorId: 'L5', officeName: 'Syntax Systems Private Limited', unitNo: 'L5-03-01', occupiedArea: 4973, area: 4973, camRate: 12, camRateDate: '2022-11-10' },
+{ id: '11', floorId: 'L5', officeName: 'Veni Rao Foundation', unitNo: 'L5-03-02A', occupiedArea: 1000, area: 1000, camRate: 12, camRateDate: '2023-05-01' },
+{ id: '12', floorId: 'L5', officeName: 'MV PURUSHOTTAMA RAO', unitNo: 'L5-03-02A', occupiedArea: 1251, area: 1251, camRate: 12, camRateDate: '2023-02-28' },
+{ id: '13', floorId: 'L5', officeName: 'RAMBOLL INDIA PVT. LTD.', unitNo: 'L5-04', occupiedArea: 10554, area: 10554, camRate: 12, camRateDate: '2023-04-15' },
+{ id: '14', floorId: 'L5', officeName: 'AKM Global', unitNo: 'L5-05', occupiedArea: 8199, area: 8199, camRate: 14, camRateDate: '2023-01-01' },
+{ id: '15', floorId: 'L5', officeName: 'Vacant', unitNo: 'L5-06-02', occupiedArea: 2942, area: 2942, camRate: 0, camRateDate: '' },
+{ id: '16', floorId: 'L5', officeName: 'Aeronutrix', unitNo: 'L5-06-01', occupiedArea: 1513, area: 1513, camRate: 12, camRateDate: '2023-05-01' },
+{ id: '17', floorId: 'L5', officeName: 'Dr. R.Kodandarama Rao', unitNo: 'L5-06-02', occupiedArea: 1000, area: 1000, camRate: 10, camRateDate: '2023-02-28' },
+{ id: '18', floorId: 'L5', officeName: 'ET Creatives', unitNo: 'L5-06-03', occupiedArea: 1532, area: 1532, camRate: 12, camRateDate: '2023-04-15' },
+// L6 Spaces
+{ id: '19', floorId: 'L6', officeName: 'Fedex Trade Networks Transport & Brokerage Pvt Ltd', unitNo: 'L6-02', occupiedArea: 10036, area: 10036, camRate: 8, camRateDate: '2023-01-15' },
+{ id: '20', floorId: 'L6', officeName: 'ARK Infra Developers Pvt Ltd', unitNo: 'L6-03-01', occupiedArea: 4542, area: 4542, camRate: 12, camRateDate: '2023-03-20' },
+{ id: '21', floorId: 'L6', officeName: 'CUMMINS INDIA LIMITED', unitNo: 'L6-03-02', occupiedArea: 2650, area: 2650, camRate: 12, camRateDate: '2022-11-10' },
+{ id: '22', floorId: 'L6', officeName: 'Glaxo Smithkline Consumer Pvt Ltd', unitNo: 'L6-04', occupiedArea: 10555.8, area: 10555.8, camRate: 12, camRateDate: '2023-05-01' },
+{ id: '23', floorId: 'L6', officeName: 'Criss Financial', unitNo: 'L6-05', occupiedArea: 8199, area: 8199, camRate: 12, camRateDate: '2023-02-28' },
+{ id: '24', floorId: 'L6', officeName: 'Tekvizion Voice Solutions Pvt. Ltd', unitNo: 'L6-06-01', occupiedArea: 4406, area: 4406, camRate: 12, camRateDate: '2023-04-15' },
+{ id: '25', floorId: 'L6', officeName: 'Scale Global', unitNo: 'L6-06-02', occupiedArea: 2525, area: 2525, camRate: 12, camRateDate: '2023-01-01' },
+// L7 Spaces
+{ id: '26', floorId: 'L7', officeName: 'HIL Limited', unitNo: 'L7-01 & 02', occupiedArea: 25150.56, area: 25150.56, camRate: 10, camRateDate: '2023-01-15' },
+{ id: '27', floorId: 'L7', officeName: 'Fedex Trade Networks Transport & Brokerage Pvt Ltd', unitNo: 'L7-03', occupiedArea: 7192, area: 7192, camRate: 12, camRateDate: '2023-03-20' },
+{ id: '28', floorId: 'L7', officeName: 'Koerber India Chain software pvt ltd', unitNo: 'L7-04', occupiedArea: 10555, area: 10555, camRate: 12, camRateDate: '2022-11-10' },
+{ id: '29', floorId: 'L7', officeName: 'Vacant', unitNo: 'L7-05', occupiedArea: 8199, area: 8199, camRate: 0, camRateDate: '' },
+{ id: '30', floorId: 'L7', officeName: 'Emids', unitNo: 'L7-06', occupiedArea: 6951, area: 6951, camRate: 12, camRateDate: '2023-05-01' },
+// L8 Spaces
+{ id: '31', floorId: 'L8', officeName: 'Regus Grandeur Offices Private Ltd', unitNo: 'L8-01', occupiedArea: 15114.88, area: 15114.88, camRate: 10, camRateDate: '2023-02-28' },
+{ id: '32', floorId: 'L8', officeName: 'Phoeniz American Salesfocus Solutions India Pvt. Ltd', unitNo: 'L8-02', occupiedArea: 10035.68, area: 10035.68, camRate: 10, camRateDate: '2023-04-15' },
+{ id: '33', floorId: 'L8', officeName: 'Float Technology Solutions Pvt Ltd', unitNo: 'L8-03', occupiedArea: 7192, area: 7192, camRate: 14, camRateDate: '2023-01-01' },
+{ id: '34', floorId: 'L8', officeName: 'Indus Towers Limited', unitNo: 'L8-04 & 05', occupiedArea: 23204.42, area: 23204.42, camRate: 10, camRateDate: '2023-05-01' },
+{ id: '35', floorId: 'L8', officeName: 'SYNERGY GLOBAL TECHNOLOGIES PVT LTD', unitNo: 'L8-06-02', occupiedArea: 2500, area: 2500, camRate: 12, camRateDate: '2023-02-28' },
+{ id: '36', floorId: 'L8', officeName: 'Asian Gold Restaurants LLP', unitNo: 'L8-10', occupiedArea: 7758, area: 7758, camRate: 10, camRateDate: '2023-04-15' },
+// L9 Spaces
+{ id: '37', floorId: 'L9', officeName: 'SLN TERMINUS HOTELS AND RESORTS PVT LTD', unitNo: 'L10-L12', occupiedArea: 120000, area: 120000, camRate: 2, camRateDate: '2023-01-15' },
+// LG Spaces (Mall Level)
+{ id: '38', floorId: 'LG', officeName: 'Avenue Super Marts Limited', unitNo: 'LG-04 & L1-04', occupiedArea: 49202, area: 49202, camRate: 6, camRateDate: '2023-03-20' },
+{ id: '39', floorId: 'LG', officeName: 'Draak Espresso', unitNo: 'LG-02', occupiedArea: 724, area: 724, camRate: 18, camRateDate: '2022-11-10' },
+{ id: '40', floorId: 'LG', officeName: 'Draak Espresso', unitNo: 'LG-03', occupiedArea: 750, area: 750, camRate: 18, camRateDate: '2023-05-01' },
+{ id: '41', floorId: 'LG', officeName: 'ARCHEE GARMENTS PVT LTD (IBADAT)', unitNo: 'LG-05', occupiedArea: 704, area: 704, camRate: 15, camRateDate: '2023-02-28' },
+{ id: '42', floorId: 'LG', officeName: 'Jubilant Food Works Ltd (Dunken & Donuts)', unitNo: 'LG-11-02', occupiedArea: 2169.77, area: 2169.77, camRate: 15, camRateDate: '2023-04-15' },
+{ id: '43', floorId: 'LG', officeName: 'Vacant', unitNo: 'LG-06', occupiedArea: 1225, area: 1225, camRate: 0, camRateDate: '' },
+{ id: '44', floorId: 'LG', officeName: 'Vacant', unitNo: 'LG-07', occupiedArea: 1246, area: 1246, camRate: 0, camRateDate: '' },
+{ id: '45', floorId: 'LG', officeName: 'Vacant', unitNo: 'LG-08', occupiedArea: 1118, area: 1118, camRate: 0, camRateDate: '' },
+{ id: '46', floorId: 'LG', officeName: 'Mr Bubble', unitNo: 'LG-09', occupiedArea: 418, area: 418, camRate: 18, camRateDate: '2023-01-01' },
+{ id: '47', floorId: 'LG', officeName: 'Vacant', unitNo: 'LG-10', occupiedArea: 1147, area: 1147, camRate: 0, camRateDate: '' },
+{ id: '48', floorId: 'LG', officeName: 'Niggimado LLP', unitNo: 'LG-11-01 partA', occupiedArea: 1325, area: 1325, camRate: 18, camRateDate: '2023-05-01' },
+{ id: '49', floorId: 'LG', officeName: 'Vacant', unitNo: 'LG-11-01 partB', occupiedArea: 1064, area: 1064, camRate: 0, camRateDate: '' },
+{ id: '50', floorId: 'LG', officeName: 'Sairabh', unitNo: 'L1-01', occupiedArea: 2669, area: 2669, camRate: 18, camRateDate: '2023-02-28' },
+{ id: '51', floorId: 'LG', officeName: 'Vyom Salon', unitNo: 'L1-02', occupiedArea: 1414, area: 1414, camRate: 18, camRateDate: '2023-04-15' },
+{ id: '52', floorId: 'LG', officeName: 'LOTUS INCORPORATION (Jockey)', unitNo: 'L1-03', occupiedArea: 551.86, area: 551.86, camRate: 15, camRateDate: '2023-01-01' },
+{ id: '53', floorId: 'LG', officeName: 'Cross Breed', unitNo: 'L1-05', occupiedArea: 1500.77, area: 1500.77, camRate: 18, camRateDate: '2023-05-01' },
+{ id: '54', floorId: 'LG', officeName: 'Cross Breed', unitNo: 'L1-06', occupiedArea: 1705, area: 1705, camRate: 18, camRateDate: '2023-02-28' },
+{ id: '55', floorId: 'LG', officeName: 'Cross Breed', unitNo: 'L1-07', occupiedArea: 1005, area: 1005, camRate: 18, camRateDate: '2023-04-15' },
+{ id: '56', floorId: 'LG', officeName: 'SHINHAN BANK', unitNo: 'L1-08', occupiedArea: 5717, area: 5717, camRate: 15, camRateDate: '2023-01-01' },
+{ id: '57', floorId: 'LG', officeName: 'Vacant', unitNo: 'L2-01', occupiedArea: 1290, area: 1290, camRate: 0, camRateDate: '' },
+{ id: '58', floorId: 'LG', officeName: 'GOB SMACK FOODS ( NORFEST)', unitNo: 'L2-02', occupiedArea: 1284, area: 1284, camRate: 18, camRateDate: '2023-05-01' },
+{ id: '59', floorId: 'LG', officeName: 'Vacant', unitNo: 'L2-03', occupiedArea: 670, area: 670, camRate: 0, camRateDate: '' },
+{ id: '60', floorId: 'LG', officeName: 'Vaaraahi Hospitalities', unitNo: 'L2-04-03', occupiedArea: 2423, area: 2423, camRate: 10, camRateDate: '2023-02-28' },
+{ id: '61', floorId: 'LG', officeName: 'Movie Time Cinemas Private Ltd (L-2-04)', unitNo: 'L2-04-02', occupiedArea: 11738, area: 11738, camRate: 17, camRateDate: '2023-04-15' },
+{ id: '62', floorId: 'LG', officeName: 'Katikaneni Hotels & Resorts', unitNo: 'L2-04-02', occupiedArea: 12600, area: 12600, camRate: 15, camRateDate: '2023-01-01' },
+{ id: '63', floorId: 'LG', officeName: 'RAJ INK TATTOOS STUDIO', unitNo: 'L2-05', occupiedArea: 342, area: 342, camRate: 17, camRateDate: '2023-05-01' },
+{ id: '64', floorId: 'LG', officeName: 'Cross Breed', unitNo: 'L2-06', occupiedArea: 1822, area: 1822, camRate: 18, camRateDate: '2023-02-28' },
+{ id: '65', floorId: 'LG', officeName: 'Cross Breed', unitNo: 'L2-07', occupiedArea: 3906, area: 3906, camRate: 18, camRateDate: '2023-04-15' },
+{ id: '66', floorId: 'LG', officeName: 'Cross Breed', unitNo: 'L2-08', occupiedArea: 1175.75, area: 1175.75, camRate: 18, camRateDate: '2023-01-01' },
+{ id: '67', floorId: 'LG', officeName: 'Surya Melange & Bistro P Ltd (LAL STREET)', unitNo: 'L2-09', occupiedArea: 13737.31, area: 13737.31, camRate: 15, camRateDate: '2023-05-01' },
+{ id: '68', floorId: 'LG', officeName: 'Vacant', unitNo: 'L2-09-1', occupiedArea: 1724, area: 1724, camRate: 0, camRateDate: '' },
+{ id: '69', floorId: 'LG', officeName: 'Vacant', unitNo: 'L2-10', occupiedArea: 671, area: 671, camRate: 0, camRateDate: '' },
+{ id: '70', floorId: 'LG', officeName: 'MOVIE TIME CINEMAS PRIVATE LIMITED-L-03-01', unitNo: 'L3-01', occupiedArea: 26157, area: 26157, camRate: 15, camRateDate: '2023-03-20' },
+{ id: '71', floorId: 'LG', officeName: 'Vaaraahi Hospitalities', unitNo: 'L3-01 Part', occupiedArea: 3850, area: 3850, camRate: 17, camRateDate: '2022-11-10' },
+{ id: '72', floorId: 'LG', officeName: 'Vaaraahi Hospitalities', unitNo: 'L3-02-03, C.A.', occupiedArea: 14295, area: 14295, camRate: 17, camRateDate: '2023-05-01' },
+{ id: '73', floorId: 'LG', officeName: 'Mili Foods (Sub Way)', unitNo: 'L3-04-01', occupiedArea: 1056, area: 1056, camRate: 15, camRateDate: '2023-02-28' },
+{ id: '74', floorId: 'LG', officeName: 'GLR Property Management Services', unitNo: 'L3-04-02', occupiedArea: 1006, area: 1006, camRate: 18, camRateDate: '2023-04-15' },
+{ id: '75', floorId: 'LG', officeName: 'Vaaraahi Hospitalities', unitNo: 'L3-04-03', occupiedArea: 1000, area: 1000, camRate: 17, camRateDate: '2023-01-01' },
+{ id: '76', floorId: 'LG', officeName: 'SWADISHT KHATTA MEETHA CHAT', unitNo: 'L3-04-04', occupiedArea: 1032, area: 1032, camRate: 18, camRateDate: '2023-05-01' },
+{ id: '77', floorId: 'LG', officeName: 'MOBILEBITZ', unitNo: 'L2-Kiosk', occupiedArea: 1000, area: 1000, camRate: 18, camRateDate: '2023-02-28' },
+{ id: '78', floorId: 'LG', officeName: 'LG- Kiosk (Vacant)', unitNo: 'LG', occupiedArea: 0, area: 0, camRate: 0, camRateDate: '' }
+]
+};
+// DOM Elements
+const floorNav = document.getElementById('floorNav');
+const tableBody = document.getElementById('tableBody');
+const currentFloorTitle = document.getElementById('currentFloorTitle');
+const searchInput = document.getElementById('searchInput');
+const themeToggle = document.getElementById('themeToggle');
+const addSpaceBtn = document.getElementById('addSpaceBtn');
+const refreshBtn = document.getElementById('refreshBtn');
+const spaceModal = document.getElementById('spaceModal');
+const closeModal = document.getElementById('closeModal');
+const cancelBtn = document.getElementById('cancelBtn');
+const spaceForm = document.getElementById('spaceForm');
+const modalTitle = document.getElementById('modalTitle');
+const spaceIdInput = document.getElementById('spaceId');
+const floorSelect = document.getElementById('floorSelect');
+const officeNameInput = document.getElementById('officeName');
+const unitNoInput = document.getElementById('unitNo');
+const occupiedAreaInput = document.getElementById('occupiedArea');
+const areaInput = document.getElementById('area');
+const camRateInput = document.getElementById('camRate');
+const camRateDateInput = document.getElementById('camRateDate');
+const attachmentsInput = document.getElementById('attachments');
+// State
+let currentFloor = 'L4'; // Default to L4 as requested
+let isDarkMode = true;
+// Initialize the application
+function init() {
+renderFloorNavigation();
+renderTable(currentFloor);
+updateStats();
+setupEventListeners();
+startAutoRefresh();
+}
+// Render floor navigation buttons
+function renderFloorNavigation() {
+floorNav.innerHTML = '';
+buildingData.floors.forEach(floor => {
+const btn = document.createElement('button');
+btn.className = `floor-btn ${floor.id === currentFloor ? 'active' : ''}`;
+btn.textContent = floor.id;
+btn.dataset.floorId = floor.id;
+btn.addEventListener('click', () => {
+currentFloor = floor.id;
+renderTable(currentFloor);
+updateActiveFloorButton();
+currentFloorTitle.textContent = floor.name;
+});
+floorNav.appendChild(btn);
+});
+}
+// Update active floor button
+function updateActiveFloorButton() {
+document.querySelectorAll('.floor-btn').forEach(btn => {
+btn.classList.remove('active');
+if (btn.dataset.floorId === currentFloor) {
+btn.classList.add('active');
+}
+});
+}
+// Format currency in Indian Rupees with comma separator
+function formatINR(amount) {
+if (amount === 0 || isNaN(amount)) return '-';
+return new Intl.NumberFormat('en-IN', {
+style: 'currency',
+currency: 'INR',
+minimumFractionDigits: 0,
+maximumFractionDigits: 0
+}).format(amount).replace('₹', '');
+}
+// Render table for the current floor
+function renderTable(floorId) {
+const filteredSpaces = buildingData.spaces.filter(space => space.floorId === floorId);
+const searchTerm = searchInput.value.toLowerCase();
+const filteredBySearch = searchTerm
+? filteredSpaces.filter(space =>
+space.officeName.toLowerCase().includes(searchTerm) ||
+space.unitNo.toLowerCase().includes(searchTerm)
+)
+: filteredSpaces;
+tableBody.innerHTML = '';
+if (filteredBySearch.length === 0) {
+const row = document.createElement('tr');
+row.innerHTML = `<td colspan="9" style="text-align: center; padding: 20px;">No spaces found for this floor</td>`;
+tableBody.appendChild(row);
+return;
+}
+filteredBySearch.forEach((space, index) => {
+const amount = space.occupiedArea * space.camRate;
+const row = document.createElement('tr');
+row.dataset.spaceId = space.id;
+row.innerHTML = `
+<td>${index + 1}</td>
+<td>${space.officeName}</td>
+<td>${space.unitNo}</td>
+<td>${space.occupiedArea.toFixed(2)}</td>
+<td>${space.area.toFixed(2)}</td>
+<td>${space.camRate}</td>
+<td class="amount-cell rupee">${formatINR(amount)}</td>
+<td>${space.camRateDate ? new Date(space.camRateDate).toLocaleDateString('en-IN') : ''}</td>
+<td>
+<button class="edit-btn edit-space" data-id="${space.id}"><i class="fas fa-edit"></i> Edit</button>
+<button class="copy-btn copy-space" data-id="${space.id}"><i class="fas fa-copy"></i> Copy</button>
+<button class="upload-btn upload-space" data-id="${space.id}"><i class="fas fa-upload"></i> Upload</button>
+</td>
+`;
+row.querySelector('.edit-space').addEventListener('click', (e) => {
+e.stopPropagation();
+openSpaceModal(space);
+});
+row.querySelector('.copy-space').addEventListener('click', (e) => {
+e.stopPropagation();
+copySpaceData(space);
+});
+row.querySelector('.upload-space').addEventListener('click', (e) => {
+e.stopPropagation();
+uploadSpaceFiles(space);
+});
+tableBody.appendChild(row);
+});
+}
+// Update statistics counters
+function updateStats() {
+const occupied = buildingData.spaces.filter(s => s.type !== 'vacant' && s.camRate > 0).length;
+const vacant = buildingData.spaces.filter(s => s.officeName === 'Vacant' || s.camRate === 0).length;
+const fitOut = buildingData.spaces.filter(s => s.type === 'fit-out').length;
+const total = buildingData.spaces.length;
+document.getElementById('occupiedCount').textContent = occupied;
+document.getElementById('vacantCount').textContent = vacant;
+document.getElementById('fitOutCount').textContent = fitOut;
+document.getElementById('totalCount').textContent = total;
+}
+// Open space modal for editing or adding
+function openSpaceModal(space = null) {
+if (space) {
+// Editing existing space
+modalTitle.textContent = 'Edit Space Details';
+spaceIdInput.value = space.id;
+floorSelect.value = space.floorId;
+officeNameInput.value = space.officeName;
+unitNoInput.value = space.unitNo;
+occupiedAreaInput.value = space.occupiedArea;
+areaInput.value = space.area;
+camRateInput.value = space.camRate;
+camRateDateInput.value = space.camRateDate;
+} else {
+// Adding new space
+modalTitle.textContent = 'Add New Space';
+spaceForm.reset();
+spaceIdInput.value = '';
+floorSelect.value = currentFloor; // Set to current floor by default
+}
+spaceModal.classList.add('active');
+}
+// Close modal
+function closeSpaceModal() {
+spaceModal.classList.remove('active');
+}
+// Save space data
+function saveSpaceData(e) {
+e.preventDefault();
+const spaceData = {
+id: spaceIdInput.value || Date.now().toString(),
+floorId: floorSelect.value,
+officeName: officeNameInput.value,
+unitNo: unitNoInput.value,
+occupiedArea: parseFloat(occupiedAreaInput.value),
+area: parseFloat(areaInput.value),
+camRate: parseFloat(camRateInput.value),
+camRateDate: camRateDateInput.value,
+type: 'occupied'
+};
+if (spaceIdInput.value) {
+// Update existing space
+const index = buildingData.spaces.findIndex(s => s.id === spaceIdInput.value);
+if (index !== -1) {
+buildingData.spaces[index] = spaceData;
+}
+} else {
+// Add new space
+buildingData.spaces.push(spaceData);
+}
+renderTable(currentFloor);
+updateStats();
+closeSpaceModal();
+console.log('Saving space ', spaceData);
+// Handle file upload (simulated)
+if (attachmentsInput.files.length > 0) {
+console.log('Files selected for upload:', attachmentsInput.files);
+// In a real implementation, you would send these files to a backend endpoint
+}
+}
+// Copy space data for pasting
+function copySpaceData(space) {
+// Create a string representation of the space data
+const spaceData = `${space.officeName}\t${space.unitNo}\t${space.occupiedArea}\t${space.area}\t${space.camRate}\t${space.camRateDate}`;
+// Copy to clipboard
+navigator.clipboard.writeText(spaceData).then(() => {
+alert('Space data copied to clipboard! You can now paste it into Excel or other applications.');
+}).catch(err => {
+console.error('Failed to copy: ', err);
+alert('Failed to copy to clipboard. Please try again.');
+});
+}
+// Upload files for a space
+function uploadSpaceFiles(space) {
+alert(`File upload functionality for space: ${space.officeName} (${space.unitNo})
+In a real application, this would open a file upload dialog to attach documents related to this space.`);
+console.log('Uploading files for space:', space);
+// In a real app, you would implement actual file upload here
+// For now, we'll just show a message
+const fileInput = document.createElement('input');
+fileInput.type = 'file';
+fileInput.multiple = true;
+fileInput.style.display = 'none';
+document.body.appendChild(fileInput);
+fileInput.click();
+fileInput.onchange = function() {
+if (fileInput.files.length > 0) {
+console.log('Selected files:', fileInput.files);
+alert(`${fileInput.files.length} file(s) selected for upload. In a real application, these would be uploaded to the server.`);
+}
+document.body.removeChild(fileInput);
+};
+}
+// Set up event listeners
+function setupEventListeners() {
+// Theme toggle
+themeToggle.addEventListener('click', () => {
+isDarkMode = !isDarkMode;
+document.body.classList.toggle('dark-mode', isDarkMode);
+themeToggle.innerHTML = isDarkMode ?
+'<i class="fas fa-moon"></i>' :
+'<i class="fas fa-sun"></i>';
+});
+// Search input
+searchInput.addEventListener('input', () => {
+renderTable(currentFloor);
+});
+// Modal controls
+closeModal.addEventListener('click', closeSpaceModal);
+cancelBtn.addEventListener('click', closeSpaceModal);
+spaceForm.addEventListener('submit', saveSpaceData);
+// Add space button
+addSpaceBtn.addEventListener('click', () => openSpaceModal());
+// Refresh button
+refreshBtn.addEventListener('click', () => {
+renderTable(currentFloor);
+updateStats();
+console.log('Manual refresh triggered');
+});
+// Close modal when clicking outside
+spaceModal.addEventListener('click', (e) => {
+if (e.target === spaceModal) {
+closeSpaceModal();
+}
+});
+}
+// Auto-refresh functionality
+function startAutoRefresh() {
+setInterval(() => {
+renderTable(currentFloor);
+updateStats();
+console.log('Auto-refresh completed');
+}, 30000); // 30 seconds
+}
+// Initialize the app
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
+

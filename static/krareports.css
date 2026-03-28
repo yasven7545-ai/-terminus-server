@@ -1,0 +1,55 @@
+/* krareports.css — corporate white A4 styling */
+@page { size: A4; margin: 18mm; }
+html,body { margin:0; padding:0; font-family: Arial, Helvetica, sans-serif; color:#000; background:#fff; }
+body { padding: 12mm; box-sizing: border-box; font-size:13px; }
+
+/* header */
+.report-header { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+.report-header .logo img { width:110px; height:auto; display:block; }
+.head-text .title { font-weight:700; font-size:18px; text-transform:none; }
+.head-text .subtitle { font-size:13px; margin-top:4px; color:#222; }
+
+/* info table */
+.employee-info table { width:100%; border-collapse:collapse; margin-top:6px; }
+.employee-info td { padding:6px 8px; vertical-align:top; }
+.employee-info .label { width:110px; font-weight:700; background:#f6f6f6; border:1px solid #000; padding:6px; }
+
+/* section */
+.section-title { font-weight:700; margin-top:14px; margin-bottom:8px; font-size:13px; text-decoration:underline; }
+
+/* KRA table */
+.kra-table, .kpi-table, .aggregate-table { width:100%; border-collapse:collapse; margin-top:8px; }
+.kra-table th, .kra-table td,
+.kpi-table th, .kpi-table td,
+.aggregate-table th, .aggregate-table td {
+  border:1px solid #000;
+  padding:6px;
+  vertical-align:top;
+}
+.kra-table thead th, .kpi-table thead th { background:#f1f1f1; font-weight:700; }
+.kra-table td.center, .kpi-table td.center { text-align:center; }
+.kra-table td.empty { min-height:40px; }
+
+/* totals */
+.total-weight { font-weight:700; text-align:center; }
+
+/* KPI small note */
+.small-note { font-size:11px; color:#333; margin-top:8px; }
+
+/* aggregate table */
+.aggregate-table th, .aggregate-table td { padding:8px; text-align:center; }
+
+/* boxes */
+.box-empty { border:1px solid #000; min-height:60px; padding:8px; margin-bottom:10px; }
+
+/* signatures */
+.sign-row { display:flex; justify-content:space-between; gap:12px; margin-top:18px; }
+.sign { width:48%; border-top:1px solid #000; padding-top:6px; text-align:left; font-weight:700; }
+
+/* print helpers */
+.page-break { page-break-after: always; display:block; height:1px; }
+
+/* utility */
+.bold { font-weight:700; }
+.center { text-align:center; }
+.agg-cell { height:40px; }

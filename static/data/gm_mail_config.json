@@ -1,0 +1,14 @@
+{
+  "recipients": "",
+  "cc": "",
+  "time": "09:00",
+  "subject": "GM Tasks Daily Summary \u2014 SLN Terminus",
+  "inclOpen": true,
+  "inclProg": true,
+  "inclOver": true,
+  "inclDone": false,
+  "inclHighOnly": false,
+  "siteFilter": "",
+  "notifyOnAdd": true,
+  "notifyOnOverdue": true
+}

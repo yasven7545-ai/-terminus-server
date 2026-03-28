@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SLN Terminus Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar">
+    <h2>SLN Terminus</h2>
+    <a href="index.html" class="active">🏠 Home</a>
+    <a href="reports.html">📊 Reports</a>
+    <a href="graph.html">📈 Graph</a>
+    <a href="upload.html">📤 Upload</a>
+  </div>
+
+  <div class="main-content">
+    <h1>Welcome to SLN Terminus Dashboard</h1>
+    <button id="vacantGraphBtn">Show Vacant Graph Data</button>
+
+    <div id="popup" class="popup">
+      <div class="popup-content">
+        <span class="close">&times;</span>
+        <h2>Vacant Data</h2>
+        <table id="data-table"></table>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

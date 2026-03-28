@@ -1,0 +1,155 @@
+[
+  {
+    "id": "OBS-0001",
+    "title": "Reminder for CAM bills",
+    "obs_date": "2026-03-08",
+    "location": "SLN Terminus",
+    "priority": "High",
+    "expected_date": "2026-08-25",
+    "description": "Kiran and Madhav, As you are aware the current CAM balance receivables is Rs 1.2 Cr. We cannot continue like this . Ideally it should never be above Rs 50 lakhs to run operations smoothly. Else, we are doing Vendor payments drawing on OD and paying interest. Please follow up on the payments diligently. Need funds immediately as we want to go ahead with painting etc",
+    "remarks": "",
+    "inspection": "Yes",
+    "image_path": "",
+    "raised_by": "USER",
+    "raised_by_name": "(Management)",
+    "current_stage": "Procurement/Finance Action",
+    "pm_response": "Noted Sir",
+    "is_cost_implication": "Yes",
+    "gm_notes": "Get the quotations please",
+    "approved_budget": "",
+    "vendor": "",
+    "final_cost": "",
+    "progress": 0,
+    "work_status": "",
+    "completion_date": "",
+    "status": "Active",
+    "history": [
+      {
+        "stage": "Observation Raised by GM/Management",
+        "action": "Observation Created",
+        "by": "USER",
+        "timestamp": "2026-03-08T10:45:40.443125",
+        "notes": "Kiran and Madhav, As you are aware the current CAM balance receivables is Rs 1.2 Cr. We cannot continue like this . Ideally it should never be above Rs 50 lakhs to run operations smoothly. Else, we are doing Vendor payments drawing on OD and paying interest. Please follow up on the payments diligently. Need funds immediately as we want to go ahead with painting etc"
+      },
+      {
+        "stage": "PM Review & Response",
+        "action": "PM Response Submitted",
+        "by": "USER",
+        "timestamp": "2026-03-08T10:48:50.978790",
+        "notes": "Noted Sir"
+      },
+      {
+        "stage": "PM Review & Response",
+        "action": "PM Response Submitted",
+        "by": "USER",
+        "timestamp": "2026-03-08T12:35:51.411066",
+        "notes": "Noted Sir"
+      },
+      {
+        "stage": "Procurement/Finance Action",
+        "action": "GM/Mgmt Approved \u2014 Cost Implication: Yes",
+        "by": "USER",
+        "timestamp": "2026-03-08T13:18:54.451753",
+        "notes": "Get the quotations please"
+      }
+    ],
+    "created_at": "2026-03-08T10:45:40.443125",
+    "updated_at": "2026-03-08T13:18:54.451753"
+  },
+  {
+    "id": "OBS-0002",
+    "title": "Reminder for CAM bills",
+    "obs_date": "2026-03-09",
+    "location": "SLN Terminus",
+    "priority": "Medium",
+    "expected_date": "2026-03-10",
+    "description": "collect all the cam payments, ensure the out standing should be less than 50 lakhs by this month end",
+    "remarks": "",
+    "inspection": "No",
+    "image_path": "",
+    "raised_by": "admin",
+    "raised_by_name": "(Management)",
+    "current_stage": "Observation Raised by GM/Management",
+    "pm_response": "",
+    "is_cost_implication": "Pending",
+    "gm_notes": "",
+    "approved_budget": "",
+    "vendor": "",
+    "final_cost": "",
+    "progress": 0,
+    "work_status": "",
+    "completion_date": "",
+    "status": "Active",
+    "history": [
+      {
+        "stage": "Observation Raised by GM/Management",
+        "action": "Observation Created",
+        "by": "admin",
+        "timestamp": "2026-03-09T17:05:36.424683",
+        "notes": "collect all the cam payments, ensure the out standing should be less than 50 lakhs by this month end"
+      }
+    ],
+    "created_at": "2026-03-09T17:05:36.424683",
+    "updated_at": "2026-03-09T17:05:36.424683"
+  },
+  {
+    "id": "OBS-0003",
+    "title": "Observed Combustible debris at HSD yard",
+    "obs_date": "2026-03-11",
+    "location": "TOT LOT AREA ",
+    "priority": "High",
+    "expected_date": "2026-03-12",
+    "description": "PLEASE ARRANGE TO REMOVE COMBUSTIBLE DEBRIS ON WAR FOOT",
+    "remarks": "",
+    "inspection": "Yes",
+    "image_path": "",
+    "raised_by": "gm",
+    "raised_by_name": "(GM)",
+    "current_stage": "GM Verification",
+    "pm_response": "",
+    "is_cost_implication": "No",
+    "gm_notes": "",
+    "approved_budget": "",
+    "vendor": "",
+    "final_cost": "",
+    "progress": 0,
+    "work_status": "",
+    "completion_date": "",
+    "status": "Active",
+    "history": [
+      {
+        "stage": "Observation Raised by GM/Management",
+        "action": "Observation Created",
+        "by": "gm",
+        "timestamp": "2026-03-11T18:29:56.927198",
+        "notes": "PLEASE ARRANGE TO REMOVE COMBUSTIBLE DEBRIS ON WAR FOOT"
+      },
+      {
+        "stage": "PM Review & Response",
+        "action": "PM Response Submitted",
+        "by": "gm",
+        "timestamp": "2026-03-11T18:30:34.767391",
+        "notes": ""
+      },
+      {
+        "stage": "GM Verification",
+        "timestamp": "2026-03-11T18:32:07.915894",
+        "notes": "Advanced via dashboard"
+      },
+      {
+        "stage": "Management Approval",
+        "timestamp": "2026-03-11T18:32:10.782385",
+        "notes": "Advanced via dashboard"
+      },
+      {
+        "stage": "GM Verification",
+        "action": "GM Verified Observation",
+        "by": "admin",
+        "timestamp": "2026-03-11T18:44:28.614406",
+        "notes": ""
+      }
+    ],
+    "created_at": "2026-03-11T18:29:56.927198",
+    "updated_at": "2026-03-11T18:44:28.614375"
+  }
+]

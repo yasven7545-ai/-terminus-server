@@ -1,0 +1,633 @@
+[
+  {
+    "id": "OWM_202602241539483442",
+    "variant": "daily",
+    "date": "2026-02-24",
+    "property": "ONEWEST",
+    "role": "Property Manager",
+    "email": "yasven7545@gmail.com",
+    "subject": "[ACTION REQUIRED] Daily Property Activities Reminder – ONEWEST | 24 Feb 2026",
+    "tasks": [
+      {
+        "name": "AAA",
+        "assigned": "AAA",
+        "due": "",
+        "status": "Pending"
+      }
+    ],
+    "completion": "",
+    "deadline": "Today 5:00 PM",
+    "body": "",
+    "remarks": "Test",
+    "sender": "Name",
+    "senderTitle": "GM",
+    "overdue": "",
+    "escalateTo": "",
+    "consequence": "",
+    "createdAt": "2026-02-24T15:39:48.344342",
+    "updatedAt": "2026-02-24T15:39:48.344349",
+    "createdBy": "USER",
+    "lastSentAt": "2026-02-24T15:39:55.147612",
+    "lastSentTo": [
+      "yasven7545@gmail.com",
+      "pm@terminus-global.com"
+    ],
+    "lastSentBy": "USER"
+  },
+  {
+    "id": "OWM_202602241543474241",
+    "variant": "daily",
+    "date": "2026-02-24",
+    "property": "ONEWEST",
+    "role": "General Manager",
+    "email": "kiran@terminus-global.com",
+    "subject": "[ACTION REQUIRED] Daily Property Activities Reminder – ONEWEST | 24 Feb 2026",
+    "tasks": [
+      {
+        "name": "Testing 02",
+        "assigned": "BBB",
+        "due": "09:00 AM",
+        "status": "Pending"
+      },
+      {
+        "name": "Testing 03",
+        "assigned": "CCC",
+        "due": "10:00 AM",
+        "status": "Pending"
+      },
+      {
+        "name": "Testing 04",
+        "assigned": "DDD",
+        "due": "11:00 AM",
+        "status": "Pending"
+      },
+      {
+        "name": "Testing 05",
+        "assigned": "EEE",
+        "due": "12:00 PM",
+        "status": "Pending"
+      }
+    ],
+    "completion": "75%",
+    "deadline": "Thurs day 5:00 PM",
+    "body": "Above Mentioned work for test trail, ",
+    "remarks": "Trigger Mail Testing in progress",
+    "sender": "Mr. XXXXXX",
+    "senderTitle": "Property Manager",
+    "overdue": "",
+    "escalateTo": "",
+    "consequence": "",
+    "createdAt": "2026-02-24T15:43:47.424183",
+    "updatedAt": "2026-02-24T17:20:15.973123",
+    "createdBy": "USER",
+    "lastSentAt": "2026-02-24T15:43:54.387146",
+    "lastSentTo": [
+      "yasven7545@gmail.com",
+      "pm@terminus-global.com"
+    ],
+    "lastSentBy": "USER",
+    "updatedBy": "USER"
+  },
+  {
+    "id": "OWM_202602241809412375",
+    "variant": "daily",
+    "date": "2026-02-24",
+    "property": "ONEWEST",
+    "role": "Property Manager",
+    "email": "yasven7545@gmail.com",
+    "subject": "[ACTION REQUIRED] Daily Property Activities Reminder – ONEWEST | 24 Feb 2026",
+    "tasks": [
+      {
+        "task": "Test",
+        "assigned": "Mr. XXXXXX",
+        "dueTime": "05:00",
+        "date": "2026-02-24",
+        "status": "Completed"
+      },
+      {
+        "task": "Test 00",
+        "assigned": "Mr. YYYYYYY",
+        "dueTime": "18:00",
+        "date": "2026-02-25",
+        "status": "Pending"
+      }
+    ],
+    "completion": "",
+    "deadline": "2026-02-25T18:00",
+    "body": "",
+    "remarks": {
+      "gm": "",
+      "pm": "",
+      "fm": "",
+      "finance": "",
+      "procurement": "",
+      "management": ""
+    },
+    "sender": "Name",
+    "senderTitle": "General Manager",
+    "createdAt": "2026-02-24T18:09:41.237580",
+    "updatedAt": "2026-02-24T18:09:41.237585",
+    "createdBy": "USER"
+  },
+  {
+    "id": "OWM_202602251207335544",
+    "variant": "daily",
+    "date": "2026-02-25",
+    "property": "ONEWEST",
+    "role": "General Manager",
+    "email": "yasven7545@gmail.com",
+    "subject": "[ACTION REQUIRED] Daily Property Activities Reminder – ONEWEST | 25 Feb 2026",
+    "tasks": [
+      {
+        "task": "AAAAAAAAAAAAAA",
+        "assigned": "AAAAAA",
+        "dueTime": "18:00",
+        "status": "Pending"
+      },
+      {
+        "task": "BBBBBBBBBBBBBB",
+        "assigned": "BBBBBBBBB",
+        "dueTime": "12:20",
+        "status": "Pending"
+      }
+    ],
+    "completion": "",
+    "deadline": "2026-02-26T08:00",
+    "body": "",
+    "remarks": "",
+    "sender": "VVVVVVVVVV",
+    "senderTitle": "General Manager",
+    "createdAt": "2026-02-25T12:07:33.554532",
+    "createdBy": "USER"
+  },
+  {
+    "id": "OWM_202602251912131224",
+    "variant": "daily",
+    "date": "2026-02-25",
+    "property": "ONEWEST",
+    "role": "Facilities Manager",
+    "email": "yasven7545@gmail.com",
+    "subject": "[ACTION REQUIRED] Daily Property Activities Reminder – ONEWEST | 25 Feb 2026",
+    "tasks": [
+      {
+        "activity": "Transformer Issue",
+        "department": "General Manager",
+        "date": "2026-02-25",
+        "dueTime": "20:00",
+        "status": "pending_approval"
+      },
+      {
+        "activity": "Transformer",
+        "department": "Procurement ",
+        "date": "2026-02-26",
+        "dueTime": "18:00",
+        "status": "pending_approval"
+      },
+      {
+        "activity": "",
+        "department": "",
+        "date": "",
+        "dueTime": "",
+        "status": "pending_approval"
+      }
+    ],
+    "completion": "20",
+    "deadline": "2026-02-26T18:00",
+    "body": "Approval required from General Manager",
+    "remarks": {
+      "gm": "GM Approval Notes",
+      "pm": "PM Operational Notes",
+      "fm": "FM Maintenance Notes",
+      "finance": "Budget Approval Notes",
+      "procurement": "Purchase Order Details",
+      "management": "Board Approval Notes"
+    },
+    "sender": "Mr.XXXXXX",
+    "senderTitle": "Facilities Manager",
+    "createdAt": "2026-02-25T19:12:13.122864",
+    "createdBy": "USER"
+  },
+  {
+    "id": "OWM_202602251912469606",
+    "variant": "daily",
+    "date": "2026-02-25",
+    "property": "ONEWEST",
+    "role": "Facilities Manager",
+    "email": "yasven7545@gmail.com",
+    "subject": "[ACTION REQUIRED] Daily Property Activities Reminder – ONEWEST | 25 Feb 2026",
+    "tasks": [
+      {
+        "activity": "Transformer Issue",
+        "department": "General Manager",
+        "date": "2026-02-25",
+        "dueTime": "20:00",
+        "status": "approved"
+      },
+      {
+        "activity": "Transformer",
+        "department": "Procurement ",
+        "date": "2026-02-26",
+        "dueTime": "18:00",
+        "status": "pending_approval"
+      },
+      {
+        "activity": "",
+        "department": "",
+        "date": "",
+        "dueTime": "",
+        "status": "pending_approval"
+      }
+    ],
+    "completion": "20",
+    "deadline": "2026-02-26T18:00",
+    "body": "Approval required from General Manager",
+    "remarks": {
+      "gm": "GM Approval Notes",
+      "pm": "PM Operational Notes",
+      "fm": "FM Maintenance Notes",
+      "finance": "Budget Approval Notes",
+      "procurement": "Purchase Order Details",
+      "management": "Board Approval Notes"
+    },
+    "sender": "Mr.XXXXXX",
+    "senderTitle": "Facilities Manager",
+    "createdAt": "2026-02-25T19:12:46.960704",
+    "createdBy": "USER"
+  },
+  {
+    "id": "OWM_202602251915378990",
+    "variant": "daily",
+    "date": "2026-02-25",
+    "property": "ONEWEST",
+    "role": "Facilities Manager",
+    "email": "yasven7545@gmail.com",
+    "subject": "[ACTION REQUIRED] Daily Property Activities Reminder – ONEWEST | 25 Feb 2026",
+    "tasks": [
+      {
+        "activity": "Transformer Issue",
+        "department": "General Manager",
+        "date": "2026-02-25",
+        "dueTime": "20:00",
+        "status": "approved"
+      },
+      {
+        "activity": "Transformer",
+        "department": "Procurement ",
+        "date": "2026-02-26",
+        "dueTime": "18:00",
+        "status": "pending_approval"
+      },
+      {
+        "activity": "",
+        "department": "",
+        "date": "",
+        "dueTime": "",
+        "status": "pending_approval"
+      }
+    ],
+    "completion": "20",
+    "deadline": "2026-02-26T18:00",
+    "body": "Approval required from General Manager[TASK_LIST]",
+    "remarks": {
+      "gm": "GM Approval Notes",
+      "pm": "PM Operational Notes",
+      "fm": "FM Maintenance Notes",
+      "finance": "Budget Approval Notes",
+      "procurement": "Purchase Order Details",
+      "management": "Board Approval Notes"
+    },
+    "sender": "Mr.XXXXXX",
+    "senderTitle": "Facilities Manager",
+    "createdAt": "2026-02-25T19:15:37.899137",
+    "createdBy": "USER"
+  },
+  {
+    "id": "OWM_202602251916408255",
+    "variant": "completion",
+    "date": "2026-02-25",
+    "property": "ONEWEST",
+    "role": "Facilities Manager",
+    "email": "yasven7545@gmail.com",
+    "subject": "Task Completion Update",
+    "tasks": [
+      {
+        "activity": "Transformer Issue",
+        "department": "General Manager",
+        "date": "2026-02-25",
+        "dueTime": "20:00",
+        "status": "completed"
+      },
+      {
+        "activity": "Transformer",
+        "department": "Procurement ",
+        "date": "2026-02-26",
+        "dueTime": "18:00",
+        "status": "pending_approval"
+      },
+      {
+        "activity": "",
+        "department": "",
+        "date": "",
+        "dueTime": "",
+        "status": "pending_approval"
+      }
+    ],
+    "completion": "20",
+    "deadline": "2026-02-26T18:00",
+    "body": "Approval required from General Manager[TASK_LIST]",
+    "remarks": {
+      "gm": "GM Approval Notes",
+      "pm": "PM Operational Notes",
+      "fm": "FM Maintenance Notes",
+      "finance": "Budget Approval Notes",
+      "procurement": "Purchase Order Details",
+      "management": "Board Approval Notes"
+    },
+    "sender": "Mr.XXXXXX",
+    "senderTitle": "Facilities Manager",
+    "createdAt": "2026-02-25T19:16:40.825615",
+    "createdBy": "USER"
+  },
+  {
+    "id": "OWM_202602251917004635",
+    "variant": "escalation\nurgent",
+    "date": "2026-02-25",
+    "property": "ONEWEST",
+    "role": "Facilities Manager",
+    "email": "yasven7545@gmail.com",
+    "subject": "URGENT: Escalation Notice",
+    "tasks": [
+      {
+        "activity": "Transformer Issue",
+        "department": "General Manager",
+        "date": "2026-02-25",
+        "dueTime": "20:00",
+        "status": "completed"
+      },
+      {
+        "activity": "Transformer",
+        "department": "Procurement ",
+        "date": "2026-02-26",
+        "dueTime": "18:00",
+        "status": "pending_material"
+      },
+      {
+        "activity": "",
+        "department": "",
+        "date": "",
+        "dueTime": "",
+        "status": "pending_approval"
+      }
+    ],
+    "completion": "20",
+    "deadline": "2026-02-26T18:00",
+    "body": "Approval required from General Manager[TASK_LIST]",
+    "remarks": {
+      "gm": "GM Approval Notes",
+      "pm": "PM Operational Notes",
+      "fm": "FM Maintenance Notes",
+      "finance": "Budget Approval Notes",
+      "procurement": "Purchase Order Details",
+      "management": "Board Approval Notes"
+    },
+    "sender": "Mr.XXXXXX",
+    "senderTitle": "Facilities Manager",
+    "createdAt": "2026-02-25T19:17:00.463701",
+    "createdBy": "USER"
+  },
+  {
+    "id": "OWM_202602261343304005",
+    "variant": "daily",
+    "date": "2026-02-25",
+    "property": "ONEWEST",
+    "role": "Facilities Manager",
+    "email": "yasven7545@gmail.com",
+    "subject": "Daily Operations & Facilities Update",
+    "tasks": [
+      {
+        "activity": "Transformer Break down",
+        "department": "General Manager",
+        "date": "2026-02-26",
+        "dueTime": "20:00",
+        "status": "approved"
+      },
+      {
+        "activity": "Transformer",
+        "department": "Procurement ",
+        "date": "2026-02-26",
+        "dueTime": "18:00",
+        "status": "pending_material"
+      },
+      {
+        "activity": "",
+        "department": "",
+        "date": "",
+        "dueTime": "",
+        "status": "pending_approval"
+      }
+    ],
+    "completion": "20",
+    "deadline": "2026-02-26T18:00",
+    "body": "Approval required from General Manager[TASK_LIST]",
+    "remarks": {
+      "gm": "GM Approval Notes",
+      "pm": "PM Operational Notes",
+      "fm": "FM Maintenance Notes",
+      "finance": "",
+      "procurement": "Purchase Order Details",
+      "management": "Board Approval Notes"
+    },
+    "sender": "Mr.XXXXXX",
+    "senderTitle": "Facilities Manager",
+    "createdAt": "2026-02-26T13:43:30.400643",
+    "createdBy": "USER"
+  },
+  {
+    "id": "OWM_202602261345295756",
+    "variant": "daily",
+    "date": "2026-02-25",
+    "property": "ONEWEST",
+    "role": "Facilities Manager",
+    "email": "yasven7545@gmail.com",
+    "subject": "Daily Operations & Facilities Update",
+    "tasks": [
+      {
+        "activity": "Transformer Break down",
+        "department": "General Manager",
+        "date": "2026-02-26",
+        "dueTime": "20:00",
+        "status": "pending_approval"
+      },
+      {
+        "activity": "Transformer",
+        "department": "Procurement ",
+        "date": "2026-02-26",
+        "dueTime": "18:00",
+        "status": "pending_material"
+      },
+      {
+        "activity": "",
+        "department": "",
+        "date": "",
+        "dueTime": "",
+        "status": "pending_approval"
+      }
+    ],
+    "completion": "20",
+    "deadline": "2026-02-26T18:00",
+    "body": "Approval required from General Manager[TASK_LIST]",
+    "remarks": {
+      "gm": "GM Approval Notes",
+      "pm": "PM Operational Notes",
+      "fm": "FM Maintenance Notes",
+      "finance": "",
+      "procurement": "Purchase Order Details",
+      "management": "Board Approval Notes"
+    },
+    "sender": "Mr.XXXXXX",
+    "senderTitle": "Facilities Manager",
+    "createdAt": "2026-02-26T13:45:29.575725",
+    "createdBy": "USER"
+  },
+  {
+    "id": "OWM_202602261346520548",
+    "variant": "daily",
+    "date": "2026-02-25",
+    "property": "ONEWEST",
+    "role": "Facilities Manager",
+    "email": "yasven7545@gmail.com",
+    "subject": "Daily Operations & Facilities Update",
+    "tasks": [
+      {
+        "activity": "Transformer Break down",
+        "department": "General Manager",
+        "date": "2026-02-26",
+        "dueTime": "20:00",
+        "status": "approved"
+      },
+      {
+        "activity": "Transformer",
+        "department": "Procurement ",
+        "date": "2026-02-26",
+        "dueTime": "18:00",
+        "status": "pending_material"
+      },
+      {
+        "activity": "",
+        "department": "",
+        "date": "",
+        "dueTime": "",
+        "status": "pending_approval"
+      }
+    ],
+    "completion": "20",
+    "deadline": "2026-02-26T18:00",
+    "body": "Approval required from General Manager[TASK_LIST]",
+    "remarks": {
+      "gm": "Mr. Sudhakar, Work approved, Please may obtain necessary estimations from multiple vendors",
+      "pm": "PM Operational Notes",
+      "fm": "FM Maintenance Notes",
+      "finance": "",
+      "procurement": "Purchase Order Details",
+      "management": "Board Approval Notes"
+    },
+    "sender": "Mr.XXXXXX",
+    "senderTitle": "Facilities Manager",
+    "createdAt": "2026-02-26T13:46:52.054964",
+    "createdBy": "USER"
+  },
+  {
+    "id": "OWM_202602261348324838",
+    "variant": "daily",
+    "date": "2026-02-25",
+    "property": "ONEWEST",
+    "role": "Facilities Manager",
+    "email": "yasven7545@gmail.com",
+    "subject": "Daily Operations & Facilities Update",
+    "tasks": [
+      {
+        "activity": "Transformer Break down",
+        "department": "General Manager",
+        "date": "2026-02-26",
+        "dueTime": "20:00",
+        "status": "approved"
+      },
+      {
+        "activity": "Transformer",
+        "department": "Procurement ",
+        "date": "2026-02-26",
+        "dueTime": "18:00",
+        "status": "pending_material"
+      },
+      {
+        "activity": "",
+        "department": "",
+        "date": "",
+        "dueTime": "",
+        "status": "pending_approval"
+      }
+    ],
+    "completion": "20",
+    "deadline": "2026-02-26T18:00",
+    "body": "Approval required from General Manager[TASK_LIST]",
+    "remarks": {
+      "gm": "Mr. Sudhakar, Work approved, Please may obtain necessary estimations from multiple vendors",
+      "pm": "sir, Please approve, as discussed this is top priority and as of now we are running on stand by",
+      "fm": "FM Maintenance Notes",
+      "finance": "",
+      "procurement": "Purchase Order Details",
+      "management": "Board Approval Notes"
+    },
+    "sender": "Mr.XXXXXX",
+    "senderTitle": "Facilities Manager",
+    "createdAt": "2026-02-26T13:48:32.483968",
+    "createdBy": "USER"
+  },
+  {
+    "id": "OWM_202602261348599387",
+    "variant": "daily",
+    "date": "2026-02-25",
+    "property": "ONEWEST",
+    "role": "Facilities Manager",
+    "email": "yasven7545@gmail.com",
+    "subject": "Daily Operations & Facilities Update",
+    "tasks": [
+      {
+        "activity": "Transformer Break down",
+        "department": "General Manager",
+        "date": "2026-02-26",
+        "dueTime": "20:00",
+        "status": "approved"
+      },
+      {
+        "activity": "Transformer",
+        "department": "Procurement ",
+        "date": "2026-02-26",
+        "dueTime": "18:00",
+        "status": "pending_material"
+      },
+      {
+        "activity": "",
+        "department": "",
+        "date": "",
+        "dueTime": "",
+        "status": "pending_approval"
+      }
+    ],
+    "completion": "20",
+    "deadline": "2026-02-26T18:00",
+    "body": "Approval required from General Manager[TASK_LIST]",
+    "remarks": {
+      "gm": "Mr. Sudhakar, Work approved, Please may obtain necessary estimations from multiple vendors",
+      "pm": "sir, Please approve, as discussed this is top priority and as of now we are running on stand by",
+      "fm": "FM Maintenance Notes",
+      "finance": "",
+      "procurement": "Purchase Order Details",
+      "management": "Board Approval Notes"
+    },
+    "sender": "Mr.XXXXXX",
+    "senderTitle": "Facilities Manager",
+    "createdAt": "2026-02-26T13:48:59.938856",
+    "createdBy": "USER"
+  }
+]

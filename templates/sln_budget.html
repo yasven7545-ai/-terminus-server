@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5"/>
+<title>SLN Budget Review — Financial Performance Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+/* ═══════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════ */
+[data-theme="dark"] {
+  --bg:       #020b12;
+  --bg2:      #071520;
+  --surf:     #0c1e2e;
+  --surf2:    #0f2540;
+  --bdr:      rgba(6,182,212,.13);
+  --bdr2:     rgba(6,182,212,.28);
+  --tx:       #b8dde8;
+  --tx2:      #daf0f7;
+  --tx3:      #4a7a8a;
+  --cyan:     #06b6d4;
+  --teal:     #0d9488;
+  --emerald:  #10b981;
+  --amber:    #f59e0b;
+  --rose:     #ef4444;
+  --violet:   #8b5cf6;
+  --ga:       linear-gradient(135deg,#0d9488,#06b6d4);
+  --sh:       0 8px 36px rgba(0,0,0,.7);
+  --sh2:      0 2px 16px rgba(0,0,0,.5);
+  --modal-bg: rgba(0,0,0,.82);
+}
+[data-theme="light"] {
+  --bg:       #f0fafa;
+  --bg2:      #e3f4f7;
+  --surf:     #ffffff;
+  --surf2:    #f0fafa;
+  --bdr:      rgba(13,148,136,.14);
+  --bdr2:     rgba(13,148,136,.32);
+  --tx:       #0f2e35;
+  --tx2:      #07191e;
+  --tx3:      #3d7080;
+  --cyan:     #0891b2;
+  --teal:     #0d9488;
+  --emerald:  #059669;
+  --amber:    #d97706;
+  --rose:     #e11d48;
+  --violet:   #7c3aed;
+  --ga:       linear-gradient(135deg,#0f766e,#0891b2);
+  --sh:       0 6px 24px rgba(0,0,0,.1);
+  --sh2:      0 2px 8px rgba(0,0,0,.07);
+  --modal-bg: rgba(0,0,0,.55);
+}
+:root {
+  --hh:  56px;
+  --sw:  240px;
+  --r:   10px;
+  --rsm: 7px;
+}
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:var(--bg); color:var(--tx);
+  min-height:100vh; overflow-x:hidden;
+  transition:background .3s,color .3s;
+}
+::-webkit-scrollbar { width:4px; height:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--bdr2); border-radius:3px; }
+
+/* ═══════ TOPBAR ═══════ */
+.topbar {
+  position:fixed; top:0; left:0; right:0; height:var(--hh);
+  background:var(--surf); border-bottom:1px solid var(--bdr);
+  display:flex; align-items:center; gap:10px;
+  padding:0 16px; z-index:600;
+  box-shadow:var(--sh2);
+  transition:background .3s,border-color .3s;
+}
+.tb-brand {
+  display:flex; align-items:center; gap:9px; flex-shrink:0;
+}
+.tb-logo {
+  width:34px; height:34px; border-radius:8px;
+  background:var(--ga); display:flex; align-items:center; justify-content:center;
+  font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; color:#fff;
+  letter-spacing:.5px; flex-shrink:0;
+}
+.tb-title {
+  font-size:13px; font-weight:800; color:var(--tx2); letter-spacing:-.2px; white-space:nowrap;
+}
+.tb-sub {
+  font-size:9px; color:var(--tx3); font-family:'JetBrains Mono',monospace; letter-spacing:.5px; white-space:nowrap;
+}
+.tb-spacer { flex:1; min-width:0; }
+
+/* clock */
+.clock-pill {
+  display:flex; align-items:center; gap:5px;
+  padding:4px 11px; border-radius:20px;
+  background:var(--surf2); border:1px solid var(--bdr);
+  font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--cyan);
+  white-space:nowrap; flex-shrink:0;
+}
+.cpulse { width:6px; height:6px; border-radius:50%; background:var(--emerald); flex-shrink:0; animation:cpulse 2s ease-in-out infinite; }
+@keyframes cpulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.4;transform:scale(.7);} }
+
+/* theme toggle */
+.theme-toggle {
+  display:flex; align-items:center; gap:5px; padding:5px 10px;
+  border-radius:20px; background:var(--surf2); border:1px solid var(--bdr2);
+  cursor:pointer; user-select:none; flex-shrink:0; transition:border-color .2s;
+}
+.theme-toggle:hover { border-color:var(--cyan); }
+.tt-icon { font-size:12px; }
+.tt-track {
+  width:30px; height:17px; border-radius:9px; background:var(--bdr2);
+  position:relative; flex-shrink:0; transition:background .25s;
+}
+[data-theme="light"] .tt-track { background:var(--teal); }
+.tt-thumb {
+  position:absolute; top:2px; left:2px; width:13px; height:13px;
+  border-radius:50%; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.3);
+  transition:transform .25s;
+}
+[data-theme="light"] .tt-thumb { transform:translateX(13px); }
+
+/* back to portal */
+.btn-portal {
+  display:flex; align-items:center; gap:5px;
+  font-size:11px; font-weight:700; color:#FFD700;
+  text-decoration:none; padding:5px 13px;
+  border:1.5px solid rgba(255,215,0,.55); border-radius:20px;
+  background:transparent; cursor:pointer; white-space:nowrap; flex-shrink:0;
+  animation:gold-blink 1.7s ease-in-out infinite; transition:background .2s;
+}
+.btn-portal:hover { background:rgba(255,215,0,.10); }
+.btn-portal svg { width:12px; height:12px; flex-shrink:0; }
+@keyframes gold-blink {
+  0%,100% { border-color:rgba(255,215,0,.55); box-shadow:none; }
+  50%     { border-color:#FFD700; box-shadow:0 0 14px rgba(255,215,0,.5); }
+}
+
+/* burger */
+.burger {
+  display:none; align-items:center; justify-content:center;
+  width:36px; height:36px; border-radius:var(--rsm);
+  background:var(--surf2); border:1px solid var(--bdr2);
+  color:var(--tx2); cursor:pointer; flex-shrink:0; transition:all .2s;
+}
+.burger:hover { border-color:var(--cyan); color:var(--cyan); }
+.burger svg { width:16px; height:16px; }
+
+/* ═══════ SIDEBAR ═══════ */
+.sidebar {
+  position:fixed; top:var(--hh); left:0; bottom:0; width:var(--sw);
+  background:var(--surf); border-right:1px solid var(--bdr);
+  display:flex; flex-direction:column; z-index:500; overflow:hidden;
+  transition:transform .3s,background .3s,border-color .3s;
+}
+.sb-head { padding:14px 13px 10px; border-bottom:1px solid var(--bdr); flex-shrink:0; }
+.sb-badge {
+  display:inline-flex; align-items:center; gap:5px; padding:4px 10px;
+  border-radius:20px; font-family:'JetBrains Mono',monospace; font-size:9px;
+  font-weight:600; text-transform:uppercase; letter-spacing:1px;
+  color:var(--cyan); background:rgba(6,182,212,.1); border:1px solid rgba(6,182,212,.25);
+}
+.sb-info { margin-top:7px; font-size:10px; color:var(--tx3); }
+
+.sb-scroll { flex:1; overflow-y:auto; padding:8px 10px 20px; }
+.nav-grp { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.3px; color:var(--tx3); padding:10px 8px 4px; }
+.nav-btn {
+  display:flex; align-items:center; gap:10px; width:100%; padding:9px 11px;
+  border-radius:var(--rsm); background:transparent; border:none; color:var(--tx2);
+  font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:500;
+  cursor:pointer; text-align:left; transition:all .18s; text-decoration:none;
+}
+.nav-btn:hover { background:rgba(6,182,212,.08); color:var(--cyan); }
+.nav-btn.active { background:rgba(6,182,212,.13); color:var(--cyan); font-weight:600; border-left:2px solid var(--cyan); }
+.nav-btn svg { width:15px; height:15px; flex-shrink:0; opacity:.7; }
+.nav-btn.active svg { opacity:1; }
+.nav-badge-pill {
+  margin-left:auto; font-size:8px; padding:1px 6px; border-radius:8px;
+  background:rgba(6,182,212,.12); color:var(--cyan); border:1px solid rgba(6,182,212,.2);
+  font-family:'JetBrains Mono',monospace; white-space:nowrap;
+}
+.nav-badge-coming {
+  margin-left:auto; font-size:8px; padding:1px 6px; border-radius:8px;
+  background:rgba(245,158,11,.1); color:var(--amber); border:1px solid rgba(245,158,11,.2);
+  font-family:'JetBrains Mono',monospace;
+}
+
+/* mob overlay */
+.mob-overlay {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,.7);
+  z-index:490; opacity:0; transition:opacity .3s;
+}
+.mob-overlay.show { opacity:1; }
+
+/* ═══════ MAIN ═══════ */
+.main {
+  margin-left:var(--sw); margin-top:var(--hh);
+  padding:20px; min-height:calc(100vh - var(--hh));
+  transition:margin-left .3s;
+}
+
+/* ═══════ PAGE ═══════ */
+.page { display:none; }
+.page.active { display:block; }
+
+/* ═══════ CARDS ═══════ */
+.card {
+  background:var(--surf); border:1px solid var(--bdr);
+  border-radius:var(--r); box-shadow:var(--sh2);
+  transition:background .3s,border-color .3s;
+}
+.card-hd {
+  padding:12px 16px; border-bottom:1px solid var(--bdr);
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+}
+.card-title { font-size:11px; font-weight:700; color:var(--tx2); text-transform:uppercase; letter-spacing:.6px; }
+.card-sub { font-size:9px; color:var(--tx3); font-family:'JetBrains Mono',monospace; margin-left:auto; }
+.card-body { padding:16px; }
+
+/* ═══════ KPI GRID ═══════ */
+.kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin-bottom:18px; }
+.kpi-box {
+  background:var(--surf); border:1px solid var(--bdr);
+  border-radius:var(--r); padding:14px 16px;
+  position:relative; overflow:hidden; cursor:pointer;
+  transition:all .2s;
+}
+.kpi-box:hover { border-color:var(--bdr2); transform:translateY(-2px); box-shadow:var(--sh); }
+.kpi-box::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  border-radius:var(--r) var(--r) 0 0;
+}
+.kpi-cyan::before    { background:linear-gradient(90deg,var(--cyan),#0284c7); }
+.kpi-emerald::before { background:linear-gradient(90deg,var(--emerald),#0d9488); }
+.kpi-amber::before   { background:linear-gradient(90deg,var(--amber),#f97316); }
+.kpi-rose::before    { background:linear-gradient(90deg,var(--rose),#db2777); }
+.kpi-violet::before  { background:linear-gradient(90deg,var(--violet),#4f46e5); }
+.kpi-lbl { font-size:9px; color:var(--tx3); text-transform:uppercase; letter-spacing:.8px; margin-bottom:6px; }
+.kpi-val { font-size:22px; font-weight:800; color:var(--tx2); line-height:1; font-family:'JetBrains Mono',monospace; }
+.kpi-unit { font-size:10px; color:var(--tx3); margin-top:4px; }
+.kpi-chg { font-size:10px; font-weight:600; margin-top:5px; }
+.chg-up { color:var(--emerald); } .chg-dn { color:var(--rose); }
+
+/* ═══════ SECTION TITLE ═══════ */
+.sec-title { font-size:13px; font-weight:800; color:var(--tx2); margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+.sec-title span { font-size:9px; color:var(--tx3); font-weight:500; font-family:'JetBrains Mono',monospace; margin-left:auto; }
+
+/* ═══════ GRID LAYOUTS ═══════ */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.grid-12 { display:grid; grid-template-columns:1fr 2fr; gap:14px; }
+.grid-21 { display:grid; grid-template-columns:2fr 1fr; gap:14px; }
+
+/* ═══════ TABLE ═══════ */
+.tbl-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:11px; }
+thead tr { background:var(--surf2); }
+th { padding:8px 12px; text-align:left; font-size:9px; text-transform:uppercase; letter-spacing:.8px; color:var(--tx3); font-weight:700; border-bottom:1px solid var(--bdr); white-space:nowrap; }
+td { padding:8px 12px; border-bottom:1px solid var(--bdr); color:var(--tx); vertical-align:middle; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:rgba(6,182,212,.04); }
+.td-num { font-family:'JetBrains Mono',monospace; font-size:11px; text-align:right; }
+.td-badge {
+  display:inline-flex; align-items:center; padding:2px 8px; border-radius:10px;
+  font-size:9px; font-weight:700; letter-spacing:.3px;
+}
+.badge-g { background:rgba(16,185,129,.12); color:var(--emerald); }
+.badge-y { background:rgba(245,158,11,.12); color:var(--amber); }
+.badge-r { background:rgba(239,68,68,.12); color:var(--rose); }
+
+/* ═══════ CHART CONTAINER ═══════ */
+.chart-wrap { position:relative; width:100%; }
+.chart-wrap canvas { width:100%!important; }
+
+/* ═══════ VARIANCE BAR ═══════ */
+.var-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.var-label { font-size:10px; color:var(--tx3); min-width:120px; }
+.var-bar-wrap { flex:1; height:6px; background:var(--surf2); border-radius:3px; overflow:hidden; }
+.var-bar { height:100%; border-radius:3px; transition:width .6s; }
+.var-val { font-size:10px; font-family:'JetBrains Mono',monospace; min-width:55px; text-align:right; }
+
+/* ═══════ DONUT LEGEND ═══════ */
+.donut-legend { display:flex; flex-direction:column; gap:8px; }
+.dl-row { display:flex; align-items:center; gap:8px; }
+.dl-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.dl-name { font-size:10px; color:var(--tx3); flex:1; }
+.dl-pct { font-size:10px; font-weight:700; color:var(--tx2); font-family:'JetBrains Mono',monospace; }
+
+/* ═══════ PROGRESS ═══════ */
+.progress-row { margin-bottom:12px; }
+.progress-head { display:flex; justify-content:space-between; margin-bottom:5px; font-size:10px; }
+.progress-name { color:var(--tx3); }
+.progress-val { font-family:'JetBrains Mono',monospace; color:var(--tx2); font-weight:600; }
+.progress-track { height:5px; background:var(--surf2); border-radius:3px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:3px; transition:width .7s; }
+
+/* ═══════ ALERT CARD ═══════ */
+.alert-item {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:10px 14px; border-radius:var(--rsm);
+  border:1px solid; margin-bottom:8px;
+}
+.alert-r { background:rgba(239,68,68,.07); border-color:rgba(239,68,68,.2); }
+.alert-y { background:rgba(245,158,11,.07); border-color:rgba(245,158,11,.2); }
+.alert-g { background:rgba(16,185,129,.07); border-color:rgba(16,185,129,.2); }
+.alert-icon { font-size:14px; flex-shrink:0; margin-top:1px; }
+.alert-title { font-size:11px; font-weight:700; color:var(--tx2); }
+.alert-desc { font-size:10px; color:var(--tx3); margin-top:2px; line-height:1.5; }
+
+/* ═══════ SHEET PREVIEW ═══════ */
+.sheet-nav { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+/* When tabs row is set to no-wrap (sheet view), enable horizontal scroll */
+#sheetTabsRow { scrollbar-width:thin; }
+#sheetTabsRow::-webkit-scrollbar { height:3px; }
+#sheetTabsRow::-webkit-scrollbar-thumb { background:var(--bdr2); border-radius:2px; }
+.sheet-tab {
+  padding:5px 12px; border-radius:20px; font-size:10px; font-weight:600;
+  background:var(--surf2); border:1px solid var(--bdr); color:var(--tx3);
+  cursor:pointer; transition:all .18s; font-family:'JetBrains Mono',monospace;
+  white-space:nowrap; flex-shrink:0; display:inline-block;
+}
+.sheet-tab:hover { border-color:var(--cyan); color:var(--cyan); }
+.sheet-tab.active { background:rgba(6,182,212,.1); border-color:var(--cyan); color:var(--cyan); }
+
+/* ═══════ MINI SUMMARY STRIP ═══════ */
+.strip { display:flex; gap:0; border-radius:var(--r); overflow:hidden; border:1px solid var(--bdr); margin-bottom:16px; }
+.strip-cell { flex:1; padding:12px 10px; text-align:center; border-right:1px solid var(--bdr); }
+.strip-cell:last-child { border-right:none; }
+.strip-num { font-size:17px; font-weight:800; color:var(--tx2); font-family:'JetBrains Mono',monospace; }
+.strip-lbl { font-size:8px; color:var(--tx3); text-transform:uppercase; letter-spacing:.7px; margin-top:3px; }
+
+/* ═══════ TOAST ═══════ */
+#toast {
+  position:fixed; bottom:20px; right:20px; z-index:9999;
+  background:var(--surf2); border:1px solid var(--bdr2); color:var(--cyan);
+  padding:10px 18px; border-radius:var(--r);
+  font-size:11px; font-family:'JetBrains Mono',monospace;
+  box-shadow:var(--sh); opacity:0; transform:translateY(10px);
+  transition:all .3s; pointer-events:none;
+}
+#toast.show { opacity:1; transform:translateY(0); }
+
+/* ═══════ RESPONSIVE ═══════ */
+@media(max-width:900px) {
+  .grid-2,.grid-3,.grid-12,.grid-21 { grid-template-columns:1fr; }
+  .main { margin-left:0; padding:12px; }
+  .sidebar { transform:translateX(-100%); }
+  .sidebar.open { transform:translateX(0); }
+  .burger { display:flex; }
+  .mob-overlay { display:block; pointer-events:none; }
+  .mob-overlay.show { pointer-events:all; }
+  .tb-sub { display:none; }
+  /* Overview dashboard responsive */
+  .kpi-overview-grid { grid-template-columns:repeat(2,1fr) !important; }
+  .chart-grid-2 { grid-template-columns:1fr !important; }
+  .alert-grid { grid-template-columns:1fr !important; }
+}
+@media(max-width:540px) {
+  .kpi-overview-grid { grid-template-columns:1fr 1fr !important; }
+  .chart-grid-2 { grid-template-columns:1fr !important; }
+  .kpi-grid { grid-template-columns:1fr 1fr; }
+  .topbar { padding:0 10px; gap:6px; }
+  .btn-portal { padding:5px 9px; font-size:10px; }
+  .clock-pill { padding:4px 8px; font-size:10px; }
+}
+@media(max-width:1200px) {
+  .kpi-overview-grid { grid-template-columns:repeat(3,1fr) !important; }
+}
+@media(max-width:900px) {
+  /* (already handled above) */
+}
+@media(max-width:400px) {
+  .kpi-overview-grid { grid-template-columns:1fr !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ TOPBAR ═══════ -->
+<header class="topbar">
+  <button class="burger" id="burgerBtn" onclick="toggleSidebar()" aria-label="Menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <div class="tb-brand">
+    <div class="tb-logo">SLN</div>
+    <div>
+      <div class="tb-title">Budget Review Dashboard</div>
+      <div class="tb-sub">SLN TERMINUS · FINANCIAL PERFORMANCE</div>
+    </div>
+  </div>
+  <div class="tb-spacer"></div>
+
+  <!-- Live Time — top right, first -->
+  <div class="clock-pill">
+    <span class="cpulse"></span>
+    <span id="liveClock">00:00:00</span>
+  </div>
+
+  <!-- Light / Dark Switch — second -->
+  <div class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme" role="button">
+    <span class="tt-icon" id="ttIcon">🌙</span>
+    <div class="tt-track"><div class="tt-thumb"></div></div>
+  </div>
+
+  <!-- Back to Portal — third, blinking gold -->
+  <a href="/sln_terminus" class="btn-portal" title="Back to SLN Portal">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    SLN TERMINUS
+  </a>
+</header>
+
+<!-- Sidebar overlay -->
+<div class="mob-overlay" id="mobOverlay" onclick="toggleSidebar()"></div>
+
+<!-- ═══════ SIDEBAR ═══════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-head">
+    <div class="sb-badge">
+      <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8"/></svg>
+      CAM BUDGET SYSTEM
+    </div>
+    <div class="sb-info">FY 2016 · SLN Terminus</div>
+  </div>
+  <div class="sb-scroll">
+    <div class="nav-grp">DASHBOARDS</div>
+    <button class="nav-btn active" onclick="showPage('overview')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Overview
+      <span class="nav-badge-pill">LIVE</span>
+    </button>
+    <button class="nav-btn" onclick="showPage('cam')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      CAM Charges
+    </button>
+    <button class="nav-btn" onclick="showPage('cost')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      Cost Breakdown
+    </button>
+    <button class="nav-btn" onclick="showPage('manpower')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Manpower
+    </button>
+    <button class="nav-btn" onclick="showPage('electrical')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Electrical
+    </button>
+    <button class="nav-btn" onclick="showPage('alerts')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      Alerts
+      <span class="nav-badge-pill" style="background:rgba(239,68,68,.12);color:var(--rose);border-color:rgba(239,68,68,.2);">3</span>
+    </button>
+    <button class="nav-btn" onclick="showPage('sheets')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Data Sheets
+    </button>
+
+    <div class="nav-grp" style="margin-top:8px;">MODULES</div>
+    <button class="nav-btn" onclick="showPage('area_summary')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#f472b6"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      Area Summary
+      <span class="nav-badge-pill" style="background:rgba(244,114,182,.12);color:#f472b6;border-color:rgba(244,114,182,.25);">LIVE</span>
+    </button>
+    <button class="nav-btn" onclick="showPage('amc_tracker')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#a78bfa"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      AMC Tracker
+      <span class="nav-badge-pill" style="background:rgba(167,139,250,.12);color:#a78bfa;border-color:rgba(167,139,250,.25);">LIVE</span>
+    </button>
+    <button class="nav-btn" onclick="showPage('hvac_analytics')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#22d3ee"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      HVAC Analytics
+      <span class="nav-badge-pill" style="background:rgba(34,211,238,.12);color:#22d3ee;border-color:rgba(34,211,238,.25);">LIVE</span>
+    </button>
+    <button class="nav-btn" onclick="showPage('sinking_fund')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#10b981"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Sinking Fund
+      <span class="nav-badge-pill" style="background:rgba(16,185,129,.12);color:#10b981;border-color:rgba(16,185,129,.25);">LIVE</span>
+    </button>
+    <button class="nav-btn" onclick="showPage('salary_breakup')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#fb923c"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Salary Breakup
+      <span class="nav-badge-pill" style="background:rgba(251,146,60,.12);color:#fb923c;border-color:rgba(251,146,60,.25);">LIVE</span>
+    </button>
+    <button class="nav-btn" onclick="showPage('load_breakup')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#f59e0b"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      Load Breakup
+      <span class="nav-badge-pill" style="background:rgba(245,158,11,.12);color:#f59e0b;border-color:rgba(245,158,11,.25);">LIVE</span>
+    </button>
+    <button class="nav-btn" onclick="showPage('trend_analysis')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#a3e635"><polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/><polyline points="16 17 22 17 22 11"/></svg>
+      Trend Analysis
+      <span class="nav-badge-pill" style="background:rgba(163,230,53,.12);color:#a3e635;border-color:rgba(163,230,53,.25);">LIVE</span>
+    </button>
+  </div>
+</aside>
+<main class="main" id="main">
+
+<!-- edit toolbar (shown when a sheet is in edit mode) -->
+<div id="editToolbar" style="display:none;position:sticky;top:0;z-index:300;
+  background:var(--surf);border-bottom:2px solid var(--cyan);padding:8px 16px;
+  align-items:center;gap:10px;flex-wrap:wrap;box-shadow:var(--sh2);">
+  <span style="font-size:10px;font-weight:700;color:var(--cyan);font-family:'JetBrains Mono',monospace;">
+    ✏ EDIT MODE — <span id="editToolbarSheet"></span>
+  </span>
+  <span style="font-size:9px;color:var(--tx3);flex:1;">Click any cell to edit · Enter to confirm · Esc to cancel</span>
+  <button onclick="addNewRow()" style="padding:5px 12px;border-radius:var(--rsm);background:rgba(16,185,129,.15);
+    border:1px solid var(--emerald);color:var(--emerald);font-size:10px;font-weight:700;cursor:pointer;">
+    + Add Row
+  </button>
+  <button onclick="saveSheetNote()" style="padding:5px 12px;border-radius:var(--rsm);background:rgba(6,182,212,.1);
+    border:1px solid var(--cyan);color:var(--cyan);font-size:10px;font-weight:700;cursor:pointer;">
+    📝 Sheet Note
+  </button>
+  <button onclick="exitEditMode()" style="padding:5px 12px;border-radius:var(--rsm);background:rgba(239,68,68,.1);
+    border:1px solid var(--rose);color:var(--rose);font-size:10px;font-weight:700;cursor:pointer;">
+    ✕ Exit Edit
+  </button>
+</div>
+
+<!-- ── SINGLE DYNAMIC PAGE ── -->
+<div id="page-main" style="min-height:calc(100vh - var(--hh));">
+
+  <!-- Overview strip (always visible at top) -->
+  <div id="overviewStrip" style="margin-bottom:16px;"></div>
+
+  <!-- Sheet viewer -->
+  <div id="sheetViewer">
+    <div class="sec-title" id="sheetViewerTitle">
+      📊 Budget Review — SLN Terminus
+      <span id="sheetViewerSub" style="color:var(--cyan);">Loading…</span>
+    </div>
+
+    <!-- Sheet selector tabs -->
+    <div class="sheet-nav" id="sheetTabsRow" style="margin-bottom:12px;overflow-x:auto;flex-wrap:nowrap;white-space:nowrap;display:flex;gap:6px;padding-bottom:4px;"></div>
+
+    <!-- Sheet note banner -->
+    <div id="sheetNoteBar" style="display:none;padding:6px 14px;border-radius:var(--rsm);
+      background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);
+      color:var(--amber);font-size:10px;margin-bottom:10px;font-family:'JetBrains Mono',monospace;">
+    </div>
+
+    <!-- The table card -->
+    <div class="card" id="mainTableCard">
+      <div class="card-hd" style="gap:12px;flex-wrap:wrap;">
+        <div class="card-title" id="activeSheetName">—</div>
+        <div style="font-size:9px;color:var(--tx3);font-family:'JetBrains Mono',monospace;" id="activeSheetMeta"></div>
+        <div style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <!-- modified badge -->
+          <span id="modifiedBadge" style="display:none;font-size:9px;font-family:'JetBrains Mono',monospace;
+            padding:2px 8px;border-radius:10px;background:rgba(245,158,11,.12);color:var(--amber);
+            border:1px solid rgba(245,158,11,.25);">● MODIFIED</span>
+          <!-- edit toggle (only for authorised roles) -->
+          <button id="editToggleBtn" onclick="toggleEditMode()" style="display:none;
+            padding:5px 12px;border-radius:var(--rsm);background:rgba(6,182,212,.1);
+            border:1px solid var(--cyan);color:var(--cyan);
+            font-size:10px;font-weight:700;cursor:pointer;font-family:'JetBrains Mono',monospace;">
+            ✏ Edit
+          </button>
+          <button onclick="exportCurrentSheet()" style="padding:5px 12px;border-radius:var(--rsm);
+            background:rgba(16,185,129,.1);border:1px solid var(--emerald);color:var(--emerald);
+            font-size:10px;font-weight:700;cursor:pointer;font-family:'JetBrains Mono',monospace;">
+            ⬇ CSV
+          </button>
+        </div>
+      </div>
+      <div class="card-body" style="padding:0;">
+        <div id="sheetTableWrap" class="tbl-wrap" style="overflow:auto;">
+  <div id="loadingPlaceholder" style="padding:48px;text-align:center;color:var(--tx3);">
+    <div style="font-size:28px;margin-bottom:12px;animation:cpulse 1.5s infinite;">📊</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--cyan);">Loading Excel data…</div>
+    <div style="font-size:10px;margin-top:8px;color:var(--tx3);">Connecting to /api/sln_budget/data</div>
+  </div>
+</div>
+      </div>
+    </div>
+
+    <!-- Audit trail panel (admin/PM) -->
+    <div id="auditPanel" style="display:none;margin-top:14px;">
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-title">🔍 Edit History</div>
+          <button onclick="document.getElementById('auditPanel').style.display='none'"
+            style="margin-left:auto;background:none;border:none;color:var(--tx3);cursor:pointer;font-size:16px;">✕</button>
+        </div>
+        <div class="card-body" style="padding:0;max-height:300px;overflow-y:auto;">
+          <div id="auditList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main><!-- /main -->
+
+<!-- Cell edit modal -->
+<div id="cellEditModal" style="display:none;position:fixed;inset:0;z-index:10000;
+  background:rgba(0,0,0,.65);align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--surf);border:1px solid var(--bdr2);border-radius:var(--r);
+    width:100%;max-width:460px;box-shadow:var(--sh);overflow:hidden;">
+    <div style="padding:13px 16px;background:var(--surf2);border-bottom:1px solid var(--bdr);
+      display:flex;align-items:center;gap:10px;">
+      <span style="font-size:11px;font-weight:700;color:var(--tx2);text-transform:uppercase;
+        letter-spacing:.5px;flex:1;" id="cellModalTitle">Edit Cell</span>
+      <span style="font-size:9px;color:var(--tx3);font-family:'JetBrains Mono',monospace;" id="cellModalAddr"></span>
+      <button onclick="closeCellModal(false)" style="background:none;border:none;
+        color:var(--tx3);cursor:pointer;font-size:18px;line-height:1;padding:0 2px;">✕</button>
+    </div>
+    <div style="padding:16px;display:flex;flex-direction:column;gap:10px;">
+      <div style="font-size:10px;color:var(--tx3);">
+        Sheet: <strong id="cellModalSheet" style="color:var(--tx2)"></strong> &nbsp;·&nbsp;
+        Column: <strong id="cellModalHeader" style="color:var(--cyan)"></strong>
+      </div>
+      <div style="font-size:10px;color:var(--tx3);">
+        Current value: <code id="cellModalOld" style="color:var(--amber);font-family:'JetBrains Mono',monospace;"></code>
+      </div>
+      <input id="cellModalInput" type="text" placeholder="Enter new value…"
+        style="width:100%;padding:9px 12px;border-radius:var(--rsm);
+          background:var(--surf2);border:1px solid var(--bdr2);
+          color:var(--tx2);font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;"
+        onkeydown="if(event.key==='Enter'){saveCellEdit();}else if(event.key==='Escape'){closeCellModal(false);}"/>
+      <input id="cellModalNote" type="text" placeholder="Optional note / reason for change…"
+        style="width:100%;padding:7px 12px;border-radius:var(--rsm);
+          background:var(--surf2);border:1px solid var(--bdr);
+          color:var(--tx3);font-size:11px;outline:none;"/>
+    </div>
+    <div style="padding:10px 16px;border-top:1px solid var(--bdr);background:var(--surf2);
+      display:flex;justify-content:flex-end;gap:8px;">
+      <button onclick="closeCellModal(false)" class="btn btn-ghost btn-sm">Cancel</button>
+      <button onclick="saveCellEdit()" class="btn btn-primary btn-sm">✓ Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Last-updated global banner -->
+<div id="lastUpdatedBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:8000;
+  background:rgba(6,182,212,.13);border-top:1px solid rgba(6,182,212,.28);
+  color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:10px;
+  padding:5px 16px;align-items:center;justify-content:center;gap:8px;
+  backdrop-filter:blur(8px);"></div>
+
+<div id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   SLN BUDGET REVIEW — Dynamic sheet engine  v3.0
+   Loads all data from /api/sln_budget/*
+   Edits go to /api/sln_budget/edit_cell (global — all users see changes)
+═══════════════════════════════════════════════════════════ */
+
+// ── State ────────────────────────────────────────────────
+let _data       = null;    // full server response { meta, sheets }
+let _canEdit    = false;   // from server: role-based
+let _editMode   = false;   // is the current sheet in edit mode?
+let _curSheet   = null;    // currently displayed sheet name
+let _pollTimer  = null;
+let _lastTs     = '';      // last_updated timestamp for poll diff
+let _pendingEdit = null;   // { sheet, row_num, col_idx, old_val, header }
+
+const SHEET_LABELS = {
+  "INDEX":                  "📋 Index",
+  "area_summary":           "📐 Area Summary",
+  "area_mall":              "🏬 Area — Mall",
+  "area_office":            "🏢 Area — Office",
+  "area_comm":              "🔧 Area — Common",
+  "common_services":        "📋 Common Services",
+  "cam_variables":          "⚙️ CAM Variables",
+  "cam_charges_summary":    "💰 CAM Summary",
+  "cam_charges":            "💳 CAM Charges",
+  "amc_cost":               "🔩 AMC Cost",
+  "comm_electrical_load":   "⚡ Comm Electrical",
+  "load_breakup":           "🔌 Load Breakup",
+  "hvac_mall":              "❄️ HVAC Mall",
+  "mall_ahu_load":          "💨 Mall AHU Load",
+  "manpower":               "👥 Manpower",
+  "salary_breakup":         "👔 Salary Breakup",
+  "hk_secr_equipments":     "🧹 HK & Security Equip",
+  "sinking_fund_estimation":"🐖 Sinking Fund",
+};
+
+// ── Load server data ─────────────────────────────────────
+async function loadData(silent=false) {
+  try {
+    const r  = await fetch('/api/sln_budget/data');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j  = await r.json();
+    if (!j.success) throw new Error(j.error || 'Server error');
+
+    const prevTs = _lastTs;
+    _data        = j.data;
+    _canEdit     = j.can_edit;
+    _lastTs      = j.data?.meta?.last_updated || '';
+
+    // Show edit button if authorised
+    const eb = document.getElementById('editToggleBtn');
+    if (eb) eb.style.display = _canEdit ? '' : 'none';
+
+    // Show admin buttons for correct roles
+    const _role = (await fetch('/api/user_profile').then(r=>r.json()).catch(()=>({role:''}))).role || '';
+    const _isAdmin = ['admin','management','general manager','property manager'].includes(_role.toLowerCase());
+    const rb = document.getElementById('reseedBtn');
+    const ab = document.getElementById('auditBtn');
+    if (rb) rb.style.display = _isAdmin ? '' : 'none';
+    if (ab) ab.style.display = _isAdmin ? '' : 'none';
+    // Update sidebar meta
+    const sm = document.getElementById('sbMetaBlock');
+    if (sm && j.data?.meta) {
+      const m = j.data.meta;
+      sm.innerHTML = `<span style="color:var(--tx2)">${m.fiscal_year||''}</span> · ${m.property||''}<br>${m.last_updated ? '✏ '+m.last_updated.slice(0,10)+' by '+m.updated_by : 'Excel source loaded'}`;
+    }
+    updateLastUpdatedBanner(j.data?.meta);
+
+    if (!silent) {
+      // Clear loading placeholder
+      const lp = document.getElementById('loadingPlaceholder');
+      if (lp) lp.remove();
+      document.getElementById('sheetViewerSub').textContent = 'Loaded · ' + (j.data?.meta?.fiscal_year||'');
+      document.getElementById('sheetViewerSub').style.color = 'var(--emerald)';
+      buildSheetTabs();
+      // Default: show Overview dashboard on first load
+      renderOverviewDashboard();
+      // Mark Overview button active
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.remove('active');
+        const oc = b.getAttribute('onclick')||'';
+        if (oc.includes("'overview'")) b.classList.add('active');
+      });
+      buildOverviewStrip();
+    } else if (_lastTs && _lastTs !== prevTs) {
+      // Data changed — refresh current sheet view
+      if (_curSheet) renderSheetTable(_curSheet);
+      buildOverviewStrip();
+      showToast('🔄 Data updated by ' + (_data?.meta?.updated_by || 'another user'));
+    }
+
+    return j.data;
+  } catch(e) {
+    console.error('[sln_budget]', e);
+    if (!silent) {
+      showToast('⚠️ Cannot load data — ' + e.message, 5000);
+      document.getElementById('sheetTableWrap').innerHTML =
+        `<div style="padding:40px;text-align:center;">
+          <div style="font-size:32px;margin-bottom:14px;">⚠️</div>
+          <div style="font-size:13px;font-weight:700;color:var(--rose);margin-bottom:8px;">Could not load budget data</div>
+          <div style="font-size:11px;color:var(--tx3);margin-bottom:14px;">${e.message}</div>
+          <div style="font-size:10px;color:var(--tx3);font-family:'JetBrains Mono',monospace;
+            padding:8px 14px;background:var(--surf2);border-radius:var(--rsm);display:inline-block;">
+            Make sure Budget_review.xlsx is at:<br>static/data/Budget_review.xlsx<br>and the server is running
+          </div>
+          <br><br>
+          <button onclick="loadData(false)" style="padding:8px 20px;border-radius:var(--rsm);
+            background:rgba(6,182,212,.15);border:1px solid var(--cyan);color:var(--cyan);
+            font-size:11px;font-weight:700;cursor:pointer;">🔄 Retry</button>
+        </div>`;
+      document.getElementById('sheetViewerSub').textContent = 'Connection error';
+      document.getElementById('sheetViewerSub').style.color = 'var(--rose)';
+    }
+    return null;
+  }
+}
+
+function startPolling(ms=30000) {
+  if (_pollTimer) clearInterval(_pollTimer);
+  _pollTimer = setInterval(() => loadData(true), ms);
+}
+
+// ── Overview KPI strip ───────────────────────────────────
+function buildOverviewStrip() {
+  // The overviewStrip is hidden when Overview dashboard is shown
+  const el = document.getElementById('overviewStrip');
+  if (!el) return;
+  el.style.display = 'none';  // Overview dashboard handles its own display
+  if (!_data) return;
+  const m = _data.meta || {};
+  const s = _data.sheets || {};
+
+  // Pull some key numbers from cam_charges_summary sheet
+  let mallY1 = '—', offY1 = '—', mallY3 = '—';
+  const cs = s['cam_charges_summary'];
+  if (cs) {
+    const rows = cs.rows.filter(r => !r.hidden);
+    // Row with "CAM COST PER MONTH PER SQ FT" — typically row 3 in that sheet
+    const rateRow = rows.find(r => r.cells.some(c => String(c).toLowerCase().includes('cam cost')));
+    if (rateRow) {
+      const nums = rateRow.cells.filter(c => typeof c === 'number' && c > 0);
+      if (nums.length >= 2) { mallY1 = '₹'+nums[0].toFixed(2); offY1 = '₹'+nums[1].toFixed(2); }
+      if (nums.length >= 6) mallY3 = '₹'+nums[4].toFixed(2);
+    }
+  }
+
+  // Manpower total from manpower sheet
+  let mpTotal = '—';
+  const mp = s['manpower'];
+  if (mp) {
+    let tot = 0;
+    mp.rows.filter(r=>!r.hidden).forEach(r=>{
+      const v = r.cells[r.cells.length-1];
+      if (typeof v === 'number' && v > 0 && v < 5000000) tot += v;
+    });
+    if (tot > 0) mpTotal = '₹' + (tot/100000).toFixed(1) + 'L';
+  }
+
+  el.innerHTML = `
+    <div class="strip card" style="margin-bottom:0;">
+      <div class="strip-cell">
+        <div class="strip-num" style="color:var(--cyan);font-size:14px;">${mallY1}</div>
+        <div class="strip-lbl">Mall CAM/sqft Y1</div>
+      </div>
+      <div class="strip-cell">
+        <div class="strip-num" style="color:var(--violet);font-size:14px;">${offY1}</div>
+        <div class="strip-lbl">Office CAM/sqft Y1</div>
+      </div>
+      <div class="strip-cell">
+        <div class="strip-num" style="color:var(--emerald);font-size:14px;">${mallY3}</div>
+        <div class="strip-lbl">Mall CAM/sqft Y3</div>
+      </div>
+      <div class="strip-cell">
+        <div class="strip-num" style="color:var(--amber);font-size:14px;">${mpTotal}</div>
+        <div class="strip-lbl">Manpower/month</div>
+      </div>
+      <div class="strip-cell">
+        <div class="strip-num" style="color:var(--teal);font-size:14px;">${m.fiscal_year||'—'}</div>
+        <div class="strip-lbl">Fiscal Year</div>
+      </div>
+      <div class="strip-cell">
+        <div class="strip-num" style="color:var(--tx3);font-size:11px;">${Object.keys(_data.sheets||{}).length}</div>
+        <div class="strip-lbl">Sheets Loaded</div>
+      </div>
+    </div>`;
+}
+
+// ── Sheet tab navigation ─────────────────────────────────
+function buildSheetTabs() {
+  const nav = document.getElementById('sheetTabsRow');
+  if (!nav || !_data?.sheets) return;
+  nav.innerHTML = '';
+  Object.keys(_data.sheets).forEach(sname => {
+    const btn = document.createElement('button');
+    btn.className   = 'sheet-tab';
+    btn.textContent = SHEET_LABELS[sname] || sname;
+    btn.title       = sname;
+    btn.onclick     = () => showSheet(sname);
+    btn.id          = 'tab_' + sname;
+    nav.appendChild(btn);
+  });
+}
+
+// ── Render a sheet as editable table ────────────────────
+function showSheet(sname) {
+  if (!_data?.sheets?.[sname]) return;
+  _curSheet = sname;
+  _editMode = false;
+  // Restore constrained height for raw sheet tables
+  const wrapEl = document.getElementById('sheetTableWrap');
+  if (wrapEl) { wrapEl.style.maxHeight = '65vh'; wrapEl.style.overflow = 'auto'; }
+  // Destroy any overview charts when switching to sheet view
+  Object.keys(_charts).forEach(destroyChart);
+
+  // Restore card styling when showing raw sheet
+  const mc2 = document.getElementById('mainTableCard');
+  if (mc2) { mc2.style.boxShadow = ''; mc2.style.border = ''; mc2.style.background = ''; }
+  // Restore edit button (hidden on overview, shown on sheets)
+  const etb2 = document.getElementById('editToggleBtn');
+  if (etb2) etb2.style.display = _canEdit ? '' : 'none';
+  // Show sheet tab row when viewing a raw sheet
+  const tabsRow3 = document.getElementById('sheetTabsRow');
+  if (tabsRow3) tabsRow3.style.display = '';
+
+  // Update active tab
+  document.querySelectorAll('.sheet-tab').forEach(t => t.classList.remove('active'));
+  const tab = document.getElementById('tab_' + sname);
+  if (tab) tab.classList.add('active');
+
+  // Title
+  document.getElementById('activeSheetName').textContent = SHEET_LABELS[sname] || sname;
+
+  const sheet = _data.sheets[sname];
+  const rows  = (sheet.rows || []).filter(r => !r.hidden);
+  document.getElementById('activeSheetMeta').textContent =
+    `${rows.length} rows · ${(sheet.headers||[]).length} cols · source: ${sheet.source||'—'}`;
+
+  // Modified badge
+  const hasMod = rows.some(r => r.modified);
+  const mb = document.getElementById('modifiedBadge');
+  if (mb) mb.style.display = hasMod ? '' : 'none';
+
+  // Sheet note
+  const nb  = document.getElementById('sheetNoteBar');
+  const note = sheet.sheet_note || '';
+  if (note) {
+    nb.textContent = '📝 ' + note;
+    nb.style.display = '';
+  } else {
+    nb.style.display = 'none';
+  }
+
+  renderSheetTable(sname);
+  updateEditToolbar();
+}
+
+function renderSheetTable(sname) {
+  const wrap = document.getElementById('sheetTableWrap');
+  if (!wrap || !_data?.sheets?.[sname]) return;
+
+  const sheet   = _data.sheets[sname];
+  const headers = sheet.headers || [];
+  const rows    = (sheet.rows || []).filter(r => !r.hidden);
+
+  if (!rows.length && !headers.length) {
+    wrap.innerHTML = '<div style="padding:24px;text-align:center;color:var(--tx3);font-size:11px;">No data in this sheet.</div>';
+    return;
+  }
+
+  let html = '<table style="width:100%;border-collapse:collapse;font-size:11px;">';
+
+  // Header row
+  html += '<thead><tr style="position:sticky;top:0;z-index:2;">';
+  html += `<th style="padding:6px 10px;font-size:9px;color:var(--tx3);background:var(--surf2);
+    border-bottom:1px solid var(--bdr);font-weight:700;white-space:nowrap;min-width:50px;
+    text-align:center;">#</th>`;
+  headers.forEach((h, ci) => {
+    const label = h !== '' && h !== null ? String(h) : `Col ${ci+1}`;
+    html += `<th style="padding:6px 10px;font-size:9px;color:var(--tx3);background:var(--surf2);
+      border-bottom:1px solid var(--bdr);font-weight:700;white-space:nowrap;text-align:left;
+      min-width:80px;">${escHtml(label)}</th>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  // Data rows
+  rows.forEach(row => {
+    const mod    = row.modified;
+    const rowBg  = mod ? 'rgba(245,158,11,.05)' : '';
+    const rowBdr = mod ? '1px solid rgba(245,158,11,.2)' : '';
+    html += `<tr style="background:${rowBg};outline:${rowBdr};" data-row="${row.row_num}">`;
+    // Row number (Excel address)
+    html += `<td style="padding:5px 8px;color:var(--tx3);font-family:'JetBrains Mono',monospace;
+      font-size:9px;border-bottom:1px solid var(--bdr);text-align:center;background:var(--surf2);
+      position:sticky;left:0;white-space:nowrap;">
+      ${row.row_num}${mod?'<span style="color:var(--amber);margin-left:3px;" title="Modified">●</span>':''}
+      ${row.note?`<span title="${escHtml(row.note)}" style="color:var(--cyan);cursor:help;margin-left:2px;">ℹ</span>`:''}
+    </td>`;
+    // Cell values
+    row.cells.forEach((cell, ci) => {
+      const isNum   = typeof cell === 'number';
+      const dispVal = cell === '' || cell === null ? '' : String(cell);
+      const editAttr = _editMode && _canEdit
+        ? `onclick="openCellModal('${sname}',${row.row_num},${ci},'${escAttr(dispVal)}','${escAttr(String(headers[ci]||''))}')" style="cursor:pointer;"`
+        : '';
+      html += `<td ${editAttr} style="padding:5px 10px;border-bottom:1px solid var(--bdr);
+        vertical-align:middle;${isNum?'text-align:right;font-family:\'JetBrains Mono\',monospace;':''}
+        ${_editMode && _canEdit ? 'transition:background .15s;' : ''}
+        " class="${_editMode && _canEdit ? 'cell-editable' : ''}">
+        ${isNum ? formatNum(cell) : escHtml(dispVal)}
+      </td>`;
+    });
+    html += '</tr>';
+  });
+
+  html += '</tbody></table>';
+
+  // Edit mode hover style
+  if (_editMode && _canEdit) {
+    html = `<style>.cell-editable:hover{background:rgba(6,182,212,.1)!important;}</style>` + html;
+  }
+
+  wrap.innerHTML = html;
+}
+
+// ── Edit mode ────────────────────────────────────────────
+function toggleEditMode() {
+  if (!_canEdit) return;
+  _editMode = !_editMode;
+  updateEditToolbar();
+  if (_curSheet) renderSheetTable(_curSheet);
+}
+
+function exitEditMode() {
+  _editMode = false;
+  updateEditToolbar();
+  if (_curSheet) renderSheetTable(_curSheet);
+}
+
+function updateEditToolbar() {
+  const tb  = document.getElementById('editToolbar');
+  const btn = document.getElementById('editToggleBtn');
+  const lbl = document.getElementById('editToolbarSheet');
+  if (!tb || !btn) return;
+
+  if (_editMode && _canEdit) {
+    tb.style.display = 'flex';
+    btn.textContent  = '✓ Exit Edit';
+    btn.style.background = 'rgba(239,68,68,.1)';
+    btn.style.borderColor = 'var(--rose)';
+    btn.style.color       = 'var(--rose)';
+    if (lbl) lbl.textContent = SHEET_LABELS[_curSheet] || _curSheet || '—';
+  } else {
+    tb.style.display = 'none';
+    btn.textContent  = '✏ Edit';
+    btn.style.background = 'rgba(6,182,212,.1)';
+    btn.style.borderColor = 'var(--cyan)';
+    btn.style.color       = 'var(--cyan)';
+  }
+}
+
+// ── Cell edit modal ──────────────────────────────────────
+function openCellModal(sheet, rowNum, colIdx, oldVal, header) {
+  _pendingEdit = { sheet, row_num: rowNum, col_idx: colIdx, old_val: oldVal, header };
+  document.getElementById('cellModalTitle').textContent  = 'Edit Cell';
+  document.getElementById('cellModalSheet').textContent  = SHEET_LABELS[sheet] || sheet;
+  document.getElementById('cellModalHeader').textContent = header || `Column ${colIdx+1}`;
+  document.getElementById('cellModalAddr').textContent   = `Row ${rowNum}, Col ${colIdx+1}`;
+  document.getElementById('cellModalOld').textContent    = oldVal || '(empty)';
+  document.getElementById('cellModalInput').value        = oldVal;
+  document.getElementById('cellModalNote').value         = '';
+  const modal = document.getElementById('cellEditModal');
+  modal.style.display = 'flex';
+  setTimeout(() => {
+    const inp = document.getElementById('cellModalInput');
+    inp.focus(); inp.select();
+  }, 80);
+}
+
+function closeCellModal(saved) {
+  document.getElementById('cellEditModal').style.display = 'none';
+  _pendingEdit = null;
+}
+
+async function saveCellEdit() {
+  if (!_pendingEdit) return;
+  const rawVal = document.getElementById('cellModalInput').value;
+  const note   = document.getElementById('cellModalNote').value.trim();
+
+  // Try to convert to number if possible
+  const numVal = Number(rawVal);
+  const value  = rawVal.trim() === '' ? '' : (!isNaN(numVal) && rawVal.trim() !== '' ? numVal : rawVal);
+
+  try {
+    const res  = await fetch('/api/sln_budget/edit_cell', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ ..._pendingEdit, value, note })
+    });
+    const data = await res.json();
+    if (data.success) {
+      // Patch in-memory data
+      const sdata = _data.sheets[_pendingEdit.sheet];
+      const row   = sdata.rows.find(r => r.row_num === _pendingEdit.row_num);
+      if (row) {
+        row.cells[_pendingEdit.col_idx] = value;
+        row.modified = true;
+        if (note) row.note = note;
+      }
+      _data.meta.last_updated = data.last_updated;
+      _data.meta.updated_by   = data.updated_by;
+      updateLastUpdatedBanner(_data.meta);
+      renderSheetTable(_curSheet);
+      buildOverviewStrip();
+      showToast(`✅ Saved — ${data.header}: ${data.old_value} → ${value}`);
+      closeCellModal(true);
+    } else {
+      showToast('❌ ' + (data.error || 'Save failed'), 4000);
+    }
+  } catch(e) {
+    showToast('❌ Network error', 3000);
+    console.error(e);
+  }
+}
+
+// ── Add new row ──────────────────────────────────────────
+async function addNewRow() {
+  if (!_curSheet || !_canEdit) return;
+  const headers = _data.sheets[_curSheet]?.headers || [];
+  const cells   = headers.map(() => '');
+  try {
+    const res  = await fetch('/api/sln_budget/add_row', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ sheet: _curSheet, cells, note: 'Added by ' + (_data?.meta?.updated_by||'user') })
+    });
+    const data = await res.json();
+    if (data.success) {
+      // Reload sheet from server
+      await loadData(true);
+      renderSheetTable(_curSheet);
+      showToast('✅ New row added (Row ' + data.row_num + ')');
+    } else {
+      showToast('❌ ' + data.error, 3000);
+    }
+  } catch(e) {
+    showToast('❌ Network error', 3000);
+  }
+}
+
+// ── Sheet note ───────────────────────────────────────────
+async function saveSheetNote() {
+  const note = prompt('Enter a note for this sheet (visible to all users):', _data?.sheets?.[_curSheet]?.sheet_note || '');
+  if (note === null) return;
+  try {
+    const res  = await fetch('/api/sln_budget/sheet_note', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ sheet: _curSheet, note })
+    });
+    const data = await res.json();
+    if (data.success) {
+      if (_data?.sheets?.[_curSheet]) _data.sheets[_curSheet].sheet_note = note;
+      const nb = document.getElementById('sheetNoteBar');
+      if (note) { nb.textContent = '📝 ' + note; nb.style.display = ''; }
+      else        { nb.style.display = 'none'; }
+      showToast('✅ Sheet note saved');
+    }
+  } catch(e) { showToast('❌ Network error', 3000); }
+}
+
+// ── CSV export ───────────────────────────────────────────
+function exportCurrentSheet() {
+  if (!_curSheet || !_data?.sheets?.[_curSheet]) return;
+  const sheet = _data.sheets[_curSheet];
+  const heads = sheet.headers || [];
+  const rows  = (sheet.rows || []).filter(r => !r.hidden);
+  const lines = [['Row#', ...heads].join(',')];
+  rows.forEach(r => {
+    const row = [r.row_num, ...r.cells.map(c => {
+      const s = String(c == null ? '' : c);
+      return s.includes(',') ? `"${s.replace(/"/g,'""')}"` : s;
+    })];
+    lines.push(row.join(','));
+  });
+  const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `sln_budget_${_curSheet}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  showToast('⬇ CSV downloaded');
+}
+
+// ── Audit trail ──────────────────────────────────────────
+function updateAuditBtn() {
+  // show audit button if admin/PM
+}
+
+async function showAuditPanel() {
+  try {
+    const res  = await fetch('/api/sln_budget/audit');
+    const data = await res.json();
+    if (!data.success) { showToast('❌ ' + data.error, 3000); return; }
+    const list = document.getElementById('auditList');
+    if (!list) return;
+    if (!data.log.length) {
+      list.innerHTML = '<div style="padding:16px;color:var(--tx3);font-size:11px;text-align:center;">No audit entries yet.</div>';
+    } else {
+      list.innerHTML = data.log.map(e => `
+        <div style="padding:8px 14px;border-bottom:1px solid var(--bdr);font-size:10px;">
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <span style="font-family:'JetBrains Mono',monospace;color:var(--tx3);">${e.ts?.slice(0,16).replace('T',' ')}</span>
+            <span style="font-weight:700;color:var(--tx2);">${e.user||'—'}</span>
+            <span style="color:var(--cyan);">${e.action}</span>
+            <span style="color:var(--tx3);">${e.sheet}</span>
+          </div>
+          ${e.action==='edit_cell' ? `<div style="margin-top:3px;color:var(--tx3);">
+            Col: <span style="color:var(--amber)">${e.header||e.col_idx}</span> &nbsp;
+            <span style="color:var(--rose)">${e.old}</span> → <span style="color:var(--emerald)">${e.new}</span>
+            ${e.note ? `<span style="color:var(--tx3)"> · ${e.note}</span>` : ''}
+          </div>` : ''}
+        </div>`).join('');
+    }
+    document.getElementById('auditPanel').style.display = '';
+  } catch(e) { showToast('❌ Audit load failed', 3000); }
+}
+
+// ── Reseed from Excel ────────────────────────────────────
+async function reseedFromExcel() {
+  if (!confirm('Re-read Budget_review.xlsx from disk and refresh all data?\nUser notes will be preserved.')) return;
+  showToast('📊 Reseeding from Excel…', 5000);
+  try {
+    const res  = await fetch('/api/sln_budget/reseed', { method: 'POST' });
+    const data = await res.json();
+    if (data.success) {
+      showToast('✅ ' + data.msg);
+      await loadData(false);
+    } else {
+      showToast('❌ ' + (data.error||'Reseed failed'), 4000);
+    }
+  } catch(e) { showToast('❌ Network error', 3000); }
+}
+
+// ── Last-updated banner ──────────────────────────────────
+function updateLastUpdatedBanner(meta) {
+  const el = document.getElementById('lastUpdatedBanner');
+  if (!el || !meta?.last_updated) return;
+  const d = new Date(meta.last_updated);
+  el.style.display = 'flex';
+  el.textContent = `🕐 Last updated: ${d.toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:false})} by ${meta.updated_by||'—'}`;
+}
+
+// ── Helpers ──────────────────────────────────────────────
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function escAttr(s) {
+  return String(s||'').replace(/'/g,'&#39;').replace(/"/g,'&quot;');
+}
+function formatNum(n) {
+  if (typeof n !== 'number') return escHtml(String(n));
+  if (Number.isInteger(n)) return n.toLocaleString('en-IN');
+  return parseFloat(n.toFixed(4)).toLocaleString('en-IN', {maximumFractionDigits:4});
+}
+
+// ── Sidebar / Theme / Clock ──────────────────────────────
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('mobOverlay');
+  sb.classList.toggle('open');
+  ov.classList.toggle('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('mobOverlay').classList.remove('show');
+}
+function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.getAttribute('data-theme')==='dark'?'light':'dark';
+  html.setAttribute('data-theme', next);
+  document.getElementById('ttIcon').textContent = next==='dark'?'🌙':'☀️';
+  localStorage.setItem('sln_budget_theme', next);
+}
+function updateClock() {
+  const el = document.getElementById('liveClock');
+  if (el) el.textContent = new Date().toLocaleTimeString('en-IN',{hour12:false,timeZone:'Asia/Kolkata'});
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+function showToast(msg, dur=2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(()=>t.classList.remove('show'), dur);
+}
+
+// ═══════════════════════════════════════════════════════════
+// PAGE ROUTING  —  every sidebar button maps correctly
+// ═══════════════════════════════════════════════════════════
+
+// Maps sidebar button key → { mode: 'overview' | 'sheet', sheet?: string }
+const PAGE_ROUTE = {
+  // ── Dashboards ──────────────────────────────────────────
+  'overview':         { mode: 'overview' },
+  'cam':              { mode: 'sheet', sheet: 'cam_charges' },
+  'cost':             { mode: 'sheet', sheet: 'amc_cost' },
+  'manpower':         { mode: 'sheet', sheet: 'manpower' },
+  'electrical':       { mode: 'sheet', sheet: 'comm_electrical_load' },
+  'alerts':           { mode: 'overview' },   // goes to overview/alerts section
+  'sheets':           { mode: 'sheet', sheet: 'INDEX' },
+  // ── Modules ─────────────────────────────────────────────
+  'area_summary':     { mode: 'sheet', sheet: 'area_summary' },
+  'amc_tracker':      { mode: 'sheet', sheet: 'amc_cost' },
+  'hvac_analytics':   { mode: 'sheet', sheet: 'hvac_mall' },
+  'sinking_fund':     { mode: 'sheet', sheet: 'sinking_fund_estimation' },
+  'salary_breakup':   { mode: 'sheet', sheet: 'salary_breakup' },
+  'load_breakup':     { mode: 'sheet', sheet: 'load_breakup' },
+  'trend_analysis':   { mode: 'sheet', sheet: 'cam_charges_summary' },
+  // Direct sheet keys (from sheet tabs)
+  'INDEX':                    { mode: 'sheet', sheet: 'INDEX' },
+  'area_mall':                { mode: 'sheet', sheet: 'area_mall' },
+  'area_office':              { mode: 'sheet', sheet: 'area_office' },
+  'area_comm':                { mode: 'sheet', sheet: 'area_comm' },
+  'common_services':          { mode: 'sheet', sheet: 'common_services' },
+  'cam_variables':            { mode: 'sheet', sheet: 'cam_variables' },
+  'cam_charges_summary':      { mode: 'sheet', sheet: 'cam_charges_summary' },
+  'cam_charges':              { mode: 'sheet', sheet: 'cam_charges' },
+  'mall_ahu_load':            { mode: 'sheet', sheet: 'mall_ahu_load' },
+  'hk_secr_equipments':       { mode: 'sheet', sheet: 'hk_secr_equipments' },
+};
+
+function showPage(key) {
+  const route = PAGE_ROUTE[key] || { mode: 'sheet', sheet: key };
+
+  // Update active sidebar button
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    const oc = b.getAttribute('onclick') || '';
+    if (oc.includes("'"+key+"'") || oc.includes('"'+key+'"')) b.classList.add('active');
+  });
+
+  if (route.mode === 'overview') {
+    renderOverviewDashboard();
+    if (window.innerWidth <= 900) closeSidebar();
+    return;
+  }
+
+  const target = route.sheet;
+  if (!_data) { showToast('⏳ Data loading…'); return; }
+  if (_data.sheets?.[target]) {
+    showSheet(target);
+  } else {
+    showToast('⚠️ Sheet not found: ' + target, 3000);
+  }
+  if (window.innerWidth <= 900) closeSidebar();
+}
+
+// ═══════════════════════════════════════════════════════════
+// OVERVIEW DASHBOARD  — graphical summary of entire budget
+// ═══════════════════════════════════════════════════════════
+let _charts = {};   // Chart.js instances keyed by canvas id
+
+function destroyChart(id) {
+  if (_charts[id]) { try { _charts[id].destroy(); } catch(e){} delete _charts[id]; }
+}
+
+function renderOverviewDashboard() {
+  _editMode = false;
+  _curSheet = null;
+
+  // ── Extract KPIs from loaded sheets ──
+  const S = _data?.sheets || {};
+
+  // CAM Summary rates
+  let mallY1=13.32, offY1=9.97, mallY2=14.72, offY2=11.77, mallY3=16.83, offY3=13.29;
+  const cs = S['cam_charges_summary'];
+  if (cs) {
+    const rateRow = cs.rows.find(r => r.cells.some(c => String(c).toLowerCase().includes('cam cost')));
+    if (rateRow) {
+      const nums = rateRow.cells.filter(c => typeof c==='number' && c>0);
+      if (nums.length>=6) { mallY1=nums[0]; offY1=nums[1]; mallY2=nums[2]; offY2=nums[3]; mallY3=nums[4]; offY3=nums[5]; }
+    }
+  }
+
+  // Area
+  const areaS = S['area_summary'];
+  let mallLeasable=187123, offLeasable=287886, totalLeasable=475009;
+  if (areaS && areaS.rows) {
+    areaS.rows.forEach(r => {
+      const lbl = String(r.cells[1]||r.cells[0]||'').toLowerCase();
+      // leasable is col index 3 (4th col) in area_summary sheet; col 2 is built-up
+      if (lbl.includes('mall') && lbl.includes('total')) {
+        const v = r.cells[3]; // Leasable Area column
+        if (typeof v==='number' && v>50000) mallLeasable = v;
+      }
+      if (lbl.includes('office') && lbl.includes('total')) {
+        const v = r.cells[3];
+        if (typeof v==='number' && v>50000) offLeasable = v;
+      }
+    });
+    const t = (typeof mallLeasable==='number'?mallLeasable:0) + (typeof offLeasable==='number'?offLeasable:0);
+    if (t > 100000) totalLeasable = t;
+  }
+
+  // Manpower total — find "Monthly Cost" column header, sum valid salary amounts
+  let mpTotal = 0;
+  const mp = S['manpower'];
+  if (mp && mp.rows) {
+    const mpH = (mp.headers||[]).map(c=>String(c||'').toLowerCase());
+    // Look for Monthly Cost column by header name
+    let costCol = mpH.findIndex(c=>c.includes('monthly') || (c.includes('cost') && !c.includes('unit')));
+    if (costCol < 0) costCol = mpH.length - 1;  // last column fallback
+    const seen = new Set();
+    mp.rows.filter(r=>!r.hidden).forEach(r => {
+      // Try cost column; fallback: find first cell in 10k–2M range
+      let v = r.cells[costCol];
+      if (typeof v !== 'number' || v < 5000 || v > 2000000)
+        v = r.cells.find(c => typeof c==='number' && c >= 5000 && c <= 2000000) || 0;
+      // Deduplicate by role name (cells 0 or 1)
+      const key = String(r.cells[0]||'')+String(r.cells[1]||'');
+      if (v > 0 && !seen.has(key)) { seen.add(key); mpTotal += v; }
+    });
+  }
+
+  // AMC - extract monthly total rows
+  let amcY2=128070, amcY3=4038293;   // fallback defaults from Excel
+  const amcS = S['amc_cost'];
+  if (amcS) {
+    amcS.rows.forEach(r => {
+      const lbl = String(r.cells[0]||r.cells[1]||r.cells[2]||'').toLowerCase();
+      if (lbl.includes('monthly') && lbl.includes('cost')) {
+        // scan cells for numbers in expected range (100k-10M)
+        const nums = r.cells.filter(c=>typeof c==='number' && c>0);
+        if (nums.length>=2) { amcY2=nums[0]; amcY3=nums[1]; }
+      }
+    });
+  }
+
+  // Electrical
+  let elComm=142946, elMall=98608, elOffice=40071, hvacMall=556319, hvacOff=415166;
+  const elS = S['comm_electrical_load'];
+  if (elS) {
+    elS.rows.forEach(r => {
+      const lbl = String(r.cells[0]||'').toLowerCase();
+      if (lbl.includes('total unit charges') || lbl.includes('total unit charge')) {
+        if (typeof r.cells[3]==='number') elComm = r.cells[3];
+      }
+    });
+  }
+
+  // Monthly totals
+  const monthlyMall   = Math.round(mallY1 * (typeof mallLeasable==='number'?mallLeasable:187123));
+  const monthlyOffice = Math.round(offY1  * (typeof offLeasable==='number'?offLeasable:287886));
+  const monthlyTotal  = monthlyMall + monthlyOffice;
+  const annualTotal   = monthlyTotal * 12;
+
+  // ── Build HTML ──
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const gc = isDark ? 'rgba(255,255,255,.06)' : 'rgba(0,0,0,.06)';
+  const tc = isDark ? '#4a7a8a' : '#607585';
+  const tx = isDark ? '#daf0f7' : '#07191e';
+
+  const wrap = document.getElementById('sheetTableWrap');
+  const ovStrip = document.getElementById('overviewStrip');
+  if (ovStrip) ovStrip.style.display = 'none';
+  if (!wrap) return;
+  // Remove height constraint on overview — let it fill the full page
+  wrap.style.maxHeight = '';
+  wrap.style.overflow  = 'visible';
+  // Hide sheet tab row on overview
+  const tabsRow2 = document.getElementById('sheetTabsRow');
+  if (tabsRow2) tabsRow2.style.display = 'none';
+
+  // Destroy old charts before rebuilding
+  ['chartCamBar','chartCostPie','chartMonthly','chartEle'].forEach(destroyChart);
+  _editMode = false;
+  updateEditToolbar();
+  const etb = document.getElementById('editToggleBtn');
+  if (etb) etb.style.display = 'none';  // no edit button on overview
+
+  wrap.innerHTML = `
+  <div style="padding:16px 20px;">
+
+    <!-- ── HEADER ── -->
+    <div style="margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div>
+        <div style="font-size:14px;font-weight:800;color:var(--tx2);">📊 Financial Performance Overview</div>
+        <div style="font-size:9px;color:var(--tx3);font-family:'JetBrains Mono',monospace;margin-top:2px;">
+          ONE GOLDEN MILE · CAM CALCULATION · ${_data?.meta?.fiscal_year||'FY 2016'} · ${Object.keys(S).length} sheets loaded
+        </div>
+      </div>
+    </div>
+
+    <!-- ── KPI CARDS — 6 cols on wide desktop, 3 on normal, 2 on tablet ── -->
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px;" class="kpi-overview-grid">
+      ${kpiCard('Monthly CAM', '₹'+fmtL(monthlyTotal)+'L', 'Mall+Office combined Y1', 'var(--cyan)', '▲ +27% by Y3')}
+      ${kpiCard('Mall CAM Rate', '₹'+mallY1.toFixed(2)+'/sqft', 'Year 1 per sqft/month', 'var(--emerald)', '▲ Y3: ₹'+mallY3.toFixed(2))}
+      ${kpiCard('Office CAM Rate', '₹'+offY1.toFixed(2)+'/sqft', 'Year 1 per sqft/month', 'var(--violet)', '▲ Y3: ₹'+offY3.toFixed(2))}
+      ${kpiCard('Manpower/mo', mpTotal>0 ? '₹'+fmtL(mpTotal)+'L' : '₹22.2L', 'Largest cost ~57% of CAM', 'var(--amber)', '▲ +10% YoY escalation')}
+      ${kpiCard('Leasable Area', fmtN(typeof totalLeasable==='number'?Math.round(totalLeasable):475009)+' sqft', 'Mall + Office', 'var(--teal)', '4,75,009 sq ft total')}
+      ${kpiCard('AMC Y2/mo', '₹'+fmtL(amcY2)+'L', 'Annual maintenance', 'var(--rose)', '▲ Y3: ₹'+fmtL(amcY3)+'L/mo')}
+    </div>
+
+    <!-- ── CHARTS ROW 1 ── -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;" class="chart-grid-2">
+
+      <!-- CAM Rate Trend Bar Chart -->
+      <div style="background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;">
+        <div style="padding:10px 14px;border-bottom:1px solid var(--bdr);background:var(--surf2);">
+          <span style="font-size:11px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.5px;">CAM Rate — 3 Year Trend</span>
+          <span style="font-size:9px;color:var(--tx3);margin-left:8px;">₹/sqft/month</span>
+        </div>
+        <div style="padding:14px;"><canvas id="chartCamBar" height="220"></canvas></div>
+      </div>
+
+      <!-- Cost Distribution Doughnut -->
+      <div style="background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;">
+        <div style="padding:10px 14px;border-bottom:1px solid var(--bdr);background:var(--surf2);">
+          <span style="font-size:11px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.5px;">Cost Distribution Y1</span>
+          <span style="font-size:9px;color:var(--tx3);margin-left:8px;">% of total CAM</span>
+        </div>
+        <div style="padding:14px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;min-height:260px;">
+          <div style="flex:0 0 180px;height:180px;"><canvas id="chartCostPie"></canvas></div>
+          <div style="flex:1;min-width:120px;">
+            ${legendDot('#06b6d4','Manpower','57.2%')}
+            ${legendDot('#10b981','Electricity & HVAC','14.5%')}
+            ${legendDot('#f59e0b','Spares & AMC','8.4%')}
+            ${legendDot('#8b5cf6','Insurance/Sinking','11.2%')}
+            ${legendDot('#ef4444','Admin/Audit/Misc','8.7%')}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CHARTS ROW 2 ── -->
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:12px;" class="chart-grid-2">
+
+      <!-- Monthly Revenue Progression -->
+      <div style="background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;">
+        <div style="padding:10px 14px;border-bottom:1px solid var(--bdr);background:var(--surf2);">
+          <span style="font-size:11px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.5px;">Monthly CAM Revenue Projection</span>
+          <span style="font-size:9px;color:var(--tx3);margin-left:8px;">₹ lakhs · Mall vs Office</span>
+        </div>
+        <div style="padding:14px;"><canvas id="chartMonthly" height="220"></canvas></div>
+      </div>
+
+      <!-- Electrical Cost Breakdown -->
+      <div style="background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;">
+        <div style="padding:10px 14px;border-bottom:1px solid var(--bdr);background:var(--surf2);">
+          <span style="font-size:11px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.5px;">Electricity Cost/mo</span>
+          <span style="font-size:9px;color:var(--tx3);margin-left:8px;">₹</span>
+        </div>
+        <div style="padding:14px;"><canvas id="chartEle" height="200"></canvas></div>
+      </div>
+    </div>
+
+    <!-- ── CAM COMPONENT TABLE ── -->
+    <div style="background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;margin-bottom:14px;">
+      <div style="padding:10px 14px;border-bottom:1px solid var(--bdr);background:var(--surf2);display:flex;align-items:center;gap:10px;">
+        <span style="font-size:11px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.5px;">CAM Components — 3 Year Comparison</span>
+        <button onclick="showPage('trend_analysis')" style="margin-left:auto;padding:4px 10px;border-radius:var(--rsm);background:rgba(6,182,212,.1);border:1px solid var(--bdr2);color:var(--cyan);font-size:9px;font-weight:700;cursor:pointer;">View Full →</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:11px;">
+          <thead>
+            <tr style="background:var(--surf2);">
+              <th style="padding:7px 12px;text-align:left;font-size:9px;color:var(--tx3);border-bottom:1px solid var(--bdr);text-transform:uppercase;letter-spacing:.6px;">Component</th>
+              <th style="padding:7px 12px;text-align:right;font-size:9px;color:var(--cyan);border-bottom:1px solid var(--bdr);">Y1 Mall</th>
+              <th style="padding:7px 12px;text-align:right;font-size:9px;color:var(--tx3);border-bottom:1px solid var(--bdr);">Y1 Office</th>
+              <th style="padding:7px 12px;text-align:right;font-size:9px;color:var(--amber);border-bottom:1px solid var(--bdr);">Y2 Mall</th>
+              <th style="padding:7px 12px;text-align:right;font-size:9px;color:var(--tx3);border-bottom:1px solid var(--bdr);">Y2 Office</th>
+              <th style="padding:7px 12px;text-align:right;font-size:9px;color:var(--emerald);border-bottom:1px solid var(--bdr);">Y3 Mall</th>
+              <th style="padding:7px 12px;text-align:right;font-size:9px;color:var(--tx3);border-bottom:1px solid var(--bdr);">Y3 Office</th>
+              <th style="padding:7px 12px;text-align:right;font-size:9px;color:var(--rose);border-bottom:1px solid var(--bdr);">Change Y1→Y3</th>
+            </tr>
+          </thead>
+          <tbody id="camCompTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── ALERTS ── -->
+    <div style="background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;">
+      <div style="padding:10px 14px;border-bottom:1px solid var(--bdr);background:var(--surf2);">
+        <span style="font-size:11px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.5px;">⚠️ Financial Alerts & Flags</span>
+      </div>
+      <div style="padding:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;" class="alert-grid">
+        ${alertBox('🚨','critical','Elevator AMC — Y3 Spike','Elevators go from ₹0 → ₹3.01Cr/year in Y3. Monthly impact: ₹25.1L. Budget provision critical.')}
+        ${alertBox('⚡','critical','HVAC — 39% of Electricity','HVAC costs ₹5.56L/month for common area alone. Power cut raises effective rate ₹6.5→₹7.97/unit.')}
+        ${alertBox('📈','warning','CAM Rate +26.4% Y1→Y3','Mall: ₹13.32→₹16.83/sqft. Office: ₹9.97→₹13.29/sqft. Lease agreements must reflect escalation.')}
+        ${alertBox('👥','warning','Manpower = 57% of CAM','Largest cost head. 10% YoY escalation adds ₹2.2L by Y3. Optimisation review recommended.')}
+        ${alertBox('🐖','info','Sinking Fund Y12 Peak','₹3.81 Cr needed at Y12 for elevators + package units. Ensure consistent monthly collection.')}
+        ${alertBox('✅','success','EB vs DG Optimised','93.75% EB reliance reduces cost vs DG. Maintaining power factor controls fixed charges.')}
+      </div>
+    </div>
+  </div>`;
+
+  // ── Render Charts ──
+  setTimeout(() => {
+    try {
+      // CAM Bar
+      const ctx1 = document.getElementById('chartCamBar');
+      if (ctx1) {
+        _charts['chartCamBar'] = new Chart(ctx1, {
+          type: 'bar',
+          data: {
+            labels: ['Manpower','Spares','AMC','Electricity','Audits','Licensing','Admin','Insurance','Profit'],
+            datasets: [
+              { label:'Y1 Mall', data:[7.54,0.89,0.00,1.68,0.09,0.08,0.15,1.46,1.43], backgroundColor:'rgba(6,182,212,.75)', borderRadius:3 },
+              { label:'Y2 Mall', data:[8.29,0.95,0.27,1.76,0.13,0.08,0.16,1.50,1.57], backgroundColor:'rgba(245,158,11,.75)', borderRadius:3 },
+              { label:'Y3 Mall', data:[9.12,0.99,1.18,1.85,0.13,0.08,0.16,1.55,1.78], backgroundColor:'rgba(16,185,129,.75)', borderRadius:3 },
+            ]
+          },
+          options: { responsive:true, maintainAspectRatio:false,
+            plugins:{ legend:{ labels:{ color:tc, boxWidth:10, font:{size:10} } } },
+            scales:{
+              x:{ grid:{color:gc}, ticks:{color:tc,font:{size:9},maxRotation:30} },
+              y:{ grid:{color:gc}, ticks:{color:tc,font:{size:9},callback:v=>'₹'+v} }
+            }
+          }
+        });
+      }
+
+      // Cost Pie
+      const ctx2 = document.getElementById('chartCostPie');
+      if (ctx2) {
+        _charts['chartCostPie'] = new Chart(ctx2, {
+          type: 'doughnut',
+          data: {
+            labels:['Manpower','Electricity+HVAC','Spares & AMC','Insurance/Sinking','Admin/Audit/Misc'],
+            datasets:[{ data:[57.2,14.5,8.4,11.2,8.7], backgroundColor:['#06b6d4','#10b981','#f59e0b','#8b5cf6','#ef4444'], borderWidth:0, hoverOffset:6 }]
+          },
+          options:{ responsive:true, maintainAspectRatio:false, cutout:'65%', plugins:{legend:{display:false}} }
+        });
+      }
+
+      // Monthly Revenue
+      const ctx3 = document.getElementById('chartMonthly');
+      if (ctx3) {
+        _charts['chartMonthly'] = new Chart(ctx3, {
+          type: 'bar',
+          data: {
+            labels:['Y1','Y2','Y3'],
+            datasets:[
+              { label:'Mall', data:[
+                  parseFloat((mallY1*(typeof mallLeasable==='number'?mallLeasable:187123)/100000).toFixed(1)),
+                  parseFloat((mallY2*(typeof mallLeasable==='number'?mallLeasable:187123)/100000).toFixed(1)),
+                  parseFloat((mallY3*(typeof mallLeasable==='number'?mallLeasable:187123)/100000).toFixed(1))
+                ], backgroundColor:'rgba(6,182,212,.7)', borderRadius:4 },
+              { label:'Office', data:[
+                  parseFloat((offY1*(typeof offLeasable==='number'?offLeasable:287886)/100000).toFixed(1)),
+                  parseFloat((offY2*(typeof offLeasable==='number'?offLeasable:287886)/100000).toFixed(1)),
+                  parseFloat((offY3*(typeof offLeasable==='number'?offLeasable:287886)/100000).toFixed(1))
+                ], backgroundColor:'rgba(139,92,246,.7)', borderRadius:4 },
+            ]
+          },
+          options:{ responsive:true, maintainAspectRatio:false,
+            plugins:{ legend:{ labels:{ color:tc, boxWidth:10, font:{size:10} } } },
+            scales:{
+              x:{ grid:{color:gc}, ticks:{color:tc} },
+              y:{ grid:{color:gc}, ticks:{color:tc,callback:v=>'₹'+v+'L'} }
+            }
+          }
+        });
+      }
+
+      // Electrical
+      const ctx4 = document.getElementById('chartEle');
+      if (ctx4) {
+        _charts['chartEle'] = new Chart(ctx4, {
+          type: 'bar',
+          data: {
+            labels:['Comm Elec','Mall Elec','Office Elec','Mall HVAC','Office HVAC'],
+            datasets:[{
+              data:[elComm/1000, elMall/1000, elOffice/1000, hvacMall/1000, hvacOff/1000],
+              backgroundColor:['#f59e0b','#06b6d4','#8b5cf6','#10b981','#ef4444'],
+              borderRadius:4
+            }]
+          },
+          options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y',
+            plugins:{ legend:{ display:false } },
+            scales:{
+              x:{ grid:{color:gc}, ticks:{color:tc,callback:v=>'₹'+v+'K'} },
+              y:{ grid:{display:false}, ticks:{color:tc,font:{size:9}} }
+            }
+          }
+        });
+      }
+
+      // CAM Component Table
+      buildCamTable(mallY1,offY1,mallY2,offY2,mallY3,offY3);
+
+    } catch(e) { console.error('Chart error:', e); }
+  }, 100);
+
+  document.getElementById('activeSheetName').textContent = '📊 Financial Overview Dashboard';
+  document.getElementById('activeSheetMeta').textContent = 'Live data from Excel · All 18 sheets';
+  // Expand card to full width, remove border-radius at top for cleaner look
+  const mc = document.getElementById('mainTableCard');
+  if (mc) { mc.style.boxShadow = 'none'; mc.style.border = 'none'; mc.style.background = 'transparent'; }
+}
+
+function buildCamTable(m1,o1,m2,o2,m3,o3) {
+  const S = _data?.sheets || {};
+  const cs = S['cam_charges_summary'];
+  const tbody = document.getElementById('camCompTable');
+  if (!tbody) return;
+
+  // Try to extract real component rows from cam_charges_summary
+  const COMP_NAMES = ['Manpower Cost','Spares','AMC','Electricity','Audits','Licens','Admin','Insurance','Profit'];
+  let rows = [];
+  if (cs) {
+    rows = cs.rows.filter(r => {
+      const first = String(r.cells[1]||r.cells[0]||'');
+      return first.length > 2 && typeof r.cells[2]==='number';
+    }).slice(0, 12);
+  }
+
+  // Fallback hardcoded if sheet parsing didn't yield good rows
+  if (rows.length < 3) {
+    const DATA = [
+      ['Manpower Cost',              7.54, 5.21, 8.29, 5.73, 9.12, 6.31],
+      ['Spares & Consumables',       0.89, 0.75, 0.95, 0.80, 0.99, 0.83],
+      ['AMC Charges',                0.00, 0.00, 0.27, 0.91, 1.18, 1.52],
+      ['Electricity (Utility+HVAC)', 1.68, 1.26, 1.76, 1.32, 1.85, 1.39],
+      ['Audits',                     0.09, 0.09, 0.13, 0.13, 0.13, 0.13],
+      ['Licensing & Fees',           0.08, 0.08, 0.08, 0.08, 0.08, 0.13],
+      ['Admin Expenses',             0.15, 0.15, 0.16, 0.16, 0.16, 0.16],
+      ['Insurance & Sinking Fund',   1.46, 1.46, 1.50, 1.50, 1.55, 1.55],
+      ['Profit Margin 10%',          1.43, 0.97, 1.57, 1.13, 1.78, 1.27],
+    ];
+    tbody.innerHTML = DATA.map(d => {
+      const chg  = d[1]>0 ? (((d[5]-d[1])/d[1])*100).toFixed(1) : '—';
+      const color = d[5]>d[1] ? 'color:var(--rose)' : 'color:var(--emerald)';
+      const isTotal = false;
+      return `<tr style="border-bottom:1px solid var(--bdr);">
+        <td style="padding:6px 12px;color:var(--tx);">${d[0]}</td>
+        <td style="padding:6px 12px;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--cyan);">${d[1].toFixed(2)}</td>
+        <td style="padding:6px 12px;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--tx3);">${d[2].toFixed(2)}</td>
+        <td style="padding:6px 12px;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--amber);">${d[3].toFixed(2)}</td>
+        <td style="padding:6px 12px;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--tx3);">${d[4].toFixed(2)}</td>
+        <td style="padding:6px 12px;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--emerald);">${d[5].toFixed(2)}</td>
+        <td style="padding:6px 12px;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--tx3);">${d[6].toFixed(2)}</td>
+        <td style="padding:6px 12px;text-align:right;font-family:'JetBrains Mono',monospace;${color};">${chg!=='—'?((parseFloat(chg)>0?'▲+':'▲')+chg+'%'):'—'}</td>
+      </tr>`;
+    }).join('') + `<tr style="font-weight:800;background:rgba(6,182,212,.07);">
+      <td style="padding:7px 12px;color:var(--tx2);">TOTAL CAM</td>
+      <td style="padding:7px 12px;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--cyan);">${m1.toFixed(2)}</td>
+      <td style="padding:7px 12px;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--tx3);">${o1.toFixed(2)}</td>
+      <td style="padding:7px 12px;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--amber);">${m2.toFixed(2)}</td>
+      <td style="padding:7px 12px;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--tx3);">${o2.toFixed(2)}</td>
+      <td style="padding:7px 12px;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--emerald);">${m3.toFixed(2)}</td>
+      <td style="padding:7px 12px;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--tx3);">${o3.toFixed(2)}</td>
+      <td style="padding:7px 12px;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--rose);">▲+${(((m3-m1)/m1)*100).toFixed(1)}%</td>
+    </tr>`;
+    return;
+  }
+}
+
+// ── Helper: KPI card HTML ────────────────────────────────
+function kpiCard(lbl, val, unit, color, chg) {
+  return `<div style="background:var(--surf);border:1px solid var(--bdr);border-radius:var(--r);
+    padding:10px 12px;position:relative;overflow:hidden;border-top:3px solid ${color};
+    transition:transform .2s,box-shadow .2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='var(--sh)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+    <div style="font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${lbl}</div>
+    <div style="font-size:18px;font-weight:800;color:var(--tx2);line-height:1;font-family:'JetBrains Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${val}</div>
+    <div style="font-size:9px;color:var(--tx3);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${unit}</div>
+    <div style="font-size:9px;font-weight:600;color:${color};margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${chg}</div>
+  </div>`;
+}
+
+function legendDot(color, label, pct) {
+  return `<div style="display:flex;align-items:center;gap:7px;margin-bottom:7px;">
+    <div style="width:9px;height:9px;border-radius:50%;background:${color};flex-shrink:0;"></div>
+    <span style="font-size:10px;color:var(--tx3);flex:1;">${label}</span>
+    <span style="font-size:10px;font-weight:700;color:var(--tx2);font-family:'JetBrains Mono',monospace;">${pct}</span>
+  </div>`;
+}
+
+function alertBox(icon, level, title, desc) {
+  const colors = {
+    critical: {bg:'rgba(239,68,68,.07)',  border:'rgba(239,68,68,.22)',  title:'var(--rose)'},
+    warning:  {bg:'rgba(245,158,11,.07)', border:'rgba(245,158,11,.22)', title:'var(--amber)'},
+    info:     {bg:'rgba(6,182,212,.07)',  border:'rgba(6,182,212,.22)',  title:'var(--cyan)'},
+    success:  {bg:'rgba(16,185,129,.07)', border:'rgba(16,185,129,.22)', title:'var(--emerald)'},
+  };
+  const c = colors[level] || colors.info;
+  return `<div style="padding:10px 12px;border-radius:var(--rsm);background:${c.bg};border:1px solid ${c.border};">
+    <div style="display:flex;align-items:center;gap:7px;margin-bottom:4px;">
+      <span style="font-size:14px;">${icon}</span>
+      <span style="font-size:10px;font-weight:700;color:${c.title};">${title}</span>
+    </div>
+    <div style="font-size:10px;color:var(--tx3);line-height:1.5;">${desc}</div>
+  </div>`;
+}
+
+function fmtL(n) {
+  if (typeof n !== 'number' || isNaN(n)) return '0';
+  return (n/100000).toFixed(1);
+}
+function fmtN(n) {
+  if (typeof n !== 'number') return String(n);
+  return n.toLocaleString('en-IN');
+}
+
+// ── Init ─────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+  const saved = localStorage.getItem('sln_budget_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  const ttIcon = document.getElementById('ttIcon');
+  if (ttIcon) ttIcon.textContent = saved === 'dark' ? '🌙' : '☀️';
+
+  document.getElementById('cellEditModal').addEventListener('click', function(e) {
+    if (e.target === this) closeCellModal(false);
+  });
+
+  await loadData(false);
+  startPolling(30000);
+});
+</script>
+</body>
+</html>

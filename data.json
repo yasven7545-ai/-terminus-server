@@ -1,0 +1,95 @@
+{
+  "floors": [
+    {
+      "id": "B1",
+      "name": "B1 - Parking",
+      "type": "parking"
+    },
+    {
+      "id": "B2",
+      "name": "B2 - Parking",
+      "type": "parking"
+    },
+    {
+      "id": "B3",
+      "name": "B3 - Parking",
+      "type": "parking"
+    },
+    {
+      "id": "B4",
+      "name": "B4 - Parking",
+      "type": "parking"
+    },
+    {
+      "id": "LG",
+      "name": "LG - Mall Level",
+      "type": "mall"
+    },
+    {
+      "id": "L1",
+      "name": "L1 - Mall Level",
+      "type": "mall"
+    },
+    {
+      "id": "L2",
+      "name": "L2 - Mall Level",
+      "type": "mall"
+    },
+    {
+      "id": "L3",
+      "name": "L3 - Mall Level",
+      "type": "mall"
+    },
+    {
+      "id": "L4",
+      "name": "L4 - Office",
+      "type": "office"
+    },
+    {
+      "id": "L5",
+      "name": "L5 - Office",
+      "type": "office"
+    },
+    {
+      "id": "L6",
+      "name": "L6 - Office",
+      "type": "office"
+    },
+    {
+      "id": "L7",
+      "name": "L7 - Office",
+      "type": "office"
+    },
+    {
+      "id": "L8",
+      "name": "L8 - Office",
+      "type": "office"
+    },
+    {
+      "id": "L9",
+      "name": "L9 - Banquet Hall",
+      "type": "banquet"
+    },
+    {
+      "id": "L10",
+      "name": "L10 - Executive Apartments",
+      "type": "apartment"
+    },
+    {
+      "id": "L11",
+      "name": "L11 - Executive Apartments",
+      "type": "apartment"
+    },
+    {
+      "id": "L12",
+      "name": "L12 - Executive Apartments",
+      "type": "apartment"
+    },
+    {
+      "id": "L13",
+      "name": "L13 - Terrace",
+      "type": "terrace"
+    }
+  ],
+  "spaces": []
+}

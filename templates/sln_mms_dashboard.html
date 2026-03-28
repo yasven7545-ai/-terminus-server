@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <!-- SLN MMS v2.1 -->
+    <title>SLN TERMINUS | MMS MAINTENANCE MANAGEMENT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+        /* ── CSS VARIABLES ── */
+        :root {
+            --primary: #06b6d4;       /* cyan */
+            --primary-glow: rgba(6,182,212,0.18);
+            --accent: #8b5cf6;        /* violet */
+            --accent-glow: rgba(139,92,246,0.18);
+            --green: #10b981;
+            --rose: #f43f5e;
+            --amber: #f59e0b;
+            --bg: #030712;
+            --surface: rgba(15,20,40,0.95);
+            --glass: rgba(15,23,42,0.9);
+            --border: rgba(6,182,212,0.14);
+            --sidebar-w: 282px;
+        }
+        /* ── LIGHT MODE OVERRIDES ── */
+        body.light {
+            --bg: #f0f9ff;
+            --surface: rgba(255,255,255,0.97);
+            --glass: rgba(255,255,255,0.95);
+            --border: rgba(6,182,212,0.22);
+            color: #0f172a;
+            background: var(--bg);
+        }
+        body.light .topbar          { background: rgba(240,249,255,0.97) !important; border-color: rgba(6,182,212,0.2) !important; }
+        body.light .sidebar         { background: rgba(255,255,255,0.98) !important; border-color: rgba(6,182,212,0.15) !important; }
+        body.light .ultra-glass     { background: rgba(255,255,255,0.95) !important; border-color: rgba(6,182,212,0.2) !important; }
+        body.light .sidebar-item    { color: #334155; }
+        body.light .sidebar-item:hover,
+        body.light .sidebar-item.active { color: var(--primary); background: rgba(6,182,212,.1); }
+        body.light h2,body.light h3,body.light p { color: #0f172a; }
+        body.light .stat-card h2 { color: #0f172a !important; }
+        body.light .stat-card p  { color: #475569 !important; }
+        body.light table th { color: #475569 !important; }
+        body.light table td { color: #334155 !important; }
+        body.light #asset-table-body td[style*="color:white"]    { color: #0f172a !important; }
+        body.light #asset-table-body td[style*="color:#64748b"]  { color: #475569 !important; }
+        body.light #wo-stream-container,
+        body.light #amc-stream-container,
+        body.light #closed-wo-container { background: transparent; }
+        body.light .wo-row { background: rgba(255,255,255,0.95) !important; border-color: rgba(6,182,212,0.2) !important; }
+        /* Cards: WO, Closed WO, AMC, Calendar */
+        body.light #wo-stream-container > div,
+        body.light #closed-wo-container > div,
+        body.light #amc-stream-container > div,
+        body.light #day-schedule-container > div {
+            background: rgba(255,255,255,0.95) !important;
+            border-color: rgba(6,182,212,0.18) !important;
+            box-shadow: 0 1px 6px rgba(0,0,0,.07);
+        }
+        /* Asset/contract name (hardcoded color:white) */
+        body.light #wo-stream-container p[style*="color:white"],
+        body.light #closed-wo-container p[style*="color:white"],
+        body.light #amc-stream-container p[style*="color:white"],
+        body.light #day-schedule-container h4[style*="color:white"] { color: #0f172a !important; }
+        /* Location / sub-text */
+        body.light #wo-stream-container  p[style*="color:#64748b"],
+        body.light #wo-stream-container  p[style*="color:#475569"],
+        body.light #closed-wo-container  span[style*="color:#64748b"],
+        body.light #amc-stream-container span[style*="color:#64748b"],
+        body.light #amc-stream-container p[style*="color:#94a3b8"],
+        body.light #amc-stream-container p[style*="color:#64748b"],
+        body.light #day-schedule-container p[style*="color:#64748b"] { color: #475569 !important; }
+        /* Assigned/secondary text */
+        body.light #wo-stream-container  span[style*="color:#94a3b8"],
+        body.light #closed-wo-container  span[style*="color:#94a3b8"],
+        body.light #amc-stream-container span[style*="color:#94a3b8"] { color: #64748b !important; }
+        /* Create WO btn keeps dark text, WO Created badge colour stays */
+        body.light .create-wo-btn { color: black !important; }
+
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; height: 100%; }
+        body { background: var(--bg); color: #94a3b8; font-family: 'Rajdhani', sans-serif; overflow: hidden; }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            position: fixed; top: 0; left: 0; right: 0; height: 46px;
+            background: rgba(3,7,18,0.97); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 18px; z-index: 500; gap: 10px;
+            padding-left: max(18px, env(safe-area-inset-left));
+            padding-right: max(18px, env(safe-area-inset-right));
+        }
+        .topbar-left  { display: flex; align-items: center; gap: 10px; min-width:0; flex-shrink:1; overflow:hidden; }
+        .topbar-right { display: flex; align-items: center; gap: 8px; flex-shrink:0; }
+        .portal-label { display: inline; }
+
+        /* Portal button – pulsing cyan */
+        @keyframes cyanBlink { 0%,100%{ box-shadow:0 0 0 0 rgba(6,182,212,0); border-color:rgba(6,182,212,.3); } 50%{ box-shadow:0 0 0 5px rgba(6,182,212,.12); border-color:rgba(6,182,212,.85); } }
+        .portal-btn {
+            display: flex; align-items: center; gap: 6px;
+            padding: 5px 13px; border-radius: 8px;
+            background: rgba(6,182,212,.08); border: 1px solid rgba(6,182,212,.3);
+            color: var(--primary); font-size: 10px; font-weight: 800;
+            letter-spacing: .07em; text-transform: uppercase; cursor: pointer;
+            text-decoration: none; animation: cyanBlink 2s ease-in-out infinite;
+            transition: background .2s, color .2s;
+        }
+        .portal-btn:hover { background: var(--primary); color: #000; animation: none; }
+
+        /* Dark/Light toggle */
+        .theme-toggle {
+            display: flex; align-items: center; gap: 6px;
+            padding: 4px 10px; border-radius: 20px;
+            background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+            cursor: pointer; transition: all .2s;
+        }
+        .theme-toggle .toggle-track {
+            width: 32px; height: 17px; background: rgba(6,182,212,.3);
+            border-radius: 10px; position: relative; transition: background .2s;
+        }
+        .theme-toggle .toggle-thumb {
+            width: 13px; height: 13px; background: var(--primary); border-radius: 50%;
+            position: absolute; top: 2px; left: 2px; transition: transform .25s;
+        }
+        body.light .theme-toggle .toggle-track { background: rgba(6,182,212,.5); }
+        body.light .theme-toggle .toggle-thumb { transform: translateX(15px); background: #0891b2; }
+        .theme-toggle span { font-size: 10px; font-weight: 700; color: #94a3b8; letter-spacing: .06em; }
+
+        /* Blinking live dot */
+        @keyframes blink { 0%,100%{ opacity:1 } 50%{ opacity:.3 } }
+        .blinking { animation: blink 1.4s ease-in-out infinite; }
+        @keyframes pulse-glow { 0%,100%{ box-shadow:0 0 0 0 rgba(6,182,212,.3) } 50%{ box-shadow:0 0 14px 4px rgba(6,182,212,.2) } }
+        .online-pulse { animation: pulse-glow 2s infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .animate-spin { animation: spin 1s linear infinite; }
+
+        /* ── APP SHELL ── */
+        .app-shell { display: flex; height: 100vh; overflow: hidden; padding-top: 46px; }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: var(--sidebar-w); min-width: var(--sidebar-w);
+            background: rgba(3,7,18,0.98); backdrop-filter: blur(24px);
+            border-right: 1px solid var(--border);
+            display: flex; flex-direction: column;
+            padding: 20px 14px; z-index: 200; overflow-y: auto;
+            transition: transform .3s ease;
+        }
+        .sidebar-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,.65); z-index: 150;
+        }
+        .sidebar-item {
+            width: 100%; display: flex; align-items: center; gap: 11px;
+            padding: 11px 14px; border-radius: 0 8px 8px 0;
+            font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+            color: #475569; background: transparent; border: none; cursor: pointer;
+            transition: all .2s; text-align: left; border-left: 3px solid transparent;
+        }
+        .sidebar-item:hover { color: #e2e8f0; background: rgba(6,182,212,.05); }
+        .sidebar-item.active {
+            background: linear-gradient(90deg, rgba(6,182,212,.18), transparent);
+            border-left-color: var(--primary); color: white;
+        }
+        .sidebar-item.amc-style { border-left-color: var(--accent); }
+        .sidebar-item.amc-style.active { background: linear-gradient(90deg, rgba(139,92,246,.18), transparent); }
+
+        /* ── MAIN ── */
+        .main-content { flex: 1; min-width: 0; overflow-y: auto; overflow-x: hidden; padding: 20px 24px; }
+        .section { display: none; }
+        .section.active { display: flex; flex-direction: column; }
+        .section.active.full-h { height: calc(100vh - 86px); }
+
+        /* ── GLASS CARD ── */
+        .ultra-glass {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+        }
+
+        /* ── STAT CARDS ── */
+        .stat-card { padding: 16px 20px; border-radius: 16px; }
+
+        /* ── CALENDAR ── */
+        #calendar-grid { display: grid; grid-template-columns: repeat(7,1fr); grid-auto-rows: minmax(44px,1fr); gap: 3px; width: 100%; }
+        .calendar-day {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 44px; border: 1px solid rgba(255,255,255,.05);
+            cursor: pointer; font-size: 13px; font-weight: 500; color: #475569;
+            transition: all .2s; border-radius: 6px; padding: 4px 2px; user-select: none;
+        }
+        .calendar-day:hover { background: rgba(6,182,212,.1); color: white; border-color: rgba(6,182,212,.3); }
+        .calendar-day.has-task { color: var(--primary); font-weight: 700; background: rgba(6,182,212,.07); border-color: rgba(6,182,212,.2); }
+        .calendar-day.today { border: 2px solid var(--primary); background: rgba(6,182,212,.1); color: white; font-weight: 700; }
+        .calendar-blank { min-height: 44px; border-radius: 6px; }
+        .task-dot { width: 5px; height: 5px; background: var(--primary); border-radius: 50%; margin-top: 3px; box-shadow: 0 0 6px var(--primary); flex-shrink: 0; }
+
+        /* ── BADGE ── */
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 800; letter-spacing: .08em; }
+
+        /* ── FORM FIELDS ── */
+        .field-label { display: block; font-size: 10px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+        .amc-field { width: 100%; padding: 10px 12px; background: rgba(15,23,42,.8); border: 1px solid rgba(255,255,255,.1); border-radius: 8px; color: white; font-family: 'Rajdhani',sans-serif; font-size: 13px; outline: none; }
+        .amc-field:focus { border-color: var(--primary); }
+        .assign-field { width: 100%; padding: 10px 12px; background: rgba(15,23,42,.8); border: 1px solid rgba(255,255,255,.1); border-radius: 8px; color: white; font-family: 'Rajdhani',sans-serif; font-size: 13px; outline: none; margin-bottom: 8px; }
+        .assign-field:focus { border-color: var(--primary); }
+
+        /* ── SCROLLBAR ── */
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(6,182,212,.35); border-radius: 10px; }
+
+        /* ── MOBILE TOGGLE — inside topbar on mobile ── */
+        .mobile-toggle {
+            display: none; align-items: center; gap: 5px;
+            background: rgba(6,182,212,.15); border: 1px solid rgba(6,182,212,.3);
+            color: var(--primary); padding: 6px 9px; border-radius: 8px; cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        /* ── ASSET TYPE TABS ── */
+        .asset-tab-btn {
+            padding: 5px 13px; border-radius: 7px; font-size: 10px; font-weight: 800;
+            letter-spacing: .05em; text-transform: uppercase; cursor: pointer;
+            border: 1px solid rgba(255,255,255,.1); background: transparent; color: #64748b; transition: all .2s;
+        }
+        .asset-tab-btn.active { border-color: rgba(6,182,212,.5); background: rgba(6,182,212,.15); color: var(--primary); }
+
+        /* ── ASSET CATEGORY PILLS ── */
+        .cat-pill {
+            padding: 4px 11px; border-radius: 6px; font-size: 10px; font-weight: 800;
+            letter-spacing: .05em; text-transform: uppercase; cursor: pointer;
+            border: 1px solid rgba(255,255,255,.08); background: transparent; color: #475569; transition: all .2s;
+        }
+        .cat-pill.active-transformer { border-color: rgba(245,158,11,.5); background: rgba(245,158,11,.12); color: #f59e0b; }
+        .cat-pill.active-dg          { border-color: rgba(244,63,94,.5);  background: rgba(244,63,94,.12);  color: #f43f5e; }
+        .cat-pill.active-chiller     { border-color: rgba(6,182,212,.5);  background: rgba(6,182,212,.12);  color: var(--primary); }
+        .cat-pill.active-general     { border-color: rgba(16,185,129,.5); background: rgba(16,185,129,.12); color: var(--green); }
+
+        /* ── SPLIT CARDS ── */
+        .split-card { border-radius: 14px; padding: 14px 18px; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width:900px) {
+            .cal-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width:768px) {
+            body { overflow: hidden; }
+            /* Sidebar slides from left */
+            .sidebar { position: fixed; top: 0; left: 0; height: 100vh; transform: translateX(-100%); z-index: 400; }
+            .sidebar.open { transform: translateX(0); box-shadow: 0 0 40px rgba(0,0,0,.8); }
+            .sidebar-overlay.open { display: block; }
+            /* Hamburger visible in topbar */
+            .mobile-toggle { display: flex; }
+            /* Clock hidden on mobile topbar */
+            #tb-clock { display: none; }
+            /* Portal btn — icon only */
+            .portal-label { display: none; }
+            .portal-btn { padding: 5px 9px; }
+            /* Theme toggle — shrink */
+            .theme-toggle { padding: 4px 7px; }
+            .theme-toggle span { display: none; }
+            /* Main content clears topbar */
+            .main-content { padding: 14px 10px 10px 10px; }
+            /* KPI: 2×2 */
+            .stats-grid { grid-template-columns: repeat(2,1fr) !important; gap: 10px !important; }
+            /* WO strip: 2×2 */
+            #wo-summary-strip { grid-template-columns: repeat(2,1fr) !important; gap: 10px !important; }
+            /* Split cards: stack */
+            .split-cards-row { grid-template-columns: 1fr !important; }
+            /* Charts: stack */
+            .charts-grid { grid-template-columns: 1fr !important; }
+            .cal-grid { grid-template-columns: 1fr !important; }
+            #calendar-grid { grid-auto-rows: minmax(36px,1fr) !important; }
+            .calendar-day { min-height: 36px !important; font-size: 11px !important; }
+            .calendar-blank { min-height: 36px !important; }
+            .modal-inner { width: 100% !important; max-width: 100% !important; border-radius: 12px 12px 0 0 !important; max-height: 92vh !important; }
+            .modal-wrap  { align-items: flex-end !important; padding: 0 !important; }
+            .modal-grid-4 { grid-template-columns: repeat(2,1fr) !important; }
+        }
+        @media (max-width:480px) {
+            /* Keep 2-col for KPI — 1-col wastes too much height */
+            .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+            .stat-card { padding: 12px 14px !important; }
+            .stat-card h2 { font-size: 26px !important; }
+            #wo-summary-strip { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+            #calendar-grid { grid-auto-rows: minmax(32px,1fr) !important; }
+            .calendar-day { min-height: 32px !important; font-size: 10px !important; }
+            .calendar-blank { min-height: 32px !important; }
+            .main-content { padding: 10px 8px 8px 8px; }
+            .topbar-left { gap: 7px; }
+        }
+        .chart-wrap { position: relative; min-height: 200px; }
+        canvas { max-height: 100% !important; max-width: 100% !important; }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════ TOPBAR ═══════════════ -->
+<div class="topbar">
+    <div class="topbar-left">
+        <button class="mobile-toggle" id="mobile-toggle">
+            <i data-lucide="menu" style="width:16px;height:16px;"></i>
+        </button>
+        <div style="font-family:'Orbitron',monospace;font-size:13px;font-weight:900;color:white;letter-spacing:-.01em;white-space:nowrap;">SLN<span style="color:var(--primary);">T</span> <span style="color:#475569;font-size:8px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.15em;">MMS</span></div>
+        <div style="width:1px;height:22px;background:rgba(255,255,255,.07);flex-shrink:0;"></div>
+        <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;">
+            <span class="blinking" style="width:6px;height:6px;border-radius:50%;background:#10b981;display:inline-block;"></span>
+            <span style="font-size:9px;font-weight:800;color:#10b981;letter-spacing:.1em;">LIVE</span>
+        </div>
+        <div id="tb-clock" style="font-family:monospace;font-size:10px;color:#334155;"></div>
+    </div>
+    <div class="topbar-right">
+        <!-- Dark/Light toggle -->
+        <div class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
+            <span id="theme-icon">🌙</span>
+            <div class="toggle-track"><div class="toggle-thumb"></div></div>
+            <span id="theme-label">Dark</span>
+        </div>
+        <!-- Back to SLN Terminus portal -->
+        <a href="/sln_terminus" class="portal-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            <span class="portal-label">Back to SLN Terminus</span>
+        </a>
+    </div>
+</div>
+
+<div class="app-shell">
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- ═══════════════ SIDEBAR ═══════════════ -->
+    <aside class="sidebar custom-scroll" id="sidebar">
+        <div style="text-align:center;margin-bottom:22px;">
+            <h1 style="font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:white;letter-spacing:-.02em;margin:0;">SLN <span style="color:var(--primary)">TERMINUS</span></h1>
+            <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.18em;text-transform:uppercase;margin:3px 0 0;">MMS MANAGEMENT</p>
+            <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;" class="online-pulse">
+                <span style="width:7px;height:7px;border-radius:50%;background:#10b981;display:inline-block;" class="blinking"></span>
+                <span style="font-size:9px;font-weight:800;color:#10b981;letter-spacing:.12em;text-transform:uppercase;">System Online</span>
+            </div>
+        </div>
+
+        <nav style="flex:1;display:flex;flex-direction:column;gap:3px;">
+            <button data-section="overview"    class="sidebar-item active"><i data-lucide="layout-dashboard" style="width:16px;height:16px;flex-shrink:0;"></i> Overview</button>
+            <button data-section="assets"      class="sidebar-item"><i data-lucide="database" style="width:16px;height:16px;flex-shrink:0;"></i> Assets</button>
+            <button data-section="calendar"    class="sidebar-item"><i data-lucide="calendar-range" style="width:16px;height:16px;flex-shrink:0;"></i> Calendar</button>
+            <button data-section="workflow"    class="sidebar-item"><i data-lucide="trello" style="width:16px;height:16px;flex-shrink:0;"></i> Work Orders</button>
+            <button data-section="closed-wos"  class="sidebar-item" style="border-left-color:#64748b;"><i data-lucide="archive" style="width:16px;height:16px;flex-shrink:0;"></i> Closed WOs</button>
+            <button data-section="amc-tracker" class="sidebar-item amc-style"><i data-lucide="clipboard-check" style="width:16px;height:16px;flex-shrink:0;"></i> AMC Tracker</button>
+        </nav>
+
+        <div style="margin-top:auto;padding-top:16px;border-top:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:10px;">
+            <div style="padding:12px 14px;border-radius:12px;background:rgba(6,182,212,.04);border:1px solid rgba(6,182,212,.1);">
+                <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;margin:0 0 4px;">Asset Source</p>
+                <p style="font-size:9px;font-family:monospace;color:var(--primary);word-break:break-all;margin:0 0 10px;">SLN/Assets.xlsx</p>
+                <label style="display:block;cursor:pointer;background:rgba(6,182,212,.08);color:var(--primary);text-align:center;padding:8px;border-radius:8px;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:all .2s;"
+                    onmouseover="this.style.background='var(--primary)';this.style.color='black';"
+                    onmouseout="this.style.background='rgba(6,182,212,.08)';this.style.color='var(--primary)';">
+                    Upload Assets.xlsx
+                    <input type="file" id="file-upload" style="display:none;" accept=".xlsx,.xls">
+                </label>
+            </div>
+            <button id="triggerDailyEmail" style="width:100%;padding:10px;background:linear-gradient(90deg,#7c3aed,#0891b2);color:white;border:none;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity .2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+                <i data-lucide="mail" style="width:14px;height:14px;"></i> Trigger Daily Mail
+            </button>
+            <button id="autoGenWOBtn" style="width:100%;padding:10px;background:rgba(16,185,129,.1);color:#10b981;border:1px solid rgba(16,185,129,.3);border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s;" onmouseover="this.style.background='var(--green)';this.style.color='black'" onmouseout="this.style.background='rgba(16,185,129,.1)';this.style.color='#10b981'">
+                <i data-lucide="zap" style="width:14px;height:14px;"></i> Auto-Generate WOs
+            </button>
+            <button id="refresh-btn" style="width:100%;padding:10px;background:rgba(255,255,255,.05);color:#94a3b8;border:none;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .2s;" onmouseover="this.style.background='rgba(255,255,255,.1)'" onmouseout="this.style.background='rgba(255,255,255,.05)'">
+                <i data-lucide="refresh-cw" style="width:12px;height:12px;"></i> Refresh Data
+            </button>
+            <div id="live-clock" style="text-align:center;font-family:monospace;font-size:10px;color:#334155;padding:4px 0;"></div>
+        </div>
+    </aside>
+
+    <!-- ═══════════════ MAIN CONTENT ═══════════════ -->
+    <main class="main-content custom-scroll">
+
+        <!-- ════ OVERVIEW ════ -->
+        <div id="section-overview" class="section active" style="gap:16px;padding-bottom:8px;">
+            <!-- KPI Row -->
+            <div class="stats-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;">
+                <div class="ultra-glass stat-card" style="border-radius:14px;border-bottom:3px solid var(--primary);">
+                    <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;margin:0 0 6px;">Total Assets</p>
+                    <h2 id="ov-total" style="font-size:34px;font-weight:800;color:white;margin:0;">0</h2>
+                </div>
+                <div class="ultra-glass stat-card" style="border-radius:14px;border-bottom:3px solid var(--accent);">
+                    <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;margin:0 0 6px;">Pending PPM</p>
+                    <h2 id="ov-pending" style="font-size:34px;font-weight:800;color:var(--accent);margin:0;">0</h2>
+                </div>
+                <div class="ultra-glass stat-card" style="border-radius:14px;border-bottom:3px solid var(--rose);">
+                    <p style="font-size:9px;font-weight:700;color:var(--rose);letter-spacing:.1em;text-transform:uppercase;margin:0 0 6px;">Overdue</p>
+                    <h2 id="ov-overdue" style="font-size:34px;font-weight:800;color:var(--rose);margin:0;">0</h2>
+                </div>
+                <div class="ultra-glass stat-card" style="border-radius:14px;border-bottom:3px solid var(--green);">
+                    <p style="font-size:9px;font-weight:700;color:var(--green);letter-spacing:.1em;text-transform:uppercase;margin:0 0 6px;">Compliance</p>
+                    <h2 id="ov-compliance" style="font-size:34px;font-weight:800;color:var(--green);margin:0;">0%</h2>
+                </div>
+            </div>
+
+            <!-- WO Summary Strip -->
+            <div id="wo-summary-strip" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+                <div class="ultra-glass" style="border-radius:12px;padding:12px 16px;cursor:pointer;" onclick="goWOs('open')">
+                    <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;margin:0 0 4px;">Open</p>
+                    <p id="wo-count-open" style="font-size:20px;font-weight:800;color:var(--amber);margin:0;">0</p>
+                </div>
+                <div class="ultra-glass" style="border-radius:12px;padding:12px 16px;cursor:pointer;" onclick="goWOs('overdue')">
+                    <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;margin:0 0 4px;">Overdue</p>
+                    <p id="wo-count-overdue" style="font-size:20px;font-weight:800;color:var(--rose);margin:0;">0</p>
+                </div>
+                <div class="ultra-glass" style="border-radius:12px;padding:12px 16px;cursor:pointer;" onclick="goWOs('in-progress')">
+                    <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;margin:0 0 4px;">In Progress</p>
+                    <p id="wo-count-inprogress" style="font-size:20px;font-weight:800;color:var(--primary);margin:0;">0</p>
+                </div>
+                <div class="ultra-glass" style="border-radius:12px;padding:12px 16px;cursor:pointer;" onclick="goWOs('completed')">
+                    <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;margin:0 0 4px;">Completed</p>
+                    <p id="wo-count-completed" style="font-size:20px;font-weight:800;color:var(--green);margin:0;">0</p>
+                </div>
+            </div>
+
+            <!-- Split cards -->
+            <div class="split-cards-row" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                <div class="ultra-glass split-card" style="border-left:4px solid var(--primary);">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                        <i data-lucide="wrench" style="width:16px;height:16px;color:var(--primary);"></i>
+                        <span style="font-size:11px;font-weight:700;color:white;letter-spacing:.08em;text-transform:uppercase;">In-House PPM</span>
+                    </div>
+                    <div style="display:flex;gap:18px;flex-wrap:wrap;">
+                        <div><p style="font-size:9px;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin:0 0 3px;">Assets</p><p id="ih-assets" style="font-size:18px;font-weight:800;color:white;margin:0;">0</p></div>
+                        <div><p style="font-size:9px;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin:0 0 3px;">Open WOs</p><p id="ih-open" style="font-size:18px;font-weight:800;color:var(--amber);margin:0;">0</p></div>
+                        <div><p style="font-size:9px;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin:0 0 3px;">Overdue</p><p id="ih-overdue" style="font-size:18px;font-weight:800;color:var(--rose);margin:0;">0</p></div>
+                    </div>
+                </div>
+                <div class="ultra-glass split-card" style="border-left:4px solid var(--accent);">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                        <i data-lucide="building-2" style="width:16px;height:16px;color:var(--accent);"></i>
+                        <span style="font-size:11px;font-weight:700;color:white;letter-spacing:.08em;text-transform:uppercase;">Vendor PPM</span>
+                    </div>
+                    <div style="display:flex;gap:18px;flex-wrap:wrap;">
+                        <div><p style="font-size:9px;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin:0 0 3px;">Assets</p><p id="vd-assets" style="font-size:18px;font-weight:800;color:white;margin:0;">0</p></div>
+                        <div><p style="font-size:9px;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin:0 0 3px;">Open WOs</p><p id="vd-open" style="font-size:18px;font-weight:800;color:var(--amber);margin:0;">0</p></div>
+                        <div><p style="font-size:9px;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin:0 0 3px;">Overdue</p><p id="vd-overdue" style="font-size:18px;font-weight:800;color:var(--rose);margin:0;">0</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+                <div class="ultra-glass" style="border-radius:14px;padding:14px 16px;">
+                    <h3 style="color:white;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin:0 0 10px;">WO Status</h3>
+                    <div class="chart-wrap" style="height:160px;"><canvas id="statusChart"></canvas></div>
+                </div>
+                <div class="ultra-glass" style="border-radius:14px;padding:14px 16px;">
+                    <h3 style="color:white;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin:0 0 10px;">By Frequency</h3>
+                    <div class="chart-wrap" style="height:160px;"><canvas id="freqChart"></canvas></div>
+                </div>
+                <div class="ultra-glass" style="border-radius:14px;padding:14px 16px;">
+                    <h3 style="color:white;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin:0 0 10px;">Asset Categories</h3>
+                    <div class="chart-wrap" style="height:160px;"><canvas id="catChart"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════ ASSETS ════ -->
+        <div id="section-assets" class="section" style="gap:16px;">
+            <div class="ultra-glass" style="border-radius:20px;overflow:hidden;">
+                <div style="padding:14px 20px;background:rgba(255,255,255,.02);border-bottom:1px solid rgba(255,255,255,.06);">
+                    <!-- Header row -->
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+                        <h2 style="color:white;font-weight:700;font-size:14px;letter-spacing:.05em;text-transform:uppercase;margin:0;">
+                            <i data-lucide="database" style="width:15px;height:15px;display:inline;vertical-align:middle;margin-right:6px;color:var(--primary);"></i>
+                            SLN Terminus Asset Register
+                            <span id="asset-count-badge" style="font-size:10px;font-weight:700;color:#475569;margin-left:6px;"></span>
+                        </h2>
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <input id="asset-search" type="text" placeholder="Search assets..." style="background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;width:180px;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'">
+                            <select id="asset-freq-filter" style="background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;cursor:pointer;">
+                                <option value="all">All Frequencies</option>
+                                <option value="MONTHLY">Monthly</option>
+                                <option value="QUARTERLY">Quarterly</option>
+                                <option value="HALF-YEARLY">Half-Yearly</option>
+                                <option value="YEARLY">Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- In-House / Vendor Tabs -->
+                    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+                        <button id="atab-all"     onclick="setAssetTab('all')"     class="asset-tab-btn active">All</button>
+                        <button id="atab-inhouse" onclick="setAssetTab('inhouse')" class="asset-tab-btn">🔧 In-House</button>
+                        <button id="atab-vendor"  onclick="setAssetTab('vendor')"  class="asset-tab-btn">🏢 Vendor</button>
+                    </div>
+                    <!-- Category Filter Pills -->
+                    <div style="display:flex;gap:5px;flex-wrap:wrap;padding-top:8px;border-top:1px solid rgba(255,255,255,.05);">
+                        <span style="font-size:9px;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:.08em;padding-top:5px;">Category:</span>
+                        <button id="catpill-all"         onclick="setAssetCategory('all')"         class="cat-pill">⚡ All</button>
+                        <button id="catpill-chiller"     onclick="setAssetCategory('chiller')"     class="cat-pill">❄️ Chiller</button>
+                        <button id="catpill-dg"          onclick="setAssetCategory('dg')"          class="cat-pill">⚡ DG/Generator</button>
+                        <button id="catpill-transformer" onclick="setAssetCategory('transformer')" class="cat-pill">🔌 Transformer</button>
+                        <button id="catpill-ahu_fcu"     onclick="setAssetCategory('ahu_fcu')"     class="cat-pill">💨 AHU/FCU</button>
+                        <button id="catpill-lift"        onclick="setAssetCategory('lift')"        class="cat-pill">🛗 Lift/Elevator</button>
+                        <button id="catpill-pump"        onclick="setAssetCategory('pump')"        class="cat-pill">💧 Pump</button>
+                        <button id="catpill-fire"        onclick="setAssetCategory('fire')"        class="cat-pill">🔥 Fire/FA</button>
+                        <button id="catpill-bms_cctv"    onclick="setAssetCategory('bms_cctv')"    class="cat-pill">🖥 BMS/CCTV</button>
+                        <button id="catpill-ups"         onclick="setAssetCategory('ups')"         class="cat-pill">🔋 UPS</button>
+                        <button id="catpill-panels"      onclick="setAssetCategory('panels')"      class="cat-pill">⚙️ Panels/MDB</button>
+                        <button id="catpill-jet_fan"     onclick="setAssetCategory('jet_fan')"     class="cat-pill">🌀 Jet Fan</button>
+                        <button id="catpill-general"     onclick="setAssetCategory('general')"     class="cat-pill">🔩 General</button>
+                    </div>
+                </div>
+                <div class="custom-scroll" style="overflow-x:auto;">
+                    <table style="width:100%;border-collapse:collapse;min-width:600px;">
+                        <thead style="background:rgba(6,182,212,.05);border-bottom:1px solid rgba(255,255,255,.06);">
+                            <tr>
+                                <th style="padding:10px 16px;text-align:left;font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;width:22%;">Asset ID</th>
+                                <th style="padding:10px 16px;text-align:left;font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;width:32%;">Name</th>
+                                <th style="padding:10px 16px;text-align:left;font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;width:18%;">Location</th>
+                                <th style="padding:10px 16px;text-align:left;font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;width:12%;">Category</th>
+                                <th style="padding:10px 16px;text-align:left;font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;width:10%;">Frequency</th>
+                                <th style="padding:10px 16px;text-align:left;font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;width:6%;">Next Due</th>
+                            </tr>
+                        </thead>
+                        <tbody id="asset-table-body">
+                            <tr><td colspan="6" style="padding:40px;text-align:center;color:#475569;">Loading assets...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════ CALENDAR ════ -->
+        <div id="section-calendar" class="section" style="height:calc(100vh - 86px);">
+            <div class="cal-grid" style="display:grid;grid-template-columns:300px 1fr;gap:16px;height:100%;">
+                <div class="ultra-glass" style="border-radius:20px;padding:18px;display:flex;flex-direction:column;overflow:hidden;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-shrink:0;">
+                        <button id="prev-month" style="background:rgba(255,255,255,.05);border:none;color:#64748b;cursor:pointer;padding:8px;border-radius:8px;transition:all .2s;display:flex;align-items:center;" onmouseover="this.style.color='var(--primary)';this.style.background='rgba(6,182,212,.1)'" onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,.05)'">
+                            <i data-lucide="chevron-left" style="width:18px;height:18px;"></i>
+                        </button>
+                        <h2 id="calendar-month-year" style="color:white;font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;margin:0;font-family:'Orbitron',monospace;"></h2>
+                        <button id="next-month" style="background:rgba(255,255,255,.05);border:none;color:#64748b;cursor:pointer;padding:8px;border-radius:8px;transition:all .2s;display:flex;align-items:center;" onmouseover="this.style.color='var(--primary)';this.style.background='rgba(6,182,212,.1)'" onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,.05)'">
+                            <i data-lucide="chevron-right" style="width:18px;height:18px;"></i>
+                        </button>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center;margin-bottom:6px;flex-shrink:0;">
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">SUN</span>
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">MON</span>
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">TUE</span>
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">WED</span>
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">THU</span>
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">FRI</span>
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">SAT</span>
+                    </div>
+                    <div id="calendar-grid"></div>
+                </div>
+                <!-- Day schedule -->
+                <div class="ultra-glass" style="border-radius:20px;padding:20px 24px;display:flex;flex-direction:column;min-width:0;overflow:hidden;">
+                    <h3 id="selected-day-label" style="color:#475569;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.06);">Select a date to view schedule</h3>
+                    <div id="day-schedule-container" class="custom-scroll" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;">
+                        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#334155;text-align:center;">
+                            <i data-lucide="calendar" style="width:48px;height:48px;margin-bottom:12px;color:#1e293b;"></i>
+                            <p style="font-size:16px;font-weight:700;color:#475569;margin:0 0 8px;">No Date Selected</p>
+                            <p style="font-size:13px;margin:0;">Click any date to view scheduled maintenance tasks</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════ WORK ORDERS ════ -->
+        <div id="section-workflow" class="section" style="height:calc(100vh - 86px);">
+            <div class="ultra-glass" style="border-radius:20px;overflow:hidden;display:flex;flex-direction:column;height:100%;">
+                <div style="padding:16px 20px;background:rgba(255,255,255,.02);border-bottom:1px solid rgba(255,255,255,.07);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                        <h2 style="color:white;font-weight:700;font-size:14px;letter-spacing:.05em;text-transform:uppercase;margin:0;">SLN Terminus Work Orders</h2>
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <select id="wo-filter" style="background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;cursor:pointer;" onchange="renderWorkOrders()">
+                                <option value="all">All Active</option>
+                                <option value="open">Open</option>
+                                <option value="overdue">Overdue</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="completed">Completed</option>
+                                <option value="pending-approval">Pending Approval</option>
+                                <option value="closed">🔒 Closed / Archived</option>
+                            </select>
+                            <div id="filter-counts" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+                            <button id="exportWOBtn" style="background:rgba(6,182,212,.08);color:var(--primary);border:1px solid rgba(6,182,212,.2);border-radius:8px;padding:7px 12px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;letter-spacing:.06em;transition:all .2s;" onmouseover="this.style.background='var(--primary)';this.style.color='black'" onmouseout="this.style.background='rgba(6,182,212,.08)';this.style.color='var(--primary)'">
+                                <i data-lucide="file-down" style="width:12px;height:12px;"></i> Export
+                            </button>
+                            <button id="refreshWOBtn" style="background:rgba(255,255,255,.05);color:#94a3b8;border:none;border-radius:8px;padding:7px 12px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;transition:background .2s;" onmouseover="this.style.background='rgba(255,255,255,.1)'" onmouseout="this.style.background='rgba(255,255,255,.05)'">
+                                <i data-lucide="refresh-cw" style="width:12px;height:12px;"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="wo-stream-container" class="custom-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;"></div>
+            </div>
+        </div>
+
+        <!-- ════ CLOSED WOs ════ -->
+        <div id="section-closed-wos" class="section" style="height:calc(100vh - 86px);">
+            <div class="ultra-glass" style="border-radius:20px;overflow:hidden;display:flex;flex-direction:column;height:100%;">
+                <div style="padding:16px 20px;background:rgba(255,255,255,.02);border-bottom:1px solid rgba(255,255,255,.07);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                        <h2 style="color:white;font-weight:700;font-size:14px;letter-spacing:.05em;text-transform:uppercase;margin:0;display:flex;align-items:center;gap:8px;">
+                            <i data-lucide="archive" style="width:15px;height:15px;color:#64748b;"></i>
+                            Closed / Completed Work Orders
+                            <span id="closed-wo-count-badge" style="padding:2px 8px;border-radius:4px;background:rgba(100,116,139,.15);color:#64748b;font-size:10px;font-weight:800;border:1px solid rgba(100,116,139,.25);">0</span>
+                        </h2>
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <select id="closed-wo-filter" onchange="renderClosedWOs()" style="background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;cursor:pointer;">
+                                <option value="all">All Closed</option>
+                                <option value="completed">✅ Completed</option>
+                                <option value="closed">🔒 Archived</option>
+                            </select>
+                            <select id="closed-wo-ppm-filter" onchange="renderClosedWOs()" style="background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;cursor:pointer;">
+                                <option value="all">All Types</option>
+                                <option value="inhouse">🔧 In-House</option>
+                                <option value="vendor">🏢 Vendor</option>
+                            </select>
+                            <input id="closed-wo-search" type="text" placeholder="Search WO / Asset..." onkeyup="renderClosedWOs()" style="background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;width:170px;">
+                        </div>
+                    </div>
+                </div>
+                <div id="closed-wo-container" class="custom-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;"></div>
+            </div>
+        </div>
+
+        <!-- ════ AMC TRACKER ════ -->
+        <div id="section-amc-tracker" class="section" style="height:calc(100vh - 86px);">
+            <div class="ultra-glass" style="border-radius:20px;overflow:hidden;display:flex;flex-direction:column;height:100%;">
+                <div style="padding:16px 20px;background:rgba(255,255,255,.02);border-bottom:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                    <h2 style="color:white;font-weight:700;font-size:14px;letter-spacing:.05em;text-transform:uppercase;margin:0;">SLN Terminus AMC Tracker</h2>
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                        <select id="amc-filter" onchange="renderAmcTracker()" style="background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;cursor:pointer;">
+                            <option value="all">All Contracts</option>
+                            <option value="active">Active</option>
+                            <option value="expiring">Expiring Soon</option>
+                            <option value="expired">Expired</option>
+                        </select>
+                        <label style="display:flex;align-items:center;gap:4px;padding:7px 12px;background:rgba(6,182,212,.08);color:var(--primary);border:1px solid rgba(6,182,212,.25);border-radius:8px;font-size:10px;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='rgba(6,182,212,.22)'" onmouseout="this.style.background='rgba(6,182,212,.08)'">
+                            <i data-lucide="upload" style="width:12px;height:12px;"></i> Upload Source
+                            <input type="file" id="amc-file-upload" style="display:none;" accept=".xlsx,.xls,.csv" onchange="handleAmcFileUpload(this)">
+                        </label>
+                        <button id="amc-addBtn" onclick="openAmcEditModal({contract_id:'',asset_id:'',asset_name:'',vendor:'',start_date:'',end_date:'',value:'',status:'active',scope:'',notes:''})" style="background:rgba(16,185,129,.08);color:var(--green);border:1px solid rgba(16,185,129,.25);border-radius:8px;padding:7px 12px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;letter-spacing:.06em;transition:all .2s;" onmouseover="this.style.background='var(--green)';this.style.color='#000'" onmouseout="this.style.background='rgba(16,185,129,.08)';this.style.color='var(--green)'">
+                            <i data-lucide="plus" style="width:12px;height:12px;"></i> Add Contract
+                        </button>
+                        <button id="amc-exportBtn" style="background:rgba(139,92,246,.08);color:var(--accent);border:1px solid rgba(139,92,246,.2);border-radius:8px;padding:7px 12px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;letter-spacing:.06em;transition:all .2s;" onmouseover="this.style.background='var(--accent)';this.style.color='white'" onmouseout="this.style.background='rgba(139,92,246,.08)';this.style.color='var(--accent)'">
+                            <i data-lucide="file-down" style="width:12px;height:12px;"></i> Export
+                        </button>
+                    </div>
+                </div>
+                <div id="amc-stream-container" class="custom-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;"></div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- ═══════════ WO DETAILS MODAL ═══════════ -->
+<div id="wo-details-modal" class="modal-wrap" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:600;align-items:center;justify-content:center;padding:16px;">
+    <div class="modal-inner ultra-glass" style="width:100%;max-width:860px;max-height:90vh;display:flex;flex-direction:column;border-radius:20px;overflow:hidden;border:1px solid rgba(6,182,212,.25);">
+        <div style="padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.07);background:rgba(6,182,212,.04);display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+                <h3 id="modal-wo-id" style="font-size:18px;font-weight:800;color:white;margin:0 0 4px;">SLN-PPM-2026-00</h3>
+                <p id="modal-asset-name" style="font-size:14px;color:var(--primary);font-weight:600;margin:0 0 2px;"></p>
+                <p id="modal-location" style="font-size:12px;color:#64748b;margin:0;display:flex;align-items:center;gap:4px;"></p>
+            </div>
+            <button id="close-wo-modal-btn" style="background:none;border:none;color:#64748b;cursor:pointer;padding:4px;border-radius:6px;transition:color .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#64748b'">
+                <i data-lucide="x" style="width:22px;height:22px;"></i>
+            </button>
+        </div>
+        <div class="custom-scroll" style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:20px;">
+            <div class="modal-grid-4" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+                <div class="ultra-glass" style="border-radius:12px;padding:14px;"><p style="font-size:9px;color:#475569;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin:0 0 6px;">Priority</p><p id="modal-priority" style="font-size:16px;font-weight:800;color:var(--amber);margin:0;">HIGH</p></div>
+                <div class="ultra-glass" style="border-radius:12px;padding:14px;"><p style="font-size:9px;color:#475569;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin:0 0 6px;">Due Date</p><p id="modal-due-date" style="font-size:16px;font-weight:800;color:white;margin:0;"></p></div>
+                <div class="ultra-glass" style="border-radius:12px;padding:14px;"><p style="font-size:9px;color:#475569;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin:0 0 6px;">Status</p><p id="modal-status" style="font-size:16px;font-weight:800;color:var(--primary);margin:0;">Open</p></div>
+                <div class="ultra-glass" style="border-radius:12px;padding:14px;"><p style="font-size:9px;color:#475569;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin:0 0 6px;">Checklist</p><p id="modal-checklist-status" style="font-size:16px;font-weight:800;color:var(--amber);margin:0;">0/0</p></div>
+            </div>
+
+            <!-- Assign Technician -->
+            <div class="ultra-glass" style="border-radius:14px;padding:20px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.06);">
+                    <h4 style="color:white;font-weight:700;font-size:15px;margin:0;display:flex;align-items:center;gap:8px;">
+                        <i data-lucide="user-check" style="width:18px;height:18px;color:var(--primary);"></i> Assign Technician
+                    </h4>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div><label class="field-label">Supervisor</label><select id="modal-supervisor" class="assign-field"><option value="">Select Supervisor</option></select></div>
+                    <div><label class="field-label">Technician</label><select id="modal-technician" class="assign-field"><option value="">Select Technician</option></select></div>
+                </div>
+                <button id="assign-btn" style="margin-top:8px;padding:10px 20px;background:rgba(6,182,212,.12);color:var(--primary);border:1px solid rgba(6,182,212,.25);border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s;" onmouseover="this.style.background='var(--primary)';this.style.color='black'" onmouseout="this.style.background='rgba(6,182,212,.12)';this.style.color='var(--primary)'">
+                    <i data-lucide="user-plus" style="width:14px;height:14px;"></i> Assign & Notify
+                </button>
+            </div>
+
+            <!-- Checklist -->
+            <div class="ultra-glass" style="border-radius:14px;padding:20px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.06);">
+                    <h4 style="color:white;font-weight:700;font-size:15px;margin:0;display:flex;align-items:center;gap:8px;">
+                        <i data-lucide="list-check" style="width:18px;height:18px;color:var(--primary);"></i> Maintenance Checklist
+                    </h4>
+                    <span id="checklist-progress" style="padding:4px 12px;background:rgba(6,182,212,.12);color:var(--primary);border-radius:20px;font-size:12px;font-weight:700;">0%</span>
+                </div>
+                <div style="background:rgba(255,255,255,.06);border-radius:4px;height:4px;margin-bottom:16px;">
+                    <div id="checklist-progress-bar" style="height:4px;border-radius:4px;background:var(--primary);width:0%;transition:width .4s;"></div>
+                </div>
+                <div id="checklist-container" class="custom-scroll" style="display:flex;flex-direction:column;gap:10px;max-height:280px;overflow-y:auto;padding-right:4px;"></div>
+                <div style="margin-top:16px;">
+                    <label style="display:block;font-size:11px;color:#475569;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Technician Notes</label>
+                    <textarea id="technician-notes" placeholder="Document observations, issues encountered..." style="width:100%;padding:12px;background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.08);border-radius:10px;color:white;font-family:'Rajdhani',sans-serif;font-size:13px;resize:none;outline:none;" rows="3" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='rgba(255,255,255,.08)'"></textarea>
+                </div>
+                <button id="save-checklist-btn" style="margin-top:12px;width:100%;padding:12px;background:rgba(6,182,212,.12);color:var(--primary);border:1px solid rgba(6,182,212,.25);border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;" onmouseover="this.style.background='var(--primary)';this.style.color='black'" onmouseout="this.style.background='rgba(6,182,212,.12)';this.style.color='var(--primary)'">
+                    <i data-lucide="save" style="width:15px;height:15px;"></i> Save Checklist Progress
+                </button>
+            </div>
+
+            <!-- Photo upload -->
+            <div class="ultra-glass" style="border-radius:14px;padding:20px;">
+                <h4 style="color:white;font-weight:700;font-size:15px;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;">
+                    <i data-lucide="camera" style="width:18px;height:18px;color:var(--primary);"></i> Photo Evidence
+                </h4>
+                <div id="drop-zone" style="border:2px dashed rgba(6,182,212,.2);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='rgba(6,182,212,.5)'" onmouseout="this.style.borderColor='rgba(6,182,212,.2)'">
+                    <i data-lucide="upload-cloud" style="width:28px;height:28px;color:#475569;margin:0 auto 8px;display:block;"></i>
+                    <p style="color:#475569;font-size:12px;margin:0;">Click or drag to upload photos</p>
+                    <input type="file" id="image-upload" style="display:none;" accept="image/*" multiple>
+                </div>
+                <div id="image-preview-container" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;"></div>
+            </div>
+
+            <!-- Read-only banner (shown when WO is closed/completed) -->
+            <div id="wo-readonly-banner" style="display:none;padding:12px 16px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.2);border-radius:12px;align-items:center;gap:10px;flex-wrap:wrap;"></div>
+
+            <!-- Supervisor approval -->
+            <div class="ultra-glass" id="wo-action-section" style="border-radius:14px;padding:20px;">
+                <h4 style="color:white;font-weight:700;font-size:15px;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;">
+                    <i data-lucide="shield-check" style="width:18px;height:18px;color:var(--green);"></i> Supervisor Sign-off
+                </h4>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                    <div>
+                        <label style="display:block;font-size:11px;color:#475569;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Approval Notes</label>
+                        <textarea id="approval-notes" placeholder="Add sign-off notes or observations..." style="width:100%;padding:12px;background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.08);border-radius:10px;color:white;font-family:'Rajdhani',sans-serif;font-size:13px;resize:none;outline:none;" rows="2" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='rgba(255,255,255,.08)'"></textarea>
+                    </div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <button id="close-work-order-btn" style="flex:1;padding:12px;background:rgba(16,185,129,.12);color:var(--green);border:1px solid rgba(16,185,129,.25);border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;" onmouseover="this.style.background='var(--green)';this.style.color='black'" onmouseout="this.style.background='rgba(16,185,129,.12)';this.style.color='var(--green)'">
+                            <i data-lucide="check-circle" style="width:15px;height:15px;"></i> Approve & Close WO
+                        </button>
+                        <button id="reject-wo-btn" style="padding:12px 18px;background:rgba(244,63,94,.08);color:var(--rose);border:1px solid rgba(244,63,94,.2);border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s;" onmouseover="this.style.background='rgba(244,63,94,.2)'" onmouseout="this.style.background='rgba(244,63,94,.08)'">
+                            <i data-lucide="x-circle" style="width:14px;height:14px;"></i> Return for Revision
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════ AMC EDIT MODAL ═══════════ -->
+<div id="amc-edit-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:600;align-items:center;justify-content:center;padding:16px;">
+    <div class="ultra-glass" style="width:100%;max-width:640px;border-radius:20px;overflow:hidden;border:1px solid rgba(139,92,246,.3);">
+        <div style="padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.07);background:linear-gradient(90deg,rgba(139,92,246,.08),rgba(6,182,212,.05));display:flex;justify-content:space-between;align-items:center;">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:8px;height:8px;border-radius:50%;background:#8b5cf6;box-shadow:0 0 8px #8b5cf6;"></div>
+                <h3 id="amc-modal-title" style="color:white;font-size:15px;font-weight:800;margin:0;letter-spacing:.04em;">AMC Contract Details</h3>
+            </div>
+            <button id="close-amc-edit-modal-btn" style="background:none;border:none;color:#64748b;cursor:pointer;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#64748b'">
+                <i data-lucide="x" style="width:22px;height:22px;"></i>
+            </button>
+        </div>
+        <div class="custom-scroll" style="padding:22px;display:flex;flex-direction:column;gap:13px;max-height:82vh;overflow-y:auto;">
+            <!-- Row 1 -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div><label class="field-label">Contract ID *</label><input type="text" id="amc-contract-id" class="amc-field" placeholder="SLN-AMC-2026-001"></div>
+                <div><label class="field-label">Asset ID</label><input type="text" id="amc-asset-id" class="amc-field" placeholder="Asset Code"></div>
+            </div>
+            <!-- Row 2 -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div><label class="field-label">Asset Name *</label><input type="text" id="amc-asset-name" class="amc-field" placeholder="Equipment name"></div>
+                <div><label class="field-label">Vendor / Contractor *</label><input type="text" id="amc-vendor" class="amc-field" placeholder="Vendor company name"></div>
+            </div>
+            <!-- Row 3 -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div><label class="field-label">Start Date</label><input type="date" id="amc-start-date" class="amc-field"></div>
+                <div><label class="field-label">End Date</label><input type="date" id="amc-end-date" class="amc-field"></div>
+            </div>
+            <!-- Row 4 -->
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+                <div>
+                    <label class="field-label">Frequency</label>
+                    <select id="amc-frequency" class="amc-field">
+                        <option value="Monthly">Monthly</option>
+                        <option value="Quarterly">Quarterly</option>
+                        <option value="Half-Yearly">Half-Yearly</option>
+                        <option value="Yearly">Yearly</option>
+                        <option value="One-Time">One-Time</option>
+                    </select>
+                </div>
+                <div><label class="field-label">Next Service Date</label><input type="date" id="amc-next-service" class="amc-field"></div>
+                <div><label class="field-label">Contract Value (₹)</label><input type="number" id="amc-value" class="amc-field" placeholder="0"></div>
+            </div>
+            <!-- Row 5 -->
+            <div>
+                <label class="field-label">Status</label>
+                <select id="amc-status" class="amc-field">
+                    <option value="active">Active</option>
+                    <option value="expiring">Expiring Soon</option>
+                    <option value="expired">Expired</option>
+                </select>
+            </div>
+            <!-- Row 6 -->
+            <div>
+                <label class="field-label">Scope of Work</label>
+                <textarea id="amc-scope" class="amc-field" rows="2" style="resize:vertical;" placeholder="Describe what is covered under this contract..."></textarea>
+            </div>
+            <!-- Row 7 -->
+            <div>
+                <label class="field-label">Notes / Remarks</label>
+                <textarea id="amc-notes" class="amc-field" rows="2" style="resize:vertical;" placeholder="Additional notes, renewal reminders, contact details..."></textarea>
+            </div>
+            <!-- Actions -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;">
+                <button id="amc-cancel-edit-btn"
+                    style="padding:12px;background:rgba(244,63,94,.1);color:#f43f5e;border:1px solid rgba(244,63,94,.3);border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s;"
+                    onmouseover="this.style.background='#e11d48';this.style.color='white';this.style.borderColor='#e11d48'"
+                    onmouseout="this.style.background='rgba(244,63,94,.1)';this.style.color='#f43f5e';this.style.borderColor='rgba(244,63,94,.3)'">
+                    <i data-lucide="x" style="width:14px;height:14px;"></i> Cancel
+                </button>
+                <button id="amc-save-edit-btn"
+                    style="padding:12px;background:linear-gradient(90deg,#16a34a,#059669);color:white;border:none;border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity .2s;"
+                    onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+                    <i data-lucide="check" style="width:14px;height:14px;"></i> Save Contract
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════════ -->
+<script>
+// ── API ENDPOINTS ──
+const API = {
+    ASSETS:       '/sln_api/mms/assets',
+    STATS:        '/sln_api/mms/stats',
+    WORKORDERS:   '/sln_api/mms/workorders',
+    WO_BY_DATE:   '/sln_api/mms/workorders/by-date',
+    WO_CREATE:    '/sln_api/mms/workflow/create',
+    WO_UPDATE:    '/sln_api/mms/workflow/update',
+    WO_CLOSE:     '/sln_api/mms/workflow/close',
+    WO_REOPEN:    '/sln_api/mms/workflow/reopen',
+    WO_EXPORT:    '/sln_api/mms/workorders/export',
+    AMC:          '/sln_api/mms/amc/contracts',
+    AMC_UPDATE:   '/sln_api/mms/amc/update',
+    AMC_EXPORT:   '/sln_api/mms/amc/contracts/export',
+    DAILY_MAIL:   '/sln_api/mms/trigger-daily-mail',
+    IMPORT_EXCEL: '/sln_api/mms/assets/import',
+    TECHNICIANS:  '/sln_api/mms/technicians',
+    SUPERVISORS:  '/sln_api/mms/supervisors',
+};
+
+// ── STATE ──
+let assetsData = [];
+let viewDate   = new Date();
+let charts     = {};
+let _currentWorkOrders = [];
+let _currentAmcContracts = [];
+let _technicians  = [];
+let _supervisors  = [];
+let currentWO     = null;
+let currentAmcContract = null;
+let _assetTab     = 'all';
+let _assetCat     = 'all';
+
+// ── UTILITIES ──
+function parseDate(str) {
+    if (!str || !str.toString().trim()) return null;
+    const s = str.toString().trim();
+    // ISO: 2025-01-31
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) { const d = new Date(s); return isNaN(d) ? null : d; }
+    // DD/MM/YYYY or DD-MM-YYYY (Excel India format)
+    const dmy = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+    if (dmy) {
+        const day = parseInt(dmy[1]), mon = parseInt(dmy[2]), yr = dmy[3].length === 2 ? 2000+parseInt(dmy[3]) : parseInt(dmy[3]);
+        const d = new Date(yr, mon-1, day);
+        return isNaN(d) ? null : d;
+    }
+    const d = new Date(s); return isNaN(d) ? null : d;
+}
+function toDateStr(d) {
+    if (!d) return '';
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function formatDateDisplay(s) {
+    if (!s) return 'N/A';
+    const d = parseDate(s);
+    return d ? d.toLocaleDateString('en-US', { day:'2-digit', month:'short', year:'numeric' }) : s;
+}
+function isOverdue(wo) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const ds    = typeof wo === 'string' ? wo : (wo['Due Date'] || wo.due_date || '');
+    const dd    = parseDate(ds);
+    if (!dd) return false;
+    dd.setHours(0,0,0,0);
+    return dd < today;
+}
+function getWOStatus(wo) {
+    const raw = (wo.Status || wo.status || 'open').toString().toLowerCase().trim();
+    if (raw === 'completed' || raw === 'closed') return raw === 'closed' ? 'closed' : 'completed';
+    if (raw === 'in-progress' || raw === 'in progress') return 'in-progress';
+    if (raw === 'pending-approval' || raw === 'pending approval') return 'pending-approval';
+    if ((raw === 'open' || raw === 'overdue') && isOverdue(wo)) return 'overdue';
+    return 'open';
+}
+function calculateFrequency(lastService, nextDue, freqHint) {
+    // Use explicit frequency field if provided by server
+    const FREQ_COLORS = { 'MONTHLY':'#10b981', 'QUARTERLY':'#f59e0b', 'HALF-YEARLY':'#8b5cf6', 'YEARLY':'#f43f5e' };
+    if (freqHint) {
+        const fh = freqHint.toString().toUpperCase().trim();
+        const color = FREQ_COLORS[fh] || '#10b981';
+        return { label: fh, color };
+    }
+    const l = parseDate(lastService), n = parseDate(nextDue);
+    if (!l || !n) return { label: 'MONTHLY', color: '#10b981' };
+    const diff = Math.ceil(Math.abs(n - l) / 86400000);
+    if (diff <= 45)  return { label: 'MONTHLY',     color: '#10b981' };
+    if (diff <= 120) return { label: 'QUARTERLY',   color: '#f59e0b' };
+    if (diff <= 210) return { label: 'HALF-YEARLY', color: '#8b5cf6' };
+    return                  { label: 'YEARLY',      color: '#f43f5e' };
+}
+function setEl(id, html)     { const e = document.getElementById(id); if (e) e.innerHTML = html; }
+function setTxt(id, val)     { const e = document.getElementById(id); if (e) e.textContent = val; }
+function loadingHTML(msg)    { return `<div style="display:flex;align-items:center;justify-content:center;height:100%;"><div style="text-align:center;"><div style="width:34px;height:34px;border:3px solid rgba(6,182,212,.25);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 14px;"></div><p style="font-size:15px;font-weight:700;color:#475569;margin:0;">${msg}</p></div></div>`; }
+function emptyHTML(t, s)     { return `<div style="display:flex;align-items:center;justify-content:center;height:100%;"><div style="text-align:center;"><p style="font-size:16px;font-weight:700;color:#475569;margin:0 0 8px;">${t}</p><p style="font-size:13px;color:#334155;margin:0;">${s}</p></div></div>`; }
+
+// ── CHECKLISTS ──
+const ASSET_CHECKLISTS = {
+    dg:      [{ id:'dg_1',  text:'Check fuel level and quality',              required:true,  completed:false, comments:'' },
+              { id:'dg_2',  text:'Inspect battery terminals and voltage',      required:true,  completed:false, comments:'' },
+              { id:'dg_3',  text:'Verify coolant level and condition',         required:true,  completed:false, comments:'' },
+              { id:'dg_4',  text:'Check oil level and quality',                required:true,  completed:false, comments:'' },
+              { id:'dg_5',  text:'Test automatic transfer switch',             required:true,  completed:false, comments:'' },
+              { id:'dg_6',  text:'Inspect exhaust system',                     required:false, completed:false, comments:'' },
+              { id:'dg_7',  text:'Verify control panel alarms',                required:false, completed:false, comments:'' }],
+    transformer:[{ id:'tr_1', text:'Inspect oil level and leaks',              required:true,  completed:false, comments:'' },
+                 { id:'tr_2', text:'Check bushing condition',                   required:true,  completed:false, comments:'' },
+                 { id:'tr_3', text:'Verify earthing connections',               required:true,  completed:false, comments:'' },
+                 { id:'tr_4', text:'Check cooling fans and radiators',          required:true,  completed:false, comments:'' },
+                 { id:'tr_5', text:'Measure insulation resistance',             required:true,  completed:false, comments:'' },
+                 { id:'tr_6', text:'Inspect protection relay settings',         required:false, completed:false, comments:'' }],
+    chiller: [{ id:'ch_1', text:'Check refrigerant pressure levels',          required:true,  completed:false, comments:'' },
+              { id:'ch_2', text:'Inspect condenser water flow',                required:true,  completed:false, comments:'' },
+              { id:'ch_3', text:'Verify compressor oil level',                 required:true,  completed:false, comments:'' },
+              { id:'ch_4', text:'Check electrical connections and terminals',  required:true,  completed:false, comments:'' },
+              { id:'ch_5', text:'Inspect for refrigerant leaks',               required:true,  completed:false, comments:'' }],
+    fire:    [{ id:'fi_1', text:'Test fire alarm panel functionality',         required:true,  completed:false, comments:'' },
+              { id:'fi_2', text:'Check sprinkler heads and pipes',             required:true,  completed:false, comments:'' },
+              { id:'fi_3', text:'Verify extinguisher pressure and seals',      required:true,  completed:false, comments:'' },
+              { id:'fi_4', text:'Test smoke detectors in all zones',           required:true,  completed:false, comments:'' }],
+    default: [{ id:'gen_1', text:'Visual inspection of equipment condition',  required:true,  completed:false, comments:'' },
+              { id:'gen_2', text:'Check for unusual noises or vibrations',    required:true,  completed:false, comments:'' },
+              { id:'gen_3', text:'Verify safety guards and covers',           required:true,  completed:false, comments:'' },
+              { id:'gen_4', text:'Inspect for leaks or damage',               required:true,  completed:false, comments:'' },
+              { id:'gen_5', text:'Test emergency stop functionality',         required:false, completed:false, comments:'' }]
+};
+function getChecklistForAsset(name) {
+    const n = (name||'').toLowerCase();
+    if (n.includes('transformer')) return 'transformer';
+    if (n.includes('dg') || n.includes('generator')) return 'dg';
+    if (n.includes('chiller') || n.includes('hvac') || n.includes('ahu')) return 'chiller';
+    if (n.includes('fire') || n.includes('sprinkler')) return 'fire';
+    return 'default';
+}
+
+// ── THEME ──
+function toggleTheme() {
+    const isLight = document.body.classList.toggle('light');
+    document.getElementById('theme-icon').textContent  = isLight ? '☀️' : '🌙';
+    document.getElementById('theme-label').textContent = isLight ? 'Light' : 'Dark';
+    try { localStorage.setItem('slnMmsTheme', isLight ? 'light' : 'dark'); } catch(e) {}
+}
+(function() {
+    try {
+        if (localStorage.getItem('slnMmsTheme') === 'light') {
+            document.body.classList.add('light');
+            const icon  = document.getElementById('theme-icon');
+            const label = document.getElementById('theme-label');
+            if (icon)  icon.textContent  = '☀️';
+            if (label) label.textContent = 'Light';
+        }
+    } catch(e) {}
+})();
+
+// ── CLOCK ──
+function updateTime() {
+    const t = new Date().toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true });
+    const c1 = document.getElementById('live-clock'); if (c1) c1.textContent = t;
+    const c2 = document.getElementById('tb-clock');   if (c2) c2.textContent = t;
+}
+
+// ── SECTION SWITCHER ──
+function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    const sec = document.getElementById(`section-${id}`);
+    if (sec) sec.classList.add('active');
+    document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
+    const btn = document.querySelector(`[data-section="${id}"]`);
+    if (btn) btn.classList.add('active');
+    if (id === 'calendar')    renderCalendar();
+    if (id === 'workflow')    renderWorkOrders();
+    if (id === 'closed-wos')  renderClosedWOs();
+    if (id === 'amc-tracker') renderAmcTracker();
+}
+function goWOs(filter) {
+    const sel = document.getElementById('wo-filter');
+    if (sel) sel.value = filter;
+    showSection('workflow');
+    renderWorkOrders();
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', async () => {
+    lucide.createIcons();
+    setupEventListeners();
+    await initDashboard();
+    updateTime();
+    setInterval(updateTime, 1000);
+});
+
+function setupEventListeners() {
+    // Sidebar nav
+    document.querySelectorAll('[data-section]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            showSection(btn.getAttribute('data-section'));
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('sidebar-overlay').classList.remove('open');
+            }
+        });
+    });
+    // Mobile toggle
+    document.getElementById('mobile-toggle')?.addEventListener('click', () => {
+        document.getElementById('sidebar').classList.toggle('open');
+        document.getElementById('sidebar-overlay').classList.toggle('open');
+    });
+    document.getElementById('sidebar-overlay')?.addEventListener('click', () => {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebar-overlay').classList.remove('open');
+    });
+    // File uploads
+    document.getElementById('file-upload')?.addEventListener('change', e => handleFileUpload(e.target));
+    document.getElementById('refresh-btn')?.addEventListener('click', initDashboard);
+    // Asset filters
+    document.getElementById('asset-search')?.addEventListener('input', e => {
+        applyAssetFilters(e.target.value.toLowerCase(), document.getElementById('asset-freq-filter')?.value || 'all');
+    });
+    document.getElementById('asset-freq-filter')?.addEventListener('change', e => {
+        applyAssetFilters(document.getElementById('asset-search')?.value.toLowerCase() || '', e.target.value);
+    });
+    // WO / AMC
+    document.getElementById('wo-filter')?.addEventListener('change', renderWorkOrders);
+    document.getElementById('amc-filter')?.addEventListener('change', renderAmcTracker);
+    document.getElementById('exportWOBtn')?.addEventListener('click', () => { window.location.href = API.WO_EXPORT; });
+    document.getElementById('refreshWOBtn')?.addEventListener('click', initDashboard);
+    document.getElementById('amc-exportBtn')?.addEventListener('click', () => { window.location.href = API.AMC_EXPORT; });
+    document.getElementById('triggerDailyEmail')?.addEventListener('click', triggerDailyMail);
+    document.getElementById('autoGenWOBtn')?.addEventListener('click', autoGenerateWOs);
+    // Modals
+    document.getElementById('close-wo-modal-btn')?.addEventListener('click', closeModal);
+    document.getElementById('close-amc-edit-modal-btn')?.addEventListener('click', closeAmcModal);
+    document.getElementById('amc-cancel-edit-btn')?.addEventListener('click', closeAmcModal);
+    document.getElementById('amc-save-edit-btn')?.addEventListener('click', saveAmcContract);
+    document.getElementById('save-checklist-btn')?.addEventListener('click', saveChecklistProgress);
+    document.getElementById('close-work-order-btn')?.addEventListener('click', closeWorkOrderWithApproval);
+    document.getElementById('reject-wo-btn')?.addEventListener('click', () => showToast('Work order returned for revision.', 'info'));
+    document.getElementById('assign-btn')?.addEventListener('click', assignWO);
+    document.getElementById('prev-month')?.addEventListener('click', () => navMonth(-1));
+    document.getElementById('next-month')?.addEventListener('click', () => navMonth(1));
+    document.getElementById('drop-zone')?.addEventListener('click', () => document.getElementById('image-upload').click());
+    document.getElementById('image-upload')?.addEventListener('change', handleImageUpload);
+    document.getElementById('wo-details-modal')?.addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+    document.getElementById('amc-edit-modal')?.addEventListener('click', e => { if (e.target === e.currentTarget) closeAmcModal(); });
+}
+
+async function initDashboard() {
+    try {
+        setEl('asset-table-body', `<tr><td colspan="6" style="padding:40px;text-align:center;color:#475569;">Loading SLN assets...</td></tr>`);
+        setEl('wo-stream-container', loadingHTML('Loading work orders...'));
+        setEl('amc-stream-container', loadingHTML('Loading AMC contracts...'));
+
+        const [assetRes, statsRes, woRes, amcRes, techRes, supRes] = await Promise.all([
+            fetch(API.ASSETS).catch(() => ({ ok: false })),
+            fetch(API.STATS).catch(() => ({ ok: false })),
+            fetch(API.WORKORDERS).catch(() => ({ ok: false })),
+            fetch(API.AMC).catch(() => ({ ok: false })),
+            fetch(API.TECHNICIANS).catch(() => ({ ok: false })),
+            fetch(API.SUPERVISORS).catch(() => ({ ok: false })),
+        ]);
+        if (assetRes.ok) { const d = await assetRes.json(); assetsData = d.assets || []; }
+        if (woRes.ok)    { const d = await woRes.json();    _currentWorkOrders = d.work_orders || []; }
+        if (amcRes.ok)   { const d = await amcRes.json();   _currentAmcContracts = d.contracts || []; }
+        if (techRes.ok)  { const d = await techRes.json();  _technicians = d.technicians || []; }
+        if (supRes.ok)   { const d = await supRes.json();   _supervisors = d.supervisors || []; }
+
+        let stats = { total_assets: assetsData.length, pending_ppm:0, ppm_overdue:0, compliance_rate:0 };
+        if (statsRes.ok) { const s = await statsRes.json(); stats = { ...stats, ...s }; }
+
+        renderAssetTable();
+        renderStats(stats);
+        renderWorkOrders();
+        renderAmcTracker();
+        renderCharts();
+        renderCalendar();
+        lucide.createIcons();
+    } catch (err) {
+        console.error('SLN MMS init error:', err);
+        setEl('asset-table-body', `<tr><td colspan="6" style="padding:40px;text-align:center;color:#475569;">Error loading data. Check server connection.</td></tr>`);
+    }
+}
+
+// ── STATS ──
+function renderStats(api) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    let open=0, overdue=0, completed=0, inProg=0;
+    _currentWorkOrders.forEach(wo => {
+        const st = getWOStatus(wo);
+        if      (st === 'completed')  completed++;
+        else if (st === 'overdue')    overdue++;
+        else if (st === 'in-progress') inProg++;
+        else open++;
+    });
+    const total       = assetsData.length || api.total_assets || 0;
+    const pending     = api.pending_ppm   || open + overdue;
+    const ovrd        = api.ppm_overdue   || overdue;
+    const compliance  = api.compliance_rate != null ? api.compliance_rate : (_currentWorkOrders.length > 0 ? (completed/_currentWorkOrders.length*100) : 0);
+
+    setTxt('ov-total',       total.toLocaleString());
+    setTxt('ov-pending',     pending.toLocaleString());
+    setTxt('ov-overdue',     ovrd.toLocaleString());
+    setTxt('ov-compliance',  `${compliance.toFixed(1)}%`);
+    setTxt('wo-count-open',  open.toLocaleString());
+    setTxt('wo-count-overdue', overdue.toLocaleString());
+    setTxt('wo-count-inprogress', inProg.toLocaleString());
+    setTxt('wo-count-completed', completed.toLocaleString());
+
+    // Split cards
+    const ihA = assetsData.filter(a => (a.ppm_type||'inhouse') !== 'vendor').length;
+    const vdA = assetsData.filter(a => a.ppm_type === 'vendor').length;
+    let ihO=0,ihOv=0,vdO=0,vdOv=0;
+    _currentWorkOrders.forEach(wo => {
+        const pt = wo.ppm_type||'inhouse', st = getWOStatus(wo);
+        if (st==='completed'||st==='closed') return;
+        if (pt==='vendor') { vdO++; if(st==='overdue') vdOv++; }
+        else               { ihO++; if(st==='overdue') ihOv++; }
+    });
+    setTxt('ih-assets', ihA); setTxt('ih-open', ihO); setTxt('ih-overdue', ihOv);
+    setTxt('vd-assets', vdA); setTxt('vd-open', vdO); setTxt('vd-overdue', vdOv);
+
+    // Filter counts badge bar
+    const bar = document.getElementById('filter-counts');
+    if (bar) {
+        const badges = [
+            { label:'Open', count:open, color:'#f59e0b' },
+            { label:'Overdue', count:overdue, color:'#f43f5e' },
+            { label:'In Progress', count:inProg, color:'#06b6d4' },
+            { label:'Completed', count:completed, color:'#10b981' },
+        ].filter(b => b.count > 0);
+        bar.innerHTML = badges.map(b =>
+            `<span style="padding:3px 8px;border-radius:4px;font-size:10px;font-weight:800;background:${b.color}22;color:${b.color};border:1px solid ${b.color}55;">${b.label}: ${b.count}</span>`
+        ).join('');
+    }
+}
+
+// ── CHARTS ──
+function renderCharts() {
+    const chartCfg = {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels: { color:'#64748b', font:{ family:'Rajdhani', size:10 }, boxWidth:12 }}, tooltip:{ backgroundColor:'rgba(15,23,42,.95)', titleFont:{ family:'Rajdhani', size:11 }, bodyFont:{ family:'Rajdhani', size:11 } } }
+    };
+
+    // Status donut
+    const open=_currentWorkOrders.filter(w=>getWOStatus(w)==='open').length;
+    const ovrd=_currentWorkOrders.filter(w=>getWOStatus(w)==='overdue').length;
+    const inP =_currentWorkOrders.filter(w=>getWOStatus(w)==='in-progress').length;
+    const done=_currentWorkOrders.filter(w=>getWOStatus(w)==='completed').length;
+    if (charts.status) charts.status.destroy();
+    const sc = document.getElementById('statusChart');
+    if (sc) charts.status = new Chart(sc, { type:'doughnut', data:{ labels:['Open','Overdue','In Progress','Completed'], datasets:[{ data:[open,ovrd,inP,done], backgroundColor:['rgba(245,158,11,.75)','rgba(244,63,94,.75)','rgba(6,182,212,.75)','rgba(16,185,129,.75)'], borderWidth:0, hoverOffset:6 }] }, options:{ ...chartCfg, cutout:'72%' } });
+
+    // Frequency bar
+    let mo=0,qt=0,hy=0,yr=0;
+    assetsData.forEach(a => {
+        const f = calculateFrequency(a.lastService, a.nextDueDate, a.frequency);
+        if(f.label==='MONTHLY') mo++; else if(f.label==='QUARTERLY') qt++;
+        else if(f.label==='HALF-YEARLY') hy++; else yr++;
+    });
+    if (charts.freq) charts.freq.destroy();
+    const fc = document.getElementById('freqChart');
+    if (fc) charts.freq = new Chart(fc, { type:'bar', data:{ labels:['Monthly','Quarterly','Half-Yearly','Yearly'], datasets:[{ data:[mo,qt,hy,yr], backgroundColor:['rgba(16,185,129,.75)','rgba(245,158,11,.75)','rgba(139,92,246,.75)','rgba(244,63,94,.75)'], borderWidth:0, borderRadius:4 }] }, options:{ ...chartCfg, plugins:{...chartCfg.plugins, legend:{display:false}}, scales:{ x:{grid:{display:false},ticks:{color:'#475569',font:{family:'Rajdhani',size:10}}}, y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#475569',font:{family:'Rajdhani',size:10}}} } } });
+
+    // Category polar — dynamic from CAT_CFG
+    const catCounts = {};
+    Object.keys(CAT_CFG).forEach(k => { catCounts[k] = 0; });
+    assetsData.forEach(a => {
+        const k = a.category || 'general';
+        if (catCounts[k] !== undefined) catCounts[k]++; else catCounts['general']++;
+    });
+    const activeCats = Object.entries(catCounts).filter(([,v]) => v > 0);
+    if (charts.cat) charts.cat.destroy();
+    const cc = document.getElementById('catChart');
+    if (cc) charts.cat = new Chart(cc, { type:'polarArea', data:{
+        labels: activeCats.map(([k]) => CAT_CFG[k]?.label || k),
+        datasets:[{ data: activeCats.map(([,v]) => v),
+            backgroundColor: activeCats.map(([k]) => (CAT_CFG[k]?.color||'#94a3b8')+'BB'),
+            borderWidth:0 }] },
+        options:{ ...chartCfg, scales:{ r:{ grid:{color:'rgba(255,255,255,.06)'}, ticks:{display:false} } } } });
+}
+
+// ── CATEGORY CONFIG ──
+const CAT_CFG = {
+    chiller:     { label:'❄️ Chiller',      color:'#06b6d4' },
+    dg:          { label:'⚡ DG/Generator', color:'#f43f5e' },
+    transformer: { label:'🔌 Transformer',  color:'#f59e0b' },
+    ahu_fcu:     { label:'💨 AHU/FCU',      color:'#8b5cf6' },
+    lift:        { label:'🛗 Lift/Elevator',color:'#a78bfa' },
+    pump:        { label:'💧 Pump',         color:'#38bdf8' },
+    fire:        { label:'🔥 Fire/FA',      color:'#fb923c' },
+    bms_cctv:    { label:'🖥 BMS/CCTV',    color:'#e879f9' },
+    ups:         { label:'🔋 UPS',          color:'#4ade80' },
+    panels:      { label:'⚙️ Panels/MDB',  color:'#fbbf24' },
+    jet_fan:     { label:'🌀 Jet Fan',      color:'#67e8f9' },
+    general:     { label:'🔩 General',      color:'#94a3b8' },
+};
+const ALL_CATS = ['all','chiller','dg','transformer','ahu_fcu','lift','pump','fire','bms_cctv','ups','panels','jet_fan','general'];
+
+function setAssetTab(tab) {
+    _assetTab = tab;
+    ['all','inhouse','vendor'].forEach(t => {
+        const b = document.getElementById('atab-'+t); if (!b) return;
+        b.classList.toggle('active', t === tab);
+    });
+    applyAssetFilters(document.getElementById('asset-search')?.value||'', document.getElementById('asset-freq-filter')?.value||'all');
+}
+
+function setAssetCategory(cat) {
+    _assetCat = cat;
+    ALL_CATS.forEach(c => {
+        const b = document.getElementById('catpill-'+c); if (!b) return;
+        b.style.borderColor = 'rgba(255,255,255,.08)';
+        b.style.background  = 'transparent';
+        b.style.color       = '#475569';
+        if (c === cat) {
+            const col = c === 'all' ? 'var(--primary)' : (CAT_CFG[c]?.color || '#94a3b8');
+            const rgb = c === 'all' ? '6,182,212' : null;
+            b.style.borderColor = col + (rgb ? '' : '88');
+            b.style.background  = col + '18';
+            b.style.color       = col;
+        }
+    });
+    applyAssetFilters(document.getElementById('asset-search')?.value||'', document.getElementById('asset-freq-filter')?.value||'all');
+}
+
+function applyAssetFilters(query, freq) {
+    let filtered = assetsData.filter(a => {
+        if (_assetTab === 'inhouse' && (a.ppm_type||'inhouse') === 'vendor') return false;
+        if (_assetTab === 'vendor'  && (a.ppm_type||'inhouse') !== 'vendor') return false;
+        if (_assetCat !== 'all' && a.category !== _assetCat) return false;
+        const q = (query||'').toLowerCase();
+        const matchQ = !q || (a.id||'').toLowerCase().includes(q) || (a.name||'').toLowerCase().includes(q) || (a.location||'').toLowerCase().includes(q) || (a.equip_type||'').toLowerCase().includes(q);
+        if (!matchQ) return false;
+        if (freq === 'all') return true;
+        return calculateFrequency(a.lastService, a.nextDueDate, a.frequency).label === freq;
+    });
+    const badge = document.getElementById('asset-count-badge');
+    if (badge) badge.textContent = `(${filtered.length} assets)`;
+    renderFilteredAssets(filtered);
+}
+function renderAssetTable() { applyAssetFilters('', 'all'); }
+
+function renderFilteredAssets(assets) {
+    const tbody = document.getElementById('asset-table-body');
+    if (!tbody) return;
+    if (!assets.length) {
+        tbody.innerHTML = `<tr><td colspan="6" style="padding:40px;text-align:center;color:#475569;">No assets found for the selected filters.</td></tr>`;
+        return;
+    }
+    tbody.innerHTML = assets.map((a, i) => {
+        const freq = calculateFrequency(a.lastService, a.nextDueDate, a.frequency);
+        const cfg  = CAT_CFG[a.category] || CAT_CFG.general;
+        const catC = cfg.color, catL = cfg.label;
+        const rowBg = i % 2 === 0 ? 'rgba(255,255,255,.01)' : 'transparent';
+        return `<tr style="border-bottom:1px solid rgba(255,255,255,.03);background:${rowBg};transition:background .15s;" onmouseover="this.style.background='rgba(6,182,212,.04)'" onmouseout="this.style.background='${rowBg}'">
+            <td style="padding:12px 16px;font-family:monospace;font-size:11px;color:var(--primary);font-weight:700;">${a.id}</td>
+            <td style="padding:12px 16px;font-size:13px;color:white;font-weight:600;">${a.name}</td>
+            <td style="padding:12px 16px;font-size:12px;color:#64748b;">${a.location}</td>
+            <td style="padding:12px 16px;"><span style="padding:2px 8px;border-radius:5px;font-size:9px;font-weight:800;color:${catC};border:1px solid ${catC}44;background:${catC}14;">${catL}</span></td>
+            <td style="padding:12px 16px;"><span style="padding:2px 8px;border-radius:5px;font-size:9px;font-weight:800;color:${freq.color};border:1px solid ${freq.color}44;background:${freq.color}14;">${freq.label}</span></td>
+            <td style="padding:12px 16px;font-size:12px;color:#475569;white-space:nowrap;">${formatDateDisplay(a.nextDueDate)}</td>
+        </tr>`;
+    }).join('');
+}
+
+// ── CALENDAR ──
+function renderCalendar() {
+    const grid  = document.getElementById('calendar-grid');
+    const title = document.getElementById('calendar-month-year');
+    if (!grid || !title) return;
+    grid.innerHTML = '';
+    const yr = viewDate.getFullYear(), mo = viewDate.getMonth();
+    title.textContent = viewDate.toLocaleString('default', { month:'long', year:'numeric' });
+    const firstDay = new Date(yr, mo, 1).getDay();
+    const daysInMo = new Date(yr, mo+1, 0).getDate();
+    const today    = new Date();
+
+    for (let i = 0; i < firstDay; i++) {
+        const b = document.createElement('div'); b.className = 'calendar-blank'; grid.appendChild(b);
+    }
+    for (let d = 1; d <= daysInMo; d++) {
+        const ds   = `${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const tasks = assetsData.filter(a => { const p = parseDate(a.nextDueDate); return p && toDateStr(p) === ds; });
+        const isToday = today.getFullYear()===yr && today.getMonth()===mo && today.getDate()===d;
+        const div = document.createElement('div');
+        div.className = 'calendar-day' + (tasks.length > 0 ? ' has-task' : '') + (isToday ? ' today' : '');
+        div.dataset.date = ds;
+        const num = document.createElement('span'); num.textContent = d; num.style.cssText='display:block;line-height:1;'; div.appendChild(num);
+        if (tasks.length > 0) { const dot = document.createElement('div'); dot.className='task-dot'; div.appendChild(dot); }
+        if (tasks.length > 1) { const badge = document.createElement('span'); badge.textContent=tasks.length; badge.style.cssText='display:block;font-size:8px;font-weight:800;line-height:1;margin-top:1px;'; div.appendChild(badge); }
+        div.addEventListener('click', () => showDaySchedule(ds));
+        grid.appendChild(div);
+    }
+    lucide.createIcons();
+    // Auto-show today's schedule if viewing current month
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    if (today.getFullYear() === yr && today.getMonth() === mo) {
+        showDaySchedule(todayStr);
+    }
+}
+function navMonth(dir) { viewDate.setMonth(viewDate.getMonth()+dir); renderCalendar(); }
+
+function showDaySchedule(dateStr) {
+    const cont  = document.getElementById('day-schedule-container');
+    const label = document.getElementById('selected-day-label');
+    if (!cont || !label) return;
+    const dObj = new Date(dateStr + 'T00:00:00');
+    label.textContent = `SCHEDULE: ${dObj.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' })}`;
+    const tasks = assetsData.filter(a => { const p = parseDate(a.nextDueDate); return p && toDateStr(p) === dateStr; });
+    if (!tasks.length) {
+        cont.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;"><i data-lucide="check-circle" style="width:48px;height:48px;margin-bottom:12px;color:rgba(16,185,129,.2);"></i><h3 style="color:#4ade80;font-weight:700;font-size:16px;margin:0 0 8px;">All Clear!</h3><p style="color:#64748b;font-size:13px;margin:0;">No maintenance tasks scheduled for this date.</p></div>`;
+        lucide.createIcons(); return;
+    }
+    cont.innerHTML = tasks.map((t, i) => {
+        const freq = calculateFrequency(t.lastService, t.nextDueDate, t.frequency);
+        const woExists = _currentWorkOrders.some(w => (w.asset_id||w['Asset ID'])===t.id && (w.due_date||w['Due Date'])===dateStr);
+        return `<div style="background:rgba(15,23,42,.6);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;transition:border-color .2s;" onmouseover="this.style.borderColor='rgba(6,182,212,.25)'" onmouseout="this.style.borderColor='rgba(255,255,255,.06)'">
+            <div style="flex:1;min-width:0;">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;flex-wrap:wrap;">
+                    <h4 style="color:white;font-weight:700;font-size:14px;margin:0;overflow:hidden;text-overflow:ellipsis;">${i+1}. ${t.name}</h4>
+                    <span style="padding:2px 8px;border-radius:4px;font-size:9px;font-weight:800;color:${freq.color};border:1px solid ${freq.color}44;background:${freq.color}14;white-space:nowrap;">${freq.label}</span>
+                </div>
+                <p style="color:#64748b;font-size:12px;margin:0 0 5px;">📍 ${t.location}</p>
+            </div>
+            ${woExists
+                ? `<span style="background:rgba(16,185,129,.12);color:#10b981;border:1px solid rgba(16,185,129,.3);border-radius:8px;padding:7px 12px;font-size:10px;font-weight:800;white-space:nowrap;flex-shrink:0;">✓ WO Created</span>`
+                : `<button class="create-wo-btn" style="background:var(--primary);color:black;border:none;border-radius:8px;padding:7px 13px;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:800;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px;letter-spacing:.06em;flex-shrink:0;transition:opacity .2s;" data-asset-id="${t.id}" data-asset-name="${t.name}" data-location="${t.location}" data-due-date="${dateStr}" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+                    <i data-lucide="plus" style="width:11px;height:11px;"></i> Create WO
+                </button>`
+            }
+        </div>`;
+    }).join('');
+    cont.querySelectorAll('.create-wo-btn').forEach(btn => {
+        btn.addEventListener('click', () => generateWorkOrder(btn.dataset.assetId, btn.dataset.assetName, btn.dataset.location, btn.dataset.dueDate, btn));
+    });
+    lucide.createIcons();
+}
+
+async function generateWorkOrder(assetId, assetName, location, dueDate, btn) {
+    const orig = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<div style="width:12px;height:12px;border:2px solid rgba(0,0,0,.3);border-top-color:black;border-radius:50%;animation:spin 1s linear infinite;display:inline-block;vertical-align:middle;margin-right:4px;"></div> Creating...';
+    try {
+        const res  = await fetch(API.WO_CREATE, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ assetId, assetName, location, dueDate, property:'SLN Terminus' }) });
+        const data = await res.json();
+        if (data.success) {
+            showToast(`✅ Work Order Created: ${data.work_order_id}`, 'success');
+            await initDashboard();
+            renderCalendar();
+            showDaySchedule(dueDate);
+        } else {
+            showToast(`❌ Failed: ${data.error || 'Unknown error'}`, 'error');
+        }
+    } catch (err) {
+        showToast(`❌ Network error: ${err.message}`, 'error');
+    } finally {
+        btn.disabled = false; btn.innerHTML = orig;
+        lucide.createIcons({ element: btn });
+    }
+}
+
+// ── WORK ORDERS ──
+const WO_STYLE = {
+    overdue:            { bg:'rgba(244,63,94,.12)',   text:'#f43f5e',    icon:'alert-triangle', border:'#f43f5e',  label:'OVERDUE' },
+    'in-progress':      { bg:'rgba(6,182,212,.12)',   text:'#06b6d4',    icon:'play',           border:'#06b6d4',  label:'IN PROGRESS' },
+    completed:          { bg:'rgba(16,185,129,.12)',  text:'#10b981',    icon:'check-circle',   border:'#10b981',  label:'COMPLETED' },
+    closed:             { bg:'rgba(100,116,139,.12)', text:'#64748b',    icon:'archive',        border:'#64748b',  label:'CLOSED' },
+    'pending-approval': { bg:'rgba(245,158,11,.12)',  text:'#f59e0b',    icon:'shield',         border:'#f59e0b',  label:'PENDING' },
+    open:               { bg:'rgba(6,182,212,.08)',   text:'var(--primary)', icon:'clock',      border:'var(--primary)', label:'OPEN' }
+};
+function renderWorkOrders() {
+    const cont   = document.getElementById('wo-stream-container');
+    const filter = document.getElementById('wo-filter')?.value || 'all';
+    if (!cont) return;
+    const aMap = {}; assetsData.forEach(a => { if(a.id) aMap[a.id]=a; });
+    let filtered = _currentWorkOrders.filter(wo => {
+        const st = getWOStatus(wo);
+        if (filter==='all')      return st!=='completed'&&st!=='closed';
+        if (filter==='closed')   return st==='closed'||(wo.status||'').toLowerCase()==='closed';
+        if (filter==='completed') return st==='completed';
+        return st === filter;
+    });
+    if (!filtered.length) { cont.innerHTML = emptyHTML('No work orders', filter==='all'?'Create work orders from Calendar View':`No ${filter} work orders`); return; }
+    cont.innerHTML = filtered.map(wo => {
+        let name = wo.Asset||wo.asset_name||'';
+        if (!name||['unknown','unknown asset'].includes(name.toLowerCase())) { const m=aMap[wo.asset_id||wo['Asset ID']||'']; if(m) name=m.name; }
+        name = name || 'Unknown Asset';
+        const st = getWOStatus(wo), sc = WO_STYLE[st] || WO_STYLE.open;
+        const pri = wo.Priority||wo.priority||'Medium';
+        const pc  = pri==='High'?'#f43f5e':pri==='Medium'?'#f59e0b':'#10b981';
+        const id  = wo['WO ID']||wo.work_order_id||'';
+        const loc = wo.Location||wo.location||'—';
+        const dd  = wo['Due Date']||wo.due_date||'N/A';
+        const at  = wo.assigned_to||'—';
+        const pt  = wo.ppm_type||'inhouse';
+        const ptB = pt==='vendor'
+            ? `<span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:800;color:#a78bfa;border:1px solid #a78bfa44;background:#a78bfa14;">🏢 VENDOR</span>`
+            : `<span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:800;color:var(--primary);border:1px solid rgba(6,182,212,.3);background:rgba(6,182,212,.08);">🔧 IN-HOUSE</span>`;
+        const canView = st!=='completed'&&st!=='closed';
+        return `<div style="background:rgba(15,23,42,.7);border:1px solid rgba(255,255,255,.05);border-left:4px solid ${sc.border};border-radius:12px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:14px;transition:transform .15s;" onmouseover="this.style.transform='scale(1.002)'" onmouseout="this.style.transform=''">
+            <div style="display:flex;align-items:flex-start;gap:12px;flex:1;min-width:0;">
+                <div style="padding:9px;border-radius:10px;background:${sc.bg};flex-shrink:0;"><i data-lucide="${sc.icon}" style="width:17px;height:17px;color:${sc.text};"></i></div>
+                <div style="flex:1;min-width:0;">
+                    <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:3px;">
+                        <span style="font-family:monospace;font-size:10px;color:var(--primary);font-weight:700;">${id}</span>
+                        <span style="padding:2px 6px;border-radius:4px;font-size:9px;font-weight:800;background:${sc.bg};color:${sc.text};border:1px solid ${sc.border}55;">${sc.label}</span>
+                        ${ptB}
+                        <span style="padding:2px 6px;border-radius:4px;font-size:9px;font-weight:800;color:${pc};border:1px solid ${pc}44;background:${pc}14;">${pri.toUpperCase()}</span>
+                    </div>
+                    <p style="color:white;font-weight:700;font-size:13px;margin:0 0 2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${name}</p>
+                    <p style="color:#475569;font-size:10px;font-family:monospace;margin:0 0 3px;">ID: ${wo.asset_id||wo['Asset ID']||'—'}</p>
+                    <p style="color:#64748b;font-size:11px;margin:0 0 2px;">📍 ${loc}</p>
+                    <p style="color:#475569;font-size:11px;margin:0;">Due: ${formatDateDisplay(dd)} | Assigned: <span style="color:#94a3b8;">${at}</span></p>
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+                ${canView?`<button onclick="openWOModal('${id}')" style="background:rgba(6,182,212,.1);color:var(--primary);border:1px solid rgba(6,182,212,.2);border-radius:8px;padding:7px 13px;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .2s;" onmouseover="this.style.background='var(--primary)';this.style.color='black'" onmouseout="this.style.background='rgba(6,182,212,.1)';this.style.color='var(--primary)'"><i data-lucide="external-link" style="width:11px;height:11px;"></i> Open</button>`
+                :'<span style="color:#10b981;font-size:11px;font-weight:700;">✓ Done</span>'}
+            </div>
+        </div>`;
+    }).join('');
+    lucide.createIcons();
+}
+
+// ── CLOSED WOs ──
+function renderClosedWOs() {
+    const cont    = document.getElementById('closed-wo-container');
+    if (!cont) return;
+    const stF     = document.getElementById('closed-wo-filter')?.value || 'all';
+    const ppmF    = document.getElementById('closed-wo-ppm-filter')?.value || 'all';
+    const searchQ = (document.getElementById('closed-wo-search')?.value||'').toLowerCase();
+    let filtered  = _currentWorkOrders.filter(wo => {
+        const st = (wo.status||wo.Status||'open').toLowerCase();
+        if (st!=='completed'&&st!=='closed') return false;
+        if (stF!=='all' && st!==stF) return false;
+        if (ppmF!=='all' && (wo.ppm_type||'inhouse')!==ppmF) return false;
+        if (searchQ) {
+            const hay = ((wo.Asset||wo.asset_name||'')+(wo['WO ID']||wo.work_order_id||'')+(wo.Location||wo.location||'')+(wo.assigned_to||'')).toLowerCase();
+            if (!hay.includes(searchQ)) return false;
+        }
+        return true;
+    });
+    const badge = document.getElementById('closed-wo-count-badge'); if (badge) badge.textContent = filtered.length;
+    if (!filtered.length) { cont.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#334155;font-size:13px;">No closed work orders yet</div>`; return; }
+    cont.innerHTML = filtered.map(wo => {
+        const st  = (wo.status||wo.Status||'completed').toLowerCase();
+        const sc  = st==='closed'
+            ? { c:'#64748b', bg:'rgba(100,116,139,.12)', label:'CLOSED' }
+            : { c:'#10b981', bg:'rgba(16,185,129,.12)',  label:'COMPLETED' };
+        const id   = wo['WO ID']||wo.work_order_id||'';
+        const asn  = wo.Asset||wo.asset_name||'Unknown';
+        const loc  = wo.Location||wo.location||'—';
+        const dd   = wo['Due Date']||wo.due_date||'—';
+        const pri  = (wo.Priority||wo.priority||'Medium');
+        const priC = pri.toLowerCase()==='high'?'#f43f5e':pri.toLowerCase()==='low'?'#10b981':'#f59e0b';
+        const pt   = wo.ppm_type||'inhouse';
+        const ptB  = pt==='vendor'
+            ? `<span style="padding:1px 6px;border-radius:4px;font-size:9px;font-weight:800;color:#a78bfa;border:1px solid #a78bfa33;background:#a78bfa0d;">🏢 VENDOR</span>`
+            : `<span style="padding:1px 6px;border-radius:4px;font-size:9px;font-weight:800;color:var(--primary);border:1px solid rgba(6,182,212,.25);background:rgba(6,182,212,.08);">🔧 IN-HOUSE</span>`;
+        const cl   = wo.checklist||[];
+        const done = cl.filter(i=>i.completed).length;
+        const pct  = cl.length ? Math.round(done/cl.length*100) : 0;
+        const pctC = pct===100?'#10b981':pct>=50?'#f59e0b':'#f43f5e';
+        const tech = wo.assigned_to||'—';
+        const sup  = wo.supervisor||'—';
+        const closedOn = wo.closed_date||wo.completed_date||'';
+        const remarks  = wo.remarks||wo.close_remarks||'';
+        return `
+        <div onclick="openWOModal('${id}')" style="background:rgba(15,23,42,.7);border:1px solid rgba(255,255,255,.05);border-left:4px solid ${sc.c};border-radius:12px;padding:16px 18px;cursor:pointer;transition:background .15s;"
+             onmouseover="this.style.background='rgba(15,23,42,.92)'" onmouseout="this.style.background='rgba(15,23,42,.7)'">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+                <div style="min-width:0;flex:1;">
+                    <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:5px;">
+                        <span style="font-family:monospace;font-size:10px;color:var(--primary);font-weight:700;">${id}</span>
+                        <span style="padding:2px 6px;border-radius:4px;font-size:9px;font-weight:800;background:${sc.bg};color:${sc.c};border:1px solid ${sc.c}44;">${sc.label}</span>
+                        ${ptB}
+                        <span style="padding:2px 6px;border-radius:4px;font-size:9px;font-weight:800;color:${priC};border:1px solid ${priC}44;background:${priC}14;">${pri.toUpperCase()}</span>
+                    </div>
+                    <p style="color:white;font-weight:700;font-size:13px;margin:0 0 4px;">${asn}</p>
+                    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
+                        <span style="color:#64748b;font-size:11px;">📍 ${loc}</span>
+                        <span style="color:#64748b;font-size:11px;">📅 Due: ${formatDateDisplay(dd)}</span>
+                        ${closedOn ? `<span style="color:#475569;font-size:11px;">✅ Closed: ${formatDateDisplay(closedOn)}</span>` : ''}
+                    </div>
+                    ${remarks ? `<p style="color:#475569;font-size:11px;margin:6px 0 0;font-style:italic;">"${remarks}"</p>` : ''}
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;">
+                    <div style="text-align:right;">
+                        <p style="color:#475569;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin:0 0 2px;">Checklist</p>
+                        <p style="font-size:20px;font-weight:800;color:${pctC};margin:0;">${pct}%</p>
+                        <p style="font-size:9px;color:#334155;margin:0;">${done}/${cl.length} items</p>
+                    </div>
+                    <div style="text-align:right;">
+                        <p style="color:#334155;font-size:10px;margin:0;">👤 ${tech}</p>
+                        ${sup !== '—' ? `<p style="color:#334155;font-size:10px;margin:0;">🧑‍💼 ${sup}</p>` : ''}
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+    lucide.createIcons();
+}
+
+// ── WO MODAL ──
+function openWOModal(woId) {
+    const wo = _currentWorkOrders.find(w => (w['WO ID']||w.work_order_id) === woId);
+    if (!wo) return;
+    currentWO = { ...wo };
+    if (!currentWO.checklist || !currentWO.checklist.length) {
+        const t = getChecklistForAsset(currentWO.Asset||currentWO.asset_name||'');
+        currentWO.checklist = JSON.parse(JSON.stringify(ASSET_CHECKLISTS[t]||ASSET_CHECKLISTS.default));
+    }
+    if (!currentWO.images) currentWO.images = [];
+
+    const isClosed = ['completed','closed'].includes((currentWO.status||currentWO.Status||'').toLowerCase());
+
+    setTxt('modal-wo-id', currentWO['WO ID']||currentWO.work_order_id||'');
+    setTxt('modal-asset-name', currentWO.Asset||currentWO.asset_name||'');
+    setEl('modal-location', `<i data-lucide="map-pin" style="width:12px;height:12px;"></i> ${currentWO.Location||currentWO.location||''}`);
+    setTxt('modal-priority', (currentWO.Priority||currentWO.priority||'Medium').toUpperCase());
+    setTxt('modal-due-date', formatDateDisplay(currentWO['Due Date']||currentWO.due_date||''));
+    setTxt('modal-status', (currentWO.Status||currentWO.status||'open').toUpperCase());
+
+    // Dropdowns
+    const techSel = document.getElementById('modal-technician');
+    const supSel  = document.getElementById('modal-supervisor');
+    if (techSel) techSel.innerHTML = '<option value="">Select Technician</option>' + _technicians.map(t => `<option value="${t.name}" ${currentWO.assigned_to===t.name?'selected':''}>${t.name} — ${t.trade||''}</option>`).join('');
+    if (supSel)  supSel.innerHTML  = '<option value="">Select Supervisor</option>'  + _supervisors.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+
+    // Read-only mode for closed/completed WOs
+    const actionSection = document.getElementById('wo-action-section');
+    const readonlyBanner = document.getElementById('wo-readonly-banner');
+    if (isClosed) {
+        if (actionSection)  actionSection.style.display = 'none';
+        if (readonlyBanner) {
+            readonlyBanner.style.display = 'flex';
+            const closedOn = currentWO.closed_date||currentWO.completed_date||'';
+            const remarks  = currentWO.remarks||currentWO.close_remarks||'';
+            readonlyBanner.innerHTML = `
+                <div style="display:flex;align-items:center;gap:10px;flex:1;flex-wrap:wrap;">
+                    <span style="padding:4px 10px;border-radius:6px;font-size:10px;font-weight:800;background:rgba(16,185,129,.12);color:#10b981;border:1px solid rgba(16,185,129,.3);">
+                        ✅ ${(currentWO.status||'COMPLETED').toUpperCase()}
+                    </span>
+                    ${closedOn ? `<span style="font-size:11px;color:#475569;">Closed: ${formatDateDisplay(closedOn)}</span>` : ''}
+                    ${remarks  ? `<span style="font-size:11px;color:#475569;font-style:italic;">"${remarks}"</span>` : ''}
+                </div>
+                <button onclick="reopenWO()" style="padding:8px 16px;background:rgba(245,158,11,.1);color:#f59e0b;border:1px solid rgba(245,158,11,.3);border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:all .2s;" onmouseover="this.style.background='rgba(245,158,11,.2)'" onmouseout="this.style.background='rgba(245,158,11,.1)'">
+                    <i data-lucide="rotate-ccw" style="width:13px;height:13px;"></i> Reopen WO
+                </button>`;
+        }
+        // Disable all inputs inside modal
+        const modal = document.getElementById('wo-details-modal');
+        modal.querySelectorAll('input,select,textarea,button:not(#close-wo-modal-btn)').forEach(el => {
+            el.disabled = true;
+            el.style.opacity = '0.5';
+            el.style.cursor  = 'not-allowed';
+        });
+    } else {
+        if (actionSection)  actionSection.style.display = '';
+        if (readonlyBanner) readonlyBanner.style.display = 'none';
+        // Re-enable inputs
+        const modal = document.getElementById('wo-details-modal');
+        modal.querySelectorAll('input,select,textarea,button').forEach(el => {
+            el.disabled = false;
+            el.style.opacity = '';
+            el.style.cursor  = '';
+        });
+    }
+
+    renderChecklist();
+    renderImagePreviews();
+    const modal = document.getElementById('wo-details-modal');
+    modal.style.display = 'flex';
+    lucide.createIcons({ element: modal });
+}
+function closeModal() { document.getElementById('wo-details-modal').style.display='none'; currentWO=null; }
+
+function renderChecklist() {
+    if (!currentWO) return;
+    const total = currentWO.checklist.length;
+    const done  = currentWO.checklist.filter(i=>i.completed).length;
+    const pct   = total ? Math.round(done/total*100) : 0;
+    setTxt('modal-checklist-status', `${done}/${total}`);
+    setTxt('checklist-progress', `${pct}%`);
+    const bar = document.getElementById('checklist-progress-bar'); if (bar) bar.style.width = `${pct}%`;
+    const cont = document.getElementById('checklist-container');
+    if (!cont) return;
+    cont.innerHTML = currentWO.checklist.map((item, idx) => `
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:rgba(15,23,42,.6);border-radius:10px;border:1px solid ${item.completed?'rgba(16,185,129,.2)':'rgba(255,255,255,.06)'};transition:border-color .2s;">
+            <input type="checkbox" id="chk-${idx}" ${item.completed?'checked':''} style="margin-top:2px;width:16px;height:16px;accent-color:var(--primary);cursor:pointer;flex-shrink:0;" onchange="toggleChecklist(${idx})">
+            <div style="flex:1;min-width:0;">
+                <label for="chk-${idx}" style="color:${item.completed?'#10b981':'white'};font-weight:600;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;">
+                    ${item.text}
+                    ${item.required?'<span style="color:#f43f5e;font-size:9px;font-weight:800;letter-spacing:.08em;">REQUIRED</span>':''}
+                </label>
+                <input type="text" value="${item.comments}" placeholder="Add comment..." style="margin-top:6px;width:100%;padding:6px 10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:6px;color:#94a3b8;font-family:'Rajdhani',sans-serif;font-size:12px;outline:none;" onchange="updateChecklistComment(${idx},this.value)" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='rgba(255,255,255,.06)'">
+            </div>
+        </div>`).join('');
+}
+function toggleChecklist(idx) { if(!currentWO) return; currentWO.checklist[idx].completed=!currentWO.checklist[idx].completed; renderChecklist(); }
+function updateChecklistComment(idx, val) { if(!currentWO) return; currentWO.checklist[idx].comments=val; }
+
+async function saveChecklistProgress() {
+    if (!currentWO) return;
+    const notes = document.getElementById('technician-notes')?.value || '';
+    currentWO.notes = notes;
+    try {
+        const res = await fetch(API.WO_UPDATE, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ work_order_id: currentWO['WO ID']||currentWO.work_order_id, checklist: currentWO.checklist, notes, status:'in-progress' }) });
+        const d = await res.json();
+        if (d.success) { showToast('Checklist saved successfully', 'success'); }
+        else { showToast('Save failed: '+(d.error||''), 'error'); }
+    } catch(e) { showToast('Network error', 'error'); }
+}
+
+async function closeWorkOrderWithApproval() {
+    if (!currentWO) return;
+    const notes = document.getElementById('approval-notes')?.value || '';
+    const woId  = currentWO['WO ID']||currentWO.work_order_id;
+    try {
+        const res = await fetch(API.WO_CLOSE, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ work_order_id: woId, status:'completed', closed_by: 'Supervisor', approval_notes: notes, checklist: currentWO.checklist }) });
+        const d = await res.json();
+        if (d.success) { showToast(`WO ${woId} closed successfully`, 'success'); closeModal(); await initDashboard(); }
+        else { showToast('Close failed: '+(d.error||''), 'error'); }
+    } catch(e) { showToast('Network error', 'error'); }
+}
+
+async function reopenWO() {
+    if (!currentWO) return;
+    const woId = currentWO['WO ID']||currentWO.work_order_id;
+    const reason = prompt('Reason for reopening this work order (optional):') ?? '';
+    if (reason === null) return; // cancelled
+    try {
+        const res = await fetch(API.WO_REOPEN, {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ work_order_id: woId, reason: reason || 'Reopened by supervisor' })
+        });
+        const d = await res.json();
+        if (d.success) {
+            showToast(`WO ${woId} reopened`, 'success');
+            closeModal();
+            await initDashboard();
+        } else {
+            showToast('Reopen failed: '+(d.error||''), 'error');
+        }
+    } catch(e) { showToast('Network error', 'error'); }
+}
+
+async function assignWO() {
+    if (!currentWO) return;
+    const tech = document.getElementById('modal-technician')?.value || '';
+    const sup  = document.getElementById('modal-supervisor')?.value || '';
+    const woId = currentWO['WO ID']||currentWO.work_order_id;
+    try {
+        const res = await fetch(API.WO_UPDATE, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ work_order_id: woId, assigned_to: tech, supervisor: sup, status:'in-progress' }) });
+        const d = await res.json();
+        if (d.success) { showToast(`Assigned to ${tech||'Technician'}`, 'success'); currentWO.assigned_to=tech; currentWO.supervisor=sup; }
+        else { showToast('Assignment failed: '+(d.error||''), 'error'); }
+    } catch(e) { showToast('Network error', 'error'); }
+}
+
+function renderImagePreviews() {
+    if (!currentWO) return;
+    const cont = document.getElementById('image-preview-container');
+    if (!cont) return;
+    if (!currentWO.images || !currentWO.images.length) { cont.innerHTML=''; return; }
+    cont.innerHTML = currentWO.images.slice(0,9).map(img => `<img src="${img.path||'/uploads/SLN/ppm/'+img.filename}" style="width:70px;height:60px;object-fit:cover;border-radius:8px;border:1px solid rgba(6,182,212,.2);cursor:pointer;" onclick="window.open(this.src,'_blank')">`).join('');
+}
+
+async function handleImageUpload(e) {
+    if (!currentWO || !e.target.files) return;
+    const woId = currentWO['WO ID']||currentWO.work_order_id;
+    for (const file of Array.from(e.target.files)) {
+        const fd = new FormData(); fd.append('image', file); fd.append('wo_id', woId);
+        try {
+            const res = await fetch('/sln_api/mms/workorders/upload-image', { method:'POST', body:fd });
+            const d   = await res.json();
+            if (d.success) { showToast('Photo uploaded', 'success'); currentWO.images.push({ filename:d.filename, path:`/uploads/SLN/ppm/${woId}/${d.filename}` }); renderImagePreviews(); }
+        } catch(err) { showToast('Upload failed: '+err.message, 'error'); }
+    }
+}
+
+// ── AMC TRACKER ──
+function renderAmcTracker() {
+    const cont = document.getElementById('amc-stream-container');
+    if (!cont) return;
+    const filter = document.getElementById('amc-filter')?.value || 'all';
+    let cs = _currentAmcContracts.filter(c => {
+        const d = daysToExpiry(c);
+        if (filter === 'active')   return (c.status||'active') === 'active';
+        if (filter === 'expiring') return (c.status === 'expiring') || ((c.status==='active') && d!==null && d<=90 && d>0);
+        if (filter === 'expired')  return (c.status === 'expired')  || (d !== null && d <= 0);
+        return true;
+    });
+    if (!cs.length) {
+        cont.innerHTML = emptyHTML('No AMC Contracts', filter==='all' ? 'Use "Add Contract" to create one' : `No ${filter} contracts found`);
+        return;
+    }
+
+    const STATUS_CFG = {
+        active:   { color:'#22c55e', bg:'rgba(34,197,94,.12)',   label:'ACTIVE' },
+        expiring: { color:'#f59e0b', bg:'rgba(245,158,11,.12)',  label:'EXPIRING SOON' },
+        expired:  { color:'#f43f5e', bg:'rgba(244,63,94,.12)',   label:'EXPIRED' },
+    };
+    const FREQ_COLOR = {
+        'Monthly':'#06b6d4','Quarterly':'#8b5cf6','Half-Yearly':'#f59e0b','Yearly':'#f43f5e'
+    };
+
+    cont.innerHTML = cs.map(c => {
+        const d   = daysToExpiry(c);
+        const sc  = STATUS_CFG[(c.status||'active').toLowerCase()] || STATUS_CFG.active;
+        const dc  = d === null ? '#64748b' : d < 30 ? '#f43f5e' : d < 90 ? '#f59e0b' : '#22c55e';
+        const fqC = FREQ_COLOR[c.service_frequency] || '#64748b';
+        const val = c.value ? `₹${Number(c.value).toLocaleString('en-IN')}` : '—';
+        const scope = c.scope ? `<p style="color:#64748b;font-size:11px;margin:4px 0 0;font-style:italic;">${c.scope}</p>` : '';
+        const noteTag = c.notes ? `<span style="padding:2px 7px;border-radius:4px;background:rgba(6,182,212,.08);color:#64748b;border:1px solid rgba(6,182,212,.12);font-size:10px;">${c.notes}</span>` : '';
+        const dataStr = JSON.stringify(c).replace(/"/g, '&quot;');
+
+        return `<div style="background:rgba(15,23,42,.75);border:1px solid rgba(255,255,255,.06);border-left:4px solid ${sc.color};border-radius:12px;padding:18px;transition:transform .15s,box-shadow .15s;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 20px rgba(0,0,0,.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+            <div style="flex:1;min-width:220px;">
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
+                <span style="font-family:monospace;font-size:11px;color:var(--primary);font-weight:700;">${c.contract_id||'N/A'}</span>
+                <span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:800;background:${sc.bg};color:${sc.color};border:1px solid ${sc.color}44;">${sc.label}</span>
+                ${c.service_frequency ? `<span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;background:${fqC}18;color:${fqC};border:1px solid ${fqC}44;">${c.service_frequency}</span>` : ''}
+              </div>
+              <p style="color:white;font-weight:700;font-size:14px;margin:0 0 3px;">${c.asset_name||'Unknown Asset'}</p>
+              <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:4px;">
+                <span style="color:#64748b;font-size:12px;">🏢 ${c.vendor||'N/A'}</span>
+                <span style="color:#64748b;font-size:12px;">💰 <span style="color:#94a3b8;">${val}</span></span>
+              </div>
+              <p style="color:#475569;font-size:11px;margin:0 0 2px;">
+                📅 ${formatDateDisplay(c.start_date)} → ${formatDateDisplay(c.end_date)}
+                ${d !== null ? `&nbsp;·&nbsp; <span style="color:${dc};font-weight:700;">${d > 0 ? d + 'd remaining' : 'Expired ' + Math.abs(d) + 'd ago'}</span>` : ''}
+              </p>
+              ${scope}
+              ${noteTag ? `<div style="margin-top:6px;">${noteTag}</div>` : ''}
+            </div>
+            <div style="display:flex;gap:6px;flex-shrink:0;align-items:flex-start;">
+              <button onclick="openAmcEditModal(${dataStr})"
+                style="background:rgba(139,92,246,.1);color:var(--accent);border:1px solid rgba(139,92,246,.2);border-radius:8px;padding:8px 12px;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .2s;"
+                onmouseover="this.style.background='var(--accent)';this.style.color='white'"
+                onmouseout="this.style.background='rgba(139,92,246,.1)';this.style.color='var(--accent)'">
+                <i data-lucide="edit" style="width:12px;height:12px;"></i> Edit
+              </button>
+              <button onclick="deleteAmcContract('${c.contract_id}')"
+                style="background:rgba(244,63,94,.08);color:#f43f5e;border:1px solid rgba(244,63,94,.2);border-radius:8px;padding:8px 10px;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .2s;"
+                onmouseover="this.style.background='#f43f5e';this.style.color='white'"
+                onmouseout="this.style.background='rgba(244,63,94,.08)';this.style.color='#f43f5e'">
+                <i data-lucide="trash-2" style="width:12px;height:12px;"></i>
+              </button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+    lucide.createIcons();
+}
+
+function daysToExpiry(c) {
+    if (!c.end_date) return null;
+    try {
+        const d = new Date(c.end_date); d.setHours(0,0,0,0);
+        const t = new Date(); t.setHours(0,0,0,0);
+        return Math.floor((d-t)/86400000);
+    } catch(e) { return null; }
+}
+
+function openAmcEditModal(contract) {
+    currentAmcContract = contract;
+    const isNew = !contract.contract_id;
+    const fmt   = d => { if (!d) return ''; const dt = parseDate(d); return dt ? toDateStr(dt) : ''; };
+    document.getElementById('amc-modal-title').textContent     = isNew ? 'Add AMC Contract' : 'Edit AMC Contract';
+    document.getElementById('amc-contract-id').value           = contract.contract_id    || '';
+    document.getElementById('amc-asset-id').value              = contract.asset_id       || '';
+    document.getElementById('amc-asset-name').value            = contract.asset_name     || '';
+    document.getElementById('amc-vendor').value                = contract.vendor         || '';
+    document.getElementById('amc-start-date').value            = fmt(contract.start_date);
+    document.getElementById('amc-end-date').value              = fmt(contract.end_date);
+    document.getElementById('amc-frequency').value             = contract.service_frequency || 'Quarterly';
+    document.getElementById('amc-next-service').value          = fmt(contract.next_service);
+    document.getElementById('amc-value').value                 = contract.value          || '';
+    document.getElementById('amc-status').value                = contract.status         || 'active';
+    document.getElementById('amc-scope').value                 = contract.scope          || '';
+    document.getElementById('amc-notes').value                 = contract.notes          || '';
+    const modal = document.getElementById('amc-edit-modal');
+    modal.style.display = 'flex';
+    lucide.createIcons({ element: modal });
+}
+
+function closeAmcModal() {
+    document.getElementById('amc-edit-modal').style.display = 'none';
+    currentAmcContract = null;
+}
+
+async function saveAmcContract() {
+    if (currentAmcContract === null) return;
+    const cid = document.getElementById('amc-contract-id').value.trim();
+    if (!cid) { showToast('Contract ID is required', 'error'); return; }
+
+    const updated = {
+        contract_id:        cid,
+        asset_id:           document.getElementById('amc-asset-id').value.trim(),
+        asset_name:         document.getElementById('amc-asset-name').value.trim(),
+        vendor:             document.getElementById('amc-vendor').value.trim(),
+        start_date:         document.getElementById('amc-start-date').value,
+        end_date:           document.getElementById('amc-end-date').value,
+        service_frequency:  document.getElementById('amc-frequency').value,
+        next_service:       document.getElementById('amc-next-service').value,
+        value:              document.getElementById('amc-value').value.trim(),
+        status:             document.getElementById('amc-status').value,
+        scope:              document.getElementById('amc-scope').value.trim(),
+        notes:              document.getElementById('amc-notes').value.trim(),
+    };
+
+    // Optimistic update
+    const idx = _currentAmcContracts.findIndex(c => c.contract_id === currentAmcContract.contract_id);
+    if (idx !== -1) _currentAmcContracts[idx] = updated;
+    else            _currentAmcContracts.push(updated);
+    renderAmcTracker();
+    closeAmcModal();
+
+    try {
+        const res = await fetch(API.AMC_UPDATE, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updated)
+        });
+        const d = await res.json();
+        if (d.success) showToast('✅ AMC contract saved', 'success');
+        else           showToast('Server error: ' + (d.error||''), 'error');
+    } catch(e) {
+        showToast('Network error: ' + e.message, 'error');
+    }
+}
+
+async function deleteAmcContract(contractId) {
+    if (!confirm(`Delete contract ${contractId}?`)) return;
+    _currentAmcContracts = _currentAmcContracts.filter(c => c.contract_id !== contractId);
+    renderAmcTracker();
+    try {
+        // Send empty update effectively removing (server keeps list from update)
+        await fetch('/sln_api/mms/amc/bulk-import', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contracts: _currentAmcContracts })
+        });
+        showToast('Contract deleted', 'success');
+    } catch(e) {
+        showToast('Delete failed: ' + e.message, 'error');
+    }
+}
+
+function handleAmcFileUpload(input) {
+    const file = input.files[0]; if (!file) return;
+    const ext  = file.name.split('.').pop().toLowerCase();
+    const reader = new FileReader();
+    reader.onload = async e => {
+        try {
+            let rows = [];
+            if (ext === 'csv') {
+                const lines = e.target.result.split('\n');
+                const hdr   = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
+                rows = lines.slice(1).filter(l => l.trim()).map(l => {
+                    const v = l.split(',').map(x => x.trim().replace(/^"|"$/g,''));
+                    const o = {}; hdr.forEach((h,i) => o[h] = v[i]||''); return o;
+                });
+            }
+            if (!rows.length) { showToast('Empty or unsupported file','error'); return; }
+            const contracts = rows.map(r => ({
+                contract_id:       r['Contract ID']   || r['contract_id']   || '',
+                asset_id:          r['Asset ID']       || r['asset_id']      || '',
+                asset_name:        r['Asset Name']     || r['asset_name']    || '',
+                vendor:            r['Vendor']         || r['vendor']        || '',
+                start_date:        r['Start Date']     || r['start_date']    || '',
+                end_date:          r['End Date']       || r['end_date']      || '',
+                service_frequency: r['Frequency']      || r['service_frequency'] || 'Quarterly',
+                value:             r['Value']          || r['value']         || '',
+                status:            (r['Status']        || 'active').toLowerCase(),
+                scope:             r['Scope']          || r['scope']         || '',
+                notes:             r['Notes']          || r['notes']         || '',
+            })).filter(c => c.asset_name || c.contract_id);
+
+            const res = await fetch('/sln_api/mms/amc/bulk-import', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contracts })
+            });
+            if (res.ok) {
+                const d = await res.json();
+                _currentAmcContracts = [..._currentAmcContracts, ...contracts];
+                renderAmcTracker();
+                showToast(`✅ Imported ${contracts.length} contracts`, 'success');
+            }
+        } catch(err) {
+            showToast('Parse error: ' + err.message, 'error');
+        }
+        input.value = '';
+    };
+    if (ext === 'csv') reader.readAsText(file);
+    else               reader.readAsArrayBuffer(file);
+}
+
+// ── FILE UPLOAD ──
+function handleFileUpload(input) {
+    if (!input.files?.length) return;
+    const fd = new FormData(); fd.append('file', input.files[0]);
+    fetch(API.IMPORT_EXCEL, { method:'POST', body:fd })
+        .then(r => r.json())
+        .then(d => { if (d.success) { showToast(`✅ ${d.message}`, 'success'); setTimeout(initDashboard, 500); } else showToast(`❌ ${d.message||d.error}`, 'error'); })
+        .catch(err => showToast(`❌ Upload failed: ${err.message}`, 'error'));
+}
+
+// ── DAILY MAIL ──
+async function triggerDailyMail() {
+    if (!confirm('Send today\'s SLN Terminus maintenance schedule email to supervisors?')) return;
+    const btn = document.getElementById('triggerDailyEmail');
+    const orig = btn.innerHTML; btn.disabled=true; btn.innerHTML='Sending...';
+    try {
+        const res = await fetch(API.DAILY_MAIL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ property:'SLN Terminus' }) });
+        const d = await res.json();
+        if (d.success) showToast(`✅ Mail sent to ${(d.sent_to||[]).length} supervisor(s). ${d.generated||0} WOs auto-generated.`, 'success');
+        else           showToast('❌ Failed: '+(d.error||''), 'error');
+    } catch(err) { showToast('❌ '+err.message, 'error'); }
+    finally { btn.disabled=false; btn.innerHTML=orig; lucide.createIcons({element:btn.parentElement}); }
+}
+
+async function autoGenerateWOs() {
+    if (!confirm('Auto-generate work orders for all assets due today or overdue?')) return;
+    const btn = document.getElementById('autoGenWOBtn');
+    const orig = btn.innerHTML; btn.disabled=true; btn.innerHTML='Generating...';
+    try {
+        const res = await fetch('/sln_api/mms/workorders/auto-generate', { method:'POST', headers:{'Content-Type':'application/json'} });
+        const d = await res.json();
+        if (d.success) {
+            showToast(`✅ ${d.generated} work order(s) generated.`, 'success');
+            await initDashboard();
+        } else {
+            showToast('❌ Failed: '+(d.error||''), 'error');
+        }
+    } catch(err) { showToast('❌ '+err.message, 'error'); }
+    finally { btn.disabled=false; btn.innerHTML=orig; lucide.createIcons({element:btn.parentElement}); }
+}
+
+// ── TOAST ──
+function showToast(msg, type) {
+    const old = document.getElementById('sln-toast'); if (old) old.remove();
+    const t = document.createElement('div');
+    t.id = 'sln-toast';
+    const ok = type==='success';
+    const info = type==='info';
+    const bg   = ok?'rgba(16,185,129,.15)':info?'rgba(6,182,212,.15)':'rgba(244,63,94,.15)';
+    const bc   = ok?'rgba(16,185,129,.4)':info?'rgba(6,182,212,.4)':'rgba(244,63,94,.4)';
+    const tc   = ok?'#10b981':info?'#06b6d4':'#f43f5e';
+    t.style.cssText = `position:fixed;bottom:24px;right:24px;z-index:9999;padding:14px 20px;border-radius:12px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;background:${bg};border:1px solid ${bc};color:${tc};backdrop-filter:blur(20px);max-width:320px;word-break:break-word;`;
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => { if (t.parentNode) t.remove(); }, 4000);
+}
+</script>
+</body>
+</html>

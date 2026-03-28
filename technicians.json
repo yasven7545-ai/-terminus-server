@@ -1,0 +1,20 @@
+[
+  {"id": "TECH-010", "name": "Mamila Laxman", "phone": "+917032263047", "trade": "Electrical"},
+  {"id": "TECH-011", "name": "Subhrajit Sahoo", "phone": "+917788917938", "trade": "Electrical"},
+  {"id": "TECH-012", "name": "Kola Thirupal", "phone": "+918688545128", "trade": "Electrical"},
+  {"id": "TECH-013", "name": "Kola Sonu", "phone": "+918919823103", "trade": "Electrical"},
+  {"id": "TECH-014", "name": "Lukkani Sravan", "phone": "+919618779088", "trade": "Electrical"},
+  {"id": "TECH-015", "name": "Thotapalli Ebinezar", "phone": "+918247507258", "trade": "Electrical"},
+  
+  {"id": "PLUM-016", "name": "Pabitra Malik", "phone": "+916302385718", "trade": "Plumbing"},
+  {"id": "PLUM-017", "name": "Alok Kumar Malik", "phone": "+916305759495", "trade": "Plumbing"},
+  {"id": "PLUM-018", "name": "Hemanta Malik", "phone": "+918117025345", "trade": "Plumbing"},
+  {"id": "PLUM-019", "name": "Chandan Malik", "phone": "+917377291650", "trade": "Plumbing"},
+  
+  {"id": "HVAC-020", "name": "Syed Azam Hussain", "phone": "+919346326643", "trade": "HVAC"},
+  {"id": "HVAC-021", "name": "Shahid Rainee", "phone": "+919838214716", "trade": "HVAC"},
+
+  {"id": "CARP-022", "name": "Pavan", "phone": "+919000696439", "trade": "Carpenter"},
+
+  {"id": "PAINT-023", "name": "Tampuluri Kishtaiah", "phone": "+918179264665", "trade": "Painter"}
+]

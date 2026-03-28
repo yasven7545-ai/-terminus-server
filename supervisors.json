@@ -1,0 +1,11 @@
+[
+  {"id": "GM-001", "name": "Mr. Kiran Kumar", "phone": "+919963570009", "trade": "GM"},
+  {"id": "PM-002", "name": "Mr. Madhav Reddy", "phone": "+918374502323", "trade": "PM"},
+  {"id": "Sr-Exe-003", "name": "Mr. Venu", "phone": "+917981397300", "trade": "Sr. Executive"},
+  {"id": "HK-Exe-004", "name": "Mr. Dhanunjay", "phone": "+919951309568", "trade": "HK Exe"},
+  {"id": "Sec-Exe-005", "name": "Mr. Shailender Singh Thakur", "phone": "+919866665554", "trade": "Sec Exe"},
+  {"id": "Sup-006", "name": "Nayini Venkat Rao", "phone": "+919985175004", "trade": "Sr. Supervisor"},
+  {"id": "Sup-007", "name": "Juthuka Nagendra", "phone": "+916302738498", "trade": "Supervisor"},
+  {"id": "Sup-008", "name": "Totapalli Sekhar", "phone": "+919100305641", "trade": "Supervisor"},
+  {"id": "Sup-009", "name": "Supervisor D", "phone": "+910000000000", "trade": "Supervisor"}
+]

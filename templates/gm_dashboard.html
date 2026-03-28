@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Executive Portfolio Dashboard | GM View</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-[#0b0e14] text-slate-200 p-8">
+    
+    <div class="flex justify-between items-center mb-10">
+        <div>
+            <h1 class="text-3xl font-black text-white">PORTFOLIO <span class="text-blue-500">INSIGHTS</span></h1>
+            <p class="text-slate-500 font-mono text-sm">Real-time Financial & Operational Risk Aggregator</p>
+        </div>
+        <div class="flex gap-6">
+            <div class="text-right border-r border-slate-700 pr-6">
+                <p class="text-[10px] uppercase tracking-widest text-slate-500">Total Portfolio Revenue</p>
+                <p id="totalRev" class="text-xl font-bold text-green-400">₹0.0 Cr</p>
+            </div>
+            <div class="text-right">
+                <p class="text-[10px] uppercase tracking-widest text-slate-500">Collection Efficiency</p>
+                <p id="collEff" class="text-xl font-bold text-blue-400">0%</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
+        
+        <div class="xl:col-span-3 space-y-6">
+            <div class="bg-[#161b22] border border-slate-800 rounded-xl p-6">
+                <h3 class="text-sm font-bold uppercase mb-6 text-slate-400">Property Health & Occupancy</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="siteGrid">
+                    </div>
+            </div>
+
+            <div class="bg-[#161b22] border border-slate-800 rounded-xl p-6">
+                <h3 class="text-sm font-bold uppercase mb-6 text-slate-400">Portfolio OPEX Trend (6 Months)</h3>
+                <canvas id="opexChart" height="100"></canvas>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="bg-red-900/10 border border-red-500/20 rounded-xl p-6">
+                <h3 class="text-sm font-bold uppercase mb-4 text-red-400">Critical Risks</h3>
+                <div id="riskList" class="space-y-4">
+                    </div>
+            </div>
+
+            <div class="bg-blue-900/10 border border-blue-500/20 rounded-xl p-6">
+                <h3 class="text-sm font-bold uppercase mb-4 text-blue-400">Compliance Score</h3>
+                <div class="text-center py-4">
+                    <span class="text-5xl font-black">94.8<span class="text-lg text-blue-500">%</span></span>
+                    <p class="text-xs text-slate-500 mt-2">Across 5 Properties</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadGMData() {
+            const statsRes = await fetch('/api/gm/portfolio-stats');
+            const stats = await statsRes.json();
+            
+            document.getElementById('totalRev').innerText = stats.total_revenue;
+            document.getElementById('collEff').innerText = stats.collection_efficiency;
+
+            // Render Site Cards
+            const siteGrid = document.getElementById('siteGrid');
+            siteGrid.innerHTML = stats.site_health.map(site => `
+                <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-800">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs font-bold truncate pr-2">${site.name}</span>
+                        <span class="h-2 w-2 rounded-full ${site.status === 'Green' ? 'bg-green-500' : 'bg-yellow-500'} shadow-[0_0_8px_rgba(34,197,94,0.5)]"></span>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-2xl font-bold">${site.occupancy}</p>
+                        <p class="text-[10px] text-slate-500 uppercase">Occupancy</p>
+                    </div>
+                    <div class="mt-2 w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+                        <div class="bg-blue-500 h-full" style="width: ${site.compliance}%"></div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Render Risks
+            const riskRes = await fetch('/api/gm/risk-alerts');
+            const risks = await riskRes.json();
+            document.getElementById('riskList').innerHTML = risks.map(r => `
+                <div class="border-l-2 border-red-500 pl-3">
+                    <p class="text-xs font-bold">${r.issue}</p>
+                    <p class="text-[10px] text-slate-500">${r.site} • Impact: ${r.impact}</p>
+                </div>
+            `).join('');
+
+            // Trend Chart
+            const ctx = document.getElementById('opexChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Opex (Lakhs)',
+                        data: stats.cost_trends,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: '#1e293b' }, ticks: { color: '#64748b' } },
+                        x: { grid: { display: false }, ticks: { color: '#64748b' } }
+                    }
+                }
+            });
+        }
+
+        loadGMData();
+    </script>
+</body>
+</html>

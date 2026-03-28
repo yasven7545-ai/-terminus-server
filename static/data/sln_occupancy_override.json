@@ -1,0 +1,708 @@
+[
+  {
+    "area": 25150.56,
+    "camRate": 10,
+    "camRateDate": "",
+    "floorId": "L4",
+    "id": "1.0",
+    "occupiedArea": 25150.56,
+    "officeName": "Sai Life Sciences Ltd",
+    "unitNo": "L4-01 & 02"
+  },
+  {
+    "area": 5592,
+    "camRate": 12,
+    "camRateDate": "",
+    "floorId": "L4",
+    "id": "2.0",
+    "occupiedArea": 5592,
+    "officeName": "Glaxo Smithkline Consumer Pvt Ltd",
+    "unitNo": "L4-03-01"
+  },
+  {
+    "area": 1600,
+    "camRate": 1,
+    "camRateDate": "",
+    "floorId": "L4",
+    "id": "3.0",
+    "occupiedArea": 1600,
+    "officeName": "DataTracks Services Private Limited",
+    "unitNo": "L4-03-03"
+  },
+  {
+    "area": 10585,
+    "camRate": 12,
+    "camRateDate": "",
+    "floorId": "L4",
+    "id": "4.0",
+    "occupiedArea": 10585,
+    "officeName": "Trouw Nutrition India Private Limited",
+    "unitNo": "L4-04"
+  },
+  {
+    "area": 8199,
+    "camRate": 12,
+    "camRateDate": "",
+    "floorId": "L4",
+    "id": "5.0",
+    "occupiedArea": 8199,
+    "officeName": "Idfc First Bharat Limited",
+    "unitNo": "L4-05"
+  },
+  {
+    "area": 4450,
+    "camRate": 12,
+    "camRateDate": "",
+    "floorId": "L4",
+    "id": "6.0",
+    "occupiedArea": 4450,
+    "officeName": "Euclid Innovations Private Ltd",
+    "unitNo": "L4-06-01"
+  },
+  {
+    "area": 15115,
+    "camRate": 12,
+    "camRateDate": "",
+    "floorId": "L5",
+    "id": "8.0",
+    "occupiedArea": 15115,
+    "officeName": "Tata Communications Limited",
+    "unitNo": "L5-01"
+  },
+  {
+    "area": 7723,
+    "camRate": 10,
+    "camRateDate": "",
+    "floorId": "L5",
+    "id": "9.0",
+    "occupiedArea": 7723,
+    "officeName": "Syntax Systems Private Limited",
+    "unitNo": "L5-02"
+  },
+  {
+    "area": 4973,
+    "camRate": 12,
+    "camRateDate": "",
+    "floorId": "L5",
+    "id": "10.0",
+    "occupiedArea": 4973,
+    "officeName": "Adonmo Private Limited",
+    "unitNo": "L5-03-01"
+  },
+  {
+    "area": 1000,
+    "camRate": 12,
+    "camRateDate": "",
+    "floorId": "L5",
+    "id": "11.0",
+    "occupiedArea": 1000,
+    "officeName": "Veni Rao Foundation",
+    "unitNo": "L5-03-02A"
+  },
+  {
+    "area": 1251,
+    "camRate": 12,
+    "camRateDate": "",
+    "floorId": "L5",
+    "id": "12.0",
+    "occupiedArea": 1251,
+    "officeName": "Mv Purushottama Rao",
+    "unitNo": "L5-03-02A"
+  },
+  {
+    "area": 1513,
+    "camRate": 12,
+    "camRateDate": "",
+    "floorId": "L5",
+    "id": "16.0",
+    "occupiedArea": 1513,
+    "officeName": "Aeronutrix Sports Products Pvt. Ltd",
+    "unitNo": "L5-06-01"
+  },
+  {
+    "area": 1000,
+    "camRate": 10,
+    "camRateDate": "",
+    "floorId": "L5",
+    "id": "17.0",
+    "occupiedArea": 1000,
+    "officeName": "Dr. R.Kodandarama Rao",
+    "unitNo": "L5-06-02"
+  },
+  {
+    "area": 1532,
+    "camRate": 12,
+    "camRateDate": "",
+    "floorId": "L5",
+    "id": "18.0",
+    "occupiedArea": 1532,
+    "officeName": "Et Creatives",
+    "unitNo": "L5-06-03"
+  },
+  {
+    "area": 10036,
+    "camRate": 8,
+    "camRateDate": "",
+    "floorId": "L6",
+    "id": "20.0",
+    "occupiedArea": 10036,
+    "officeName": "Fedex Trade Networks Transport & Brokerage Pvt Ltd",
+    "unitNo": "L6-02"
+  },
+  {
+    "area": 4542,
+    "camRate": 12,
+    "camRateDate": "",
+    "floorId": "L6",
+    "id": "21.0",
+    "occupiedArea": 4542,
+    "officeName": "Ark Infra Developers Pvt Ltd",
+    "unitNo": "L6-03-01"
+  },
+  {
+    "area": 10555.8,
+    "camRate": 12,
+    "camRateDate": "",
+    "floorId": "L6",
+    "id": "21.1",
+    "occupiedArea": 10555.8,
+    "officeName": "Glaxo Smithkline Consumer Pvt Ltd",
+    "unitNo": "L6-04"
+  },
+  {
+    "area": 8198.62,
+    "camRate": 12,
+    "camRateDate": "",
+    "floorId": "L6",
+    "id": "21.2",
+    "occupiedArea": 8199,
+    "officeName": "Criss Financial",
+    "unitNo": "L6-05"
+  },
+  {
+    "area": 4406,
+    "camRate": 12,
+    "camRateDate": "",
+    "floorId": "L6",
+    "id": "21.4",
+    "occupiedArea": 4406,
+    "officeName": "Tekvizion Voice Solutions Pvt. Ltd",
+    "unitNo": "L6-06-01"
+  },
+  {
+    "area": 25150.56,
+    "camRate": 10,
+    "camRateDate": "",
+    "floorId": "L7",
+    "id": "27.0",
+    "occupiedArea": 25150.56,
+    "officeName": "BirlaNu",
+    "unitNo": "L7-01 & 02"
+  },
+  {
+    "area": 7192,
+    "camRate": 12,
+    "camRateDate": "",
+    "floorId": "L7",
+    "id": "28.0",
+    "occupiedArea": 7192,
+    "officeName": "Usdc Projects India Private Limited",
+    "unitNo": "L7-03"
+  },
+  {
+    "area": 10555,
+    "camRate": 10,
+    "camRateDate": "",
+    "floorId": "L7",
+    "id": "29.0",
+    "occupiedArea": 10555,
+    "officeName": "Infios India Private Limited",
+    "unitNo": "L7-04"
+  },
+  {
+    "area": 6951,
+    "camRate": 10,
+    "camRateDate": "",
+    "floorId": "L7",
+    "id": "31.0",
+    "occupiedArea": 6951,
+    "officeName": "Emids Technologies Pvt. Ltd.",
+    "unitNo": "L7-06"
+  },
+  {
+    "area": 15114.88,
+    "camRate": 10,
+    "camRateDate": "",
+    "floorId": "L8",
+    "id": "31.1",
+    "occupiedArea": 15114.88,
+    "officeName": "Regus Grandeur Offices Private Ltd",
+    "unitNo": "L8-01"
+  },
+  {
+    "area": 10035.68,
+    "camRate": 10,
+    "camRateDate": "",
+    "floorId": "L8",
+    "id": "31.2",
+    "occupiedArea": 10035.68,
+    "officeName": "Pheonix American Salesfocus Solutions India Pvt. Ltd",
+    "unitNo": "L8-02"
+  },
+  {
+    "area": 7192,
+    "camRate": 14,
+    "camRateDate": "",
+    "floorId": "L8",
+    "id": "31.3",
+    "occupiedArea": 7192,
+    "officeName": "Float Technology Solutions Pvt Ltd",
+    "unitNo": "L8-03"
+  },
+  {
+    "area": 23204.42,
+    "camRate": 10,
+    "camRateDate": "",
+    "floorId": "L8",
+    "id": "31.4",
+    "occupiedArea": 23204.42,
+    "officeName": "Indus Towers Limited",
+    "unitNo": "L8-04 & 05"
+  },
+  {
+    "area": 2500,
+    "camRate": 12,
+    "camRateDate": "",
+    "floorId": "L8",
+    "id": "31.5",
+    "occupiedArea": 2500,
+    "officeName": "SYNERGY GLOBAL TECHNOLOGIES PVT LTD",
+    "unitNo": "L8-06-02"
+  },
+  {
+    "amount": 93096,
+    "area": 7758,
+    "camRate": 12,
+    "camRateDate": "",
+    "floorId": "L10",
+    "gst": 16757.28,
+    "id": "37.0",
+    "occupiedArea": 7758,
+    "officeName": "Asian Gold Restaurants Llp",
+    "total": 109853.28,
+    "unitNo": "L-10"
+  },
+  {
+    "area": 0,
+    "camRate": 0,
+    "camRateDate": "",
+    "floorId": "L9",
+    "id": "38.0",
+    "occupiedArea": 0,
+    "officeName": "Vacant",
+    "unitNo": "L9"
+  },
+  {
+    "area": 120000,
+    "camRate": 2,
+    "camRateDate": "",
+    "floorId": "L9 to L12",
+    "id": "39.0",
+    "occupiedArea": 120000,
+    "officeName": "Sln Terminus Hotels And Resorts Pvt Ltd",
+    "unitNo": "L10-L12"
+  },
+  {
+    "area": 49202,
+    "camRate": 6,
+    "camRateDate": "",
+    "floorId": "LG",
+    "id": "1.0",
+    "occupiedArea": 49202,
+    "officeName": "Avenue Super Marts Limited",
+    "unitNo": "LG-04 & L1-04"
+  },
+  {
+    "area": 724,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "LG",
+    "id": "2.0",
+    "occupiedArea": 724,
+    "officeName": "Draak Espresso",
+    "unitNo": "LG-02"
+  },
+  {
+    "area": 750,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "LG",
+    "id": "3.0",
+    "occupiedArea": 750,
+    "officeName": "Draak Espresso",
+    "unitNo": "LG-03"
+  },
+  {
+    "area": 704,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "LG",
+    "id": "4.0",
+    "occupiedArea": 704,
+    "officeName": "Archee Garments Pvt Ltd (Ibadat)",
+    "unitNo": "LG-05"
+  },
+  {
+    "area": 2169.77,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "LG",
+    "id": "5.0",
+    "occupiedArea": 2169.77,
+    "officeName": "Burger King",
+    "unitNo": "LG-11-02"
+  },
+  {
+    "area": 1225,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "LG",
+    "id": "6.0",
+    "occupiedArea": 1225,
+    "officeName": "Maheshraj Pearls Gems Jewels",
+    "unitNo": "LG-06"
+  },
+  {
+    "area": 1118,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "LG",
+    "id": "8.0",
+    "occupiedArea": 1118,
+    "officeName": "Dappers House",
+    "unitNo": "LG-08"
+  },
+  {
+    "area": 418,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "LG",
+    "id": "9.0",
+    "occupiedArea": 418,
+    "officeName": "Mr Bubble",
+    "unitNo": "LG-09"
+  },
+  {
+    "area": 1147,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "LG",
+    "id": "10.0",
+    "occupiedArea": 1147,
+    "officeName": "Eternal Twilight SPA",
+    "unitNo": "LG-10"
+  },
+  {
+    "area": 1325,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "LG",
+    "id": "11.0",
+    "occupiedArea": 1325,
+    "officeName": "Eternal Twilight SPA",
+    "unitNo": "LG-11-01 partA"
+  },
+  {
+    "area": 1064,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "LG",
+    "id": "12.0",
+    "occupiedArea": 1064,
+    "officeName": "Crazy Shoppe",
+    "unitNo": "LG-11-01 partB"
+  },
+  {
+    "area": 2669,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L1",
+    "id": "13.0",
+    "occupiedArea": 2669,
+    "officeName": "Sairabh Ventures PVT LTD",
+    "unitNo": "L1-01"
+  },
+  {
+    "area": 1414,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L1",
+    "id": "14.0",
+    "occupiedArea": 1414,
+    "officeName": "Vyom Salon",
+    "unitNo": "L1-02"
+  },
+  {
+    "area": 551.86,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L1",
+    "id": "15.0",
+    "occupiedArea": 551.86,
+    "officeName": "Brand Blooms",
+    "unitNo": "L1-03"
+  },
+  {
+    "area": 1500.77,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L1",
+    "id": "16.0",
+    "occupiedArea": 1500.77,
+    "officeName": "Cross Breed",
+    "unitNo": "L1-05"
+  },
+  {
+    "area": 1705,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L1",
+    "id": "17.0",
+    "occupiedArea": 1705,
+    "officeName": "Cross Breed",
+    "unitNo": "L1-06"
+  },
+  {
+    "area": 1005,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L1",
+    "id": "18.0",
+    "occupiedArea": 1005,
+    "officeName": "Cross Breed",
+    "unitNo": "L1-07"
+  },
+  {
+    "area": 5717,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L1",
+    "id": "19.0",
+    "occupiedArea": 5717,
+    "officeName": "Shinhan Bank",
+    "unitNo": "L1-08"
+  },
+  {
+    "area": 1290,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L2",
+    "id": "20.0",
+    "occupiedArea": 1290,
+    "officeName": "Venkateswara Dental Hospital",
+    "unitNo": "L2-01"
+  },
+  {
+    "area": 1284,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L2",
+    "id": "21.0",
+    "occupiedArea": 1284,
+    "officeName": "Gob Smack Foods ( Norfest)",
+    "unitNo": "L2-02"
+  },
+  {
+    "area": 670,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L2",
+    "id": "22.0",
+    "occupiedArea": 670,
+    "officeName": "CryptoWala",
+    "unitNo": "L2-03"
+  },
+  {
+    "area": 2423,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L2",
+    "id": "23.0",
+    "occupiedArea": 2423,
+    "officeName": "Vaaraahi Hospitalities",
+    "unitNo": "L2-04-03"
+  },
+  {
+    "area": 11738,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L2",
+    "id": "24.0",
+    "occupiedArea": 11738,
+    "officeName": "Katikaneni Hotels & Resorts",
+    "unitNo": "L2-04-02"
+  },
+  {
+    "area": 12600,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L2",
+    "id": "25.0",
+    "occupiedArea": 12600,
+    "officeName": "Katikaneni Hotels & Resorts",
+    "unitNo": "L2-04-02"
+  },
+  {
+    "area": 342,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L2",
+    "id": "26.0",
+    "occupiedArea": 342,
+    "officeName": "Raj Ink Tattoos Studio",
+    "unitNo": "L2-05"
+  },
+  {
+    "area": 1822,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L2",
+    "id": "27.0",
+    "occupiedArea": 1822,
+    "officeName": "Cross Breed",
+    "unitNo": "L2-06"
+  },
+  {
+    "area": 3906,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L2",
+    "id": "28.0",
+    "occupiedArea": 3906,
+    "officeName": "Cross Breed",
+    "unitNo": "L2-07"
+  },
+  {
+    "area": 1175.75,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L2",
+    "id": "29.0",
+    "occupiedArea": 1175.75,
+    "officeName": "Cross Breed",
+    "unitNo": "L2-08"
+  },
+  {
+    "area": 13737.31,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L2",
+    "id": "30.0",
+    "occupiedArea": 13737.31,
+    "officeName": "Surya Melange & Bistro P Ltd (Lal Street)",
+    "unitNo": "L2-09"
+  },
+  {
+    "area": 1724,
+    "camRate": 0,
+    "camRateDate": "",
+    "floorId": "L2",
+    "id": "31.0",
+    "occupiedArea": 0,
+    "officeName": "Vacant",
+    "unitNo": "L2-09-1"
+  },
+  {
+    "area": 671,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L2",
+    "id": "32.0",
+    "occupiedArea": 671,
+    "officeName": "Artha Max PVT LTD",
+    "unitNo": "L2-10"
+  },
+  {
+    "area": 26157,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L3",
+    "id": "33.0",
+    "occupiedArea": 26157,
+    "officeName": "Platinum Cinemas",
+    "unitNo": "L-3-01"
+  },
+  {
+    "area": 3850,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L3",
+    "id": "34.0",
+    "occupiedArea": 3850,
+    "officeName": "Vaaraahi Hospitalities",
+    "unitNo": "L3-01 Part"
+  },
+  {
+    "area": 14295,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L3",
+    "id": "35.0",
+    "occupiedArea": 14295,
+    "officeName": "Vaaraahi Hospitalities",
+    "unitNo": "L3-02,03, C.A."
+  },
+  {
+    "area": 1056,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L3",
+    "id": "36.0",
+    "occupiedArea": 1056,
+    "officeName": "Mili Foods (Sub Way)",
+    "unitNo": "L3-04-01"
+  },
+  {
+    "area": 1006,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L3",
+    "id": "37.0",
+    "occupiedArea": 1056,
+    "officeName": "Glr Property Management Services",
+    "unitNo": "L3-04-02"
+  },
+  {
+    "area": 1000,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L3",
+    "id": "38.0",
+    "occupiedArea": 1000,
+    "officeName": "Vaaraahi Hospitalities",
+    "unitNo": "L3-04-03"
+  },
+  {
+    "area": 1032,
+    "camRate": 18,
+    "camRateDate": "",
+    "floorId": "L3",
+    "id": "39.0",
+    "occupiedArea": 1032,
+    "officeName": "Swadisht Khatta Meetha Chat",
+    "unitNo": "L3-04-04"
+  },
+  {
+    "id": "1772978346983",
+    "floorId": "LG",
+    "officeName": "SUPRISHA",
+    "unitNo": "LG-07",
+    "occupiedArea": 1246,
+    "area": 1246,
+    "camRate": 18,
+    "camRateDate": "2026-01-08",
+    "amount": 22428,
+    "gst": 4037.04,
+    "total": 26465.04
+  }
+]

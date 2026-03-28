@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAM Dashboard | Consolidated</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; }
+        .sidebar-transition { transition: transform 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="text-slate-300">
+
+    <div class="lg:hidden flex items-center justify-between bg-[#111827] p-4 border-b border-gray-800">
+        <div class="text-blue-500 font-bold text-lg">SLNT CAM</div>
+        <button id="mobileMenuBtn" class="text-gray-400 focus:outline-none">
+            <i class="fas fa-bars fa-lg"></i>
+        </button>
+    </div>
+
+    <div class="flex min-h-screen">
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#111827] border-r border-gray-800 p-6 sidebar-transition -translate-x-full lg:translate-x-0 lg:static lg:inset-auto">
+            <div class="flex items-center justify-between mb-8">
+                <div class="text-blue-500 font-bold text-xl flex items-center gap-2">
+                    <i class="fas fa-chart-line"></i> OGM CAM
+                </div>
+                <button id="closeMenuBtn" class="lg:hidden text-gray-400">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <nav class="space-y-1">
+                <a href="/my_dashboard" class="flex items-center gap-3 text-white bg-blue-600/20 p-3 rounded-xl border-l-4 border-blue-500">
+                    <i class="fas fa-th-large"></i> Dashboard
+                </a>
+<div class="mb-6 pt-2">
+<button onclick="window.location.href='/ogm'" 
+        class="w-full flex items-center justify-center gap-2 p-3 mb-6 text-sm font-bold text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 rounded-xl transition-all">
+    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+    BACK TO HUB
+</button>
+</div>
+
+<p class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-4">Main Navigation</p>
+                <div class="pt-6 pb-2 text-xs font-bold text-gray-500 uppercase tracking-widest">Input Sheets</div>
+                <a href="/cam_input/Area Deatils" class="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-xl transition"><i class="fas fa-box-open"></i> Occupancy Details</a>
+                <a href="/cam_input/Emerzhent Manpower" class="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-xl transition"><i class="fas fa-box-open"></i> EPMS Man Power</a>
+                <a href="/cam_input/Manpower - Technical" class="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-xl transition"><i class="fas fa-tools"></i> Technical</a>
+                <a href="/cam_input/AMC Charges" class="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-xl transition"><i class="fas fa-file-contract"></i> AMC</a>
+                <a href="/cam_input/HK Manpower" class="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-xl transition"><i class="fas fa-broom"></i> Housekeeping</a>
+                <a href="/cam_input/Consumables" class="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-xl transition"><i class="fas fa-box-open"></i> Consumables</a>
+                <a href="/cam_input/LP Manpower" class="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-xl transition"><i class="fas fa-shield-alt"></i> Security</a>
+                <a href="/cam_input/Liosaning & Licenses" class="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-xl transition"><i class="fas fa-tools"></i>Liosaning & Licenses Cost</a> 
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-4 md:p-10 w-full overflow-x-hidden">
+            <header class="mb-8">
+                <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">Financial Overview</h1>
+                <p class="text-sm text-gray-500 mt-1">Consolidated monthly actuals for OGM Facilities</p>
+            </header>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-8 mb-8">
+                <div class="bg-[#1e293b] p-6 md:p-8 rounded-2xl border border-gray-700 shadow-xl">
+                    <span class="text-gray-400 text-xs uppercase font-bold tracking-widest">Total Monthly Cost</span>
+                    <div class="text-2xl md:text-4xl font-extrabold text-white mt-2">₹{{ "{:,.2f}".format(total_cost) }}</div>
+                </div>
+                <div class="bg-[#1e293b] p-6 md:p-8 rounded-2xl border border-gray-700 shadow-xl">
+                    <span class="text-gray-400 text-xs uppercase font-bold tracking-widest">CAM Rate / Sq. Ft.</span>
+                    <div class="text-2xl md:text-4xl font-extrabold text-blue-400 mt-2">₹{{ "{:,.2f}".format(per_sft_avg) }}</div>
+                </div>
+            </div>
+
+            <div class="flex flex-col xl:flex-row gap-8">
+                <div class="w-full xl:w-2/3 bg-[#111827] rounded-2xl border border-gray-800 overflow-hidden shadow-xl">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-gray-800/50 text-gray-400 text-[10px] md:text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-4 md:px-6 py-4">Description</th>
+                                    <th class="px-4 md:px-6 py-4">Monthly</th>
+                                    <th class="px-4 md:px-6 py-4">Per SFT</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-800 text-sm md:text-base">
+                                {% for item in items %}
+                                <tr class="hover:bg-gray-800/30 transition">
+                                    <td class="px-4 md:px-6 py-4 text-white font-medium">{{ item.Description }}</td>
+                                    <td class="px-4 md:px-6 py-4 font-mono">₹{{ "{:,.0f}".format(item.Per_month) }}</td>
+                                    <td class="px-4 md:px-6 py-4 text-blue-400">₹{{ "{:,.2f}".format(item.Per_sft) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="w-full xl:w-1/3 bg-[#111827] p-6 md:p-8 rounded-2xl border border-gray-800 shadow-xl flex flex-col items-center">
+                    <h3 class="font-bold text-white mb-6 self-start">Cost Split</h3>
+                    <div class="relative w-full max-w-[250px]">
+                        <canvas id="camChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Mobile Sidebar Logic
+        const sidebar = document.getElementById('sidebar');
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const closeBtn = document.getElementById('closeMenuBtn');
+
+        mobileBtn.addEventListener('click', () => sidebar.classList.remove('-translate-x-full'));
+        closeBtn.addEventListener('click', () => sidebar.classList.add('-translate-x-full'));
+
+        // Chart Logic
+        const ctx = document.getElementById('camChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [{% for item in items %}'{{ item.Description }}',{% endfor %}],
+                datasets: [{
+                    data: [{% for item in items %}{{ item.Per_month }},{% endfor %}],
+                    backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                cutout: '75%',
+                responsive: true
+            }
+        });
+
+
+    </script>
+
+</body>
+</html>

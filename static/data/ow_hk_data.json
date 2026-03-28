@@ -1,0 +1,103 @@
+{
+  "tasks": [],
+  "requests": [],
+  "staff": [
+    {
+      "id": "s1",
+      "name": "Ravi Kumar",
+      "shift": "Morning",
+      "zone": "Lobby & Atrium",
+      "status": "active",
+      "current_task": null,
+      "phone": ""
+    },
+    {
+      "id": "s2",
+      "name": "Priya Devi",
+      "shift": "Morning",
+      "zone": "Washrooms B1-GF",
+      "status": "active",
+      "current_task": null,
+      "phone": ""
+    },
+    {
+      "id": "s3",
+      "name": "Suresh Naidu",
+      "shift": "Afternoon",
+      "zone": "Floors 1-3",
+      "status": "active",
+      "current_task": null,
+      "phone": ""
+    },
+    {
+      "id": "s4",
+      "name": "Lakshmi Bai",
+      "shift": "Afternoon",
+      "zone": "Floors 4-6",
+      "status": "active",
+      "current_task": null,
+      "phone": ""
+    },
+    {
+      "id": "s5",
+      "name": "Ramesh Rao",
+      "shift": "Night",
+      "zone": "External Areas",
+      "status": "off_shift",
+      "current_task": null,
+      "phone": ""
+    }
+  ],
+  "inspections": [],
+  "schedules": [
+    {
+      "id": "sc1",
+      "zone": "Lobby & Atrium",
+      "task": "Full sweep & mop",
+      "frequency": "Every 2 hrs",
+      "next_due": "08:00",
+      "sla_mins": 30,
+      "active": true
+    },
+    {
+      "id": "sc2",
+      "zone": "Washrooms B1-GF",
+      "task": "Deep clean + restock",
+      "frequency": "Hourly",
+      "next_due": "08:00",
+      "sla_mins": 20,
+      "active": true
+    },
+    {
+      "id": "sc3",
+      "zone": "Parking Level",
+      "task": "Sweep & debris removal",
+      "frequency": "Daily 06:00",
+      "next_due": "06:00",
+      "sla_mins": 60,
+      "active": true
+    },
+    {
+      "id": "sc4",
+      "zone": "Lifts & Lobbies",
+      "task": "Wipe panels + mop",
+      "frequency": "Every 3 hrs",
+      "next_due": "09:00",
+      "sla_mins": 15,
+      "active": true
+    },
+    {
+      "id": "sc5",
+      "zone": "Glass Facade",
+      "task": "External glass clean",
+      "frequency": "Weekly Mon",
+      "next_due": "Monday 07:00",
+      "sla_mins": 120,
+      "active": true
+    }
+  ],
+  "meta": {
+    "last_updated": "2026-03-22T15:20:08.525715",
+    "property": "ONEWEST"
+  }
+}

@@ -1,0 +1,1872 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5"/>
+<title>OW Housekeeping — ONEWEST</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+/* ═══════════════ TOKENS ═══════════════ */
+:root{
+  --hh:54px; --sw:240px;
+  --ease:cubic-bezier(.4,0,.2,1);
+  --spring:cubic-bezier(.34,1.5,.64,1);
+  --cyan:#06b6d4; --teal:#0d9488; --emerald:#10b981;
+  --amber:#f59e0b; --rose:#f43f5e; --violet:#8b5cf6;
+  --orange:#f97316; --blue:#3b82f6; --gold:#ffd700; --gold2:#ffaa00;
+  --crit:#ef4444; --high:#f97316; --med:#f59e0b; --low:#10b981;
+}
+[data-theme="dark"]{
+  --bg:#030810;--bg2:#060d1a;--surf:#091220;--surf2:#0c1628;
+  --card:#091220;--card2:#06101d;
+  --bdr:rgba(6,182,212,.1);--bdr2:rgba(6,182,212,.22);--bdr3:rgba(6,182,212,.42);
+  --tx:#d0eaf5;--tx2:#3d6070;--tx3:#0c1e2e;
+  --hbg:rgba(3,8,16,.97);--sh:0 20px 60px rgba(0,0,0,.7);
+  --input-bg:rgba(6,182,212,.06);--input-bdr:rgba(6,182,212,.2);
+}
+[data-theme="light"]{
+  --bg:#f0fafa;--bg2:#e0f5f5;--surf:#fff;--surf2:#f0fafa;
+  --card:#fff;--card2:#f0fafa;
+  --bdr:rgba(13,148,136,.1);--bdr2:rgba(13,148,136,.22);--bdr3:rgba(13,148,136,.44);
+  --tx:#071520;--tx2:#3d7080;--tx3:#cdeeed;
+  --hbg:rgba(240,250,250,.97);--sh:0 4px 24px rgba(0,0,0,.08);
+  --input-bg:rgba(13,148,136,.04);--input-bdr:rgba(13,148,136,.2);
+}
+/* ═══════════════ RESET ═══════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+button{font-family:inherit;cursor:pointer}
+a{text-decoration:none;color:inherit}
+input,select,textarea{font-family:inherit}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--cyan)}
+/* ═══════════════ ATMOSPHERE ═══════════════ */
+.bg-wrap{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);animation:orbf 22s ease-in-out infinite alternate}
+.orb1{width:500px;height:500px;top:-150px;left:-120px;background:radial-gradient(circle,rgba(6,182,212,.12),transparent 65%)}
+.orb2{width:420px;height:420px;bottom:-80px;right:-100px;background:radial-gradient(circle,rgba(13,148,136,.09),transparent 65%);animation-delay:-9s}
+.orb3{width:320px;height:320px;top:45%;left:40%;background:radial-gradient(circle,rgba(245,158,11,.06),transparent 65%);animation-delay:-17s}
+[data-theme="light"] .orb{opacity:.25}
+@keyframes orbf{from{transform:translate(0,0) scale(1)}to{transform:translate(20px,16px) scale(1.06)}}
+.bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(6,182,212,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(6,182,212,.03) 1px,transparent 1px);background-size:46px 46px}
+[data-theme="light"] .bg-grid{opacity:.5}
+.scan{position:fixed;left:0;right:0;height:1px;z-index:1;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(6,182,212,.5) 40%,rgba(13,148,136,.5) 60%,transparent);animation:scan 12s linear infinite;opacity:.25}
+@keyframes scan{0%{top:-1px;opacity:0}4%{opacity:.25}96%{opacity:.18}100%{top:100vh;opacity:0}}
+/* ═══════════════ HEADER ═══════════════ */
+.hdr{
+  position:fixed;top:0;left:0;right:0;z-index:500;height:var(--hh);
+  background:var(--hbg);backdrop-filter:blur(28px) saturate(180%);
+  border-bottom:1px solid var(--bdr2);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 18px 0 14px;gap:10px;
+  box-shadow:0 1px 0 rgba(255,255,255,.04),0 4px 20px rgba(0,0,0,.4);
+}
+.hdr-l{display:flex;align-items:center;gap:10px;min-width:0}
+.hdr-r{display:flex;align-items:center;gap:7px;flex-shrink:0}
+/* hamburger */
+.hbg-btn{display:none;width:36px;height:36px;border-radius:9px;border:1px solid var(--bdr2);background:var(--surf2);align-items:center;justify-content:center;color:var(--tx);flex-shrink:0}
+@media(max-width:900px){.hbg-btn{display:flex}}
+/* gem */
+.gem{width:34px;height:34px;border-radius:9px;flex-shrink:0;background:linear-gradient(135deg,var(--cyan),var(--teal));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:#fff;box-shadow:0 0 18px rgba(6,182,212,.45);position:relative}
+.gem::after{content:'';position:absolute;inset:-3px;border-radius:12px;border:1px solid rgba(6,182,212,.3);animation:gemring 3s ease infinite}
+@keyframes gemring{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0;transform:scale(1.18)}}
+.hdr-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;background:linear-gradient(90deg,var(--tx),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap}
+.hdr-sub{font-family:'JetBrains Mono',monospace;font-size:7.5px;color:var(--tx2);letter-spacing:2px;text-transform:uppercase;white-space:nowrap}
+/* clock pill */
+.clk-pill{display:flex;align-items:center;gap:5px;padding:4px 9px;border-radius:20px;background:var(--surf2);border:1px solid var(--bdr2);font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--tx2);white-space:nowrap}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--emerald);flex-shrink:0;animation:pd 1.5s infinite}
+@keyframes pd{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(16,185,129,.7)}50%{opacity:.3;box-shadow:0 0 0 5px rgba(16,185,129,0)}}
+/* theme toggle */
+.th-tog{display:flex;align-items:center;gap:5px;padding:5px 9px;border-radius:20px;background:var(--surf2);border:1px solid var(--bdr2);cursor:pointer;user-select:none;transition:border-color .2s}
+.th-tog:hover{border-color:var(--cyan)}
+.tic{width:11px;height:11px;color:var(--tx2);flex-shrink:0}
+.tt-track{width:26px;height:14px;border-radius:7px;background:var(--surf);border:1px solid var(--bdr2);position:relative;flex-shrink:0;transition:background .25s}
+[data-theme="light"] .tt-track{background:var(--teal)}
+.tt-knob{position:absolute;top:1.5px;left:1.5px;width:10px;height:10px;border-radius:50%;background:var(--cyan);box-shadow:0 0 6px rgba(6,182,212,.5);transition:transform .22s var(--spring),background .2s}
+[data-theme="light"] .tt-knob{transform:translateX(12px);background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+/* gold portal btn */
+.portal-btn{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:.66rem;font-weight:600;letter-spacing:1.1px;text-transform:uppercase;color:var(--gold);border:1.5px solid var(--gold);background:rgba(255,215,0,.04);animation:gblink 2.2s ease-in-out infinite;white-space:nowrap;transition:background .2s}
+.portal-btn:hover{background:rgba(255,215,0,.12);animation:none}
+.portal-btn svg{width:10px;height:10px;flex-shrink:0}
+@keyframes gblink{0%,100%{color:var(--gold);border-color:var(--gold);box-shadow:0 0 6px rgba(255,215,0,.2)}50%{color:var(--gold2);border-color:var(--gold2);box-shadow:0 0 16px rgba(255,170,0,.55),0 0 30px rgba(255,170,0,.15)}}
+/* ═══════════════ LAYOUT ═══════════════ */
+.layout{display:flex;min-height:100vh;padding-top:var(--hh)}
+/* ═══════════════ SIDEBAR ═══════════════ */
+.sidebar{
+  position:fixed;top:var(--hh);left:0;bottom:0;width:var(--sw);
+  background:var(--bg2);border-right:1px solid var(--bdr);
+  display:flex;flex-direction:column;z-index:100;
+  overflow-y:auto;transition:transform .28s var(--ease),background .3s;
+}
+.sidebar.hidden{transform:translateX(-100%)}
+.sb-head{padding:16px 14px 10px;border-bottom:1px solid var(--bdr)}
+.sb-head-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--tx2)}
+/* sidebar nav items */
+.sb-nav{padding:8px 8px;flex:1;display:flex;flex-direction:column;gap:2px}
+.sb-item{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 11px;border-radius:9px;
+  border:1px solid transparent;background:transparent;
+  color:var(--tx2);font-size:12.5px;font-weight:500;
+  cursor:pointer;transition:all .15s;text-align:left;width:100%;
+}
+.sb-item:hover{background:rgba(6,182,212,.08);border-color:var(--bdr);color:var(--tx)}
+.sb-item.active{background:rgba(6,182,212,.14);border-color:rgba(6,182,212,.3);color:var(--cyan);font-weight:600}
+.sb-item svg{width:14px;height:14px;flex-shrink:0;opacity:.75}
+.sb-item.active svg{opacity:1}
+.sb-badge{
+  margin-left:auto;min-width:20px;height:18px;border-radius:9px;
+  background:rgba(6,182,212,.15);color:var(--cyan);
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;padding:0 5px;
+  transition:all .3s;cursor:pointer;
+}
+.sb-badge.crit{background:rgba(239,68,68,.2);color:#ef4444}
+.sb-badge.warn{background:rgba(245,158,11,.2);color:#f59e0b}
+.sb-badge.ok  {background:rgba(16,185,129,.2);color:#10b981}
+.sb-divider{height:1px;background:var(--bdr);margin:6px 10px}
+.sb-label{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--tx2);padding:8px 11px 4px}
+/* overlay */
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;backdrop-filter:blur(2px)}
+.sb-overlay.show{display:block}
+/* ═══════════════ MAIN ═══════════════ */
+.main{flex:1;margin-left:var(--sw);min-width:0;position:relative;z-index:2}
+@media(max-width:900px){.main{margin-left:0}.sidebar{transform:translateX(-100%)}.sidebar.open{transform:none}}
+/* ═══════════════ SECTION ═══════════════ */
+.section{display:none;padding:22px 20px 80px;animation:secin .35s var(--ease)}
+.section.active{display:block}
+@keyframes secin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.sec-hd{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.sec-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sec-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--tx)}
+.sec-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--tx2);text-transform:uppercase;letter-spacing:1.5px}
+.sec-line{flex:1;height:1px;background:var(--bdr)}
+/* ═══════════════ COUNTER CARDS ═══════════════ */
+.counter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:22px}
+.ctr-card{
+  background:var(--card);border:1px solid var(--bdr);border-radius:13px;
+  padding:16px;cursor:pointer;transition:all .2s var(--spring);
+  position:relative;overflow:hidden;
+}
+.ctr-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:13px 13px 0 0;opacity:0;transition:opacity .2s}
+.ctr-card:hover{border-color:var(--bdr3);transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,.35)}
+.ctr-card:hover::before{opacity:1}
+.ctr-card.active-tab{border-color:var(--bdr3);box-shadow:0 0 0 2px rgba(6,182,212,.15)}
+.ctr-card.active-tab::before{opacity:1}
+.ctr-ico{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.ctr-ico svg{width:16px;height:16px}
+.ctr-val{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;line-height:1;margin-bottom:3px}
+.ctr-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:1.2px;color:var(--tx2)}
+.ctr-trend{font-size:10px;margin-top:4px;opacity:.7}
+/* ═══════════════ KANBAN ═══════════════ */
+.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:start}
+@media(max-width:1100px){.kanban{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.kanban{grid-template-columns:1fr}}
+.kb-col{background:var(--surf2);border:1px solid var(--bdr);border-radius:12px;overflow:hidden}
+.kb-hd{display:flex;align-items:center;justify-content:space-between;padding:10px 13px;border-bottom:1px solid var(--bdr)}
+.kb-hd-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px}
+.kb-cnt{font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 7px;border-radius:8px;font-weight:700}
+.kb-body{padding:8px;display:flex;flex-direction:column;gap:7px;min-height:80px;max-height:520px;overflow-y:auto}
+/* task card */
+.task-card{
+  background:var(--card);border:1px solid var(--bdr);border-radius:10px;
+  padding:11px 12px;cursor:pointer;transition:all .18s;
+  animation:cardin .3s var(--ease);
+}
+@keyframes cardin{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.task-card:hover{border-color:var(--bdr2);box-shadow:0 4px 16px rgba(0,0,0,.3);transform:translateY(-1px)}
+.tc-hd{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.tc-title{font-size:12px;font-weight:600;color:var(--tx);flex:1;line-height:1.3}
+.prio-badge{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;padding:2px 6px;border-radius:5px;text-transform:uppercase;flex-shrink:0}
+.prio-critical{background:rgba(239,68,68,.18);color:#ef4444;border:1px solid rgba(239,68,68,.3)}
+.prio-high    {background:rgba(249,115,22,.18);color:#f97316;border:1px solid rgba(249,115,22,.3)}
+.prio-medium  {background:rgba(245,158,11,.18);color:#f59e0b;border:1px solid rgba(245,158,11,.3)}
+.prio-low     {background:rgba(16,185,129,.18);color:#10b981;border:1px solid rgba(16,185,129,.3)}
+.tc-meta{display:flex;flex-wrap:wrap;gap:5px;font-size:10px;color:var(--tx2)}
+.tc-zone{display:flex;align-items:center;gap:3px}
+.tc-zone svg{width:9px;height:9px}
+.tc-sla{display:flex;align-items:center;gap:3px}
+.sla-ok{color:var(--emerald)}.sla-warn{color:var(--amber)}.sla-br{color:var(--rose)}
+.tc-actions{display:flex;gap:5px;margin-top:8px}
+.tc-btn{flex:1;padding:4px 6px;border-radius:6px;border:1px solid var(--bdr);background:transparent;color:var(--tx2);font-size:10px;font-weight:600;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:3px}
+.tc-btn:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(6,182,212,.07)}
+.tc-btn svg{width:10px;height:10px}
+/* ═══════════════ TABLE ═══════════════ */
+.tbl-wrap{overflow-x:auto;border-radius:11px;border:1px solid var(--bdr)}
+table{width:100%;border-collapse:collapse;min-width:600px}
+thead{position:sticky;top:0;z-index:5}
+th{background:var(--surf2);padding:10px 13px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--tx2);border-bottom:1px solid var(--bdr2);white-space:nowrap}
+th.tc{text-align:center}
+td{padding:10px 13px;font-size:12.5px;color:var(--tx);border-bottom:1px solid var(--bdr);vertical-align:middle}
+tbody tr{transition:background .12s}
+tbody tr:hover td{background:rgba(6,182,212,.04)}
+tbody tr:last-child td{border-bottom:none}
+td.tc{text-align:center}
+/* ═══════════════ CARDS / PANELS ═══════════════ */
+.card{background:var(--card);border:1px solid var(--bdr);border-radius:13px;padding:18px;margin-bottom:16px;transition:border-color .2s}
+.card:hover{border-color:var(--bdr2)}
+.card-hd{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.card-bar{width:3px;height:16px;border-radius:2px;background:linear-gradient(180deg,var(--cyan),var(--teal));flex-shrink:0}
+.card-title{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--cyan)}
+/* ═══════════════ FORMS ═══════════════ */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-label{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;color:var(--tx2)}
+.form-input,.form-select,.form-textarea{
+  background:var(--input-bg);border:1px solid var(--input-bdr);
+  border-radius:8px;color:var(--tx);padding:8px 11px;font-size:13px;
+  transition:border-color .2s,box-shadow .2s;width:100%;
+}
+.form-input:focus,.form-select:focus,.form-textarea:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(6,182,212,.12)}
+.form-select option{background:var(--card2);color:var(--tx)}
+.form-textarea{resize:vertical;min-height:80px}
+/* ═══════════════ BUTTONS ═══════════════ */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:9px;font-family:'Syne',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .2s var(--ease);white-space:nowrap;border:none;letter-spacing:.3px}
+.btn svg{width:13px;height:13px;flex-shrink:0}
+.btn-cyan{background:linear-gradient(135deg,var(--cyan),var(--teal));color:#fff;box-shadow:0 4px 14px rgba(6,182,212,.3)}
+.btn-cyan:hover{transform:translateY(-2px);box-shadow:0 7px 22px rgba(6,182,212,.45)}
+.btn-emerald{background:linear-gradient(135deg,var(--emerald),#059669);color:#fff;box-shadow:0 4px 14px rgba(16,185,129,.28)}
+.btn-emerald:hover{transform:translateY(-2px)}
+.btn-amber{background:linear-gradient(135deg,var(--amber),#d97706);color:#fff;box-shadow:0 4px 14px rgba(245,158,11,.28)}
+.btn-amber:hover{transform:translateY(-2px)}
+.btn-rose{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.28);color:var(--rose)}
+.btn-rose:hover{background:rgba(244,63,94,.18)}
+.btn-ghost{background:var(--surf2);border:1px solid var(--bdr2);color:var(--tx2)}
+.btn-ghost:hover{border-color:var(--bdr3);color:var(--tx)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important}
+/* toolbar */
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px}
+/* ═══════════════ STAFF GRID ═══════════════ */
+.staff-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.staff-card{background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:14px;transition:all .2s;cursor:pointer}
+.staff-card:hover{border-color:var(--bdr2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.staff-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--teal));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:#fff;margin-bottom:10px}
+.staff-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--tx);margin-bottom:2px}
+.staff-role{font-size:11px;color:var(--tx2);margin-bottom:6px}
+.staff-status{display:inline-flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:2px 7px;border-radius:6px;text-transform:uppercase}
+.s-active{background:rgba(16,185,129,.15);color:#10b981}
+.s-busy  {background:rgba(245,158,11,.15);color:#f59e0b}
+.s-off   {background:rgba(100,116,139,.15);color:#64748b}
+/* ═══════════════ INSPECTION SCORE ═══════════════ */
+.score-bar{height:8px;border-radius:4px;background:var(--bdr);overflow:hidden;margin-top:4px}
+.score-fill{height:100%;border-radius:4px;transition:width .6s var(--ease)}
+/* ═══════════════ TOAST ═══════════════ */
+.toast{position:fixed;bottom:20px;right:20px;z-index:9999;background:var(--card2);border:1px solid var(--bdr2);border-radius:10px;padding:11px 16px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;box-shadow:var(--sh);opacity:0;transform:translateY(12px);transition:all .3s;pointer-events:none;max-width:320px}
+.toast.show{opacity:1;transform:none}
+.t-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.t-ok .t-dot{background:var(--emerald)}.t-err .t-dot{background:var(--rose)}.t-info .t-dot{background:var(--cyan)}
+/* ═══════════════ MODAL ═══════════════ */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px}
+.modal-overlay.show{display:flex}
+.modal-box{background:var(--bg2);border:1px solid var(--bdr2);border-radius:16px;padding:24px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;animation:modin .3s var(--spring)}
+@keyframes modin{from{opacity:0;transform:scale(.94) translateY(20px)}to{opacity:1;transform:none}}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.modal-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--tx)}
+.modal-close{width:30px;height:30px;border-radius:8px;border:1px solid var(--bdr2);background:transparent;color:var(--tx2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
+.modal-close:hover{border-color:var(--rose);color:var(--rose)}
+.modal-close svg{width:14px;height:14px}
+/* ═══════════════ SCHEDULE TABLE ═══════════════ */
+.sched-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:13px;display:flex;align-items:center;gap:12px;transition:border-color .2s}
+.sched-card:hover{border-color:var(--bdr2)}
+.sched-freq{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(6,182,212,.12);color:var(--cyan);white-space:nowrap}
+/* ═══════════════ EMPTY STATE ═══════════════ */
+.empty{padding:40px 20px;text-align:center;color:var(--tx2)}
+.empty svg{width:40px;height:40px;margin-bottom:12px;opacity:.3}
+.empty h3{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--tx);margin-bottom:5px}
+.empty p{font-size:12px;line-height:1.5}
+/* ═══════════════ RESPONSIVE ═══════════════ */
+@media(max-width:768px){
+  .hdr{padding:0 12px}
+  .hdr-title{font-size:15px}
+  .hdr-sub{display:none}
+  .section{padding:14px 12px 70px}
+  .counter-grid{grid-template-columns:repeat(2,1fr);gap:9px}
+  .kanban{gap:9px}
+  .form-grid{grid-template-columns:1fr}
+  #ldt{display:none}
+}
+@media(max-width:440px){
+  .portal-btn span{display:none}
+  .clk-pill .ist-lbl{display:none}
+  .counter-grid{grid-template-columns:repeat(2,1fr)}
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinning{animation:spin .7s linear infinite;display:inline-block}
+</style>
+</head>
+<body>
+<!-- BG -->
+<div class="bg-wrap" aria-hidden="true">
+  <div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
+  <div class="bg-grid"></div>
+</div>
+<div class="scan" aria-hidden="true"></div>
+<!-- TOAST -->
+<div class="toast" id="owHkToast"><span class="t-dot"></span><span id="owHkToastMsg"></span></div>
+<!-- MODAL OVERLAY -->
+<div class="modal-overlay" id="owHkModal">
+  <div class="modal-box" id="owHkModalBox">
+    <div class="modal-hd">
+      <div class="modal-title" id="owHkModalTitle">Add Task</div>
+      <button class="modal-close" onclick="owHkCloseModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div id="owHkModalBody"></div>
+  </div>
+</div>
+<!-- SIDEBAR OVERLAY -->
+<div class="sb-overlay" id="owHkSbOverlay" onclick="owHkCloseSb()"></div>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-l">
+    <button class="hbg-btn" id="owHkHbg" onclick="owHkToggleSb()" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="gem">H</div>
+    <div>
+      <div class="hdr-title">OW Housekeeping</div>
+      <div class="hdr-sub">Service Operations · ONEWEST</div>
+    </div>
+  </div>
+  <div class="hdr-r">
+    <div class="clk-pill">
+      <span class="live-dot"></span>
+      <span id="owHkClk">--:--:--</span>
+      <span class="ist-lbl" style="font-size:.58rem;color:var(--tx2);letter-spacing:.5px">IST</span>
+      <span id="owHkDate" style="color:var(--tx2);font-size:.62rem"></span>
+    </div>
+    <div class="th-tog" id="owHkThTog" onclick="owHkToggleTheme()" title="Dark / Light">
+      <svg class="tic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <div class="tt-track"><div class="tt-knob"></div></div>
+      <svg class="tic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </div>
+    <a href="/onewest" class="portal-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      <span>PORTAL</span>
+    </a>
+  </div>
+</header>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="owHkSidebar">
+  <div class="sb-head">
+    <div class="sb-head-title">HK Operations</div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-label">Overview</div>
+    <button class="sb-item active" data-sec="overview" onclick="owHkNav('overview',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Dashboard
+      <span class="sb-badge" id="sbBadgeOverdue">0</span>
+    </button>
+
+    <div class="sb-divider"></div>
+    <div class="sb-label">Operations</div>
+    <button class="sb-item" data-sec="tasks" onclick="owHkNav('tasks',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      Task Board
+      <span class="sb-badge" id="sbBadgeTasks">0</span>
+    </button>
+    <button class="sb-item" data-sec="requests" onclick="owHkNav('requests',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+      Requests
+      <span class="sb-badge" id="sbBadgeReqs">0</span>
+    </button>
+    <button class="sb-item" data-sec="schedules" onclick="owHkNav('schedules',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Schedules
+      <span class="sb-badge ok" id="sbBadgeSched">0</span>
+    </button>
+
+    <div class="sb-divider"></div>
+    <div class="sb-label">People & Quality</div>
+    <button class="sb-item" data-sec="staff" onclick="owHkNav('staff',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Staff
+      <span class="sb-badge ok" id="sbBadgeStaff">0</span>
+    </button>
+    <button class="sb-item" data-sec="inspections" onclick="owHkNav('inspections',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      Inspections
+      <span class="sb-badge" id="sbBadgeInsp">0</span>
+    </button>
+
+    <div class="sb-divider"></div>
+    <div class="sb-label">Stock & Movement</div>
+    <button class="sb-item" data-sec="materials" onclick="owHkNav('materials',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      Materials
+      <span class="sb-badge warn" id="sbBadgeMat">0</span>
+    </button>
+    <button class="sb-item" data-sec="inout" onclick="owHkNav('inout',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+      In &amp; Out
+      <span class="sb-badge" id="sbBadgeInOut">0</span>
+    </button>
+
+    <div class="sb-divider"></div>
+    <div class="sb-label">Data</div>
+    <button class="sb-item" onclick="owHkDownloadTemplate()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Excel Template
+    </button>
+    <button class="sb-item" onclick="document.getElementById('owHkFileIn').click()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Upload Data
+    </button>
+    <input type="file" id="owHkFileIn" accept=".xlsx,.xls" style="display:none" onchange="owHkUploadFile(this)"/>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<div class="main" id="owHkMain">
+
+<!-- ══ OVERVIEW ══ -->
+<div class="section active" id="sec-overview">
+  <div class="sec-hd">
+    <div class="sec-dot" style="background:var(--cyan)"></div>
+    <div><div class="sec-title">Housekeeping Dashboard</div><div class="sec-sub">Live operations overview · ONEWEST</div></div>
+    <div class="sec-line"></div>
+    <button class="btn btn-cyan" onclick="owHkOpenAddTask()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Task
+    </button>
+    <button class="btn btn-ghost" onclick="owHkRefresh()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="refIcon"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+    </button>
+  </div>
+
+  <!-- COUNTER CARDS -->
+  <div class="counter-grid" id="owHkCounters">
+    <div class="ctr-card" onclick="owHkNavFilter('tasks','all')" style="--acc:var(--cyan)">
+      <div class="ctr-card" style="all:unset;display:block;cursor:pointer" onclick="owHkNavFilter('tasks','all')"></div>
+      <div class="ctr-ico" style="background:rgba(6,182,212,.12);color:var(--cyan)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      </div>
+      <div class="ctr-val" style="color:var(--cyan)" id="ctrTotal">0</div>
+      <div class="ctr-lbl">Total Tasks</div>
+      <div class="ctr-trend" style="color:var(--tx2)">Today</div>
+    </div>
+    <div class="ctr-card" onclick="owHkNavFilter('tasks','pending')">
+      <div class="ctr-ico" style="background:rgba(245,158,11,.12);color:var(--amber)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="ctr-val" style="color:var(--amber)" id="ctrPending">0</div>
+      <div class="ctr-lbl">Pending</div>
+      <div class="ctr-trend" style="color:var(--amber)" id="ctrPendTrend">Awaiting</div>
+    </div>
+    <div class="ctr-card" onclick="owHkNavFilter('tasks','in_progress')">
+      <div class="ctr-ico" style="background:rgba(6,182,212,.12);color:var(--cyan)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
+      <div class="ctr-val" style="color:var(--cyan)" id="ctrInProgress">0</div>
+      <div class="ctr-lbl">In Progress</div>
+      <div class="ctr-trend" style="color:var(--cyan)">Active now</div>
+    </div>
+    <div class="ctr-card" onclick="owHkNavFilter('tasks','completed')">
+      <div class="ctr-ico" style="background:rgba(16,185,129,.12);color:var(--emerald)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="ctr-val" style="color:var(--emerald)" id="ctrDone">0</div>
+      <div class="ctr-lbl">Completed</div>
+      <div class="ctr-trend" style="color:var(--emerald)">Today</div>
+    </div>
+    <div class="ctr-card" onclick="owHkNavFilter('tasks','overdue')">
+      <div class="ctr-ico" style="background:rgba(239,68,68,.12);color:var(--rose)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div class="ctr-val" style="color:var(--rose)" id="ctrOverdue">0</div>
+      <div class="ctr-lbl">Overdue</div>
+      <div class="ctr-trend" style="color:var(--rose)">SLA breached</div>
+    </div>
+    <div class="ctr-card" onclick="owHkNav('requests',document.querySelector('[data-sec=requests]'))">
+      <div class="ctr-ico" style="background:rgba(249,115,22,.12);color:var(--orange)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+      </div>
+      <div class="ctr-val" style="color:var(--orange)" id="ctrRequests">0</div>
+      <div class="ctr-lbl">Requests</div>
+      <div class="ctr-trend" style="color:var(--orange)">Open</div>
+    </div>
+    <div class="ctr-card" onclick="owHkNav('staff',document.querySelector('[data-sec=staff]'))">
+      <div class="ctr-ico" style="background:rgba(139,92,246,.12);color:var(--violet)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      </div>
+      <div class="ctr-val" style="color:var(--violet)" id="ctrStaff">0</div>
+      <div class="ctr-lbl">Staff Active</div>
+      <div class="ctr-trend" style="color:var(--tx2)" id="ctrStaffShift">On shift</div>
+    </div>
+    <div class="ctr-card" onclick="owHkNav('inspections',document.querySelector('[data-sec=inspections]'))">
+      <div class="ctr-ico" style="background:rgba(16,185,129,.12);color:var(--emerald)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div class="ctr-val" style="color:var(--emerald)" id="ctrAvgScore">—</div>
+      <div class="ctr-lbl">Avg Audit Score</div>
+      <div class="ctr-trend" style="color:var(--tx2)">/ 100</div>
+    </div>
+    <div class="ctr-card" onclick="owHkNav('materials',document.querySelector('[data-sec=materials]'))">
+      <div class="ctr-ico" style="background:rgba(249,115,22,.12);color:var(--orange)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      </div>
+      <div class="ctr-val" style="color:var(--orange)" id="ctrLowStock">0</div>
+      <div class="ctr-lbl">Low Stock Items</div>
+      <div class="ctr-trend" style="color:var(--rose)" id="ctrLowStockTrend">Below minimum</div>
+    </div>
+    <div class="ctr-card" onclick="owHkNav('inout',document.querySelector('[data-sec=inout]'))">
+      <div class="ctr-ico" style="background:rgba(139,92,246,.12);color:var(--violet)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+      </div>
+      <div class="ctr-val" style="color:var(--violet)" id="ctrInOut">0</div>
+      <div class="ctr-lbl">Today Movements</div>
+      <div class="ctr-trend" style="color:var(--tx2)">In &amp; Out today</div>
+    </div>
+  </div>
+
+  <!-- Quick task board preview -->
+  <div class="card">
+    <div class="card-hd"><div class="card-bar"></div><div class="card-title">Task Board — Live</div>
+      <button class="btn btn-ghost" style="margin-left:auto;padding:5px 10px;font-size:11px" onclick="owHkNav('tasks',document.querySelector('[data-sec=tasks]'))">View Full Board</button>
+    </div>
+    <div class="kanban" id="owHkKanbanPreview"></div>
+  </div>
+</div>
+
+<!-- ══ TASK BOARD ══ -->
+<div class="section" id="sec-tasks">
+  <div class="sec-hd">
+    <div class="sec-dot" style="background:var(--cyan)"></div>
+    <div><div class="sec-title">Task Board</div><div class="sec-sub">Kanban · All active tasks · SLA live</div></div>
+    <div class="sec-line"></div>
+    <select class="form-select" id="owHkFilterPrio" onchange="owHkRenderTasks()" style="width:120px;padding:7px 10px;font-size:12px">
+      <option value="all">All Priority</option>
+      <option value="critical">Critical</option>
+      <option value="high">High</option>
+      <option value="medium">Medium</option>
+      <option value="low">Low</option>
+    </select>
+    <select class="form-select" id="owHkFilterZone" onchange="owHkRenderTasks()" style="width:130px;padding:7px 10px;font-size:12px">
+      <option value="all">All Zones</option>
+    </select>
+    <button class="btn btn-cyan" onclick="owHkOpenAddTask()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Task
+    </button>
+  </div>
+  <div class="kanban" id="owHkKanbanFull"></div>
+</div>
+
+<!-- ══ REQUESTS ══ -->
+<div class="section" id="sec-requests">
+  <div class="sec-hd">
+    <div class="sec-dot" style="background:var(--orange)"></div>
+    <div><div class="sec-title">On-Demand Requests</div><div class="sec-sub">Tenant & FM requests · Convert to task</div></div>
+    <div class="sec-line"></div>
+    <button class="btn btn-amber" onclick="owHkOpenAddRequest()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      New Request
+    </button>
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>#</th><th>Title</th><th>Location</th><th class="tc">Priority</th>
+        <th class="tc">Source</th><th class="tc">SLA</th><th class="tc">Status</th><th class="tc">Actions</th>
+      </tr></thead>
+      <tbody id="owHkReqBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ SCHEDULES ══ -->
+<div class="section" id="sec-schedules">
+  <div class="sec-hd">
+    <div class="sec-dot" style="background:var(--violet)"></div>
+    <div><div class="sec-title">Cleaning Schedules</div><div class="sec-sub">Recurring task definitions · Zone-based</div></div>
+    <div class="sec-line"></div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-bar"></div><div class="card-title">Active Schedules</div></div>
+    <div id="owHkSchedList" style="display:flex;flex-direction:column;gap:10px"></div>
+  </div>
+</div>
+
+<!-- ══ STAFF ══ -->
+<div class="section" id="sec-staff">
+  <div class="sec-hd">
+    <div class="sec-dot" style="background:var(--violet)"></div>
+    <div><div class="sec-title">Staff Roster</div><div class="sec-sub">Shift deployment · Zone assignment · Live status</div></div>
+    <div class="sec-line"></div>
+    <button class="btn btn-cyan" onclick="owHkOpenAddStaff()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Staff
+    </button>
+  </div>
+  <div class="staff-grid" id="owHkStaffGrid"></div>
+</div>
+
+<!-- ══ INSPECTIONS ══ -->
+<div class="section" id="sec-inspections">
+  <div class="sec-hd">
+    <div class="sec-dot" style="background:var(--emerald)"></div>
+    <div><div class="sec-title">Quality Inspections</div><div class="sec-sub">Audit scores · Rework tracking · Compliance</div></div>
+    <div class="sec-line"></div>
+    <button class="btn btn-emerald" onclick="owHkOpenAddInspection()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Inspection
+    </button>
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>#</th><th>Zone</th><th>Inspector</th>
+        <th class="tc">Score</th><th class="tc">Result</th><th>Remarks</th>
+        <th class="tc">Rework</th><th>Date</th>
+      </tr></thead>
+      <tbody id="owHkInspBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ MATERIALS ══ -->
+<div class="section" id="sec-materials">
+  <div class="sec-hd">
+    <div class="sec-dot" style="background:var(--orange)"></div>
+    <div><div class="sec-title">Material Consumption</div><div class="sec-sub">Stock levels · Issue log · Receive log · Low-stock alerts</div></div>
+    <div class="sec-line"></div>
+    <button class="btn btn-amber" onclick="owHkOpenIssueMaterial()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      Issue
+    </button>
+    <button class="btn btn-emerald" onclick="owHkOpenReceiveMaterial()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      Receive
+    </button>
+    <button class="btn btn-cyan" onclick="owHkOpenAddMaterial()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Item
+    </button>
+  </div>
+
+  <!-- Stock inventory table -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-hd"><div class="card-bar"></div><div class="card-title">Current Stock</div>
+      <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--tx2)" id="matLowLabel"></span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>#</th><th>Item</th><th class="tc">Category</th><th class="tc">Unit</th>
+          <th class="tc">Stock</th><th class="tc">Min Level</th><th class="tc">Status</th><th class="tc">Actions</th>
+        </tr></thead>
+        <tbody id="owHkMatBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Transaction log -->
+  <div class="card">
+    <div class="card-hd"><div class="card-bar" style="background:linear-gradient(180deg,var(--amber),var(--orange))"></div><div class="card-title">Transaction Log</div></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>#</th><th>Item</th><th class="tc">Type</th><th class="tc">Qty</th>
+          <th>Zone</th><th>Issued To</th><th>Notes</th><th>Date & Time</th>
+        </tr></thead>
+        <tbody id="owHkMatLogBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ IN & OUT ══ -->
+<div class="section" id="sec-inout">
+  <div class="sec-hd">
+    <div class="sec-dot" style="background:var(--violet)"></div>
+    <div><div class="sec-title">In &amp; Out Register</div><div class="sec-sub">Staff · Vendor · Material · Equipment movements</div></div>
+    <div class="sec-line"></div>
+    <button class="btn btn-cyan" onclick="owHkOpenAddInOut()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Log Entry
+    </button>
+  </div>
+
+  <!-- Quick stats strip -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px" id="owHkInOutStats"></div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>#</th><th>Name / Item</th><th class="tc">Type</th>
+        <th class="tc">Direction</th><th>Zone</th><th>Purpose</th>
+        <th>Items / Qty</th><th>Auth By</th><th>Time</th><th class="tc">Action</th>
+      </tr></thead>
+      <tbody id="owHkInOutBody"></tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- /main -->
+</div><!-- /layout -->
+<script>
+/* ══════════════════════════════════════════════
+   GLOBALS
+══════════════════════════════════════════════ */
+let OWD = { tasks:[], requests:[], staff:[], inspections:[], schedules:[], materials:[], material_log:[], inout:[], meta:{} };
+let owHkFilter = 'all';
+let _owHkTT;
+
+/* ══════════════════════════════════════════════
+   THEME + CLOCK
+══════════════════════════════════════════════ */
+(()=>{ try{ document.documentElement.setAttribute('data-theme', localStorage.getItem('ow_hk_theme')||'dark'); }catch(e){} })();
+function owHkToggleTheme(){
+  const h=document.documentElement, n=h.getAttribute('data-theme')==='dark'?'light':'dark';
+  h.setAttribute('data-theme',n);
+  try{ localStorage.setItem('ow_hk_theme',n); }catch(e){}
+}
+function owHkTick(){
+  const ist=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
+  const pad=n=>String(n).padStart(2,'0');
+  document.getElementById('owHkClk').textContent=`${pad(ist.getHours())}:${pad(ist.getMinutes())}:${pad(ist.getSeconds())}`;
+  document.getElementById('owHkDate').textContent=ist.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});
+}
+setInterval(owHkTick,1000); owHkTick();
+
+/* ══════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════ */
+function owHkToast(msg,type='ok'){
+  const el=document.getElementById('owHkToast');
+  document.getElementById('owHkToastMsg').textContent=msg;
+  el.className=`toast show t-${type}`;
+  clearTimeout(_owHkTT);
+  _owHkTT=setTimeout(()=>el.className='toast',3400);
+}
+
+/* ══════════════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════════════ */
+function owHkToggleSb(){
+  const sb=document.getElementById('owHkSidebar');
+  const ov=document.getElementById('owHkSbOverlay');
+  sb.classList.toggle('open');
+  ov.classList.toggle('show');
+}
+function owHkCloseSb(){
+  document.getElementById('owHkSidebar').classList.remove('open');
+  document.getElementById('owHkSbOverlay').classList.remove('show');
+}
+function owHkNav(sec, btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-'+sec).classList.add('active');
+  if(btn) btn.classList.add('active');
+  owHkCloseSb();
+  owHkRenderSection(sec);
+}
+function owHkNavFilter(sec, filter){
+  owHkFilter = filter;
+  owHkNav(sec, document.querySelector(`[data-sec="${sec}"]`));
+}
+
+/* ══════════════════════════════════════════════
+   FETCH + REFRESH
+══════════════════════════════════════════════ */
+async function owHkFetch(){
+  try{
+    const r=await fetch('/api/ow_hk/data');
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const j=await r.json();
+    if(j.error) throw new Error(j.error);
+    OWD=j;
+    owHkRenderAll();
+  }catch(e){
+    console.warn('[OW HK] fetch failed:',e.message);
+    owHkRenderAll(); // render from fallback
+  }
+}
+function owHkRefresh(){
+  const icon=document.getElementById('refIcon');
+  if(icon) icon.classList.add('spinning');
+  owHkFetch().then(()=>{ if(icon) icon.classList.remove('spinning'); });
+  owHkToast('Refreshed','info');
+}
+
+/* ══════════════════════════════════════════════
+   RENDER ALL
+══════════════════════════════════════════════ */
+function owHkRenderAll(){
+  owHkUpdateCounters();
+  owHkUpdateBadges();
+  owHkRenderKanban('owHkKanbanPreview', true);
+  owHkRenderKanban('owHkKanbanFull', false);
+  owHkRenderRequests();
+  owHkRenderSchedules();
+  owHkRenderStaff();
+  owHkRenderInspections();
+  owHkRenderMaterials();
+  owHkRenderInOut();
+  owHkUpdateZoneFilter();
+  try{ lucide.createIcons(); }catch(e){}
+}
+function owHkRenderSection(sec){
+  if(sec==='tasks')       { owHkRenderKanban('owHkKanbanFull',false); }
+  if(sec==='requests')    { owHkRenderRequests(); }
+  if(sec==='schedules')   { owHkRenderSchedules(); }
+  if(sec==='staff')       { owHkRenderStaff(); }
+  if(sec==='inspections') { owHkRenderInspections(); }
+  if(sec==='materials')   { owHkRenderMaterials(); }
+  if(sec==='inout')       { owHkRenderInOut(); }
+  try{ lucide.createIcons(); }catch(e){}
+}
+
+/* ══════════════════════════════════════════════
+   COUNTERS
+══════════════════════════════════════════════ */
+function owHkUpdateCounters(){
+  const tasks=OWD.tasks||[];
+  const all      = tasks.length;
+  const pending  = tasks.filter(t=>t.status==='pending').length;
+  const inprog   = tasks.filter(t=>t.status==='in_progress').length;
+  const done     = tasks.filter(t=>t.status==='completed'||t.status==='closed').length;
+  const overdue  = tasks.filter(t=>t.sla_status==='breached' && !['completed','closed'].includes(t.status)).length;
+  const openReqs = (OWD.requests||[]).filter(r=>r.status==='open').length;
+  const activeStaff=(OWD.staff||[]).filter(s=>s.status==='active'||s.status==='busy').length;
+  const insps=(OWD.inspections||[]);
+  const avgScore=insps.length?Math.round(insps.reduce((a,b)=>a+(b.score||0),0)/insps.length):'—';
+
+  const s=id=>{ const e=document.getElementById(id); if(e) e.textContent=arguments[1]??''; };
+  document.getElementById('ctrTotal').textContent=all;
+  document.getElementById('ctrPending').textContent=pending;
+  document.getElementById('ctrInProgress').textContent=inprog;
+  document.getElementById('ctrDone').textContent=done;
+  document.getElementById('ctrOverdue').textContent=overdue;
+  document.getElementById('ctrRequests').textContent=openReqs;
+  document.getElementById('ctrStaff').textContent=activeStaff;
+  document.getElementById('ctrAvgScore').textContent=avgScore;
+
+  // colour overdue counter
+  const oc=document.getElementById('ctrOverdue');
+  if(oc){ oc.style.color = overdue>0?'var(--rose)':'var(--emerald)'; }
+  // material low stock
+  const mats=OWD.materials||[];
+  const lowStock=mats.filter(m=>m.stock<=m.min_stock).length;
+  const ctrLS=document.getElementById('ctrLowStock');
+  if(ctrLS){ ctrLS.textContent=lowStock; ctrLS.style.color=lowStock>0?'var(--rose)':'var(--emerald)'; }
+  const ctrLT=document.getElementById('ctrLowStockTrend');
+  if(ctrLT){ ctrLT.textContent=lowStock>0?lowStock+' below min':'All stocked'; ctrLT.style.color=lowStock>0?'var(--rose)':'var(--emerald)'; }
+  // in/out today
+  const todayStr=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'})).toLocaleDateString('en-IN',{day:'2-digit',month:'short'});
+  const todayMov=(OWD.inout||[]).filter(e=>e.timestamp&&e.timestamp.includes(todayStr)).length;
+  const ctrIO=document.getElementById('ctrInOut');
+  if(ctrIO) ctrIO.textContent=todayMov;
+}
+function owHkUpdateBadges(){
+  const tasks=OWD.tasks||[];
+  const active=tasks.filter(t=>!['completed','closed'].includes(t.status)).length;
+  const overdue=tasks.filter(t=>t.sla_status==='breached' && !['completed','closed'].includes(t.status)).length;
+  const openReqs=(OWD.requests||[]).filter(r=>r.status==='open').length;
+
+  const setBadge=(id,val,cls)=>{
+    const e=document.getElementById(id);
+    if(!e) return;
+    e.textContent=val;
+    if(cls){ e.className='sb-badge '+cls; }
+    else {
+      e.className='sb-badge'+(val>0 && id==='sbBadgeOverdue'?' crit':val>0?' warn':'');
+    }
+  };
+  setBadge('sbBadgeOverdue', overdue);
+  setBadge('sbBadgeTasks',   active);
+  setBadge('sbBadgeReqs',    openReqs);
+  setBadge('sbBadgeSched',   (OWD.schedules||[]).filter(s=>s.active).length, 'ok');
+  setBadge('sbBadgeStaff',   (OWD.staff||[]).filter(s=>s.status==='active').length, 'ok');
+  setBadge('sbBadgeInsp',    (OWD.inspections||[]).length);
+  const lowM=(OWD.materials||[]).filter(m=>m.stock<=m.min_stock).length;
+  setBadge('sbBadgeMat', lowM, lowM>0?'crit':'ok');
+  setBadge('sbBadgeInOut', (OWD.inout||[]).length);
+}
+function owHkUpdateZoneFilter(){
+  const sel=document.getElementById('owHkFilterZone');
+  if(!sel) return;
+  const zones=[...new Set((OWD.tasks||[]).map(t=>t.zone).filter(Boolean))].sort();
+  const cur=sel.value;
+  sel.innerHTML='<option value="all">All Zones</option>'+zones.map(z=>`<option value="${z}">${z}</option>`).join('');
+  if(cur) sel.value=cur;
+}
+
+/* ══════════════════════════════════════════════
+   SLA DISPLAY
+══════════════════════════════════════════════ */
+function owHkSlaEl(item){
+  const st=item.sla_status||'ok';
+  const cls={'ok':'sla-ok','warning':'sla-warn','breached':'sla-br'}[st]||'sla-ok';
+  const label={'ok':'On track','warning':'Near SLA','breached':'SLA Breached'}[st]||'On track';
+  return `<span class="tc-sla ${cls}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="9" height="9"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${label}</span>`;
+}
+
+/* ══════════════════════════════════════════════
+   KANBAN
+══════════════════════════════════════════════ */
+const KANBAN_COLS=[
+  {id:'pending',    label:'Pending',     color:'var(--amber)',   bg:'rgba(245,158,11,.12)'},
+  {id:'in_progress',label:'In Progress', color:'var(--cyan)',    bg:'rgba(6,182,212,.12)'},
+  {id:'completed',  label:'Completed',   color:'var(--emerald)', bg:'rgba(16,185,129,.12)'},
+  {id:'overdue',    label:'Overdue',     color:'var(--rose)',    bg:'rgba(239,68,68,.12)'},
+];
+function owHkRenderKanban(containerId, preview){
+  const c=document.getElementById(containerId);
+  if(!c) return;
+  const pf=document.getElementById('owHkFilterPrio')?.value||'all';
+  const zf=document.getElementById('owHkFilterZone')?.value||'all';
+
+  let tasks=OWD.tasks||[];
+  if(pf!=='all') tasks=tasks.filter(t=>t.priority===pf);
+  if(zf!=='all') tasks=tasks.filter(t=>t.zone===zf);
+
+  // apply tab filter from counters
+  if(owHkFilter && owHkFilter!=='all'){
+    if(owHkFilter==='overdue') tasks=tasks.filter(t=>t.sla_status==='breached' && !['completed','closed'].includes(t.status));
+    else tasks=tasks.filter(t=>t.status===owHkFilter);
+  }
+
+  c.innerHTML=KANBAN_COLS.map(col=>{
+    let colTasks;
+    if(col.id==='overdue'){
+      colTasks=tasks.filter(t=>t.sla_status==='breached' && !['completed','closed'].includes(t.status));
+    } else {
+      colTasks=tasks.filter(t=>t.status===col.id);
+    }
+    const show=preview ? colTasks.slice(0,3) : colTasks;
+    return `<div class="kb-col">
+      <div class="kb-hd">
+        <div class="kb-hd-title" style="color:${col.color}">${col.label}</div>
+        <div class="kb-cnt" style="background:${col.bg};color:${col.color}">${colTasks.length}</div>
+      </div>
+      <div class="kb-body">
+        ${show.length ? show.map(t=>owHkTaskCard(t)).join('') :
+          `<div class="empty" style="padding:20px 10px"><p style="font-size:11px">No tasks</p></div>`}
+        ${preview && colTasks.length>3 ? `<div style="text-align:center;font-size:11px;color:var(--tx2);padding:6px">+${colTasks.length-3} more</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+  try{ lucide.createIcons(); }catch(e){}
+}
+function owHkTaskCard(t){
+  const pcls=`prio-${t.priority||'medium'}`;
+  const plbl=(t.priority||'medium').toUpperCase();
+  const nextStatus={pending:'in_progress',in_progress:'completed',completed:'closed'}[t.status]||null;
+  const nextLabel={pending:'Start',in_progress:'Complete',completed:'Close'}[t.status]||null;
+  return `<div class="task-card" onclick="owHkViewTask('${t.id}')">
+    <div class="tc-hd">
+      <div class="tc-title">${owHkEsc(t.title)}</div>
+      <div class="prio-badge ${pcls}">${plbl}</div>
+    </div>
+    <div class="tc-meta">
+      <span class="tc-zone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="9" height="9"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${owHkEsc(t.zone||'—')}</span>
+      ${owHkSlaEl(t)}
+    </div>
+    ${t.assigned_to?`<div style="font-size:10px;color:var(--tx2);margin-top:5px;display:flex;align-items:center;gap:4px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="9" height="9"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>${owHkEsc(t.assigned_to)}</div>`:''}
+    <div class="tc-actions">
+      ${nextLabel?`<button class="tc-btn" onclick="event.stopPropagation();owHkAdvanceTask('${t.id}','${nextStatus}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>${nextLabel}</button>`:''}
+      <button class="tc-btn" onclick="event.stopPropagation();owHkDeleteTask('${t.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+    </div>
+  </div>`;
+}
+
+/* ══════════════════════════════════════════════
+   TASK ACTIONS
+══════════════════════════════════════════════ */
+async function owHkAdvanceTask(tid, status){
+  try{
+    const r=await fetch(`/api/ow_hk/task/${tid}/status`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({status})});
+    const j=await r.json();
+    if(j.success){ const t=OWD.tasks.find(x=>x.id===tid); if(t){t.status=status; if(status==='completed') t.sla_status='ok';} owHkRenderAll(); owHkToast(`Task ${status.replace('_',' ')}!`,'ok'); }
+    else owHkToast(j.error||'Error','err');
+  }catch(e){ owHkToast('Server unreachable','err'); }
+}
+async function owHkDeleteTask(tid){
+  if(!confirm('Delete this task?')) return;
+  try{
+    const r=await fetch(`/api/ow_hk/task/${tid}`,{method:'DELETE'});
+    const j=await r.json();
+    if(j.success){ OWD.tasks=OWD.tasks.filter(t=>t.id!==tid); owHkRenderAll(); owHkToast('Task deleted','info'); }
+  }catch(e){ owHkToast('Server unreachable','err'); }
+}
+function owHkViewTask(tid){
+  const t=OWD.tasks.find(x=>x.id===tid);
+  if(!t) return;
+  const cl=t.checklist||[];
+  const pcls=`prio-${t.priority||'medium'}`;
+  document.getElementById('owHkModalTitle').textContent='Task Details';
+  document.getElementById('owHkModalBody').innerHTML=`
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+      <span class="prio-badge ${pcls}">${(t.priority||'medium').toUpperCase()}</span>
+      <span style="font-size:11px;color:var(--tx2);background:var(--surf2);padding:2px 9px;border-radius:6px;border:1px solid var(--bdr)">${t.status.replace('_',' ').toUpperCase()}</span>
+      <span class="tc-sla ${t.sla_status==='breached'?'sla-br':t.sla_status==='warning'?'sla-warn':'sla-ok'}" style="font-size:11px">SLA: ${t.sla_status==='breached'?'BREACHED':t.sla_status==='warning'?'Near limit':'On track'}</span>
+    </div>
+    <h3 style="font-family:'Syne',sans-serif;font-size:16px;margin-bottom:12px;color:var(--tx)">${owHkEsc(t.title)}</h3>
+    <div class="form-grid" style="grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      <div><div class="form-label">Zone</div><div style="font-size:13px;color:var(--tx)">${owHkEsc(t.zone||'—')}</div></div>
+      <div><div class="form-label">Area</div><div style="font-size:13px;color:var(--tx)">${owHkEsc(t.area||'—')}</div></div>
+      <div><div class="form-label">Assigned To</div><div style="font-size:13px;color:var(--tx)">${owHkEsc(t.assigned_to||'Unassigned')}</div></div>
+      <div><div class="form-label">SLA</div><div style="font-size:13px;color:var(--tx)">${t.sla_mins} mins</div></div>
+      <div><div class="form-label">Created</div><div style="font-size:12px;color:var(--tx2)">${t.created_at||'—'}</div></div>
+      <div><div class="form-label">Source</div><div style="font-size:12px;color:var(--tx2)">${t.source||'manual'}</div></div>
+    </div>
+    ${t.notes?`<div style="margin-bottom:14px"><div class="form-label">Notes</div><div style="font-size:13px;color:var(--tx2);margin-top:4px">${owHkEsc(t.notes)}</div></div>`:''}
+    ${cl.length?`<div class="form-label" style="margin-bottom:8px">Checklist</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        ${cl.map(item=>`<label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer">
+          <input type="checkbox" style="width:14px;height:14px;accent-color:var(--cyan)"/>
+          <span style="color:var(--tx)">${owHkEsc(item)}</span>
+        </label>`).join('')}
+      </div>`:''}
+    <div style="display:flex;gap:8px;margin-top:18px;flex-wrap:wrap">
+      ${t.status==='pending'?`<button class="btn btn-cyan" onclick="owHkAdvanceTask('${t.id}','in_progress');owHkCloseModal()">Start Task</button>`:t.status==='in_progress'?`<button class="btn btn-emerald" onclick="owHkAdvanceTask('${t.id}','completed');owHkCloseModal()">Mark Complete</button>`:''}
+      <button class="btn btn-ghost" onclick="owHkCloseModal()">Close</button>
+    </div>`;
+  document.getElementById('owHkModal').classList.add('show');
+}
+
+/* ══════════════════════════════════════════════
+   ADD TASK MODAL
+══════════════════════════════════════════════ */
+function owHkOpenAddTask(){
+  const zones=[...new Set((OWD.tasks||[]).map(t=>t.zone).filter(Boolean))];
+  const staff=(OWD.staff||[]).filter(s=>s.status!=='off_shift');
+  document.getElementById('owHkModalTitle').textContent='Add New Task';
+  document.getElementById('owHkModalBody').innerHTML=`
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Task Title *</label>
+        <input class="form-input" id="aTTitle" placeholder="e.g. Lobby deep clean" autofocus/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Zone *</label>
+        <input class="form-input" id="aTZone" list="zoneList" placeholder="Zone or area"/>
+        <datalist id="zoneList">${zones.map(z=>`<option value="${owHkEsc(z)}">`).join('')}</datalist>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Area / Level</label>
+        <input class="form-input" id="aTArea" placeholder="e.g. Ground Floor"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Task Type</label>
+        <select class="form-select" id="aTType">
+          <option value="routine">Routine</option>
+          <option value="on_demand">On Demand</option>
+          <option value="periodic">Periodic</option>
+          <option value="deep_clean">Deep Clean</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Priority</label>
+        <select class="form-select" id="aTPrio">
+          <option value="medium" selected>Medium (60 min SLA)</option>
+          <option value="critical">Critical (10 min SLA)</option>
+          <option value="high">High (20 min SLA)</option>
+          <option value="low">Low (240 min SLA)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Assign To</label>
+        <select class="form-select" id="aTAssign">
+          <option value="">-- Unassigned --</option>
+          ${staff.map(s=>`<option value="${owHkEsc(s.name)}">${owHkEsc(s.name)} (${s.shift})</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Custom SLA (mins)</label>
+        <input class="form-input" id="aTSla" type="number" min="5" placeholder="Leave blank = auto"/>
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Checklist (one item per line)</label>
+        <textarea class="form-textarea" id="aTChecklist" placeholder="Sweep floor&#10;Mop&#10;Empty bins&#10;Wipe surfaces"></textarea>
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Notes</label>
+        <input class="form-input" id="aTNotes" placeholder="Optional remarks"/>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:18px">
+      <button class="btn btn-cyan" onclick="owHkSubmitTask()">Add Task</button>
+      <button class="btn btn-ghost" onclick="owHkCloseModal()">Cancel</button>
+    </div>`;
+  document.getElementById('owHkModal').classList.add('show');
+  setTimeout(()=>document.getElementById('aTTitle')?.focus(), 120);
+}
+async function owHkSubmitTask(){
+  const title=document.getElementById('aTTitle')?.value.trim();
+  const zone =document.getElementById('aTZone')?.value.trim();
+  if(!title||!zone){ owHkToast('Title and Zone are required','err'); return; }
+  const checklist=document.getElementById('aTChecklist')?.value.split('\n').map(s=>s.trim()).filter(Boolean)||[];
+  const prio=document.getElementById('aTPrio')?.value||'medium';
+  const slaEl=document.getElementById('aTSla');
+  const sla_mins=slaEl?.value?parseInt(slaEl.value):null;
+  const body={
+    title, zone,
+    area:   document.getElementById('aTArea')?.value.trim()||'',
+    task_type:document.getElementById('aTType')?.value||'routine',
+    priority: prio,
+    assigned_to: document.getElementById('aTAssign')?.value||'',
+    sla_mins,
+    checklist,
+    notes:  document.getElementById('aTNotes')?.value.trim()||'',
+    source: 'manual',
+  };
+  try{
+    const r=await fetch('/api/ow_hk/task',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const j=await r.json();
+    if(j.success){ OWD.tasks.unshift(j.task); owHkCloseModal(); owHkRenderAll(); owHkToast('Task added!','ok'); }
+    else owHkToast(j.error||'Error','err');
+  }catch(e){
+    // offline fallback
+    const task={...body,id:Date.now().toString(36),status:'pending',created_at:new Date().toISOString(),sla_status:'ok',sla_mins:sla_mins||{critical:10,high:20,medium:60,low:240}[prio]||60};
+    OWD.tasks.unshift(task); owHkCloseModal(); owHkRenderAll(); owHkToast('Task added (offline)','info');
+  }
+}
+
+/* ══════════════════════════════════════════════
+   ADD REQUEST MODAL
+══════════════════════════════════════════════ */
+function owHkOpenAddRequest(){
+  document.getElementById('owHkModalTitle').textContent='New On-Demand Request';
+  document.getElementById('owHkModalBody').innerHTML=`
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Request Title *</label>
+        <input class="form-input" id="aRTitle" placeholder="e.g. Washroom attention needed" autofocus/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Location *</label>
+        <input class="form-input" id="aRLoc" placeholder="e.g. 2nd Floor Gents"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Zone</label>
+        <input class="form-input" id="aRZone" placeholder="e.g. Washrooms"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Priority</label>
+        <select class="form-select" id="aRPrio">
+          <option value="high" selected>High</option>
+          <option value="critical">Critical</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Source</label>
+        <select class="form-select" id="aRSrc">
+          <option value="tenant">Tenant</option>
+          <option value="fm">FM / Supervisor</option>
+          <option value="iot">IoT Sensor</option>
+          <option value="manual">Manual</option>
+        </select>
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Notes</label>
+        <textarea class="form-textarea" id="aRNotes" placeholder="Additional details..." style="min-height:60px"></textarea>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:18px">
+      <button class="btn btn-amber" onclick="owHkSubmitRequest()">Raise Request</button>
+      <button class="btn btn-ghost" onclick="owHkCloseModal()">Cancel</button>
+    </div>`;
+  document.getElementById('owHkModal').classList.add('show');
+  setTimeout(()=>document.getElementById('aRTitle')?.focus(), 120);
+}
+async function owHkSubmitRequest(){
+  const title=document.getElementById('aRTitle')?.value.trim();
+  const location=document.getElementById('aRLoc')?.value.trim();
+  if(!title||!location){ owHkToast('Title and Location required','err'); return; }
+  const body={title,location,zone:document.getElementById('aRZone')?.value.trim()||'',priority:document.getElementById('aRPrio')?.value||'high',source:document.getElementById('aRSrc')?.value||'manual',notes:document.getElementById('aRNotes')?.value.trim()||''};
+  try{
+    const r=await fetch('/api/ow_hk/request',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const j=await r.json();
+    if(j.success){ OWD.requests.unshift(j.request); owHkCloseModal(); owHkRenderAll(); owHkToast('Request raised!','ok'); }
+    else owHkToast(j.error||'Error','err');
+  }catch(e){
+    const req={...body,id:Date.now().toString(36),status:'open',sla_status:'ok',sla_mins:{critical:5,high:15,medium:30,low:60}[body.priority]||30,created_at:new Date().toISOString()};
+    OWD.requests.unshift(req); owHkCloseModal(); owHkRenderAll(); owHkToast('Request raised (offline)','info');
+  }
+}
+
+/* ══════════════════════════════════════════════
+   RENDER REQUESTS
+══════════════════════════════════════════════ */
+function owHkRenderRequests(){
+  const tb=document.getElementById('owHkReqBody');
+  if(!tb) return;
+  const reqs=OWD.requests||[];
+  if(!reqs.length){ tb.innerHTML=`<tr><td colspan="8"><div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg><h3>No Requests</h3><p>All clear — no pending service requests.</p></div></td></tr>`; return; }
+  tb.innerHTML=reqs.map((r,i)=>{
+    const pcls=`prio-${r.priority||'medium'}`;
+    const scls={'open':'sla-warn','converted':'sla-ok','closed':'sla-ok'}[r.status]||'sla-ok';
+    const slaCls={'ok':'sla-ok','warning':'sla-warn','breached':'sla-br'}[r.sla_status||'ok'];
+    return `<tr>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx2)">${i+1}</td>
+      <td style="font-weight:600">${owHkEsc(r.title)}</td>
+      <td style="color:var(--tx2);font-size:12px">${owHkEsc(r.location||r.zone||'—')}</td>
+      <td class="tc"><span class="prio-badge ${pcls}">${(r.priority||'medium').toUpperCase()}</span></td>
+      <td class="tc" style="font-size:11px;color:var(--tx2)">${r.source||'—'}</td>
+      <td class="tc"><span class="${slaCls}" style="font-size:11px">${r.sla_status==='breached'?'BREACHED':r.sla_status==='warning'?'Near SLA':'On track'}</span></td>
+      <td class="tc"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 7px;border-radius:5px;background:var(--surf2);color:var(--tx2)">${r.status.toUpperCase()}</span></td>
+      <td class="tc">
+        ${r.status==='open'?`<button class="tc-btn" style="width:auto;padding:4px 8px" onclick="owHkConvertRequest('${r.id}')">Convert Task</button>`:'<span style="font-size:11px;color:var(--tx2)">—</span>'}
+      </td>
+    </tr>`;
+  }).join('');
+}
+async function owHkConvertRequest(rid){
+  const req=OWD.requests.find(r=>r.id===rid);
+  if(!req) return;
+  const staff=(OWD.staff||[]).filter(s=>s.status!=='off_shift');
+  document.getElementById('owHkModalTitle').textContent='Convert to Task';
+  document.getElementById('owHkModalBody').innerHTML=`
+    <p style="font-size:13px;color:var(--tx2);margin-bottom:14px">Converting: <strong style="color:var(--tx)">${owHkEsc(req.title)}</strong></p>
+    <div class="form-group">
+      <label class="form-label">Assign To</label>
+      <select class="form-select" id="cRAssign">
+        <option value="">-- Unassigned --</option>
+        ${staff.map(s=>`<option value="${owHkEsc(s.name)}">${owHkEsc(s.name)} (${s.shift})</option>`).join('')}
+      </select>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:18px">
+      <button class="btn btn-emerald" onclick="owHkDoConvert('${rid}')">Convert to Task</button>
+      <button class="btn btn-ghost" onclick="owHkCloseModal()">Cancel</button>
+    </div>`;
+  document.getElementById('owHkModal').classList.add('show');
+}
+async function owHkDoConvert(rid){
+  const assigned_to=document.getElementById('cRAssign')?.value||'';
+  try{
+    const r=await fetch(`/api/ow_hk/request/${rid}/convert`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({assigned_to})});
+    const j=await r.json();
+    if(j.success){
+      const req=OWD.requests.find(x=>x.id===rid);
+      if(req) req.status='converted';
+      OWD.tasks.unshift(j.task);
+      owHkCloseModal(); owHkRenderAll(); owHkToast('Converted to task!','ok');
+    } else owHkToast(j.error||'Error','err');
+  }catch(e){ owHkToast('Server unreachable','err'); }
+}
+
+/* ══════════════════════════════════════════════
+   RENDER SCHEDULES
+══════════════════════════════════════════════ */
+function owHkRenderSchedules(){
+  const c=document.getElementById('owHkSchedList');
+  if(!c) return;
+  const scheds=OWD.schedules||[];
+  if(!scheds.length){ c.innerHTML=`<div class="empty"><p>No schedules defined</p></div>`; return; }
+  c.innerHTML=scheds.map(s=>`
+    <div class="sched-card">
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:3px">${owHkEsc(s.task)}</div>
+        <div style="font-size:11px;color:var(--tx2);display:flex;gap:8px;flex-wrap:wrap">
+          <span style="display:flex;align-items:center;gap:3px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${owHkEsc(s.zone)}</span>
+          <span>SLA: ${s.sla_mins} mins</span>
+          <span>Next: ${owHkEsc(s.next_due||'—')}</span>
+        </div>
+      </div>
+      <div class="sched-freq">${owHkEsc(s.frequency)}</div>
+      <div style="width:8px;height:8px;border-radius:50%;background:${s.active?'var(--emerald)':'var(--tx2)'};flex-shrink:0"></div>
+    </div>`).join('');
+}
+
+/* ══════════════════════════════════════════════
+   RENDER STAFF
+══════════════════════════════════════════════ */
+function owHkRenderStaff(){
+  const c=document.getElementById('owHkStaffGrid');
+  if(!c) return;
+  const staff=OWD.staff||[];
+  if(!staff.length){ c.innerHTML=`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><h3>No Staff</h3><p>Add housekeeping staff to track deployment.</p></div>`; return; }
+  c.innerHTML=staff.map(s=>{
+    const scls={'active':'s-active','busy':'s-busy','off_shift':'s-off'}[s.status]||'s-active';
+    const slbl={'active':'Active','busy':'Busy','off_shift':'Off Shift'}[s.status]||s.status;
+    const initials=s.name.split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
+    return `<div class="staff-card" onclick="owHkEditStaff('${s.id}')">
+      <div class="staff-avatar">${initials}</div>
+      <div class="staff-name">${owHkEsc(s.name)}</div>
+      <div class="staff-role">${owHkEsc(s.zone||'—')} · ${owHkEsc(s.shift||'—')}</div>
+      <span class="staff-status ${scls}">${slbl}</span>
+      ${s.current_task?`<div style="font-size:10px;color:var(--amber);margin-top:5px">On task</div>`:''}
+    </div>`;
+  }).join('');
+}
+function owHkOpenAddStaff(){
+  document.getElementById('owHkModalTitle').textContent='Add Staff Member';
+  document.getElementById('owHkModalBody').innerHTML=`
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Full Name *</label>
+        <input class="form-input" id="aSName" placeholder="e.g. Ravi Kumar" autofocus/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Shift</label>
+        <select class="form-select" id="aSShift">
+          <option>Morning</option><option>Afternoon</option><option>Night</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Zone Assignment</label>
+        <input class="form-input" id="aSZone" placeholder="e.g. Lobby & Atrium"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <input class="form-input" id="aSPhone" type="tel" placeholder="9876543210"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select class="form-select" id="aSStatus">
+          <option value="active">Active</option>
+          <option value="off_shift">Off Shift</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:18px">
+      <button class="btn btn-cyan" onclick="owHkSubmitStaff()">Add Staff</button>
+      <button class="btn btn-ghost" onclick="owHkCloseModal()">Cancel</button>
+    </div>`;
+  document.getElementById('owHkModal').classList.add('show');
+  setTimeout(()=>document.getElementById('aSName')?.focus(), 120);
+}
+async function owHkSubmitStaff(){
+  const name=document.getElementById('aSName')?.value.trim();
+  if(!name){ owHkToast('Name required','err'); return; }
+  const body={name,shift:document.getElementById('aSShift')?.value||'Morning',zone:document.getElementById('aSZone')?.value.trim()||'',phone:document.getElementById('aSPhone')?.value.trim()||'',status:document.getElementById('aSStatus')?.value||'active'};
+  try{
+    const r=await fetch('/api/ow_hk/staff',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const j=await r.json();
+    if(j.success){ OWD.staff.push(j.member); owHkCloseModal(); owHkRenderAll(); owHkToast('Staff added!','ok'); }
+    else owHkToast(j.error||'Error','err');
+  }catch(e){ owHkToast('Server unreachable','err'); }
+}
+function owHkEditStaff(sid){
+  const s=OWD.staff.find(x=>x.id===sid);
+  if(!s) return;
+  document.getElementById('owHkModalTitle').textContent='Edit Staff Status';
+  document.getElementById('owHkModalBody').innerHTML=`
+    <p style="font-size:15px;font-weight:700;color:var(--tx);margin-bottom:14px">${owHkEsc(s.name)}</p>
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <select class="form-select" id="eSStatus">
+        <option value="active" ${s.status==='active'?'selected':''}>Active</option>
+        <option value="busy"   ${s.status==='busy'?'selected':''}>Busy</option>
+        <option value="off_shift" ${s.status==='off_shift'?'selected':''}>Off Shift</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:18px">
+      <button class="btn btn-cyan" onclick="owHkUpdateStaff('${sid}')">Update</button>
+      <button class="btn btn-ghost" onclick="owHkCloseModal()">Cancel</button>
+    </div>`;
+  document.getElementById('owHkModal').classList.add('show');
+}
+async function owHkUpdateStaff(sid){
+  const s=OWD.staff.find(x=>x.id===sid);
+  if(!s) return;
+  const status=document.getElementById('eSStatus')?.value||s.status;
+  try{
+    const r=await fetch('/api/ow_hk/staff',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...s,status})});
+    const j=await r.json();
+    if(j.success){ s.status=status; owHkCloseModal(); owHkRenderAll(); owHkToast('Status updated','ok'); }
+  }catch(e){ s.status=status; owHkCloseModal(); owHkRenderAll(); owHkToast('Updated (offline)','info'); }
+}
+
+/* ══════════════════════════════════════════════
+   INSPECTIONS
+══════════════════════════════════════════════ */
+function owHkRenderInspections(){
+  const tb=document.getElementById('owHkInspBody');
+  if(!tb) return;
+  const insps=OWD.inspections||[];
+  if(!insps.length){ tb.innerHTML=`<tr><td colspan="8"><div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><h3>No Inspections</h3><p>Add quality audit records here.</p></div></td></tr>`; return; }
+  tb.innerHTML=insps.map((ins,i)=>{
+    const sc=ins.score||0;
+    const fillClr=sc>=80?'var(--emerald)':sc>=60?'var(--amber)':'var(--rose)';
+    return `<tr>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx2)">${i+1}</td>
+      <td style="font-weight:600">${owHkEsc(ins.zone||'—')}</td>
+      <td style="color:var(--tx2);font-size:12px">${owHkEsc(ins.inspector||'—')}</td>
+      <td class="tc">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:${fillClr}">${sc}</span>
+          <div class="score-bar" style="width:50px"><div class="score-fill" style="width:${sc}%;background:${fillClr}"></div></div>
+        </div>
+      </td>
+      <td class="tc"><span style="font-size:11px;font-weight:700;color:${ins.result==='pass'?'var(--emerald)':'var(--rose)'}">${(ins.result||'—').toUpperCase()}</span></td>
+      <td style="font-size:12px;color:var(--tx2)">${owHkEsc(ins.remarks||'—')}</td>
+      <td class="tc"><span style="font-size:11px;color:${ins.rework?'var(--amber)':'var(--tx2)'}">${ins.rework?'Required':'None'}</span></td>
+      <td style="font-size:11px;color:var(--tx2)">${owHkEsc(ins.inspected_at||'—')}</td>
+    </tr>`;
+  }).join('');
+}
+function owHkOpenAddInspection(){
+  const zones=[...new Set([...(OWD.tasks||[]).map(t=>t.zone),...(OWD.schedules||[]).map(s=>s.zone)].filter(Boolean))];
+  document.getElementById('owHkModalTitle').textContent='Add Inspection Record';
+  document.getElementById('owHkModalBody').innerHTML=`
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Zone *</label>
+        <input class="form-input" id="aIZone" list="iZoneList" placeholder="Select or type zone" autofocus/>
+        <datalist id="iZoneList">${zones.map(z=>`<option value="${owHkEsc(z)}">`).join('')}</datalist>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Inspector</label>
+        <input class="form-input" id="aIInspector" placeholder="Supervisor name"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cleanliness Score (0–100)</label>
+        <input class="form-input" id="aIScore" type="number" min="0" max="100" value="85"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Rework Required?</label>
+        <select class="form-select" id="aIRework">
+          <option value="false">No</option>
+          <option value="true">Yes</option>
+        </select>
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Remarks</label>
+        <textarea class="form-textarea" id="aIRemarks" placeholder="Inspection notes..." style="min-height:60px"></textarea>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:18px">
+      <button class="btn btn-emerald" onclick="owHkSubmitInspection()">Save Inspection</button>
+      <button class="btn btn-ghost" onclick="owHkCloseModal()">Cancel</button>
+    </div>`;
+  document.getElementById('owHkModal').classList.add('show');
+  setTimeout(()=>document.getElementById('aIZone')?.focus(), 120);
+}
+async function owHkSubmitInspection(){
+  const zone=document.getElementById('aIZone')?.value.trim();
+  if(!zone){ owHkToast('Zone required','err'); return; }
+  const score=parseInt(document.getElementById('aIScore')?.value)||0;
+  const body={zone,inspector:document.getElementById('aIInspector')?.value.trim()||'',score,remarks:document.getElementById('aIRemarks')?.value.trim()||'',rework:document.getElementById('aIRework')?.value==='true'};
+  try{
+    const r=await fetch('/api/ow_hk/inspection',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const j=await r.json();
+    if(j.success){ OWD.inspections.unshift(j.inspection); owHkCloseModal(); owHkRenderAll(); owHkToast('Inspection saved!','ok'); }
+    else owHkToast(j.error||'Error','err');
+  }catch(e){ const ins={...body,id:Date.now().toString(36),result:score>=70?'pass':'fail',inspected_at:new Date().toISOString()}; OWD.inspections.unshift(ins); owHkCloseModal(); owHkRenderAll(); owHkToast('Saved (offline)','info'); }
+}
+
+/* ══════════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════════ */
+function owHkCloseModal(){
+  document.getElementById('owHkModal').classList.remove('show');
+}
+document.getElementById('owHkModal').addEventListener('click', e=>{
+  if(e.target===document.getElementById('owHkModal')) owHkCloseModal();
+});
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') owHkCloseModal(); });
+
+/* ══════════════════════════════════════════════
+   EXCEL TEMPLATE + UPLOAD
+══════════════════════════════════════════════ */
+function owHkDownloadTemplate(){
+  window.open('/api/ow_hk/template','_blank');
+  owHkToast('Downloading template…','info');
+}
+async function owHkUploadFile(inp){
+  if(!inp.files[0]) return;
+  const fd=new FormData(); fd.append('file',inp.files[0]);
+  owHkToast('Uploading…','info');
+  try{
+    const r=await fetch('/api/ow_hk/upload',{method:'POST',body:fd});
+    const j=await r.json();
+    if(j.success){
+      owHkToast(`Uploaded! Tasks:${j.added.tasks} Requests:${j.added.requests} Staff:${j.added.staff}  Inspections:${j.added.inspections}`,'ok');
+      await owHkFetch();
+    } else owHkToast(j.error||'Upload error','err');
+  }catch(e){ owHkToast('Upload failed','err'); }
+  inp.value='';
+}
+
+/* ══════════════════════════════════════════════
+   UTILS
+══════════════════════════════════════════════ */
+function owHkEsc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ══════════════════════════════════════════════
+   INIT — auto-poll every 60s for global live
+══════════════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', ()=>{
+  try{ lucide.createIcons(); }catch(e){}
+  owHkFetch();
+  setInterval(owHkFetch, 60000); // global live: refresh every 60s
+});
+
+// expose globals
+window.owHkNav=owHkNav;window.owHkNavFilter=owHkNavFilter;
+window.owHkToggleTheme=owHkToggleTheme;
+window.owHkCloseModal=owHkCloseModal;
+window.owHkOpenAddTask=owHkOpenAddTask;window.owHkSubmitTask=owHkSubmitTask;
+window.owHkOpenAddRequest=owHkOpenAddRequest;window.owHkSubmitRequest=owHkSubmitRequest;
+window.owHkConvertRequest=owHkConvertRequest;window.owHkDoConvert=owHkDoConvert;
+window.owHkOpenAddInspection=owHkOpenAddInspection;window.owHkSubmitInspection=owHkSubmitInspection;
+window.owHkOpenAddStaff=owHkOpenAddStaff;window.owHkSubmitStaff=owHkSubmitStaff;
+window.owHkEditStaff=owHkEditStaff;window.owHkUpdateStaff=owHkUpdateStaff;
+window.owHkAdvanceTask=owHkAdvanceTask;window.owHkDeleteTask=owHkDeleteTask;
+window.owHkViewTask=owHkViewTask;window.owHkDownloadTemplate=owHkDownloadTemplate;
+window.owHkUploadFile=owHkUploadFile;window.owHkRefresh=owHkRefresh;
+window.owHkRenderTasks=function(){owHkRenderKanban('owHkKanbanFull',false);};
+
+/* ══════════════════════════════════════════════
+   MATERIALS
+══════════════════════════════════════════════ */
+const MAT_CAT_CLR={chemical:'var(--cyan)',consumable:'var(--emerald)',equipment:'var(--amber)',ppe:'var(--violet)'};
+function owHkRenderMaterials(){
+  const tb=document.getElementById('owHkMatBody');
+  const logTb=document.getElementById('owHkMatLogBody');
+  const mats=OWD.materials||[];
+  const lowLabel=document.getElementById('matLowLabel');
+  const lowCount=mats.filter(m=>m.stock<=m.min_stock).length;
+  if(lowLabel) lowLabel.textContent=lowCount>0?lowCount+' ITEM(S) BELOW MIN STOCK':'All items stocked';
+  if(lowLabel) lowLabel.style.color=lowCount>0?'var(--rose)':'var(--emerald)';
+
+  if(tb){
+    if(!mats.length){ tb.innerHTML=`<tr><td colspan="8"><div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="36" height="36"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg><h3>No Materials</h3><p>Add items or upload from Excel template.</p></div></td></tr>`; }
+    else tb.innerHTML=mats.map((m,i)=>{
+      const pct=m.min_stock>0?Math.min(100,Math.round((m.stock/m.min_stock)*100)):100;
+      const isLow=m.stock<=m.min_stock;
+      const isCrit=m.stock<=m.min_stock*0.5;
+      const stClr=isCrit?'var(--rose)':isLow?'var(--amber)':'var(--emerald)';
+      const stTxt=isCrit?'CRITICAL':isLow?'LOW':'OK';
+      const catClr=MAT_CAT_CLR[m.category]||'var(--tx2)';
+      return `<tr>
+        <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx2)">${i+1}</td>
+        <td style="font-weight:600;color:var(--tx)">${owHkEsc(m.name)}</td>
+        <td class="tc"><span style="font-size:10px;padding:2px 7px;border-radius:5px;background:rgba(6,182,212,.1);color:${catClr}">${owHkEsc(m.category)}</span></td>
+        <td class="tc" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx2)">${owHkEsc(m.unit)}</td>
+        <td class="tc">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+            <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:${stClr};font-size:14px">${m.stock}</span>
+            <div class="score-bar" style="width:55px"><div class="score-fill" style="width:${pct}%;background:${stClr}"></div></div>
+          </div>
+        </td>
+        <td class="tc" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--tx2)">${m.min_stock}</td>
+        <td class="tc"><span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;color:${stClr};background:${stClr.replace(')',',0.12)').replace('var(','rgba(').replace('--rose','244,63,94').replace('--amber','245,158,11').replace('--emerald','16,185,129')}">${stTxt}</span></td>
+        <td class="tc" style="display:flex;gap:4px;justify-content:center">
+          <button class="tc-btn" style="padding:4px 8px" onclick="owHkOpenIssueMaterial('${m.id}')">Issue</button>
+          <button class="tc-btn" style="padding:4px 8px" onclick="owHkOpenReceiveMaterial('${m.id}')">Receive</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  if(logTb){
+    const log=OWD.material_log||[];
+    if(!log.length){ logTb.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--tx2);font-size:12px">No transactions yet</td></tr>`; }
+    else logTb.innerHTML=log.slice(0,50).map((l,i)=>{
+      const isIssue=l.type==='issue';
+      return `<tr>
+        <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx2)">${i+1}</td>
+        <td style="font-weight:600">${owHkEsc(l.material)}</td>
+        <td class="tc"><span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;
+          background:${isIssue?'rgba(249,115,22,.15)':'rgba(16,185,129,.15)'};
+          color:${isIssue?'var(--orange)':'var(--emerald)'}">${isIssue?'ISSUE':'RECEIVE'}</span></td>
+        <td class="tc" style="font-family:'JetBrains Mono',monospace;font-weight:700;color:${isIssue?'var(--orange)':'var(--emerald)'}">${isIssue?'-':'+'} ${l.qty} ${owHkEsc(l.unit)}</td>
+        <td style="color:var(--tx2);font-size:12px">${owHkEsc(l.zone||'—')}</td>
+        <td style="color:var(--tx2);font-size:12px">${owHkEsc(l.issued_to||'—')}</td>
+        <td style="color:var(--tx2);font-size:12px">${owHkEsc(l.notes||'—')}</td>
+        <td style="font-size:11px;color:var(--tx2)">${owHkEsc(l.logged_at||'—')}</td>
+      </tr>`;
+    }).join('');
+  }
+}
+
+function owHkOpenAddMaterial(){
+  document.getElementById('owHkModalTitle').textContent='Add Material Item';
+  document.getElementById('owHkModalBody').innerHTML=`
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Item Name *</label>
+        <input class="form-input" id="aMName" placeholder="e.g. Floor Cleaner (Lizol)" autofocus/>
+      </div>
+      <div class="form-group"><label class="form-label">Unit</label>
+        <input class="form-input" id="aMUnit" placeholder="Litres / Rolls / Nos / Pairs"/>
+      </div>
+      <div class="form-group"><label class="form-label">Category</label>
+        <select class="form-select" id="aMCat">
+          <option value="consumable">Consumable</option>
+          <option value="chemical">Chemical</option>
+          <option value="equipment">Equipment</option>
+          <option value="ppe">PPE</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Opening Stock</label>
+        <input class="form-input" id="aMStock" type="number" min="0" value="0"/>
+      </div>
+      <div class="form-group"><label class="form-label">Min Stock Level</label>
+        <input class="form-input" id="aMMin" type="number" min="0" value="0"/>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:18px">
+      <button class="btn btn-cyan" onclick="owHkSubmitAddMaterial()">Add Item</button>
+      <button class="btn btn-ghost" onclick="owHkCloseModal()">Cancel</button>
+    </div>`;
+  document.getElementById('owHkModal').classList.add('show');
+  setTimeout(()=>document.getElementById('aMName')?.focus(),120);
+}
+async function owHkSubmitAddMaterial(){
+  const name=document.getElementById('aMName')?.value.trim();
+  if(!name){ owHkToast('Name required','err'); return; }
+  const body={name,unit:document.getElementById('aMUnit')?.value.trim()||'Nos',
+    category:document.getElementById('aMCat')?.value||'consumable',
+    stock:parseFloat(document.getElementById('aMStock')?.value)||0,
+    min_stock:parseFloat(document.getElementById('aMMin')?.value)||0};
+  try{
+    const r=await fetch('/api/ow_hk/material',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const j=await r.json();
+    if(j.success){ OWD.materials.push(j.material); owHkCloseModal(); owHkRenderAll(); owHkToast('Item added!','ok'); }
+    else owHkToast(j.error||'Error','err');
+  }catch(e){ const m={...body,id:Date.now().toString(36)}; OWD.materials.push(m); owHkCloseModal(); owHkRenderAll(); owHkToast('Added (offline)','info'); }
+}
+
+function owHkOpenIssueMaterial(preselect){
+  const mats=(OWD.materials||[]).filter(m=>m.stock>0);
+  const staff=(OWD.staff||[]).filter(s=>s.status!=='off_shift');
+  const zones=[...new Set((OWD.tasks||[]).map(t=>t.zone).filter(Boolean))];
+  document.getElementById('owHkModalTitle').textContent='Issue Material';
+  document.getElementById('owHkModalBody').innerHTML=`
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Item *</label>
+        <select class="form-select" id="iMItem">
+          ${mats.map(m=>`<option value="${m.id}" ${m.id===preselect?'selected':''}>${owHkEsc(m.name)} — Stock: ${m.stock} ${owHkEsc(m.unit)}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Quantity *</label>
+        <input class="form-input" id="iMQty" type="number" min="0.1" step="0.1" value="1" autofocus/>
+      </div>
+      <div class="form-group"><label class="form-label">Zone</label>
+        <input class="form-input" id="iMZone" list="iZoneListM" placeholder="Zone or area"/>
+        <datalist id="iZoneListM">${zones.map(z=>`<option value="${owHkEsc(z)}">`).join('')}</datalist>
+      </div>
+      <div class="form-group"><label class="form-label">Issued To</label>
+        <select class="form-select" id="iMTo">
+          <option value="">-- Select staff --</option>
+          ${staff.map(s=>`<option value="${owHkEsc(s.name)}">${owHkEsc(s.name)}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group" style="grid-column:1/-1"><label class="form-label">Notes</label>
+        <input class="form-input" id="iMNotes" placeholder="Optional notes"/>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:18px">
+      <button class="btn btn-amber" onclick="owHkSubmitIssue()">Issue</button>
+      <button class="btn btn-ghost" onclick="owHkCloseModal()">Cancel</button>
+    </div>`;
+  document.getElementById('owHkModal').classList.add('show');
+  setTimeout(()=>document.getElementById('iMQty')?.focus(),120);
+}
+async function owHkSubmitIssue(){
+  const mid=document.getElementById('iMItem')?.value;
+  const qty=parseFloat(document.getElementById('iMQty')?.value)||0;
+  if(!mid||qty<=0){ owHkToast('Select item and valid qty','err'); return; }
+  const body={qty,zone:document.getElementById('iMZone')?.value||'',issued_to:document.getElementById('iMTo')?.value||'',notes:document.getElementById('iMNotes')?.value||''};
+  try{
+    const r=await fetch('/api/ow_hk/material/'+mid+'/issue',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const j=await r.json();
+    if(j.success){
+      const m=OWD.materials.find(x=>x.id===mid); if(m) m.stock=j.material.stock;
+      if(!OWD.material_log) OWD.material_log=[];
+      OWD.material_log.unshift(j.log);
+      owHkCloseModal(); owHkRenderAll(); owHkToast('Issued!','ok');
+    } else owHkToast(j.error||'Error','err');
+  }catch(e){ owHkToast('Server unreachable','err'); }
+}
+
+function owHkOpenReceiveMaterial(preselect){
+  const mats=OWD.materials||[];
+  document.getElementById('owHkModalTitle').textContent='Receive Stock';
+  document.getElementById('owHkModalBody').innerHTML=`
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Item *</label>
+        <select class="form-select" id="rMItem">
+          ${mats.map(m=>`<option value="${m.id}" ${m.id===preselect?'selected':''}>${owHkEsc(m.name)} — Current: ${m.stock} ${owHkEsc(m.unit)}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Quantity Received *</label>
+        <input class="form-input" id="rMQty" type="number" min="0.1" step="0.1" value="1" autofocus/>
+      </div>
+      <div class="form-group" style="grid-column:1/-1"><label class="form-label">Notes / Invoice Ref</label>
+        <input class="form-input" id="rMNotes" placeholder="e.g. Invoice #INV-234"/>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:18px">
+      <button class="btn btn-emerald" onclick="owHkSubmitReceive()">Receive</button>
+      <button class="btn btn-ghost" onclick="owHkCloseModal()">Cancel</button>
+    </div>`;
+  document.getElementById('owHkModal').classList.add('show');
+  setTimeout(()=>document.getElementById('rMQty')?.focus(),120);
+}
+async function owHkSubmitReceive(){
+  const mid=document.getElementById('rMItem')?.value;
+  const qty=parseFloat(document.getElementById('rMQty')?.value)||0;
+  if(!mid||qty<=0){ owHkToast('Select item and valid qty','err'); return; }
+  const body={qty,notes:document.getElementById('rMNotes')?.value||''};
+  try{
+    const r=await fetch('/api/ow_hk/material/'+mid+'/receive',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const j=await r.json();
+    if(j.success){
+      const m=OWD.materials.find(x=>x.id===mid); if(m) m.stock=j.material.stock;
+      if(!OWD.material_log) OWD.material_log=[];
+      OWD.material_log.unshift(j.log);
+      owHkCloseModal(); owHkRenderAll(); owHkToast('Stock received!','ok');
+    } else owHkToast(j.error||'Error','err');
+  }catch(e){ owHkToast('Server unreachable','err'); }
+}
+
+/* ══════════════════════════════════════════════
+   IN & OUT REGISTER
+══════════════════════════════════════════════ */
+const INOUT_TYPE_CLR={staff:'var(--emerald)',vendor:'var(--cyan)',material:'var(--amber)',equipment:'var(--violet)'};
+const INOUT_DIR_CLR ={in:'var(--emerald)',out:'var(--rose)'};
+function owHkRenderInOut(){
+  const stats=document.getElementById('owHkInOutStats');
+  const tb=document.getElementById('owHkInOutBody');
+  const entries=OWD.inout||[];
+
+  // Quick stats
+  if(stats){
+    const types=['staff','vendor','material','equipment'];
+    stats.innerHTML=types.map(t=>{
+      const cnt=entries.filter(e=>e.type===t).length;
+      const clr=INOUT_TYPE_CLR[t]||'var(--tx2)';
+      return `<div style="background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:10px 14px;display:flex;align-items:center;gap:9px">
+        <div style="width:8px;height:8px;border-radius:50%;background:${clr}"></div>
+        <div><div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:${clr}">${cnt}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:1px;color:var(--tx2)">${t}</div></div>
+      </div>`;
+    }).join('');
+    const inCnt=entries.filter(e=>e.direction==='in').length;
+    const outCnt=entries.filter(e=>e.direction==='out').length;
+    stats.innerHTML+=`<div style="background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:10px 14px">
+      <div style="font-size:11px;color:var(--tx2);margin-bottom:3px">Direction</div>
+      <div style="display:flex;gap:10px">
+        <span style="color:var(--emerald);font-weight:700;font-size:13px">IN: ${inCnt}</span>
+        <span style="color:var(--rose);font-weight:700;font-size:13px">OUT: ${outCnt}</span>
+      </div>
+    </div>`;
+  }
+
+  if(!tb) return;
+  if(!entries.length){ tb.innerHTML=`<tr><td colspan="10"><div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="36" height="36"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg><h3>No Entries</h3><p>Log staff, vendor, material and equipment movements here.</p></div></td></tr>`; return; }
+  tb.innerHTML=entries.map((e,i)=>{
+    const tClr=INOUT_TYPE_CLR[e.type]||'var(--tx2)';
+    const dClr=INOUT_DIR_CLR[e.direction]||'var(--tx2)';
+    const dIcon=e.direction==='in'?'→ IN':'← OUT';
+    return `<tr>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx2)">${i+1}</td>
+      <td style="font-weight:600;color:var(--tx)">${owHkEsc(e.name||'—')}</td>
+      <td class="tc"><span style="font-size:10px;padding:2px 7px;border-radius:5px;background:${tClr.replace(')',',0.12)').replace('var(--emerald','rgba(16,185,129').replace('var(--cyan','rgba(6,182,212').replace('var(--amber','rgba(245,158,11').replace('var(--violet','rgba(139,92,246')};color:${tClr}">${e.type}</span></td>
+      <td class="tc"><span style="font-size:11px;font-weight:700;color:${dClr}">${dIcon}</span></td>
+      <td style="font-size:12px;color:var(--tx2)">${owHkEsc(e.zone||'—')}</td>
+      <td style="font-size:12px;color:var(--tx2)">${owHkEsc(e.purpose||'—')}</td>
+      <td style="font-size:12px;color:var(--tx2)">${owHkEsc(e.items||e.qty||'—')}</td>
+      <td style="font-size:12px;color:var(--tx2)">${owHkEsc(e.authorized_by||'—')}</td>
+      <td style="font-size:11px;color:var(--tx2)">${owHkEsc(e.timestamp||'—')}</td>
+      <td class="tc"><button class="tc-btn" style="padding:4px 8px" onclick="owHkDeleteInOut('${e.id}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+      </button></td>
+    </tr>`;
+  }).join('');
+}
+
+function owHkOpenAddInOut(){
+  document.getElementById('owHkModalTitle').textContent='Log In / Out Entry';
+  document.getElementById('owHkModalBody').innerHTML=`
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Name / Item *</label>
+        <input class="form-input" id="ioName" placeholder="Staff name, vendor, or item description" autofocus/>
+      </div>
+      <div class="form-group"><label class="form-label">Type</label>
+        <select class="form-select" id="ioType">
+          <option value="staff">Staff</option>
+          <option value="vendor">Vendor</option>
+          <option value="material">Material</option>
+          <option value="equipment">Equipment</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Direction</label>
+        <select class="form-select" id="ioDir">
+          <option value="in">IN — Entry</option>
+          <option value="out">OUT — Exit</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Zone / Location</label>
+        <input class="form-input" id="ioZone" placeholder="e.g. Lobby, Store, Parking"/>
+      </div>
+      <div class="form-group"><label class="form-label">Purpose</label>
+        <input class="form-input" id="ioPurpose" placeholder="e.g. Morning shift, Delivery"/>
+      </div>
+      <div class="form-group"><label class="form-label">Items / Quantity</label>
+        <input class="form-input" id="ioItems" placeholder="e.g. 2 drums, 1 trolley"/>
+      </div>
+      <div class="form-group"><label class="form-label">Authorized By</label>
+        <input class="form-input" id="ioAuth" placeholder="FM / Supervisor name"/>
+      </div>
+      <div class="form-group" style="grid-column:1/-1"><label class="form-label">Notes</label>
+        <input class="form-input" id="ioNotes" placeholder="Optional notes"/>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:18px">
+      <button class="btn btn-cyan" onclick="owHkSubmitInOut()">Log Entry</button>
+      <button class="btn btn-ghost" onclick="owHkCloseModal()">Cancel</button>
+    </div>`;
+  document.getElementById('owHkModal').classList.add('show');
+  setTimeout(()=>document.getElementById('ioName')?.focus(),120);
+}
+async function owHkSubmitInOut(){
+  const name=document.getElementById('ioName')?.value.trim();
+  if(!name){ owHkToast('Name/item required','err'); return; }
+  const body={name,type:document.getElementById('ioType')?.value||'staff',
+    direction:document.getElementById('ioDir')?.value||'in',
+    zone:document.getElementById('ioZone')?.value||'',
+    purpose:document.getElementById('ioPurpose')?.value||'',
+    items:document.getElementById('ioItems')?.value||'',
+    authorized_by:document.getElementById('ioAuth')?.value||'',
+    notes:document.getElementById('ioNotes')?.value||''};
+  try{
+    const r=await fetch('/api/ow_hk/inout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const j=await r.json();
+    if(j.success){ if(!OWD.inout) OWD.inout=[]; OWD.inout.unshift(j.entry); owHkCloseModal(); owHkRenderAll(); owHkToast('Entry logged!','ok'); }
+    else owHkToast(j.error||'Error','err');
+  }catch(e){
+    const entry={...body,id:Date.now().toString(36),timestamp:new Date().toISOString()};
+    if(!OWD.inout) OWD.inout=[]; OWD.inout.unshift(entry); owHkCloseModal(); owHkRenderAll(); owHkToast('Logged (offline)','info');
+  }
+}
+async function owHkDeleteInOut(eid){
+  if(!confirm('Remove this entry?')) return;
+  try{
+    const r=await fetch('/api/ow_hk/inout/'+eid,{method:'DELETE'});
+    const j=await r.json();
+    if(j.success){ OWD.inout=OWD.inout.filter(e=>e.id!==eid); owHkRenderAll(); owHkToast('Removed','info'); }
+  }catch(e){ owHkToast('Server unreachable','err'); }
+}
+
+// expose new globals
+window.owHkOpenAddMaterial=owHkOpenAddMaterial;window.owHkSubmitAddMaterial=owHkSubmitAddMaterial;
+window.owHkOpenIssueMaterial=owHkOpenIssueMaterial;window.owHkSubmitIssue=owHkSubmitIssue;
+window.owHkOpenReceiveMaterial=owHkOpenReceiveMaterial;window.owHkSubmitReceive=owHkSubmitReceive;
+window.owHkRenderMaterials=owHkRenderMaterials;
+window.owHkOpenAddInOut=owHkOpenAddInOut;window.owHkSubmitInOut=owHkSubmitInOut;
+window.owHkDeleteInOut=owHkDeleteInOut;window.owHkRenderInOut=owHkRenderInOut;
+</script>
+</body>
+</html>

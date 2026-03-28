@@ -1,0 +1,84 @@
+{
+  "refNo": "007/Conference room/XXXX-Corporate office/21.12.2023",
+  "attendees": "X – Chief Engineer/ Emerzhent\nY – Property Manager (OW & TD)\nZ – Property Manager (SLNT)\nW – General Manager Corporate\nV - DGM Procurement & Projects\nU – Chief Operating Officer\nT",
+  "items": [
+    {
+      "site": "All sites",
+      "topic": "Vendor Performance Score card",
+      "desc": "Mr. Dhanunjay enquired, how the vendors performance has been rated at all the sites managed by EPMS",
+      "rem": "Scorecard implemented at SLN Terminus and will be replicated at all sites."
+    },
+    {
+      "site": "All sites",
+      "topic": "Man power revision in the Budget",
+      "desc": "Mr. Dhanunjay asked to freeze the existing Manpower deployment at ONE WEST.",
+      "rem": "This will be updated in the coming year budget for all the sites."
+    },
+    {
+      "site": "Onewest & The District",
+      "topic": "Sinking fund provision",
+      "desc": "Discussion on over usage of Elevators and critical equipment pertaining to ADP operations.",
+      "rem": "Provision of sinking fund insisted for ONE WEST budget."
+    },
+    {
+      "site": "The District",
+      "topic": "Transformer shed",
+      "desc": "EPMS requested a Shed over outdoor transformers to avoid weather failures.",
+      "rem": "Submit critical works along with impact for further approvals."
+    },
+    {
+      "site": "The District",
+      "topic": "Shaft Sealing",
+      "desc": "Gaps to be sealed in floor-to-floor shafts to avoid Pest movement.",
+      "rem": "Pending submission of impact report."
+    },
+    {
+      "site": "The District",
+      "topic": "Drain line & Concrete work",
+      "desc": "Provision for Water discharge from STP / WTP and rain water.",
+      "rem": "Co-ordinate regarding approvals from Govt. Authorities."
+    },
+    {
+      "site": "The District",
+      "topic": "STP Non-operational",
+      "desc": "Discussion on entry of Oil and Grease into STP; requested trap installation (INR 7 Lakhs).",
+      "rem": "Approved for installation. Collect from tenants via notice."
+    },
+    {
+      "site": "ONEWEST",
+      "topic": "De-watering drain line",
+      "desc": "Provision for Water discharge generated from STP / WTP.",
+      "rem": "Co-ordinate regarding approvals from Govt. Authorities."
+    },
+    {
+      "site": "ONEWEST",
+      "topic": "Basement flooring",
+      "desc": "Drive way flooring damaged in the basements. ADP insisting on rectification.",
+      "rem": "Submit critical works list for approval."
+    },
+    {
+      "site": "ONEWEST",
+      "topic": "Lift Shaft Air-Conditioning",
+      "desc": "Temperature rise in drives affecting elevator movement. Problematic in summer.",
+      "rem": "Impact report required for approvals."
+    },
+    {
+      "site": "ONEWEST",
+      "topic": "Nagoor-ji Stack parking",
+      "desc": "Vendor is out of reach and non-responsive; few works still pending.",
+      "rem": "Contact vendor through Email."
+    },
+    {
+      "site": "SLN Terminus",
+      "topic": "Solar-Metering",
+      "desc": "Clarification on Solar metering requested.",
+      "rem": "Standalone system; invertor part of package."
+    },
+    {
+      "site": "SLN Terminus",
+      "topic": "Renovation plan",
+      "desc": "Prepare costing on the list of works submitted.",
+      "rem": "Costing preparation in progress."
+    }
+  ]
+}

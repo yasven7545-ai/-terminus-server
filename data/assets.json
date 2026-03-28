@@ -1,0 +1,3943 @@
+[
+  {
+    "asset_id": "SLNT-B1-CH-1",
+    "name": "CHILLER-1",
+    "category": "HVAC",
+    "service_frequency_weeks": "4",
+    "next_due_date": "2025-12-25"
+  },
+  {
+    "asset_id": "SLNT-B1-CH-2",
+    "name": "CHILLER-2",
+    "category": "HVAC",
+    "service_frequency_weeks": "4",
+    "next_due_date": "2025-12-25"
+  },
+  {
+    "asset_id": "SLNT-B1-CH-3",
+    "name": "CHILLER-3",
+    "category": "HVAC",
+    "service_frequency_weeks": "4",
+    "next_due_date": "2025-12-25"
+  },
+  {
+    "asset_id": "SLNT-B1-SP1",
+    "name": "Secondary pump-1",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-SP2",
+    "name": "Secondary pump-2",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-SP3",
+    "name": "Secondary pump-3",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-SP4",
+    "name": "Secondary pump-4",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-SP5",
+    "name": "Secondary pump-5",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-SP6",
+    "name": "Secondary pump-6",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-PP1",
+    "name": "PRIMARY PUMP-01",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-PP2",
+    "name": "PRIMARY PUMP-02",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-PP3",
+    "name": "PRIMARY PUMP-03",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-CP-01",
+    "name": "CONDENSOR PUMP-01",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-CP-02",
+    "name": "CONDENSOR PUMP-02",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-CP-03",
+    "name": "CONDENSOR PUMP-03",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-PAC-CP-01",
+    "name": "CONDENSOR PUMP-01",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-PAC-CP-02",
+    "name": "CONDENSOR PUMP-02",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-PAC-CP-03",
+    "name": "CONDENSOR PUMP-03",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-UPS",
+    "name": "UPS",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-RSP-01",
+    "name": "STP Raw Seawage Pump-1",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-RSP-02",
+    "name": "STP Raw Seawage Pump-2",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-ABM-01",
+    "name": "STP Aireblower motor-1",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-ABM-02",
+    "name": "STP Aireblower motor-2",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-ABM-03",
+    "name": "STP Aireblower motor-3",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FFP-01",
+    "name": "STP Filter feed pump-1",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FFP-02",
+    "name": "STP Filter feed pump-2",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SRP-01",
+    "name": "STP Sludge Recirculation pump-1",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SRP-02",
+    "name": "STP Sludge Recirculation pump-2",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SWFP-01",
+    "name": "STP Soft Water feed pump-1",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SWFP-02",
+    "name": "STP Soft Water feed pump-2",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SWTP-01",
+    "name": "STP Soft Water Transformer pumps-1",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SWTP-02",
+    "name": "STP Soft Water Transformer pumps-2",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-UFFP-01",
+    "name": "STP UF Feed Pump-1",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-UFFP-02",
+    "name": "STP UF Feed Pump-2",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SSP-01",
+    "name": "STP Sludge screw pump-1",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SSP-02",
+    "name": "STP Sludge screw pump-2",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FTP-01",
+    "name": "STP Flushing transfer pump-1",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FTP-02",
+    "name": "STP Flushing transfer pump-2",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-SCDP-01",
+    "name": "STP Caustic dosing pump",
+    "category": "STP",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-01",
+    "name": "POWER PANEL MDB-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-01",
+    "name": "FRESH AIR FAN-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-02",
+    "name": "POWER PANEL MDB-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-02",
+    "name": "FRESH AIR FAN-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-03",
+    "name": "POWER PANEL MDB-03",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-03",
+    "name": "FRESH AIR FAN-03",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-04",
+    "name": "POWER PANEL MDB-04",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-04",
+    "name": "FRESH AIR FAN-04",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-05",
+    "name": "POWER PANEL MDB-05",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-05",
+    "name": "FRESH AIR FAN-05",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-06",
+    "name": "POWER PANEL MDB-06",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-06",
+    "name": "FRESH AIR FAN-06",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-07",
+    "name": "POWER PANEL MDB-07",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-07",
+    "name": "FRESH AIR FAN-07",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-08",
+    "name": "POWER PANEL MDB-08",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-08",
+    "name": "FRESH AIR FAN-08",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-09",
+    "name": "POWER PANEL MDB-09",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-09",
+    "name": "FRESH AIR FAN-09",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-10",
+    "name": "POWER PANEL MDB-10",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-10",
+    "name": "FRESH AIR FAN-10",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-11",
+    "name": "POWER PANEL MDB-11",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-11",
+    "name": "FRESH AIR FAN-11",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-12",
+    "name": "POWER PANEL MDB-12",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-12",
+    "name": "FRESH AIR FAN-12",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-13",
+    "name": "POWER PANEL MDB-13",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-13",
+    "name": "FRESH AIR FAN-13",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-14",
+    "name": "POWER PANEL MDB-14",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-14",
+    "name": "FRESH AIR FAN-14",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-15",
+    "name": "POWER PANEL MDB-15",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-15",
+    "name": "FRESH AIR FAN-15",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-01",
+    "name": "POWER PANEL MDB-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-01",
+    "name": "EXHAUST FAN-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-02",
+    "name": "POWER PANEL MDB-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-02",
+    "name": "EXHAUST FAN-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-03",
+    "name": "POWER PANEL MDB-03",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-03",
+    "name": "EXHAUST FAN-03",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-04",
+    "name": "POWER PANEL MDB-04",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-04",
+    "name": "EXHAUST FAN-04",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-05",
+    "name": "POWER PANEL MDB-05",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-05",
+    "name": "EXHAUST FAN-05",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-06",
+    "name": "POWER PANEL MDB-06",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-06",
+    "name": "EXHAUST FAN-06",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-07",
+    "name": "POWER PANEL MDB-07",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-07",
+    "name": "EXHAUST FAN-07",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-08",
+    "name": "POWER PANEL MDB-08",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-08",
+    "name": "EXHAUST FAN-08",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-09",
+    "name": "POWER PANEL MDB-09",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-09",
+    "name": "EXHAUST FAN-09",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-10",
+    "name": "POWER PANEL MDB-10",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-10",
+    "name": "EXHAUST FAN-10",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-11",
+    "name": "POWER PANEL MDB-11",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-11",
+    "name": "EXHAUST FAN-11",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-12",
+    "name": "POWER PANEL MDB-12",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-12",
+    "name": "EXHAUST FAN-12",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-PP-13",
+    "name": "POWER PANEL MDB-13",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-FF-13",
+    "name": "EXHAUST FAN-13",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-01",
+    "name": "POWER PANEL MDB-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-01",
+    "name": "FRESH AIR FAN-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-02",
+    "name": "POWER PANEL MDB-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-02",
+    "name": "FRESH AIR FAN-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-03",
+    "name": "POWER PANEL MDB-03",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-03",
+    "name": "FRESH AIR FAN-03",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-04",
+    "name": "POWER PANEL MDB-04",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-04",
+    "name": "FRESH AIR FAN-04",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-05",
+    "name": "POWER PANEL MDB-05",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-05",
+    "name": "FRESH AIR FAN-05",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-06",
+    "name": "POWER PANEL MDB-06",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-06",
+    "name": "FRESH AIR FAN-06",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-07",
+    "name": "POWER PANEL MDB-07",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-07",
+    "name": "FRESH AIR FAN-07",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-08",
+    "name": "POWER PANEL MDB-08",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-08",
+    "name": "FRESH AIR FAN-08",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-09",
+    "name": "POWER PANEL MDB-09",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-09",
+    "name": "FRESH AIR FAN-09",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-10",
+    "name": "POWER PANEL MDB-10",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-10",
+    "name": "FRESH AIR FAN-10",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-11",
+    "name": "POWER PANEL MDB-11",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-11",
+    "name": "FRESH AIR FAN-11",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-12",
+    "name": "POWER PANEL MDB-12",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-12",
+    "name": "FRESH AIR FAN-12",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-13",
+    "name": "POWER PANEL MDB-13",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-13",
+    "name": "FRESH AIR FAN-13",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-14",
+    "name": "POWER PANEL MDB-14",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-14",
+    "name": "FRESH AIR FAN-14",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-15",
+    "name": "POWER PANEL MDB-15",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-15",
+    "name": "FRESH AIR FAN-15",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-16",
+    "name": "POWER PANEL MDB-16",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-16",
+    "name": "FRESH AIR FAN-16",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-01",
+    "name": "POWER PANEL MDB-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-01",
+    "name": "EXHAUST FAN-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-02",
+    "name": "POWER PANEL MDB-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-02",
+    "name": "EXHAUST FAN-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-03",
+    "name": "POWER PANEL MDB-03",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-03",
+    "name": "EXHAUST FAN-03",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-04",
+    "name": "POWER PANEL MDB-04",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-04",
+    "name": "EXHAUST FAN-04",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-05",
+    "name": "POWER PANEL MDB-05",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-05",
+    "name": "EXHAUST FAN-05",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-06",
+    "name": "POWER PANEL MDB-06",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-06",
+    "name": "EXHAUST FAN-06",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-07",
+    "name": "POWER PANEL MDB-07",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-07",
+    "name": "EXHAUST FAN-07",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-08",
+    "name": "POWER PANEL MDB-08",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-08",
+    "name": "EXHAUST FAN-08",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-09",
+    "name": "POWER PANEL MDB-09",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-09",
+    "name": "EXHAUST FAN-09",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-10",
+    "name": "POWER PANEL MDB-10",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-10",
+    "name": "EXHAUST FAN-10",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-11",
+    "name": "POWER PANEL MDB-11",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-11",
+    "name": "EXHAUST FAN-11",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-PP-12",
+    "name": "POWER PANEL MDB-12",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-FF-12",
+    "name": "EXHAUST FAN-12",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-01",
+    "name": "POWER PANEL MDB-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-01",
+    "name": "FRESH AIR FAN-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-02",
+    "name": "POWER PANEL MDB-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-02",
+    "name": "FRESH AIR FAN-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-03",
+    "name": "POWER PANEL MDB-03",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-03",
+    "name": "FRESH AIR FAN-03",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-04",
+    "name": "POWER PANEL MDB-04",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-04",
+    "name": "FRESH AIR FAN-04",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-05",
+    "name": "POWER PANEL MDB-05",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-05",
+    "name": "FRESH AIR FAN-05",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-06",
+    "name": "POWER PANEL MDB-06",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-06",
+    "name": "FRESH AIR FAN-06",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-07",
+    "name": "POWER PANEL MDB-07",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-07",
+    "name": "FRESH AIR FAN-07",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-08",
+    "name": "POWER PANEL MDB-08",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-08",
+    "name": "FRESH AIR FAN-08",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-09",
+    "name": "POWER PANEL MDB-09",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-09",
+    "name": "FRESH AIR FAN-09",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-10",
+    "name": "POWER PANEL MDB-10",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-10",
+    "name": "FRESH AIR FAN-10",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-11",
+    "name": "POWER PANEL MDB-11",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-11",
+    "name": "FRESH AIR FAN-11",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-12",
+    "name": "POWER PANEL MDB-12",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-12",
+    "name": "FRESH AIR FAN-12",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-13",
+    "name": "POWER PANEL MDB-13",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-13",
+    "name": "FRESH AIR FAN-13",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-01",
+    "name": "POWER PANEL MDB-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-01",
+    "name": "EXHAUST FAN-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-02",
+    "name": "POWER PANEL MDB-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-02",
+    "name": "EXHAUST FAN-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-03",
+    "name": "POWER PANEL MDB-03",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-03",
+    "name": "EXHAUST FAN-03",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-04",
+    "name": "POWER PANEL MDB-04",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-04",
+    "name": "EXHAUST FAN-04",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-05",
+    "name": "POWER PANEL MDB-05",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-05",
+    "name": "EXHAUST FAN-05",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-06",
+    "name": "POWER PANEL MDB-06",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-06",
+    "name": "EXHAUST FAN-06",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-07",
+    "name": "POWER PANEL MDB-07",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-07",
+    "name": "EXHAUST FAN-07",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-08",
+    "name": "POWER PANEL MDB-08",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-08",
+    "name": "EXHAUST FAN-08",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-09",
+    "name": "POWER PANEL MDB-09",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-09",
+    "name": "EXHAUST FAN-09",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-10",
+    "name": "POWER PANEL MDB-10",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-10",
+    "name": "EXHAUST FAN-10",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-11",
+    "name": "POWER PANEL MDB-11",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-11",
+    "name": "EXHAUST FAN-11",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-PP-12",
+    "name": "POWER PANEL MDB-12",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-FF-12",
+    "name": "EXHAUST FAN-12",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-PP-01",
+    "name": "POWER PANEL MDB-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-FF-01",
+    "name": "FRESH AIR FAN-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-PP-02",
+    "name": "POWER PANEL MDB-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-FF-02",
+    "name": "FRESH AIR FAN-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-PP-03",
+    "name": "POWER PANEL MDB-03",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-FF-03",
+    "name": "FRESH AIR FAN-03",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-PP-04",
+    "name": "POWER PANEL MDB-04",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-FF-04",
+    "name": "FRESH AIR FAN-04",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-PP-05",
+    "name": "POWER PANEL MDB-05",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-FF-05",
+    "name": "FRESH AIR FAN-05",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-PP-01",
+    "name": "POWER PANEL MDB-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-FF-01",
+    "name": "EXHAUST FAN-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-PP-02",
+    "name": "POWER PANEL MDB-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-FF-02",
+    "name": "EXHAUST FAN-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-PP-03",
+    "name": "POWER PANEL MDB-03",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-FF-03",
+    "name": "EXHAUST FAN-03",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-PP-04",
+    "name": "POWER PANEL MDB-04",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-FF-04",
+    "name": "EXHAUST FAN-04",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-PP-05",
+    "name": "POWER PANEL MDB-05",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-FF-05",
+    "name": "EXHAUST FAN-05",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-PP-06",
+    "name": "POWER PANEL MDB-06",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-FF-06",
+    "name": "EXHAUST FAN-06",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-PP-07",
+    "name": "POWER PANEL MDB-07",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-FF-07",
+    "name": "EXHAUST FAN-07",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L3-CSU-01",
+    "name": "CSU",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L3-CSU-PANEL-01",
+    "name": "CSU PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L3-CSU-02",
+    "name": "CSU",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L3-CSU-PANEL-02",
+    "name": "CSU PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L2-CSU-01",
+    "name": "CSU",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L2-CSU-PANEL-01",
+    "name": "CSU PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L2-CSU-02",
+    "name": "CSU",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L2-CSU-PANEL-02",
+    "name": "CSU PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L1-AHU-01",
+    "name": "AHU",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L1-AHU-PANEL-01",
+    "name": "AHU PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-LG-CSU-01",
+    "name": "CSU",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-LG-CSU-PANEL-01",
+    "name": "CSU PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-LG-CSU-02",
+    "name": "CSU",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-LG-CSU-PANEL-02",
+    "name": "CSU PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-HTROOM-CSU-01",
+    "name": "CSU",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-HTROOM-CSU-PANEL-01",
+    "name": "CSU PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-LTROOM-CSU-01",
+    "name": "CSU",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-LTROOM-CSU-PANEL-01",
+    "name": "CSU PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-UPSROOM-CSU-01",
+    "name": "CSU",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-UPSROOM-CSU-PANEL-01",
+    "name": "CSU PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-CCTVROOM-SPLITAC",
+    "name": "SPLIT AC",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-GARBAGEROOM-SPLITAC",
+    "name": "SPLIT AC",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-UPSROOM-SPLITAC",
+    "name": "SPLIT AC",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-RTPROOM-SPLITAC",
+    "name": "SPLIT AC",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-SERVERROOM-SPLITAC-01",
+    "name": "SPLIT AC",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-SERVERROOM-SPLITAC-02",
+    "name": "SPLIT AC",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-BMSROOM-SPLITAC",
+    "name": "SPLIT AC",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-OELOBBY-SPLITAC",
+    "name": "SPLIT AC",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-OELOBBY-SPLITAC",
+    "name": "SPLIT AC",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-OELOBBY-SPLITAC",
+    "name": "SPLIT AC",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-UPSROOM-SPLITAC",
+    "name": "SPLIT AC",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-DG-01",
+    "name": "DG GENERATOR-1",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-DG-02",
+    "name": "DG GENERATOR-2",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-DG-03",
+    "name": "DG GENERATOR-3",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-DG-04",
+    "name": "DG GENERATOR-4",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-CP-01",
+    "name": "DG CONDENSOR PUMP-1",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-CP-02",
+    "name": "DG CONDENSOR PUMP-2",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-CP-03",
+    "name": "DG CONDENSOR PUMP-3",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-CP-04",
+    "name": "DG CONDENSOR PUMP-4",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-CP-05",
+    "name": "DG CONDENSOR PUMP-5",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-TR-01",
+    "name": "TRANSFORMER-1",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-TR-02",
+    "name": "TRANSFORMER-2",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-TR-03",
+    "name": "TRANSFORMER-3",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-TR-04",
+    "name": "TRANSFORMER-4",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-TR-05",
+    "name": "TRANSFORMER-5",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-HT-OGVCB-01",
+    "name": "HT PANEL O/G TO VCB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-OGVCB",
+    "name": "VCB O/G",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-ICVCB-01",
+    "name": "VCB I/C",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-OGVCB-01",
+    "name": "VCB O/G",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-OGVCB-02",
+    "name": "VCB O/G",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-OGVCB-03",
+    "name": "VCB O/G",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-OGVCB-04",
+    "name": "VCB O/G",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-OGVCB-05",
+    "name": "VCB O/G",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-ACB-01",
+    "name": "ISOLATOR - 1",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-ACB-02",
+    "name": "ISOLATOR - 2",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-ACB-03",
+    "name": "ISOLATOR - 3",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-ACB-04",
+    "name": "ISOLATOR - 4",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-ACB-05",
+    "name": "ISOLATOR - 5",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-EB-IC-01",
+    "name": "EB I/C - 1",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-EB-IC-02",
+    "name": "EB I/C - 2",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-EB-IC-03",
+    "name": "EB I/C - 3",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-EB-IC-04",
+    "name": "EB I/C - 4",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-EB-IC-05",
+    "name": "EB I/C - 5",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-DG-IC-01",
+    "name": "DG I/C - 1",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-DG-IC-02",
+    "name": "DG I/C - 2",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-DG-IC-03",
+    "name": "DG I/C - 3",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-DG-IC-04",
+    "name": "DG I/C - 4",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-DG-IC-05",
+    "name": "DG I/C - 5",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-APFCR-01",
+    "name": "APFCR-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-APFCR-02",
+    "name": "APFCR-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-APFCR-03",
+    "name": "APFCR-03",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-APFCR-04",
+    "name": "APFCR-04",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LT-APFCR-05",
+    "name": "APFCR-05",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L8-MDB-01",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L8-MDB-02",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L7-MDB-01",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L7-MDB-02",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L6-MDB-01",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L6-MDB-02",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L5-MDB-01",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L5-MDB-02",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L4-MDB-01",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L4-MDB-02",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L3-MDB-01",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L3-MDB-02",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L2-MDB-01",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L2-MDB-02",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-L1-MDB-01",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-LG-MDB-01",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-LG-MDB-02",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-MDB-01",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B2-MDB-01",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-MDB-01",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-MDB-01",
+    "name": "ELECTRICAL ROOM MDB PANEL",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-01",
+    "name": "STARTER PANEL-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-01",
+    "name": "STARTER PANEL-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-PUMP-01",
+    "name": "DEWATERING PUMP",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-PUMP-02",
+    "name": "DEWATERING PUMP",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-02",
+    "name": "STARTER PANEL-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-02",
+    "name": "STARTER PANEL-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-PUMP-01",
+    "name": "DEWATERING PUMP",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-PUMP-02",
+    "name": "DEWATERING PUMP",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-03",
+    "name": "STARTER PANEL-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-03",
+    "name": "STARTER PANEL-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-PUMP-01",
+    "name": "DEWATERING PUMP",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-PUMP-02",
+    "name": "DEWATERING PUMP",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-04",
+    "name": "STARTER PANEL-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-04",
+    "name": "STARTER PANEL-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-PUMP-01",
+    "name": "DEWATERING PUMP",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-PUMP-02",
+    "name": "DEWATERING PUMP",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-05",
+    "name": "STARTER PANEL-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-05",
+    "name": "STARTER PANEL-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-PUMP-01",
+    "name": "DEWATERING PUMP",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-PUMP-02",
+    "name": "DEWATERING PUMP",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-06",
+    "name": "STARTER PANEL-01",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-06",
+    "name": "STARTER PANEL-02",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-PUMP-01",
+    "name": "DEWATERING PUMP",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B4-SUMP-PUMP-02",
+    "name": "DEWATERING PUMP",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-SP",
+    "name": "SPRINKLER",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-HYD",
+    "name": "HYDRAND",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-STD",
+    "name": "STAND BY",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-LOW-JOC",
+    "name": "LOW JOCKEY",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-HIGH-JOC",
+    "name": "HIGH JOCKEY",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-DG",
+    "name": "DG ENGINE",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-SP",
+    "name": "APT-SPRINKLER",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-HYD",
+    "name": "APT-HYDRAND",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-STD",
+    "name": "APT-STAND BY",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-JOC",
+    "name": "APT-JOCKEY",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-DG",
+    "name": "APT-DG ENGINE",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-DP-01",
+    "name": "Pump Room Domestic Pump-01",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-DP-02",
+    "name": "Pump Room Domestic Pump-02",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-FFP-03",
+    "name": "Pump Room WTP pump-3 Filter feed pump",
+    "category": "nan",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-PAC-PANEL-01",
+    "name": "PACKAGE MOTOR PANELS",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-PAC-PANEL-02",
+    "name": "PACKAGE MOTOR PANELS",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-PAC-PANEL-03",
+    "name": "PACKAGE MOTOR PANELS",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-CT1",
+    "name": "Chiller Cooling Tower -1",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT1-MTR-1",
+    "name": "Chiller Cooling Tower -1 Motor-1",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT1-MTR-2",
+    "name": "Chiller Cooling Tower -1 Motor-2",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT1-MTR-3",
+    "name": "Chiller Cooling Tower -1 Motor-3",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT1-MTR-4",
+    "name": "Chiller Cooling Tower -1 Motor-4",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-CT2",
+    "name": "Chiller Cooling Tower -2",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT2-MTR-1",
+    "name": "Chiller Cooling Tower -2 Motor-1",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT2-MTR-2",
+    "name": "Chiller Cooling Tower -2 Motor-2",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT2-MTR-3",
+    "name": "Chiller Cooling Tower -2 Motor-3",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT2-MTR-4",
+    "name": "Chiller Cooling Tower -2 Motor-4",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-CT3",
+    "name": "Chiller Cooling Tower -3",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT3-MTR-1",
+    "name": "Chiller Cooling Tower -3 Motor-1",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT3-MTR-2",
+    "name": "Chiller Cooling Tower -3 Motor-2",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-CT5",
+    "name": "Package Cooling Tower -1 Panel-1",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT5-MTR-1",
+    "name": "Package Cooling Tower -1 Motor-1",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT5-MTR-2",
+    "name": "Package Cooling Tower -1 Motor-2",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT5-MTR-3",
+    "name": "Package Cooling Tower -1 Motor-3",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT5-MTR-4",
+    "name": "Package Cooling Tower -1 Motor-4",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-CT6",
+    "name": "Package Cooling Tower -2 Panel-2",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT6-MTR-1",
+    "name": "Package Cooling Tower -1 Motor-1",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT6-MTR-2",
+    "name": "Package Cooling Tower -1 Motor-2",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT6-MTR-3",
+    "name": "Package Cooling Tower -1 Motor-3",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT6-MTR-4",
+    "name": "Package Cooling Tower -1 Motor-4",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-CT7",
+    "name": "DG Cooling Tower-1",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT7-MTR-1",
+    "name": "DG Cooling Tower Motor-1",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT7-MTR-2",
+    "name": "DG Cooling Tower Motor-2",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT7-MTR-3",
+    "name": "DG Cooling Tower Motor-3",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT7-MTR-4",
+    "name": "DG Cooling Tower Motor-4",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-CT8",
+    "name": "DG Cooling Tower-2",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT8-MTR-1",
+    "name": "DG Cooling Tower Motor-1",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT8-MTR-2",
+    "name": "DG Cooling Tower Motor-2",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT8-MTR-3",
+    "name": "DG Cooling Tower Motor-3",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-CT8-MTR-4",
+    "name": "DG Cooling Tower Motor-4",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-BP-01",
+    "name": "Terrace Booster  Pump-01",
+    "category": "HVAC",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-WTP-DMF-B1-01",
+    "name": "DMF (Dual Media Filter)",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-WTP-SF-B1-01",
+    "name": "SF (SAND FILTER)",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-WTP-CF-B1-01",
+    "name": "CF (CARBON FILTER)",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-WTP-SF-B1-01",
+    "name": "Softener Filter",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-WTP-DMF-B1-02",
+    "name": "DMF (Dual Media Filter)",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-WTP-SF-B1-02",
+    "name": "DMF (SAND FILTER)",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-WTP-CF-B1-02",
+    "name": "DMF (CARBON FILTER)",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-WTP-SF-B1-02",
+    "name": "Softener Filter",
+    "category": "Plumbing",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-FT-B1",
+    "name": "FIRE TANKS",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-FT-B1",
+    "name": "FIRE TANKS",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-DT-B1",
+    "name": "Domestic Tank",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-DT-B1",
+    "name": "Domestic Tank",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-DT-B1",
+    "name": "Domestic Tank",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-RWT-B1",
+    "name": "Raw Water Tank",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-RWT-B1",
+    "name": "Raw Water Tank",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-DT-TR",
+    "name": "Domestic Tank",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-FT-TR",
+    "name": "Flush Tank",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-FT-TR",
+    "name": "Fire Tank",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-ST-TR",
+    "name": "Softner Tank",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-10DT-TR",
+    "name": "10D TANK",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-STP-RWT-B4",
+    "name": "Raw Water Tank",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-STP-SBR-B4",
+    "name": "SBR-01",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-STP-SBR-B4",
+    "name": "SBR-02",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-STP-FF-B4",
+    "name": "FILTER FEED",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-STP-FT-B4",
+    "name": "Flush Tank",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-STP-ST-B4",
+    "name": "Softner Tank",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-STP-ST-B4",
+    "name": "SLUDGE TANK",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-STP-SUMP-B4",
+    "name": "DEWATERING SUMP",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-AL-01",
+    "name": "AVIATION LAMP",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-AL-02",
+    "name": "AVIATION LAMP",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TR-LR",
+    "name": "LIGHTINING ARRESTER",
+    "category": "Electrical",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-OE-01",
+    "name": "OFFICE ELEVATORS-01",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-OE-02",
+    "name": "OFFICE ELEVATORS-02",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-OE-03",
+    "name": "OFFICE ELEVATORS-03",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-OS-01",
+    "name": "OFFICE SERVICE ELEVATORS",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-MG-01",
+    "name": "MALL GUEST ELEVATOR-01",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-MG-02",
+    "name": "MALL GUEST ELEVATOR-02",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-MS-01",
+    "name": "MALL SERVICE ELEVATOR-01",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-MS-02",
+    "name": "MALL SERVICE ELEVATOR-02",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-AG-01",
+    "name": "APARTMENT GUEST ELEVATOR-01",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-AG-02",
+    "name": "APARTMENT GUEST ELEVATOR-02",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-AS-01",
+    "name": "APARTMENT SERVICE ELEVATOR-01",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-AS-02",
+    "name": "APARTMENT SERVICE ELEVATOR-02",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-FE-01",
+    "name": "F ELEVATOR-01",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-FE-02",
+    "name": "F ELEVATOR-02",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-ES-LG",
+    "name": "LG-L1 ESCALATOR",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-ES-L1",
+    "name": "L1-LG ESCALATOR",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-ES-L1",
+    "name": "L1-L2 ESCALATOR",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-ES-L2",
+    "name": "L2-L1 ESCALATOR",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-ES-L2",
+    "name": "L2-L3 ESCALATOR",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-ES-L3",
+    "name": "L3-L2 ESCALATOR",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TRAVE-01",
+    "name": "LG-B1 TRAVELATORS",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TRAVE-02",
+    "name": "LG-B1 TRAVELATORS",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TRAVE-03",
+    "name": "B1-B2 TRAVELATORS",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TRAVE-DMART-01",
+    "name": "LG TO L1 TRAVELATOR",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-TRAVE-DMART-02",
+    "name": "L1 TO LG TRAVELATOR",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-01",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-02",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-03",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-04",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-05",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-06",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-07",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-08",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-09",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-10",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-11",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-12",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-13",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-14",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-15",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-16",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-17",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-18",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-19",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-20",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-21",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-22",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-23",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-24",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-25",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-26",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-27",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-28",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-29",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-30",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-31",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-32",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-33",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-34",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-35",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-36",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-37",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-38",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-39",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-40",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-41",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-42",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-43",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-44",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-45",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-46",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-47",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-48",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-49",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-50",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-51",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-52",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-53",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-54",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-55",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-56",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-57",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-58",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-59",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-60",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-61",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-62",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-63",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-64",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-65",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-66",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-67",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-68",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-69",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-70",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-71",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-72",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-73",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-74",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-75",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-76",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-77",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-78",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-79",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-80",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-81",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-82",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-83",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-84",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-85",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-86",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-87",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-88",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-89",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-90",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-91",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-92",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-93",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-94",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-95",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-96",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-97",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-98",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-99",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-100",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-101",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-102",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-103",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-104",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-105",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B3-STACK PARKING-106",
+    "name": "STACK PARKING",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-NVR-01",
+    "name": "NVR-01",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-NVR-02",
+    "name": "NVR-02",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-NVR-03",
+    "name": "NVR-03",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-NVR-04",
+    "name": "NVR-04",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-FIRE PANEL",
+    "name": "FIRE PANEL",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-PA PANEL",
+    "name": "PA PANEL",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  },
+  {
+    "asset_id": "SLNT-B1-FTJ PANEL",
+    "name": "FTJ PANEL",
+    "category": "Others",
+    "service_frequency_weeks": "Later",
+    "next_due_date": null
+  }
+]

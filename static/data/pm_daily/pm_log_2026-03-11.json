@@ -1,0 +1,36 @@
+{
+  "date": "2026-03-11",
+  "shift": "Morning",
+  "author": "",
+  "property": "SLN TERMINUS",
+  "tasks": [
+    {
+      "time": "",
+      "location": "",
+      "description": "",
+      "priority": "M",
+      "status": "Pending",
+      "assigned": ""
+    },
+    {
+      "time": "",
+      "location": "",
+      "description": "",
+      "priority": "M",
+      "status": "Pending",
+      "assigned": ""
+    },
+    {
+      "time": "",
+      "location": "",
+      "description": "",
+      "priority": "M",
+      "status": "Pending",
+      "assigned": ""
+    }
+  ],
+  "remarks": "",
+  "task_count": 3,
+  "saved_at": "2026-03-11T23:41:49.779418",
+  "saved_by": "admin"
+}

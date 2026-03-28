@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - Internal Server Error</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a0e17;
+            color: #e6e9ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .error-container {
+            text-align: center;
+            padding: 40px;
+            background: #131a29;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            font-size: 72px;
+            color: #f9c74f;
+            margin: 0;
+            font-weight: bold;
+        }
+        p {
+            font-size: 18px;
+            color: #a9b1c6;
+            margin: 20px 0;
+        }
+        .message {
+            background: rgba(249, 199, 79, 0.1);
+            border: 1px solid #f9c74f;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: monospace;
+            text-align: left;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: #4361ee;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        a:hover {
+            background: #3a56d4;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>500</h1>
+        <p>Internal Server Error</p>
+        <p>Something went wrong on our end. Please try again later.</p>
+        <div class="message">
+            Error: The server encountered an unexpected condition<br>
+            that prevented it from fulfilling the request.
+        </div>
+        <a href="/">Go Back Home</a>
+    </div>
+</body>
+</html>

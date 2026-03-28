@@ -1,0 +1,474 @@
+[
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER IMPORT TEMPLATE  v2": "Fill each sheet \u2192 Save as .xlsx \u2192 Import via: SLN Security  \u25b8  Export/Import  \u25b8  Upload tab  \u25b8  Select module",
+    "Unnamed: 1": NaN,
+    "Unnamed: 2": NaN,
+    "Unnamed: 3": NaN,
+    "Unnamed: 4": NaN
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER IMPORT TEMPLATE  v2": NaN,
+    "Unnamed: 1": NaN,
+    "Unnamed: 2": NaN,
+    "Unnamed: 3": NaN,
+    "Unnamed: 4": NaN
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER IMPORT TEMPLATE  v2": NaN,
+    "Unnamed: 1": "Sheet",
+    "Unnamed: 2": "Description",
+    "Unnamed: 3": "Module",
+    "Unnamed: 4": "Rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER IMPORT TEMPLATE  v2": NaN,
+    "Unnamed: 1": "\ud83d\udc6e Guards",
+    "Unnamed: 2": "Guard roster \u2014 shifts, zones, status, contact details",
+    "Unnamed: 3": "Guard Management",
+    "Unnamed: 4": "20"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER IMPORT TEMPLATE  v2": NaN,
+    "Unnamed: 1": "\ud83d\udd04 Patrols",
+    "Unnamed: 2": "Patrol logs \u2014 route, guard name, checkpoint compliance",
+    "Unnamed: 3": "Patrol Monitoring",
+    "Unnamed: 4": "20"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER IMPORT TEMPLATE  v2": NaN,
+    "Unnamed: 1": "\ud83d\udc64 Visitors",
+    "Unnamed: 2": "Visitor entry/exit \u2014 ID, host, purpose, status",
+    "Unnamed: 3": "Access Control",
+    "Unnamed: 4": "30"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER IMPORT TEMPLATE  v2": NaN,
+    "Unnamed: 1": "\ud83d\udd27 Vendors",
+    "Unnamed: 2": "Vendor/contractor movement \u2014 work order, zone access",
+    "Unnamed: 3": "Access Control",
+    "Unnamed: 4": "20"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER IMPORT TEMPLATE  v2": NaN,
+    "Unnamed: 1": "\ud83d\ude97 Vehicles",
+    "Unnamed: 2": "Vehicle entry/exit \u2014 plate, driver, parking",
+    "Unnamed: 3": "Movement",
+    "Unnamed: 4": "25"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER IMPORT TEMPLATE  v2": NaN,
+    "Unnamed: 1": "\ud83d\udce6 Materials",
+    "Unnamed: 2": "Material gate pass \u2014 inward/outward, approval",
+    "Unnamed: 3": "Movement",
+    "Unnamed: 4": "20"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER IMPORT TEMPLATE  v2": NaN,
+    "Unnamed: 1": "\u26a0 Incidents",
+    "Unnamed: 2": "Incident register \u2014 severity, status, RCA",
+    "Unnamed: 3": "Incident Mgmt",
+    "Unnamed: 4": "20"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER IMPORT TEMPLATE  v2": NaN,
+    "Unnamed: 1": "\ud83d\udccb Guide",
+    "Unnamed: 2": "Field reference \u2014 allowed values, import steps",
+    "Unnamed: 3": "Reference",
+    "Unnamed: 4": "\u2014"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER IMPORT TEMPLATE  v2": NaN,
+    "Unnamed: 1": NaN,
+    "Unnamed: 2": NaN,
+    "Unnamed: 3": NaN,
+    "Unnamed: 4": NaN
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER IMPORT TEMPLATE  v2": NaN,
+    "Unnamed: 1": "\u26a0  DO NOT modify column headers (row 4). Use dropdown values where provided. Save as .xlsx before uploading.",
+    "Unnamed: 2": NaN,
+    "Unnamed: 3": NaN,
+    "Unnamed: 4": NaN
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": "All-in-one import template | 7 data sheets + instructions  |  Fill \u2192 Save \u2192 Import via SLN Security portal",
+    "Unnamed: 1": NaN,
+    "Unnamed: 2": NaN,
+    "Unnamed: 3": NaN,
+    "Unnamed: 4": NaN
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": NaN,
+    "Unnamed: 2": NaN,
+    "Unnamed: 3": NaN,
+    "Unnamed: 4": NaN
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "Sheet / Module",
+    "Unnamed: 2": "Description",
+    "Unnamed: 3": "Category",
+    "Unnamed: 4": "Rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udc6e Guards",
+    "Unnamed: 2": "Guard roster, shifts, zones, attendance & contacts",
+    "Unnamed: 3": "Guard Management",
+    "Unnamed: 4": "20 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udd04 Patrols",
+    "Unnamed: 2": "Patrol logs, route tracking, checkpoint compliance",
+    "Unnamed: 3": "Patrol & Monitoring",
+    "Unnamed: 4": "20 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udc64 Visitors",
+    "Unnamed: 2": "Visitor entry/exit, ID verification, host tracking",
+    "Unnamed: 3": "Access Control",
+    "Unnamed: 4": "30 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udd27 Vendors",
+    "Unnamed: 2": "Contractor movement, work orders, zone access",
+    "Unnamed: 3": "Access Control",
+    "Unnamed: 4": "20 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\ude97 Vehicles",
+    "Unnamed: 2": "Vehicle entry/exit, plate, driver, parking zone",
+    "Unnamed: 3": "Movement",
+    "Unnamed: 4": "25 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udce6 Materials",
+    "Unnamed: 2": "Gate pass \u2014 inward/outward, approval workflow",
+    "Unnamed: 3": "Movement",
+    "Unnamed: 4": "20 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\u26a0 Incidents",
+    "Unnamed: 2": "Incident reports, severity, RCA, closure tracking",
+    "Unnamed: 3": "Incident Mgmt",
+    "Unnamed: 4": "20 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udccb Instructions",
+    "Unnamed: 2": "Field guide, allowed values, import steps",
+    "Unnamed: 3": "Reference",
+    "Unnamed: 4": "\u2014"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": NaN,
+    "Unnamed: 2": NaN,
+    "Unnamed: 3": NaN,
+    "Unnamed: 4": NaN
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udccc  Do NOT modify column headers. Use dropdowns where available. Save as .xlsx before importing.",
+    "Unnamed: 2": NaN,
+    "Unnamed: 3": NaN,
+    "Unnamed: 4": NaN
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": "All-in-one import template | 7 data sheets + instructions  |  Fill \u2192 Save \u2192 Import via SLN Security portal",
+    "Unnamed: 1": NaN,
+    "Unnamed: 2": NaN,
+    "Unnamed: 3": NaN,
+    "Unnamed: 4": NaN
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": NaN,
+    "Unnamed: 2": NaN,
+    "Unnamed: 3": NaN,
+    "Unnamed: 4": NaN
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "Sheet / Module",
+    "Unnamed: 2": "Description",
+    "Unnamed: 3": "Category",
+    "Unnamed: 4": "Rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udc6e Guards",
+    "Unnamed: 2": "Guard roster, shifts, zones, attendance & contacts",
+    "Unnamed: 3": "Guard Management",
+    "Unnamed: 4": "20 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udd04 Patrols",
+    "Unnamed: 2": "Patrol logs, route tracking, checkpoint compliance",
+    "Unnamed: 3": "Patrol & Monitoring",
+    "Unnamed: 4": "20 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udc64 Visitors",
+    "Unnamed: 2": "Visitor entry/exit, ID verification, host tracking",
+    "Unnamed: 3": "Access Control",
+    "Unnamed: 4": "30 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udd27 Vendors",
+    "Unnamed: 2": "Contractor movement, work orders, zone access",
+    "Unnamed: 3": "Access Control",
+    "Unnamed: 4": "20 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\ude97 Vehicles",
+    "Unnamed: 2": "Vehicle entry/exit, plate, driver, parking zone",
+    "Unnamed: 3": "Movement",
+    "Unnamed: 4": "25 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udce6 Materials",
+    "Unnamed: 2": "Gate pass \u2014 inward/outward, approval workflow",
+    "Unnamed: 3": "Movement",
+    "Unnamed: 4": "20 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\u26a0 Incidents",
+    "Unnamed: 2": "Incident reports, severity, RCA, closure tracking",
+    "Unnamed: 3": "Incident Mgmt",
+    "Unnamed: 4": "20 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udccb Instructions",
+    "Unnamed: 2": "Field guide, allowed values, import steps",
+    "Unnamed: 3": "Reference",
+    "Unnamed: 4": "\u2014"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": NaN,
+    "Unnamed: 2": NaN,
+    "Unnamed: 3": NaN,
+    "Unnamed: 4": NaN
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udccc  Do NOT modify column headers. Use dropdowns where available. Save as .xlsx before importing.",
+    "Unnamed: 2": NaN,
+    "Unnamed: 3": NaN,
+    "Unnamed: 4": NaN
+  },
+  {
+    "Visitor Name": "Full name",
+    "Phone": "+91 XXXXXXXXXX",
+    "Purpose": "Meeting / Delivery / Interview...",
+    "Host / Meeting With": "Person they are meeting",
+    "Company": "Visitor company/org",
+    "ID Type": "Select from list",
+    "ID Number": "Document number",
+    "Entry Date": "DD-MM-YYYY",
+    "Entry Time": "HH:MM",
+    "Exit Time": "HH:MM",
+    "Status": "Inside / Exited",
+    "Floor / Zone": "Destination floor/zone",
+    "Badge No.": "Issued badge number",
+    "Remarks": "Notes",
+    "id": "VIS-DA1DB099",
+    "imported_at": "2026-03-23 15:16:04"
+  },
+  {
+    "Visitor Name": "Soumya Mishra",
+    "Phone": null,
+    "Purpose": "Watching Movie",
+    "Host / Meeting With": null,
+    "Company": "IAS",
+    "ID Type": null,
+    "ID Number": null,
+    "Entry Date": "2026-03-23 00:00:00",
+    "Entry Time": "15:00:00",
+    "Exit Time": null,
+    "Status": null,
+    "Floor / Zone": null,
+    "Badge No.": null,
+    "Remarks": null,
+    "id": "VIS-BA1B902E",
+    "imported_at": "2026-03-23 15:16:04"
+  },
+  {
+    "Visitor Name": "Full name",
+    "Phone": "+91 XXXXXXXXXX",
+    "Purpose": "Meeting / Delivery / Interview...",
+    "Host / Meeting With": "Person they are meeting",
+    "Company": "Visitor company/org",
+    "ID Type": "Select from list",
+    "ID Number": "Document number",
+    "Entry Date": "DD-MM-YYYY",
+    "Entry Time": "HH:MM",
+    "Exit Time": "HH:MM",
+    "Status": "Inside / Exited",
+    "Floor / Zone": "Destination floor/zone",
+    "Badge No.": "Issued badge number",
+    "Remarks": "Notes",
+    "id": "VIS-063F00C6",
+    "imported_at": "2026-03-23 15:11:07"
+  },
+  {
+    "Visitor Name": "Soumya Mishra",
+    "Phone": null,
+    "Purpose": "Watching Movie",
+    "Host / Meeting With": null,
+    "Company": "IAS",
+    "ID Type": null,
+    "ID Number": null,
+    "Entry Date": "2026-03-23 00:00:00",
+    "Entry Time": "15:00:00",
+    "Exit Time": null,
+    "Status": null,
+    "Floor / Zone": null,
+    "Badge No.": null,
+    "Remarks": null,
+    "id": "VIS-64EAC948",
+    "imported_at": "2026-03-23 15:11:07"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": "All-in-one import template | 7 data sheets + instructions  |  Fill \u2192 Save \u2192 Import via SLN Security portal",
+    "Unnamed: 1": NaN,
+    "Unnamed: 2": NaN,
+    "Unnamed: 3": NaN,
+    "Unnamed: 4": NaN
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": NaN,
+    "Unnamed: 2": NaN,
+    "Unnamed: 3": NaN,
+    "Unnamed: 4": NaN
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "Sheet / Module",
+    "Unnamed: 2": "Description",
+    "Unnamed: 3": "Category",
+    "Unnamed: 4": "Rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udc6e Guards",
+    "Unnamed: 2": "Guard roster, shifts, zones, attendance & contacts",
+    "Unnamed: 3": "Guard Management",
+    "Unnamed: 4": "20 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udd04 Patrols",
+    "Unnamed: 2": "Patrol logs, route tracking, checkpoint compliance",
+    "Unnamed: 3": "Patrol & Monitoring",
+    "Unnamed: 4": "20 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udc64 Visitors",
+    "Unnamed: 2": "Visitor entry/exit, ID verification, host tracking",
+    "Unnamed: 3": "Access Control",
+    "Unnamed: 4": "30 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udd27 Vendors",
+    "Unnamed: 2": "Contractor movement, work orders, zone access",
+    "Unnamed: 3": "Access Control",
+    "Unnamed: 4": "20 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\ude97 Vehicles",
+    "Unnamed: 2": "Vehicle entry/exit, plate, driver, parking zone",
+    "Unnamed: 3": "Movement",
+    "Unnamed: 4": "25 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udce6 Materials",
+    "Unnamed: 2": "Gate pass \u2014 inward/outward, approval workflow",
+    "Unnamed: 3": "Movement",
+    "Unnamed: 4": "20 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\u26a0 Incidents",
+    "Unnamed: 2": "Incident reports, severity, RCA, closure tracking",
+    "Unnamed: 3": "Incident Mgmt",
+    "Unnamed: 4": "20 rows"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udccb Instructions",
+    "Unnamed: 2": "Field guide, allowed values, import steps",
+    "Unnamed: 3": "Reference",
+    "Unnamed: 4": "\u2014"
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": NaN,
+    "Unnamed: 2": NaN,
+    "Unnamed: 3": NaN,
+    "Unnamed: 4": NaN
+  },
+  {
+    "\u2694  SLN SECURITY MODULE \u2014 MASTER TEMPLATE": NaN,
+    "Unnamed: 1": "\ud83d\udccc  Do NOT modify column headers. Use dropdowns where available. Save as .xlsx before importing.",
+    "Unnamed: 2": NaN,
+    "Unnamed: 3": NaN,
+    "Unnamed: 4": NaN
+  },
+  {
+    "Visitor Name": "Full name",
+    "Phone": "+91 XXXXXXXXXX",
+    "Purpose": "Meeting / Delivery / Interview...",
+    "Host / Meeting With": "Person they are meeting",
+    "Company": "Visitor company/org",
+    "ID Type": "Select from list",
+    "ID Number": "Document number",
+    "Entry Date": "DD-MM-YYYY",
+    "Entry Time": "HH:MM",
+    "Exit Time": "HH:MM",
+    "Status": "Inside / Exited",
+    "Floor / Zone": "Destination floor/zone",
+    "Badge No.": "Issued badge number",
+    "Remarks": "Notes",
+    "id": "VIS-27103C44",
+    "imported_at": "2026-03-23 15:09:06"
+  },
+  {
+    "Visitor Name": "Soumya Mishra",
+    "Phone": null,
+    "Purpose": "Watching Movie",
+    "Host / Meeting With": null,
+    "Company": "IAS",
+    "ID Type": null,
+    "ID Number": null,
+    "Entry Date": "2026-03-23 00:00:00",
+    "Entry Time": "15:00:00",
+    "Exit Time": null,
+    "Status": null,
+    "Floor / Zone": null,
+    "Badge No.": null,
+    "Remarks": null,
+    "id": "VIS-8D6EBC55",
+    "imported_at": "2026-03-23 15:09:06"
+  }
+]

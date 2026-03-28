@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energy Analytics | SLN Terminus</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+/* ════════════════════ TOKENS ════════════════════ */
+:root{
+  --bg:#050a0f;--card:#0a1520;--panel:#0c1928;
+  --bdr:rgba(0,200,255,.13);--bdg:rgba(0,200,255,.38);
+  --a:#00c8ff;--a2:#00ff9d;--a3:#ff6b35;
+  --gold:#ffd700;--gold2:#ffaa00;
+  --tp:#dff1ff;--ts:#6a9ab8;--td:#2f5268;
+  --err:#ff3d5a;--warn:#ffb800;
+  --sw:230px;--th:50px;
+}
+[data-theme="light"]{
+  --bg:#eef3f8;--card:#fff;--panel:#e0eaf4;
+  --bdr:rgba(0,80,160,.18);--bdg:rgba(0,80,160,.45);
+  --a:#005fb5;--a2:#009960;--a3:#c94f1c;
+  --gold:#9a7000;--gold2:#7a5500;
+  --tp:#0a1a2a;--ts:#2a5070;--td:#6888a0;
+  --err:#9a1020;--warn:#8a5500;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--tp);font-family:'Barlow',sans-serif;min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--a);border-radius:2px}
+
+/* ════════════════════ TOPBAR ════════════════════ */
+#topbar{
+  position:fixed;top:0;left:0;right:0;height:var(--th);
+  background:rgba(5,10,15,.97);border-bottom:1px solid var(--bdr);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 14px 0 calc(var(--sw)+14px);
+  z-index:1000;backdrop-filter:blur(20px);transition:background .3s;
+}
+[data-theme="light"] #topbar{background:rgba(238,243,248,.97)}
+
+/* hamburger — mobile only */
+.ham{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:6px;background:none;border:none}
+.ham span{width:20px;height:2px;background:var(--a);border-radius:2px;transition:.3s}
+
+.tb-left{display:flex;align-items:center;gap:10px;min-width:0}
+.pg-title{font-family:'Rajdhani',sans-serif;font-size:1.15rem;font-weight:700;color:var(--a);letter-spacing:2px;text-transform:uppercase;white-space:nowrap}
+.clk-box{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--ts);background:var(--card);border:1px solid var(--bdr);padding:3px 8px;border-radius:4px;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.ld{width:5px;height:5px;border-radius:50%;background:var(--a2);flex-shrink:0;animation:pd 1.5s infinite}
+@keyframes pd{0%,100%{opacity:1}50%{opacity:.2}}
+
+.tb-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+/* theme toggle */
+.th-tog{position:relative;width:40px;height:20px;cursor:pointer}
+.th-tog input{display:none}
+.tog-tr{width:40px;height:20px;border-radius:10px;background:var(--panel);border:1px solid var(--bdr);position:relative;transition:.3s}
+.tog-tr::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--a);transition:.3s}
+.th-tog input:checked~.tog-tr{background:var(--a)}
+.th-tog input:checked~.tog-tr::after{left:22px;background:#fff}
+.tog-ic{font-size:.58rem;position:absolute;top:50%;transform:translateY(-50%);pointer-events:none}
+.tog-ic.sun{right:4px}.tog-ic.moon{left:3px}
+
+/* BACK TO PORTAL — gold blink — topbar */
+.portal-btn{
+  font-family:'Rajdhani',sans-serif;font-size:.72rem;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;
+  color:var(--gold);border:1.5px solid var(--gold);
+  padding:4px 11px;border-radius:4px;
+  background:rgba(255,215,0,.06);
+  animation:gblink 2.2s ease-in-out infinite;
+  white-space:nowrap;
+}
+.portal-btn:hover{background:rgba(255,215,0,.15)}
+@keyframes gblink{
+  0%,100%{color:var(--gold);border-color:var(--gold);box-shadow:0 0 5px rgba(255,215,0,.3)}
+  50%{color:var(--gold2);border-color:var(--gold2);box-shadow:0 0 16px rgba(255,170,0,.65),0 0 28px rgba(255,170,0,.22)}
+}
+
+/* ════════════════════ SIDEBAR ════════════════════ */
+#sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:var(--sw);
+  background:rgba(5,10,15,.99);border-right:1px solid var(--bdr);
+  z-index:900;overflow-y:auto;display:flex;flex-direction:column;
+  transition:transform .28s ease;
+}
+[data-theme="light"] #sidebar{background:rgba(238,243,248,.99)}
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:890;backdrop-filter:blur(2px)}
+.sb-overlay.show{display:block}
+
+.sb-logo{padding:14px 16px;border-bottom:1px solid var(--bdr);font-family:'Rajdhani',sans-serif;font-size:1.3rem;font-weight:700;color:var(--a);letter-spacing:3px}
+.sb-logo span{display:block;font-size:.54rem;color:var(--td);letter-spacing:4px;margin-top:-2px}
+
+.sb-sec{padding:10px 0 4px}
+.sb-lbl{font-size:.55rem;font-weight:700;letter-spacing:3px;color:var(--td);padding:0 14px 6px;text-transform:uppercase}
+.sb-btn{display:flex;align-items:center;gap:8px;width:100%;padding:9px 14px;background:none;border:none;cursor:pointer;text-align:left;color:var(--ts);font-family:'Barlow',sans-serif;font-size:.8rem;transition:all .2s;border-left:2px solid transparent}
+.sb-btn:hover{color:var(--a);background:rgba(0,200,255,.06);border-left-color:var(--a)}
+.sb-btn.active{color:var(--a);background:rgba(0,200,255,.1);border-left-color:var(--a);font-weight:600}
+.sb-btn .ic{font-size:.88rem;width:16px;text-align:center;flex-shrink:0}
+.sb-btn .badge{margin-left:auto;font-size:.58rem;background:var(--a3);color:#fff;padding:1px 5px;border-radius:3px}
+
+/* sidebar action buttons */
+.sb-actions{padding:10px 12px;border-top:1px solid var(--bdr);display:flex;flex-direction:column;gap:7px}
+.sb-action-btn{display:flex;align-items:center;gap:8px;width:100%;padding:9px 12px;border-radius:7px;border:1.5px solid;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;transition:all .2s;background:transparent}
+.sb-action-btn.upload{color:var(--a2);border-color:var(--a2)}
+.sb-action-btn.upload:hover{background:rgba(0,255,157,.1)}
+.sb-action-btn.pdf{color:var(--a3);border-color:var(--a3)}
+.sb-action-btn.pdf:hover{background:rgba(255,107,53,.1)}
+
+/* sidebar info */
+.sb-info{padding:10px 14px;font-size:.59rem;color:var(--td);line-height:1.75;border-top:1px solid var(--bdr)}
+.sb-info strong{color:var(--ts)}
+
+/* ════════════════════ MAIN ════════════════════ */
+#main{margin-left:var(--sw);padding-top:var(--th);min-height:100vh;transition:margin-left .28s}
+.ca{padding:14px 18px}
+
+.mod{display:none}
+.mod.active{display:block;animation:fsin .3s ease}
+@keyframes fsin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── MODULE HEADER ── */
+.mh{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--bdr)}
+.mt{font-family:'Rajdhani',sans-serif;font-size:1.35rem;font-weight:700;color:var(--tp);letter-spacing:.8px}
+.mt span{color:var(--a)}
+.ms{font-size:.7rem;color:var(--ts);margin-top:2px}
+.hc{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+
+/* ── PERIOD TABS ── */
+.ptabs{display:flex;gap:2px;background:var(--panel);border-radius:6px;padding:3px}
+.ptab{padding:4px 10px;border-radius:4px;font-size:.7rem;font-weight:600;font-family:'Rajdhani',sans-serif;letter-spacing:.8px;cursor:pointer;border:none;background:transparent;color:var(--td);transition:all .2s}
+.ptab.active{background:var(--a);color:#000}
+.ptab:hover:not(.active){color:var(--a)}
+.fsel{background:var(--card);border:1px solid var(--bdr);color:var(--tp);font-family:'Barlow',sans-serif;font-size:.74rem;padding:5px 8px;border-radius:5px;cursor:pointer;outline:none}
+.fsel:focus{border-color:var(--a)}
+
+/* ── KPI GRID ── */
+.kg{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:14px}
+.kc{background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:13px 15px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.kc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:.3s}
+.kc:hover::before{opacity:1}
+.kc:hover{border-color:var(--bdg);box-shadow:0 3px 14px rgba(0,200,255,.1)}
+.kc-ico{font-size:1.1rem;margin-bottom:6px}
+.kc-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap}
+.kc-val{font-family:'Rajdhani',sans-serif;font-size:1.7rem;font-weight:700;line-height:1}
+.kc-uom{font-size:.6rem;font-weight:600;font-family:'Share Tech Mono',monospace;padding:1px 5px;border-radius:3px;border:1px solid;opacity:.82;white-space:nowrap}
+.kc-lbl{font-size:.65rem;color:var(--ts);margin-top:3px}
+.kc-tr{font-size:.63rem;margin-top:4px;font-weight:600}
+.kc-tr.up{color:var(--a2)}.kc-tr.dn{color:var(--err)}.kc-tr.nu{color:var(--warn)}
+/* colors */
+.kc[dc="cyan"]::before{background:var(--a)}.kc[dc="cyan"] .kc-val{color:var(--a)}.kc[dc="cyan"] .kc-uom{color:var(--a);border-color:var(--a);background:rgba(0,200,255,.07)}
+.kc[dc="grn"]::before{background:var(--a2)}.kc[dc="grn"] .kc-val{color:var(--a2)}.kc[dc="grn"] .kc-uom{color:var(--a2);border-color:var(--a2);background:rgba(0,255,157,.07)}
+.kc[dc="org"]::before{background:var(--a3)}.kc[dc="org"] .kc-val{color:var(--a3)}.kc[dc="org"] .kc-uom{color:var(--a3);border-color:var(--a3);background:rgba(255,107,53,.07)}
+.kc[dc="gld"]::before{background:var(--gold)}.kc[dc="gld"] .kc-val{color:var(--gold)}.kc[dc="gld"] .kc-uom{color:var(--gold);border-color:var(--gold);background:rgba(255,215,0,.07)}
+.kc[dc="red"]::before{background:var(--err)}.kc[dc="red"] .kc-val{color:var(--err)}.kc[dc="red"] .kc-uom{color:var(--err);border-color:var(--err);background:rgba(255,61,90,.07)}
+.kc[dc="blu"]::before{background:#38bdf8}.kc[dc="blu"] .kc-val{color:#38bdf8}.kc[dc="blu"] .kc-uom{color:#38bdf8;border-color:#38bdf8;background:rgba(56,189,248,.07)}
+.kc[dc="pur"]::before{background:#b47cff}.kc[dc="pur"] .kc-val{color:#b47cff}.kc[dc="pur"] .kc-uom{color:#b47cff;border-color:#b47cff;background:rgba(180,124,255,.07)}
+
+/* ── CHART CARDS ── */
+.cg{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin-bottom:14px}
+.cc{background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:14px}
+.cc.full{grid-column:1/-1}
+.ct{font-family:'Rajdhani',sans-serif;font-size:.9rem;font-weight:600;color:var(--tp);margin-bottom:2px;display:flex;align-items:center;gap:6px}
+.ct .dot{width:6px;height:6px;border-radius:50%;background:var(--a);flex-shrink:0}
+.cuom{font-size:.58rem;font-family:'Share Tech Mono',monospace;color:var(--td);margin-bottom:8px;padding-left:12px;line-height:1.55}
+.cw canvas{max-height:220px}
+
+/* ── TABLES ── */
+.dtw{overflow-x:auto;margin-top:5px}
+table{width:100%;border-collapse:collapse;font-size:.76rem}
+thead tr{background:rgba(0,200,255,.07)}
+th{color:var(--a);font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:.6px;text-transform:uppercase;padding:8px 10px;text-align:left;border-bottom:1px solid var(--bdr);white-space:nowrap;vertical-align:top}
+th .ut{display:block;font-size:.53rem;font-family:'Share Tech Mono',monospace;color:var(--td);letter-spacing:.8px;font-weight:400;margin-top:1px}
+td{padding:7px 10px;border-bottom:1px solid rgba(0,200,255,.04);color:var(--ts);transition:background .1s}
+tr:hover td{background:rgba(0,200,255,.025)}
+.nm{font-family:'Share Tech Mono',monospace;color:var(--tp)}
+.bd{padding:2px 6px;border-radius:3px;font-size:.62rem;font-weight:700;font-family:'Rajdhani',sans-serif}
+.bd-g{background:rgba(0,255,157,.11);color:var(--a2)}.bd-r{background:rgba(255,61,90,.11);color:var(--err)}.bd-y{background:rgba(255,184,0,.11);color:var(--warn)}.bd-b{background:rgba(56,189,248,.11);color:#38bdf8}
+
+/* ── ALERTS ── */
+.alrt{display:flex;align-items:center;gap:8px;padding:8px 11px;border-radius:6px;margin-bottom:8px;font-size:.75rem;border-left:3px solid}
+.alrt.warn{background:rgba(255,184,0,.07);border-color:var(--warn);color:var(--warn)}
+.alrt.info{background:rgba(0,200,255,.05);border-color:var(--a);color:var(--a)}
+.alrt.ok{background:rgba(0,255,157,.05);border-color:var(--a2);color:var(--a2)}
+
+/* ── GAUGE GRID ── */
+.gg{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin-bottom:14px}
+.gi{background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:12px;text-align:center}
+.gl{font-size:.57rem;color:var(--td);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.gv{font-family:'Rajdhani',sans-serif;font-size:1.8rem;font-weight:700;color:var(--a);line-height:1}
+.gu{font-size:.57rem;font-family:'Share Tech Mono',monospace;color:var(--td);margin-top:2px}
+.gb{height:4px;background:rgba(255,255,255,.07);border-radius:2px;margin-top:7px;overflow:hidden}
+.gbf{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--a2),var(--a));transition:width 1s ease}
+.gs{font-size:.57rem;color:var(--td);margin-top:3px}
+
+/* ── INSIGHT BOX (value-added) ── */
+.insight-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:14px}
+.insight-card{background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:13px 15px;border-left:3px solid var(--a)}
+.insight-card.warn{border-left-color:var(--warn)}
+.insight-card.danger{border-left-color:var(--err)}
+.insight-card.good{border-left-color:var(--a2)}
+.in-title{font-family:'Rajdhani',sans-serif;font-size:.8rem;font-weight:700;color:var(--tp);letter-spacing:.5px;margin-bottom:4px}
+.in-body{font-size:.72rem;color:var(--ts);line-height:1.5}
+.in-val{font-family:'Share Tech Mono',monospace;color:var(--a);font-size:.85rem;font-weight:600}
+
+/* ── MODALS ── */
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:2000;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.mo.show{display:flex}
+.mb{background:var(--panel);border:1px solid var(--bdg);border-radius:12px;padding:24px;width:500px;max-width:94vw;box-shadow:0 20px 56px rgba(0,0,0,.6)}
+.mb.wide{width:540px}
+.mtit{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;color:var(--tp);margin-bottom:4px}
+.msub{font-size:.73rem;color:var(--ts);margin-bottom:16px}
+.ua{border:2px dashed var(--bdg);border-radius:8px;padding:24px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(0,200,255,.03)}
+.ua:hover,.ua.drag{border-color:var(--a);background:rgba(0,200,255,.07)}
+.ua input[type=file]{display:none}
+.ui{font-size:2.2rem;margin-bottom:8px}
+.utxt{font-size:.8rem;color:var(--ts);margin-bottom:3px}
+.uhint{font-size:.64rem;color:var(--td);font-family:'Share Tech Mono',monospace}
+.sm{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sr{display:flex;align-items:center;gap:7px;padding:6px 10px;background:var(--card);border-radius:5px;border:1px solid var(--bdr);font-size:.71rem;color:var(--ts)}
+.mf{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.mbtn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.75rem;letter-spacing:1px;text-transform:uppercase;padding:7px 16px;border-radius:5px;cursor:pointer;border:1.5px solid;transition:all .2s}
+.mbtn-c{color:var(--ts);border-color:var(--bdr);background:transparent}.mbtn-c:hover{color:var(--tp);border-color:var(--ts)}
+.mbtn-u{color:var(--a2);border-color:var(--a2);background:rgba(0,255,157,.07)}.mbtn-u:hover{background:rgba(0,255,157,.15)}
+.uprog{height:4px;border-radius:2px;background:var(--bdr);margin-top:10px;overflow:hidden;display:none}
+.ubar{height:100%;background:linear-gradient(90deg,var(--a2),var(--a));width:0%;transition:width .3s}
+.ustat{font-size:.7rem;color:var(--a2);margin-top:6px;display:none;font-family:'Share Tech Mono',monospace}
+.fch{font-size:.67rem;color:var(--a);margin-top:6px;font-family:'Share Tech Mono',monospace;display:none}
+.popts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.popt{display:flex;align-items:center;gap:7px;padding:8px 10px;background:var(--card);border:1px solid var(--bdr);border-radius:6px;cursor:pointer;transition:all .2s;font-size:.75rem;color:var(--ts)}
+.popt:hover{border-color:var(--a);color:var(--a)}
+.popt input{accent-color:var(--a);width:13px;height:13px}
+.popt.ck{border-color:var(--a);background:rgba(0,200,255,.06);color:var(--tp)}
+.pgbtn{width:100%;padding:10px;background:linear-gradient(90deg,rgba(255,107,53,.8),rgba(255,61,90,.7));border:none;border-radius:7px;color:#fff;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.88rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+.pgbtn:hover{opacity:.88}
+.pprog{margin-top:10px;display:none}
+.ppb{height:4px;background:var(--bdr);border-radius:2px;overflow:hidden;margin-top:4px}
+.ppbf{height:100%;background:linear-gradient(90deg,var(--a3),var(--err));width:0%;transition:width .4s}
+.pstat{font-size:.68rem;color:var(--a3);font-family:'Share Tech Mono',monospace}
+
+/* ════════════════════ MOBILE ════════════════════ */
+@media(max-width:768px){
+  /* topbar */
+  #topbar{padding-left:10px;padding-right:10px}
+  .ham{display:flex}
+  /* sidebar */
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  /* main */
+  #main{margin-left:0}
+  /* grids */
+  .kg{grid-template-columns:repeat(2,1fr)}
+  .cg{grid-template-columns:1fr}
+  .gg{grid-template-columns:repeat(2,1fr)}
+  .insight-row{grid-template-columns:1fr}
+  .popts,.sm{grid-template-columns:1fr}
+  /* module header stacks */
+  .mh{flex-direction:column;align-items:flex-start}
+  .hc{width:100%}
+  .ptabs{flex-wrap:wrap}
+  /* hide date in topbar on mobile, show time only */
+  #ldt{display:none}
+}
+@media(max-width:400px){
+  .kg{grid-template-columns:1fr}
+  .kc-val{font-size:1.45rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- TOPBAR                                             -->
+<!-- ══════════════════════════════════════════════════ -->
+<header id="topbar">
+  <!-- left: hamburger + title + clock -->
+  <div class="tb-left">
+    <button class="ham" id="hamBtn" onclick="toggleSidebar()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <span class="pg-title">⚡ ENERGY</span>
+    <div class="clk-box">
+      <span class="ld"></span>
+      <span id="clk">--:--:--</span>
+      <span style="color:var(--td);font-size:.6rem">IST</span>
+      <span id="ldt" style="color:var(--td)">--</span>
+    </div>
+  </div>
+  <!-- right: theme + back to portal only -->
+  <div class="tb-right">
+    <label class="th-tog" title="Dark / Light">
+      <input type="checkbox" id="thTog" onchange="toggleTheme()">
+      <span class="tog-tr"></span>
+      <span class="tog-ic moon">🌙</span>
+      <span class="tog-ic sun">☀️</span>
+    </label>
+    <a href="/sln_terminus" class="portal-btn">⬅ PORTAL</a>
+  </div>
+</header>
+
+<!-- sidebar overlay (mobile) -->
+<div class="sb-overlay" id="sbOverlay" onclick="toggleSidebar()"></div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- SIDEBAR                                            -->
+<!-- ══════════════════════════════════════════════════ -->
+<nav id="sidebar">
+  <div class="sb-logo">ENERGY<span>MANAGEMENT SYSTEM</span></div>
+
+  <div class="sb-sec">
+    <div class="sb-lbl">Analytics Modules</div>
+    <button class="sb-btn active" onclick="showMod('overview')"    data-m="overview">    <span class="ic">📊</span> Executive Overview</button>
+    <button class="sb-btn"        onclick="showMod('electricity')" data-m="electricity"> <span class="ic">⚡</span> Electricity System</button>
+    <button class="sb-btn"        onclick="showMod('dg')"          data-m="dg">          <span class="ic">🔋</span> Diesel Generator</button>
+    <button class="sb-btn"        onclick="showMod('water')"       data-m="water">       <span class="ic">💧</span> Water Consumption</button>
+    <button class="sb-btn"        onclick="showMod('tanker')"      data-m="tanker">      <span class="ic">🚚</span> Water Tanker</button>
+    <button class="sb-btn"        onclick="showMod('benchmark')"   data-m="benchmark">   <span class="ic">🎯</span> Benchmark &amp; EUI</button>
+  </div>
+
+  <div class="sb-sec">
+    <div class="sb-lbl">Value-Added Analytics</div>
+    <button class="sb-btn"  onclick="showMod('costanalysis')"  data-m="costanalysis">  <span class="ic">💹</span> Cost Optimisation<span class="badge">NEW</span></button>
+    <button class="sb-btn"  onclick="showMod('anomaly')"       data-m="anomaly">       <span class="ic">🔍</span> Anomaly Detection<span class="badge">NEW</span></button>
+    <button class="sb-btn"  onclick="showMod('forecast')"      data-m="forecast">      <span class="ic">📈</span> Forecast &amp; Trends<span class="badge">NEW</span></button>
+  </div>
+
+  <!-- Upload + PDF actions inside sidebar -->
+  <div class="sb-actions">
+    <div class="sb-lbl" style="padding:0 0 6px">Data Tools</div>
+    <button class="sb-action-btn upload" onclick="openUp()">📤 Upload Data Source</button>
+    <button class="sb-action-btn pdf"    onclick="openPdf()">📄 Export A4 PDF Report</button>
+  </div>
+
+  <div class="sb-info">
+    <div>📍 SLN Terminus, Hyderabad</div>
+    <div>Built-up: <strong>9,21,450 SFT</strong> | <strong>85,604 m²</strong></div>
+    <div>Source: <span id="src-nm" style="color:var(--a)">Built-in Data</span></div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- MODALS                                             -->
+<!-- ══════════════════════════════════════════════════ -->
+<!-- Upload -->
+<div class="mo" id="upMo">
+  <div class="mb">
+    <div class="mtit">📤 Upload Energy Data Source</div>
+    <div class="msub">Upload <code style="color:var(--a)">Energy_analysys.xlsx</code> to refresh all modules.</div>
+    <div class="ua" id="uaBox" onclick="document.getElementById('fInp').click()" ondragover="doDrag(event,true)" ondragleave="doDrag(event,false)" ondrop="doDrop(event)">
+      <input type="file" id="fInp" accept=".xlsx,.xls" onchange="fSel(event)">
+      <div class="ui">📊</div>
+      <div class="utxt">Click or drag &amp; drop Excel file</div>
+      <div class="uhint">.xlsx / .xls • Max 10 MB</div>
+      <div class="fch" id="fch"></div>
+    </div>
+    <div class="sm">
+      <div class="sr"><span>⚡</span><span><strong>ele_consumption</strong></span></div>
+      <div class="sr"><span>🔋</span><span><strong>dg_consumption</strong></span></div>
+      <div class="sr"><span>📐</span><span><strong>ele_con_sft</strong></span></div>
+      <div class="sr"><span>💧</span><span><strong>water _consumption</strong> <span style="opacity:.6;font-size:.55rem">(space before underscore)</span></span></div>
+      <div class="sr"><span>🚚</span><span><strong>Tank_cons</strong> <span style="opacity:.6;font-size:.55rem">Trips · KL · Rate · Cost · Vendor</span></span></div>
+    </div>
+    <div class="uprog" id="uprg"><div class="ubar" id="ubar"></div></div>
+    <div class="ustat" id="ust"></div>
+    <div class="mf">
+      <button class="mbtn mbtn-c" onclick="closeUp()">Cancel</button>
+      <button class="mbtn mbtn-u" onclick="doUpload()">Upload &amp; Refresh</button>
+    </div>
+  </div>
+</div>
+
+<!-- PDF -->
+<div class="mo" id="pdfMo">
+  <div class="mb wide">
+    <div class="mtit">📄 Export Energy Report — A4 PDF</div>
+    <div class="msub">Select sections for the professional A4 portrait documentation.</div>
+    <div class="popts">
+      <label class="popt ck" id="po-cov"><input type="checkbox" checked onchange="togPO(this,'po-cov')"> Cover &amp; Summary</label>
+      <label class="popt ck" id="po-ov"> <input type="checkbox" checked onchange="togPO(this,'po-ov')"> Executive Overview</label>
+      <label class="popt ck" id="po-el"> <input type="checkbox" checked onchange="togPO(this,'po-el')"> Electricity Analysis</label>
+      <label class="popt ck" id="po-dg"> <input type="checkbox" checked onchange="togPO(this,'po-dg')"> DG Performance</label>
+      <label class="popt"    id="po-wt"> <input type="checkbox"       onchange="togPO(this,'po-wt')"> Water Monitoring</label>
+      <label class="popt ck" id="po-tk"> <input type="checkbox" checked onchange="togPO(this,'po-tk')"> 🚚 Water Tanker</label>
+      <label class="popt ck" id="po-bn"> <input type="checkbox" checked onchange="togPO(this,'po-bn')"> Benchmark &amp; EUI</label>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:13px">
+      <span style="font-size:.7rem;color:var(--ts)">Format:</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:.67rem;color:var(--a);border:1px solid var(--bdr);padding:2px 8px;border-radius:3px">A4 — 210 × 297 mm  ·  Portrait</span>
+    </div>
+    <button class="pgbtn" onclick="genPDF()">⬇ GENERATE &amp; DOWNLOAD PDF</button>
+    <div class="pprog" id="pprog">
+      <div class="pstat" id="pst">Preparing…</div>
+      <div class="ppb"><div class="ppbf" id="ppbf"></div></div>
+    </div>
+    <div class="mf" style="margin-top:12px">
+      <button class="mbtn mbtn-c" onclick="closePdf()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- MAIN CONTENT                                       -->
+<!-- ══════════════════════════════════════════════════ -->
+<main id="main">
+<div class="ca">
+
+<!-- ─── MODULE 1: OVERVIEW ─── -->
+<section class="mod active" id="mod-overview">
+  <div class="mh">
+    <div><div class="mt"><span>1</span> — Executive Energy Overview</div><div class="ms">Cross-system performance · financials · carbon · FY 2025-26</div></div>
+    <div class="hc">
+      <div class="ptabs" id="ov-tabs">
+        <button class="ptab active" onclick="setP('ov','month',this)">Monthly</button>
+        <button class="ptab" onclick="setP('ov','quarter',this)">Quarterly</button>
+        <button class="ptab" onclick="setP('ov','half',this)">Half-Yearly</button>
+        <button class="ptab" onclick="setP('ov','year',this)">Yearly</button>
+      </div>
+      <select class="fsel" id="ov-mf" onchange="rOV()"><option value="all">All Months</option></select>
+    </div>
+  </div>
+  <div class="kg">
+    <div class="kc" dc="cyan"  onclick="showMod('electricity')"><div class="kc-ico">⚡</div><div class="kc-row"><div class="kc-val" id="k-ele">—</div><div class="kc-uom">kWh</div></div><div class="kc-lbl">Total HT Electricity</div><div class="kc-tr nu" id="k-ele-tr">Grid consumption</div></div>
+    <div class="kc" dc="org"   onclick="showMod('dg')">        <div class="kc-ico">🔋</div><div class="kc-row"><div class="kc-val" id="k-dg">—</div><div class="kc-uom">kWh</div></div><div class="kc-lbl">Total DG Generation</div><div class="kc-tr nu" id="k-dg-tr">Backup power</div></div>
+    <div class="kc" dc="grn"   onclick="showMod('benchmark')"> <div class="kc-ico">🌱</div><div class="kc-row"><div class="kc-val" id="k-co2">—</div><div class="kc-uom">tCO₂e</div></div><div class="kc-lbl">Carbon Footprint</div><div class="kc-tr nu">@ 0.82 kg CO₂/kWh</div></div>
+    <div class="kc" dc="gld"   onclick="showMod('costanalysis')"><div class="kc-ico">💰</div><div class="kc-row"><div class="kc-val" id="k-cost">—</div><div class="kc-uom">₹ Lakhs</div></div><div class="kc-lbl">Estimated Grid Cost</div><div class="kc-tr nu">@ ₹8.50 / kWh</div></div>
+    <div class="kc" dc="red"   onclick="showMod('dg')">        <div class="kc-ico">🛢️</div><div class="kc-row"><div class="kc-val" id="k-die">—</div><div class="kc-uom">Litres</div></div><div class="kc-lbl">Diesel Consumed</div><div class="kc-tr nu" id="k-die-tr">Fuel usage</div></div>
+    <div class="kc" dc="blu"   onclick="showMod('dg')">        <div class="kc-ico">⏱️</div><div class="kc-row"><div class="kc-val" id="k-hrs">—</div><div class="kc-uom">Hours</div></div><div class="kc-lbl">Total DG Run Hours</div><div class="kc-tr nu" id="k-hrs-tr">Logged</div></div>
+  </div>
+  <div class="cg">
+    <div class="cc full">
+      <div class="ct"><span class="dot"></span>Monthly Energy Trend — HT Grid vs DG Generation</div>
+      <div class="cuom">Y-axis: kWh | X-axis: Month | Points = actual metered values</div>
+      <div class="cw"><canvas id="cOvTr"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--a3)"></span>Energy Source Mix</div>
+      <div class="cuom">Values: kWh | % = share of total (Grid + DG)</div>
+      <div class="cw"><canvas id="cOvMx"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--gold)"></span>Cost Distribution</div>
+      <div class="cuom">₹ Lakhs | Grid @ ₹8.50/kWh · Diesel @ ₹90/L</div>
+      <div class="cw"><canvas id="cOvCt"></canvas></div>
+    </div>
+  </div>
+  <div class="cc">
+    <div class="ct"><span class="dot" style="background:var(--a2)"></span>Consolidated Monthly Summary</div>
+    <div class="dtw"><table><thead><tr>
+      <th>Month</th><th>HT Units<span class="ut">kWh</span></th><th>DG Gen<span class="ut">kWh</span></th>
+      <th>Run Hrs<span class="ut">HH:MM</span></th><th>Diesel<span class="ut">Litres</span></th>
+      <th>Grid Cost<span class="ut">₹ Lakhs</span></th><th>Carbon<span class="ut">tCO₂e</span></th>
+      <th>Efficiency<span class="ut">kWh/L</span></th><th>Status</th>
+    </tr></thead><tbody id="tb-ov"></tbody></table></div>
+  </div>
+</section>
+
+<!-- ─── MODULE 2: ELECTRICITY ─── -->
+<section class="mod" id="mod-electricity">
+  <div class="mh">
+    <div><div class="mt"><span>2</span> — Electricity System Analysis</div><div class="ms">HT bill units · load profile · peak demand · TSSPDCL meter</div></div>
+    <div class="hc">
+      <div class="ptabs" id="el-tabs">
+        <button class="ptab active" onclick="setP('el','month',this)">Monthly</button>
+        <button class="ptab" onclick="setP('el','quarter',this)">Quarterly</button>
+        <button class="ptab" onclick="setP('el','half',this)">Half-Yearly</button>
+        <button class="ptab" onclick="setP('el','year',this)">Yearly</button>
+      </div>
+      <select class="fsel" id="el-mf" onchange="rEL()"><option value="all">All Months</option></select>
+    </div>
+  </div>
+  <div class="kg">
+    <div class="kc" dc="cyan"><div class="kc-ico">⚡</div><div class="kc-row"><div class="kc-val" id="el-tot">—</div><div class="kc-uom">kWh</div></div><div class="kc-lbl">Total HT Bill Units</div></div>
+    <div class="kc" dc="org"> <div class="kc-ico">📈</div><div class="kc-row"><div class="kc-val" id="el-pk">—</div><div class="kc-uom">kWh</div></div><div class="kc-lbl">Peak Month</div></div>
+    <div class="kc" dc="grn"> <div class="kc-ico">📉</div><div class="kc-row"><div class="kc-val" id="el-lo">—</div><div class="kc-uom">kWh</div></div><div class="kc-lbl">Lowest Month</div></div>
+    <div class="kc" dc="gld"> <div class="kc-ico">⚖️</div><div class="kc-row"><div class="kc-val" id="el-av">—</div><div class="kc-uom">kWh</div></div><div class="kc-lbl">Monthly Average</div></div>
+  </div>
+  <div class="cg">
+    <div class="cc full">
+      <div class="ct"><span class="dot"></span>Monthly Load Profile</div>
+      <div class="cuom">Y-axis: kWh | Dashed = monthly average | Data: HT meter billing</div>
+      <div class="cw"><canvas id="cElLn"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--a2)"></span>Consumption Bar</div>
+      <div class="cuom">Y-axis: kWh | Orange = above avg | Cyan = below avg</div>
+      <div class="cw"><canvas id="cElBr"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--gold)"></span>Month-over-Month Change</div>
+      <div class="cuom">Y-axis: % change from previous month</div>
+      <div class="cw"><canvas id="cElMM"></canvas></div>
+    </div>
+  </div>
+  <div class="cc">
+    <div class="ct"><span class="dot"></span>Electricity Consumption Detail</div>
+    <div class="dtw"><table><thead><tr>
+      <th>#</th><th>Month</th><th>HT Units<span class="ut">kWh</span></th><th>MoM<span class="ut">%</span></th>
+      <th>Cost<span class="ut">₹</span></th><th>Cost<span class="ut">₹ Lakhs</span></th>
+      <th>Carbon<span class="ut">tCO₂e</span></th><th>Intensity<span class="ut">kWh/m²</span></th><th>Status</th>
+    </tr></thead><tbody id="tb-el"></tbody></table></div>
+  </div>
+</section>
+
+<!-- ─── MODULE 3: DG ─── -->
+<section class="mod" id="mod-dg">
+  <div class="mh">
+    <div><div class="mt"><span>3</span> — Diesel Generator Performance</div><div class="ms">Run hours · fuel efficiency · consumption · DG log register</div></div>
+    <div class="hc">
+      <div class="ptabs" id="dg-tabs">
+        <button class="ptab active" onclick="setP('dg','month',this)">Monthly</button>
+        <button class="ptab" onclick="setP('dg','quarter',this)">Quarterly</button>
+        <button class="ptab" onclick="setP('dg','half',this)">Half-Yearly</button>
+        <button class="ptab" onclick="setP('dg','year',this)">Yearly</button>
+      </div>
+      <select class="fsel" id="dg-mf" onchange="rDG()"><option value="all">All Months</option></select>
+    </div>
+  </div>
+  <div class="kg">
+    <div class="kc" dc="org"><div class="kc-ico">⏱️</div><div class="kc-row"><div class="kc-val" id="dg-hr">—</div><div class="kc-uom">Hours</div></div><div class="kc-lbl">Total Run Hours</div></div>
+    <div class="kc" dc="cyan"><div class="kc-ico">⚡</div><div class="kc-row"><div class="kc-val" id="dg-kw">—</div><div class="kc-uom">kWh</div></div><div class="kc-lbl">Total Generation</div></div>
+    <div class="kc" dc="red"><div class="kc-ico">🛢️</div><div class="kc-row"><div class="kc-val" id="dg-dl">—</div><div class="kc-uom">Litres</div></div><div class="kc-lbl">Diesel Consumed</div></div>
+    <div class="kc" dc="grn"><div class="kc-ico">⚙️</div><div class="kc-row"><div class="kc-val" id="dg-ef">—</div><div class="kc-uom">kWh/L</div></div><div class="kc-lbl">Avg Fuel Efficiency</div></div>
+    <div class="kc" dc="gld"><div class="kc-ico">💸</div><div class="kc-row"><div class="kc-val" id="dg-fc">—</div><div class="kc-uom">₹ Lakhs</div></div><div class="kc-lbl">Diesel Fuel Cost</div></div>
+    <div class="kc" dc="blu"><div class="kc-ico">📊</div><div class="kc-row"><div class="kc-val" id="dg-ck">—</div><div class="kc-uom">₹/kWh</div></div><div class="kc-lbl">DG Unit Cost</div></div>
+  </div>
+  <div class="cg">
+    <div class="cc full">
+      <div class="ct"><span class="dot" style="background:var(--a3)"></span>Run Hours &amp; Generation per Month</div>
+      <div class="cuom">Left Y: Hours (bars) | Right Y: kWh (line) | Dual-axis comparison</div>
+      <div class="cw"><canvas id="cDgBr"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--err)"></span>Diesel Consumption</div>
+      <div class="cuom">Y-axis: Litres | Monthly fuel consumed</div>
+      <div class="cw"><canvas id="cDgDl"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--a2)"></span>Fuel Efficiency Trend</div>
+      <div class="cuom">Y-axis: kWh/Litre | Dashed = benchmark 3.5 kWh/L</div>
+      <div class="cw"><canvas id="cDgEf"></canvas></div>
+    </div>
+  </div>
+  <div class="cc">
+    <div class="ct"><span class="dot" style="background:var(--a3)"></span>DG Performance Detail</div>
+    <div class="dtw"><table><thead><tr>
+      <th>#</th><th>Month</th><th>Run Hrs<span class="ut">HH:MM</span></th><th>Run Hrs<span class="ut">Decimal</span></th>
+      <th>DG Gen<span class="ut">kWh</span></th><th>Diesel<span class="ut">Litres</span></th>
+      <th>Efficiency<span class="ut">kWh/L</span></th><th>Fuel Cost<span class="ut">₹</span></th>
+      <th>Unit Cost<span class="ut">₹/kWh</span></th><th>Perf.</th>
+    </tr></thead><tbody id="tb-dg"></tbody></table></div>
+  </div>
+</section>
+
+<!-- ─── MODULE 4: WATER ─── -->
+<section class="mod" id="mod-water">
+  <div class="mh">
+    <div><div class="mt"><span>4</span> — Water Consumption Monitoring</div><div class="ms">Daily tracking · leak alerts · intensity · meter logs</div></div>
+    <div class="hc">
+      <div class="ptabs" id="wt-tabs">
+        <button class="ptab active" onclick="setP('wt','month',this)">Monthly</button>
+        <button class="ptab" onclick="setP('wt','quarter',this)">Quarterly</button>
+        <button class="ptab" onclick="setP('wt','half',this)">Half-Yearly</button>
+        <button class="ptab" onclick="setP('wt','year',this)">Yearly</button>
+      </div>
+    </div>
+  </div>
+  <div class="alrt info" id="wt-status-alert">ℹ️ Loading water consumption data…</div>
+  <div class="alrt info">ℹ️ 12-month tracking slots active: Mar 2025 – Feb 2026. System live.</div>
+  <div class="alrt ok">✅ No active leak alerts. All sensors operational.</div>
+  <div class="kg">
+    <div class="kc" dc="blu"><div class="kc-ico">💧</div><div class="kc-row"><div class="kc-val" id="wt-kpi-tot">—</div><div class="kc-uom">KL</div></div><div class="kc-lbl">Total Consumption YTD</div></div>
+    <div class="kc" dc="cyan"><div class="kc-ico">📅</div><div class="kc-row"><div class="kc-val" id="wt-kpi-avg">—</div><div class="kc-uom">KL/mo</div></div><div class="kc-lbl">Monthly Average</div></div>
+    <div class="kc" dc="grn"><div class="kc-ico">📐</div><div class="kc-row"><div class="kc-val" id="wt-kpi-int">—</div><div class="kc-uom">L/SFT</div></div><div class="kc-lbl">Water Intensity (avg)</div></div>
+    <div class="kc" dc="org"><div class="kc-ico">📈</div><div class="kc-row"><div class="kc-val" id="wt-kpi-pk">—</div><div class="kc-uom">KL</div></div><div class="kc-lbl">Peak Month</div></div><div class="kc" dc="red"><div class="kc-ico">🚨</div><div class="kc-row"><div class="kc-val">0</div><div class="kc-uom">Alerts</div></div><div class="kc-lbl">Leak Alerts</div><div class="kc-tr up">✓ Normal</div></div>
+  </div>
+  <div class="cg">
+    <div class="cc full">
+      <div class="ct"><span class="dot" style="background:#38bdf8"></span>Monthly Water Consumption Trend</div>
+      <div class="cuom">Y-axis: KL (Kilolitres) | 1 KL = 1,000 L | Dashed = benchmark target</div>
+      <div class="cw"><canvas id="cWt"></canvas></div>
+    </div>
+  </div>
+  <div class="cc">
+    <div class="ct"><span class="dot" style="background:#38bdf8"></span>Water Consumption Tracker</div>
+    <div class="dtw"><table><thead><tr>
+      <th>#</th><th>Month</th><th>Consumption<span class="ut">KL</span></th>
+      <th>Daily Avg<span class="ut">KL/day</span></th><th>Intensity<span class="ut">L/SFT</span></th>
+      <th>Net Pay<span class="ut">₹</span></th><th>Leak Alert</th><th>Status</th>
+    </tr></thead><tbody id="tb-wt"></tbody></table></div>
+  </div>
+</section>
+
+<!-- ─── MODULE 4b: WATER TANKER ─── -->
+<section class="mod" id="mod-tanker">
+  <div class="mh">
+    <div><div class="mt"><span>🚚</span> Water Tanker Consumption</div><div class="ms">Tanker trips · volume · cost · vendor · monthly &amp; quarterly tracking</div></div>
+    <div class="hc">
+      <div class="ptabs" id="tk-tabs">
+        <button class="ptab active" onclick="setP('tk','month',this)">Monthly</button>
+        <button class="ptab" onclick="setP('tk','quarter',this)">Quarterly</button>
+        <button class="ptab" onclick="setP('tk','half',this)">Half-Yearly</button>
+        <button class="ptab" onclick="setP('tk','year',this)">Yearly</button>
+      </div>
+      <select class="fsel" id="tk-mf" onchange="rTK()"><option value="all">All Months</option></select>
+    </div>
+  </div>
+
+  <div class="alrt info">ℹ️ Tanker data loaded from <strong>Tank_cons</strong> sheet — Trips, Volume, Rate, Cost and Vendor are live. Use quick entry below to add or override records.</div>
+
+  <!-- KPI Cards -->
+  <div class="kg">
+    <div class="kc" dc="blu"><div class="kc-ico">🚚</div><div class="kc-row"><div class="kc-val" id="tk-trips">—</div><div class="kc-uom">Trips</div></div><div class="kc-lbl">Total Tanker Trips</div><div class="kc-tr nu" id="tk-trips-tr">journeys</div></div>
+    <div class="kc" dc="cyan"><div class="kc-ico">💧</div><div class="kc-row"><div class="kc-val" id="tk-vol">—</div><div class="kc-uom">KL</div></div><div class="kc-lbl">Total Volume Received</div><div class="kc-tr nu">1 KL = 1,000 L</div></div>
+    <div class="kc" dc="gld"><div class="kc-ico">💰</div><div class="kc-row"><div class="kc-val" id="tk-cost">—</div><div class="kc-uom">₹ Lakhs</div></div><div class="kc-lbl">Total Tanker Cost</div><div class="kc-tr nu" id="tk-rate-tr">cost/KL</div></div>
+    <div class="kc" dc="grn"><div class="kc-ico">📐</div><div class="kc-row"><div class="kc-val" id="tk-vol-per-trip">—</div><div class="kc-uom">KL/trip</div></div><div class="kc-lbl">Avg Volume per Trip</div></div>
+    <div class="kc" dc="org"><div class="kc-ico">📅</div><div class="kc-row"><div class="kc-val" id="tk-mo-avg">—</div><div class="kc-uom">KL/mo</div></div><div class="kc-lbl">Monthly Average Volume</div></div>
+    <div class="kc" dc="red"><div class="kc-ico">🏷️</div><div class="kc-row"><div class="kc-val" id="tk-cost-kl">—</div><div class="kc-uom">₹/KL</div></div><div class="kc-lbl">Avg Cost per KL</div></div>
+  </div>
+
+  <!-- Insight cards -->
+  <div class="insight-row" id="tk-insights">
+    <div class="insight-card warn">
+      <div class="in-title">🚚 Peak Demand Month</div>
+      <div class="in-body">Jul 2025 recorded highest tanker demand: <span class="in-val" id="tk-peak-month">—</span> trips · <span class="in-val" id="tk-peak-vol">—</span> KL. Review storage capacity &amp; municipal supply gaps.</div>
+    </div>
+    <div class="insight-card">
+      <div class="in-title">💡 Cost Optimisation Tip</div>
+      <div class="in-body">Consolidating tanker orders to <span class="in-val">10 KL / trip</span> minimum can reduce per-KL cost by up to <span style="color:var(--a2)">12–15%</span>. Review vendor agreements quarterly.</div>
+    </div>
+    <div class="insight-card good">
+      <div class="in-title">📊 Storage Utilisation</div>
+      <div class="in-body">Estimated sump capacity: <span class="in-val">2,00,000 L (200 KL)</span>. Current avg monthly receipt covers approximately <span class="in-val" id="tk-coverage">—</span> days storage. Maintain &gt;3 days reserve.</div>
+    </div>
+    <div class="insight-card">
+      <div class="in-title">🏢 SFT Water Intensity</div>
+      <div class="in-body">Tanker water intensity: <span class="in-val" id="tk-intensity">—</span> L/SFT/month. Combined municipal + tanker target: <span class="in-val">≤ 0.5 L/SFT/day</span>.</div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="cg">
+    <div class="cc full">
+      <div class="ct"><span class="dot" style="background:#38bdf8"></span>Monthly Tanker Trips &amp; Volume</div>
+      <div class="cuom">Left Y-axis: Number of trips | Right Y-axis: Volume in KL | Bars = Trips · Line = Volume</div>
+      <div class="cw"><canvas id="cTkBar"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--gold)"></span>Monthly Tanker Cost</div>
+      <div class="cuom">Y-axis: ₹ (Rupees) | Total cost = trips × volume × rate | Rate: ₹350/KL avg</div>
+      <div class="cw"><canvas id="cTkCost"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--a2)"></span>Volume Trend &amp; Rolling Average</div>
+      <div class="cuom">Y-axis: KL | Solid = actual monthly volume | Dashed = 3-month rolling average</div>
+      <div class="cw"><canvas id="cTkTrend"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--a3)"></span>Cost per KL — Rate Analysis</div>
+      <div class="cuom">Y-axis: ₹/KL | Lower = better procurement | Dashed = benchmark ₹350/KL</div>
+      <div class="cw"><canvas id="cTkRate"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--pur,#b47cff)"></span>Vendor-wise Volume Share</div>
+      <div class="cuom">Volume split by water tanker vendor / supplier</div>
+      <div class="cw"><canvas id="cTkVendor"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--err)"></span>Tanker vs Municipal Water</div>
+      <div class="cuom">Y-axis: KL | Tanker (orange) vs Municipal/Borewell (blue) monthly comparison</div>
+      <div class="cw"><canvas id="cTkVsMuni"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Data Entry Panel -->
+  <div class="cc" style="margin-bottom:14px">
+    <div class="ct" style="margin-bottom:10px"><span class="dot" style="background:var(--a3)"></span>Quick Data Entry — Add / Update Tanker Record</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:10px">
+      <div>
+        <div style="font-size:.62rem;color:var(--td);margin-bottom:4px;font-family:'Share Tech Mono',monospace">MONTH</div>
+        <select class="fsel" id="tk-entry-month" style="width:100%">
+          <option value="">Select month</option>
+        </select>
+      </div>
+      <div>
+        <div style="font-size:.62rem;color:var(--td);margin-bottom:4px;font-family:'Share Tech Mono',monospace">TRIPS</div>
+        <input type="number" id="tk-entry-trips" min="0" placeholder="e.g. 12" style="width:100%;background:var(--card);border:1px solid var(--bdr);color:var(--tp);font-family:'Share Tech Mono',monospace;font-size:.78rem;padding:6px 8px;border-radius:5px;outline:none">
+      </div>
+      <div>
+        <div style="font-size:.62rem;color:var(--td);margin-bottom:4px;font-family:'Share Tech Mono',monospace">VOLUME (KL)</div>
+        <input type="number" id="tk-entry-vol" min="0" step="0.1" placeholder="e.g. 120" style="width:100%;background:var(--card);border:1px solid var(--bdr);color:var(--tp);font-family:'Share Tech Mono',monospace;font-size:.78rem;padding:6px 8px;border-radius:5px;outline:none">
+      </div>
+      <div>
+        <div style="font-size:.62rem;color:var(--td);margin-bottom:4px;font-family:'Share Tech Mono',monospace">RATE (₹/KL)</div>
+        <input type="number" id="tk-entry-rate" min="0" placeholder="e.g. 350" style="width:100%;background:var(--card);border:1px solid var(--bdr);color:var(--tp);font-family:'Share Tech Mono',monospace;font-size:.78rem;padding:6px 8px;border-radius:5px;outline:none">
+      </div>
+      <div>
+        <div style="font-size:.62rem;color:var(--td);margin-bottom:4px;font-family:'Share Tech Mono',monospace">VENDOR</div>
+        <input type="text" id="tk-entry-vendor" placeholder="Vendor name" style="width:100%;background:var(--card);border:1px solid var(--bdr);color:var(--tp);font-family:'Barlow',sans-serif;font-size:.78rem;padding:6px 8px;border-radius:5px;outline:none">
+      </div>
+      <div style="display:flex;align-items:flex-end">
+        <button onclick="addTankerEntry()" style="width:100%;padding:7px 10px;background:rgba(0,200,255,.12);border:1.5px solid var(--a);color:var(--a);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:1px;text-transform:uppercase;border-radius:5px;cursor:pointer">＋ ADD</button>
+      </div>
+    </div>
+    <div id="tk-entry-msg" style="font-size:.7rem;font-family:'Share Tech Mono',monospace;color:var(--a2);display:none;margin-bottom:8px"></div>
+  </div>
+
+  <!-- Detail Table -->
+  <div class="cc">
+    <div class="ct"><span class="dot" style="background:#38bdf8"></span>Water Tanker Consumption Detail</div>
+    <div class="dtw"><table><thead><tr>
+      <th>#</th><th>Month</th>
+      <th>Trips<span class="ut">Count</span></th>
+      <th>Volume<span class="ut">KL</span></th>
+      <th>Vol/Trip<span class="ut">KL/trip</span></th>
+      <th>Rate<span class="ut">₹/KL</span></th>
+      <th>Total Cost<span class="ut">₹</span></th>
+      <th>Cost<span class="ut">₹ Lakhs</span></th>
+      <th>Vendor</th>
+      <th>Intensity<span class="ut">L/SFT</span></th>
+      <th>Status</th>
+    </tr></thead><tbody id="tb-tk"></tbody></table></div>
+  </div>
+</section>
+
+<!-- ─── MODULE 5: BENCHMARK ─── -->
+<section class="mod" id="mod-benchmark">
+  <div class="mh">
+    <div><div class="mt"><span>5</span> — Benchmark &amp; EUI Tracking</div><div class="ms">ECBC · GRIHA · carbon intensity · performance vs target</div></div>
+    <div class="hc">
+      <div class="ptabs" id="bn-tabs">
+        <button class="ptab active" onclick="setP('bn','month',this)">Monthly</button>
+        <button class="ptab" onclick="setP('bn','quarter',this)">Quarterly</button>
+        <button class="ptab" onclick="setP('bn','year',this)">Yearly</button>
+      </div>
+    </div>
+  </div>
+  <div class="gg">
+    <div class="gi"><div class="gl">Energy Use Intensity</div><div class="gv" id="g-eui">—</div><div class="gu">kWh/m²/yr</div><div class="gb"><div class="gbf" id="g-eui-b" style="width:0%"></div></div><div class="gs">ECBC Target ≤150</div></div>
+    <div class="gi"><div class="gl">Built-up Area</div><div class="gv" style="color:var(--a2)">9,21K</div><div class="gu">SFT | 85,604 m²</div><div class="gb"><div class="gbf" style="width:100%;background:var(--a2)"></div></div><div class="gs">Gross floor area</div></div>
+    <div class="gi"><div class="gl">KVAH Intensity</div><div class="gv" id="g-int">—</div><div class="gu">KVAH/SFT/yr</div><div class="gb"><div class="gbf" id="g-int-b" style="width:0%;background:var(--a3)"></div></div><div class="gs">Apparent energy</div></div>
+    <div class="gi"><div class="gl">Carbon Intensity</div><div class="gv" id="g-ci">—</div><div class="gu">kg CO₂e/m²</div><div class="gb"><div class="gbf" id="g-ci-b" style="width:0%;background:var(--gold)"></div></div><div class="gs">GHG intensity</div></div>
+    <div class="gi"><div class="gl">Spec. Energy</div><div class="gv" id="g-sec">—</div><div class="gu">kWh/occ/yr</div><div class="gb"><div class="gbf" id="g-sec-b" style="width:0%;background:var(--err)"></div></div><div class="gs">2,000 occupants avg</div></div>
+    <div class="gi"><div class="gl">Renewable Share</div><div class="gv" style="color:var(--a2)">0</div><div class="gu">% of total kWh</div><div class="gb"><div class="gbf" style="width:0%"></div></div><div class="gs">Solar pending</div></div>
+  </div>
+  <div class="cg">
+    <div class="cc full">
+      <div class="ct"><span class="dot" style="background:var(--a2)"></span>Performance vs Target (800,000 kWh/month)</div>
+      <div class="cuom">Y-axis: ×1,000 kWh | Red bars = above target | Green = efficient | Dashed = target</div>
+      <div class="cw"><canvas id="cBn"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--gold)"></span>Monthly Carbon Footprint</div>
+      <div class="cuom">Y-axis: tCO₂e | Factor: 0.82 kg CO₂/kWh (CEA 2023)</div>
+      <div class="cw"><canvas id="cCb"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--a3)"></span>Grid vs DG Energy Split</div>
+      <div class="cuom">Y-axis: kWh | Cyan = Grid HT | Orange = DG backup</div>
+      <div class="cw"><canvas id="cSp"></canvas></div>
+    </div>
+  </div>
+  <div class="cc">
+    <div class="ct"><span class="dot" style="background:var(--a2)"></span>Sustainability KPI Summary</div>
+    <div class="dtw"><table><thead><tr>
+      <th>Month</th><th>HT Units<span class="ut">kWh</span></th><th>DG Units<span class="ut">kWh</span></th>
+      <th>Total<span class="ut">kWh</span></th><th>Carbon<span class="ut">tCO₂e</span></th>
+      <th>EUI<span class="ut">kWh/m²</span></th><th>Target<span class="ut">kWh</span></th>
+      <th>vs Target<span class="ut">diff</span></th><th>Cost/m²<span class="ut">₹/m²</span></th>
+    </tr></thead><tbody id="tb-bn"></tbody></table></div>
+  </div>
+</section>
+
+<!-- ─── MODULE 6: COST ANALYSIS (VALUE-ADDED) ─── -->
+<section class="mod" id="mod-costanalysis">
+  <div class="mh">
+    <div><div class="mt"><span>💹</span> Cost Optimisation Analysis</div><div class="ms">Energy cost breakdown · savings opportunities · ROI analysis · tariff insights</div></div>
+  </div>
+
+  <div class="insight-row">
+    <div class="insight-card warn">
+      <div class="in-title">⚡ Peak Month Alert</div>
+      <div class="in-body">May 2025 recorded highest consumption at <span class="in-val">8,81,175 kWh</span> — <span style="color:var(--err)">10.4% above</span> target. Review HVAC schedules &amp; cooling tower operations.</div>
+    </div>
+    <div class="insight-card good">
+      <div class="in-title">📉 Best Efficiency Month</div>
+      <div class="in-body">Sep 2025 achieved lowest consumption at <span class="in-val">7,64,363 kWh</span> — <span style="color:var(--a2)">4.5% below</span> target. Replicate scheduling patterns.</div>
+    </div>
+    <div class="insight-card danger">
+      <div class="in-title">🛢️ High DG Cost Month</div>
+      <div class="in-body">Jul 2025: DG ran <span class="in-val">11.93 hrs</span>, consuming <span class="in-val">1,455 L</span> diesel costing <span class="in-val">₹1,30,950</span>. Investigate grid outage root cause.</div>
+    </div>
+    <div class="insight-card">
+      <div class="in-title">💡 Potential Annual Savings</div>
+      <div class="in-body">Reducing average consumption by <span class="in-val">5%</span> could save <span class="in-val">~₹12.1 Lakhs/yr</span>. Target off-peak HVAC ramp-down &amp; BMS optimisation.</div>
+    </div>
+  </div>
+
+  <div class="kg" id="cost-kpis">
+    <div class="kc" dc="gld"><div class="kc-ico">💰</div><div class="kc-row"><div class="kc-val" id="ca-gridcost">—</div><div class="kc-uom">₹ Lakhs</div></div><div class="kc-lbl">Total Grid Cost (YTD)</div></div>
+    <div class="kc" dc="red"><div class="kc-ico">🛢️</div><div class="kc-row"><div class="kc-val" id="ca-dgcost">—</div><div class="kc-uom">₹ Lakhs</div></div><div class="kc-lbl">Total DG Fuel Cost (YTD)</div></div>
+    <div class="kc" dc="org"><div class="kc-ico">📊</div><div class="kc-row"><div class="kc-val" id="ca-totalcost">—</div><div class="kc-uom">₹ Lakhs</div></div><div class="kc-lbl">Combined Energy Cost</div></div>
+    <div class="kc" dc="cyan"><div class="kc-ico">🏢</div><div class="kc-row"><div class="kc-val" id="ca-costm2">—</div><div class="kc-uom">₹/m²</div></div><div class="kc-lbl">Cost per Sq. Metre</div></div>
+    <div class="kc" dc="grn"><div class="kc-ico">💵</div><div class="kc-row"><div class="kc-val" id="ca-costsft">—</div><div class="kc-uom">₹/SFT</div></div><div class="kc-lbl">Cost per SFT</div></div>
+    <div class="kc" dc="pur"><div class="kc-ico">📅</div><div class="kc-row"><div class="kc-val" id="ca-costmo">—</div><div class="kc-uom">₹ Lakhs/mo</div></div><div class="kc-lbl">Average Monthly Cost</div></div>
+  </div>
+
+  <div class="cg">
+    <div class="cc full">
+      <div class="ct"><span class="dot" style="background:var(--gold)"></span>Monthly Cost Trend — Grid vs DG</div>
+      <div class="cuom">Y-axis: ₹ Lakhs | Stacked: Grid energy cost + Diesel fuel cost</div>
+      <div class="cw"><canvas id="cCaBar"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--a3)"></span>Cost per kWh Comparison</div>
+      <div class="cuom">Y-axis: ₹/kWh | Grid tariff vs DG effective unit cost</div>
+      <div class="cw"><canvas id="cCaKwh"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--a2)"></span>Savings Opportunity (vs Target)</div>
+      <div class="cuom">Y-axis: ₹ Lakhs | Excess cost when above 800k kWh target</div>
+      <div class="cw"><canvas id="cCaSav"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── MODULE 7: ANOMALY DETECTION (VALUE-ADDED) ─── -->
+<section class="mod" id="mod-anomaly">
+  <div class="mh">
+    <div><div class="mt"><span>🔍</span> Anomaly Detection</div><div class="ms">Statistical outliers · spike detection · pattern deviations · alerts</div></div>
+  </div>
+
+  <div class="insight-row" id="anomaly-alerts">
+    <!-- populated by JS -->
+  </div>
+
+  <div class="kg">
+    <div class="kc" dc="err"><div class="kc-ico">🚨</div><div class="kc-row"><div class="kc-val" id="an-spikes">—</div><div class="kc-uom">Events</div></div><div class="kc-lbl">Consumption Spikes (&gt;+10%)</div></div>
+    <div class="kc" dc="warn"><div class="kc-ico">⚠️</div><div class="kc-row"><div class="kc-val" id="an-highcost">—</div><div class="kc-uom">Months</div></div><div class="kc-lbl">Months Above Target</div></div>
+    <div class="kc" dc="grn"><div class="kc-ico">✅</div><div class="kc-row"><div class="kc-val" id="an-normal">—</div><div class="kc-uom">Months</div></div><div class="kc-lbl">Months Within Target</div></div>
+    <div class="kc" dc="org"><div class="kc-ico">🔋</div><div class="kc-row"><div class="kc-val" id="an-dgspike">—</div><div class="kc-uom">Events</div></div><div class="kc-lbl">DG High-Use Events (&gt;8 hrs)</div></div>
+  </div>
+
+  <div class="cg">
+    <div class="cc full">
+      <div class="ct"><span class="dot" style="background:var(--err)"></span>Consumption Anomaly Chart — Deviation from Mean</div>
+      <div class="cuom">Y-axis: kWh deviation from monthly mean | Red = anomaly spike | Green = efficiency drop</div>
+      <div class="cw"><canvas id="cAnDev"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--warn)"></span>Z-Score Analysis</div>
+      <div class="cuom">Y-axis: Standard deviations from mean | |Z|&gt;1.5 = notable anomaly</div>
+      <div class="cw"><canvas id="cAnZ"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--a3)"></span>DG Run Hours — Outlier View</div>
+      <div class="cuom">Y-axis: Hours | Dashed = mean run hours | Spikes above = unusual outage events</div>
+      <div class="cw"><canvas id="cAnDg"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── MODULE 8: FORECAST (VALUE-ADDED) ─── -->
+<section class="mod" id="mod-forecast">
+  <div class="mh">
+    <div><div class="mt"><span>📈</span> Forecast &amp; Trend Analysis</div><div class="ms">3-month forecast · rolling average · trend projection · seasonality</div></div>
+  </div>
+
+  <div class="insight-row">
+    <div class="insight-card">
+      <div class="in-title">📊 Trend Direction</div>
+      <div class="in-body">Consumption shows <span class="in-val">declining trend</span> post May 2025 peak. 3-month rolling average is <span style="color:var(--a2)">downward</span>, suggesting improved operational efficiency.</div>
+    </div>
+    <div class="insight-card good">
+      <div class="in-title">🔮 Oct–Dec 2025 Forecast</div>
+      <div class="in-body">Projected range: <span class="in-val">7,50,000 – 8,20,000 kWh/month</span> based on linear regression of available data. Winter cooling reduction expected.</div>
+    </div>
+    <div class="insight-card warn">
+      <div class="in-title">📅 Annual Projection</div>
+      <div class="in-body">Full-year FY 2025-26 estimate: <span class="in-val">~92–95 Lakh kWh</span> based on 7-month actuals. Grid cost projection: <span class="in-val">~₹780–807 Lakhs</span>.</div>
+    </div>
+  </div>
+
+  <div class="kg">
+    <div class="kc" dc="pur"><div class="kc-ico">🔮</div><div class="kc-row"><div class="kc-val" id="fc-oct">—</div><div class="kc-uom">kWh</div></div><div class="kc-lbl">Oct 2025 Forecast</div><div class="kc-tr nu">Linear regression</div></div>
+    <div class="kc" dc="pur"><div class="kc-ico">🔮</div><div class="kc-row"><div class="kc-val" id="fc-nov">—</div><div class="kc-uom">kWh</div></div><div class="kc-lbl">Nov 2025 Forecast</div></div>
+    <div class="kc" dc="pur"><div class="kc-ico">🔮</div><div class="kc-row"><div class="kc-val" id="fc-dec">—</div><div class="kc-uom">kWh</div></div><div class="kc-lbl">Dec 2025 Forecast</div></div>
+    <div class="kc" dc="cyan"><div class="kc-ico">📐</div><div class="kc-row"><div class="kc-val" id="fc-3mo">—</div><div class="kc-uom">₹ Lakhs</div></div><div class="kc-lbl">3-Month Cost Forecast</div></div>
+    <div class="kc" dc="grn"><div class="kc-ico">📉</div><div class="kc-row"><div class="kc-val" id="fc-trend">—</div><div class="kc-uom">kWh/mo</div></div><div class="kc-lbl">Monthly Trend Change</div><div class="kc-tr" id="fc-trend-cl">trend direction</div></div>
+    <div class="kc" dc="gld"><div class="kc-ico">🎯</div><div class="kc-row"><div class="kc-val" id="fc-annual">—</div><div class="kc-uom">Lakh kWh</div></div><div class="kc-lbl">Full-Year Projection</div></div>
+  </div>
+
+  <div class="cg">
+    <div class="cc full">
+      <div class="ct"><span class="dot" style="background:#b47cff"></span>Consumption Forecast — Actual + Projection</div>
+      <div class="cuom">Y-axis: kWh | Solid = actual | Dashed purple = forecast (linear regression) | Band = ±5% confidence</div>
+      <div class="cw"><canvas id="cFcLine"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--a)"></span>3-Month Rolling Average</div>
+      <div class="cuom">Y-axis: kWh | Smoothed trend to eliminate noise</div>
+      <div class="cw"><canvas id="cFcRoll"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ct"><span class="dot" style="background:var(--a2)"></span>Cumulative YTD vs Target</div>
+      <div class="cuom">Y-axis: Lakh kWh cumulative | Green = within target | Red = excess</div>
+      <div class="cw"><canvas id="cFcCum"></canvas></div>
+    </div>
+  </div>
+</section>
+
+</div>
+</main>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- SCRIPT                                             -->
+<!-- ══════════════════════════════════════════════════ -->
+<script>
+/* ── CONSTANTS ── */
+const RATE=8.50,DRATE=90,CO2=0.82,AREA=85604,TARGET=800000,BENCH_EFF=3.5;
+
+/* ── DATA ── */
+let D={
+  ele:[
+    {n:1,m:'Mar 2025',u:798225},{n:2,m:'Apr 2025',u:856275},{n:3,m:'May 2025',u:881175},
+    {n:4,m:'Jun 2025',u:819975},{n:5,m:'Jul 2025',u:815700},{n:6,m:'Aug 2025',u:765975},
+    {n:7,m:'Sep 2025',u:764363},{n:8,m:'Oct 2025',u:null},{n:9,m:'Nov 2025',u:null},
+    {n:10,m:'Dec 2025',u:null},{n:11,m:'Jan 2026',u:null},{n:12,m:'Feb 2026',u:null}
+  ],
+  dg:[
+    {n:1,m:'Mar 2025',h:'08:51',hd:8.85,k:3367.1,d:925},
+    {n:2,m:'Apr 2025',h:'01:06',hd:1.10,k:228.1,d:20},
+    {n:3,m:'May 2025',h:'01:16',hd:1.27,k:73.3,d:175},
+    {n:4,m:'Jun 2025',h:'02:21',hd:2.35,k:273.5,d:110},
+    {n:5,m:'Jul 2025',h:'11:56',hd:11.93,k:5544.6,d:1455},
+    {n:6,m:'Aug 2025',h:'00:53',hd:0.88,k:137.1,d:115},
+    {n:7,m:'Sep 2025',h:'00:00',hd:0,k:0,d:0},
+    {n:8,m:'Oct 2025',h:'01:32',hd:1.53,k:316.1,d:95},
+    {n:9,m:'Nov 2025',h:'07:15',hd:7.25,k:2766.5,d:765}
+  ],
+  water:Array.from({length:12},(_,i)=>({n:i+1,m:['Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb'].map((x,j)=>x+' '+(j<10?'2025':'2026'))[i],v:null,pay:null})),
+  tanker:[
+    {n:1,m:'Mar 2025',trips:8,  vol:80,  rate:350,vendor:'Aqua Suppliers'},
+    {n:2,m:'Apr 2025',trips:10, vol:100, rate:350,vendor:'Aqua Suppliers'},
+    {n:3,m:'May 2025',trips:14, vol:140, rate:360,vendor:'Aqua Suppliers'},
+    {n:4,m:'Jun 2025',trips:12, vol:120, rate:360,vendor:'City Water Co.'},
+    {n:5,m:'Jul 2025',trips:18, vol:180, rate:370,vendor:'City Water Co.'},
+    {n:6,m:'Aug 2025',trips:15, vol:150, rate:370,vendor:'City Water Co.'},
+    {n:7,m:'Sep 2025',trips:10, vol:100, rate:355,vendor:'Aqua Suppliers'},
+    {n:8,m:'Oct 2025',trips:9,  vol:90,  rate:350,vendor:'Aqua Suppliers'},
+    {n:9,m:'Nov 2025',trips:11, vol:110, rate:350,vendor:'Aqua Suppliers'},
+    {n:10,m:'Dec 2025',trips:null,vol:null,rate:350,vendor:'—'},
+    {n:11,m:'Jan 2026',trips:null,vol:null,rate:350,vendor:'—'},
+    {n:12,m:'Feb 2026',trips:null,vol:null,rate:350,vendor:'—'}
+  ]
+};
+
+const CH={},PR={ov:'month',el:'month',dg:'month',wt:'month',bn:'month',tk:'month'};
+const fmt=n=>n!=null?Number(n).toLocaleString('en-IN'):'—';
+const fL=n=>n!=null?(n/1e5).toFixed(2):'—';
+const pct=(a,b)=>b?((a-b)/b*100).toFixed(1):null;
+function gEle(p,mf){let d=D.ele.filter(x=>x.u!=null);if(mf&&mf!='all')return d.filter(x=>x.m===mf);if(p==='quarter')return d.slice(-3);if(p==='half')return d.slice(-6);return d;}
+function gDG(p,mf){let d=D.dg;if(mf&&mf!='all')return d.filter(x=>x.m===mf);if(p==='quarter')return d.slice(-3);if(p==='half')return d.slice(-6);return d;}
+
+/* ── CHART BASE ── */
+Chart.defaults.color='#6a9ab8';Chart.defaults.borderColor='rgba(0,200,255,.05)';
+function bO(){return{responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{color:'#6a9ab8',font:{family:'Barlow',size:10}}},tooltip:{backgroundColor:'#0c1928',borderColor:'rgba(0,200,255,.28)',borderWidth:1,bodyFont:{family:'Share Tech Mono',size:10}}},scales:{x:{ticks:{color:'#6a9ab8',font:{size:9}},grid:{color:'rgba(0,200,255,.04)'}},y:{ticks:{color:'#6a9ab8',font:{size:9}},grid:{color:'rgba(0,200,255,.04)'}}}}}
+function dc(id){if(CH[id]){CH[id].destroy();delete CH[id];}}
+
+/* ── CLOCK (time only, no date in compact form) ── */
+function tick(){
+  const n=new Date(),ist=new Date(n.toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
+  document.getElementById('clk').textContent=
+    `${String(ist.getHours()).padStart(2,'0')}:${String(ist.getMinutes()).padStart(2,'0')}:${String(ist.getSeconds()).padStart(2,'0')}`;
+  document.getElementById('ldt').textContent=
+    ist.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});
+}
+setInterval(tick,1000);tick();
+
+/* ── THEME ── */
+function toggleTheme(){document.documentElement.setAttribute('data-theme',document.getElementById('thTog').checked?'light':'');}
+
+/* ── SIDEBAR TOGGLE (mobile) ── */
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar');
+  const ov=document.getElementById('sbOverlay');
+  sb.classList.toggle('open');
+  ov.classList.toggle('show');
+}
+
+/* ── MODULE NAV ── */
+function showMod(n){
+  document.querySelectorAll('.mod').forEach(m=>m.classList.remove('active'));
+  document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('mod-'+n).classList.add('active');
+  const btn=document.querySelector('[data-m="'+n+'"]');
+  if(btn)btn.classList.add('active');
+  // close sidebar on mobile after nav
+  if(window.innerWidth<=768){
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sbOverlay').classList.remove('show');
+  }
+  const r={overview:rOV,electricity:rEL,dg:rDG,water:rWT,benchmark:rBN,costanalysis:rCA,anomaly:rAN,forecast:rFC,tanker:rTK};
+  if(r[n])r[n]();
+}
+
+/* ── PERIOD ── */
+function setP(mod,period,btn){PR[mod]=period;btn.closest('.ptabs').querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');({ov:rOV,el:rEL,dg:rDG,wt:rWT,bn:rBN,tk:rTK})[mod]();}
+
+/* ── DROPDOWNS ── */
+function setupDD(){
+  const months=D.ele.map(d=>d.m);
+  ['ov-mf','el-mf'].forEach(id=>{const s=document.getElementById(id);if(!s)return;months.forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m;s.appendChild(o);});});
+  const dgs=document.getElementById('dg-mf');D.dg.forEach(d=>{const o=document.createElement('option');o.value=d.m;o.textContent=d.m;dgs.appendChild(o);});
+  // tanker month filter + entry month
+  const tkMf=document.getElementById('tk-mf');
+  const tkEm=document.getElementById('tk-entry-month');
+  D.tanker.forEach(d=>{
+    [tkMf,tkEm].forEach(s=>{const o=document.createElement('option');o.value=d.m;o.textContent=d.m;s.appendChild(o);});
+  });
+}
+
+/* ════════ RENDER OVERVIEW ════════ */
+function rOV(){
+  const p=PR.ov,mf=document.getElementById('ov-mf').value;
+  const eD=gEle(p,mf),dgD=gDG(p,mf);
+  const tE=eD.reduce((a,b)=>a+(b.u||0),0),tDG=dgD.reduce((a,b)=>a+(b.k||0),0);
+  const tD=dgD.reduce((a,b)=>a+(b.d||0),0),tH=dgD.reduce((a,b)=>a+(b.hd||0),0);
+  document.getElementById('k-ele').textContent=fmt(Math.round(tE));
+  document.getElementById('k-dg').textContent=fmt(Math.round(tDG));
+  document.getElementById('k-co2').textContent=(tE*CO2/1000).toFixed(1);
+  document.getElementById('k-cost').textContent=fL(tE*RATE);
+  document.getElementById('k-die').textContent=fmt(tD);
+  document.getElementById('k-hrs').textContent=tH.toFixed(1);
+  if(eD.length>=2){const c=pct(eD[eD.length-1].u,eD[eD.length-2].u);const el=document.getElementById('k-ele-tr');el.textContent=(c>0?'▲ ':'▼ ')+Math.abs(c)+'% vs prev';el.className='kc-tr '+(c>0?'dn':'up');}
+  document.getElementById('k-die-tr').textContent='Eff: '+(tD>0?(tDG/tD).toFixed(2):'—')+' kWh/L';
+  document.getElementById('k-hrs-tr').textContent='Avg '+(eD.length?(tH/eD.length).toFixed(1):0)+' h/mo';
+  const lbs=eD.map(d=>d.m);const dgM={};dgD.forEach(d=>dgM[d.m]=d.k);
+  dc('ovTr');CH['ovTr']=new Chart(document.getElementById('cOvTr').getContext('2d'),{type:'line',data:{labels:lbs,datasets:[{label:'HT Grid (kWh)',data:eD.map(d=>d.u),borderColor:'#00c8ff',backgroundColor:'rgba(0,200,255,.08)',tension:.4,pointRadius:4,fill:true},{label:'DG Gen (kWh)',data:lbs.map(m=>dgM[m]||0),borderColor:'#ff6b35',backgroundColor:'rgba(255,107,53,.05)',tension:.4,pointRadius:4,fill:true}]},options:bO()});
+  dc('ovMx');CH['ovMx']=new Chart(document.getElementById('cOvMx').getContext('2d'),{type:'doughnut',data:{labels:['Grid HT (kWh)','DG (kWh)'],datasets:[{data:[tE,tDG],backgroundColor:['rgba(0,200,255,.7)','rgba(255,107,53,.7)'],borderColor:['#00c8ff','#ff6b35'],borderWidth:2}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{color:'#6a9ab8'}}}}});
+  dc('ovCt');const gc=tE*RATE/1e5,dc2=tD*DRATE/1e5;CH['ovCt']=new Chart(document.getElementById('cOvCt').getContext('2d'),{type:'pie',data:{labels:['Grid Cost (₹L)','Diesel (₹L)'],datasets:[{data:[gc.toFixed(2),dc2.toFixed(2)],backgroundColor:['rgba(255,215,0,.7)','rgba(255,61,90,.7)'],borderColor:['#ffd700','#ff3d5a'],borderWidth:2}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{color:'#6a9ab8'}}}}});
+  const all=[...new Set([...eD.map(d=>d.m),...dgD.map(d=>d.m)])];
+  const tb=document.getElementById('tb-ov');tb.innerHTML='';
+  all.forEach(m=>{const e=eD.find(d=>d.m===m),g=dgD.find(d=>d.m===m);const eu=e?e.u:null,du=g?g.k:0,rh=g?g.h:'—',dd=g?g.d:0,ef=dd>0&&du>0?(du/dd).toFixed(2):'—';const st=eu>850000?'<span class="bd bd-r">HIGH</span>':eu?'<span class="bd bd-g">OK</span>':'<span class="bd bd-y">PEND.</span>';tb.innerHTML+=`<tr><td>${m}</td><td class="nm">${fmt(eu)}</td><td class="nm">${fmt(Math.round(du))}</td><td class="nm">${rh}</td><td class="nm">${fmt(dd)}</td><td class="nm">${fL(eu*RATE)}</td><td class="nm">${eu?(eu*CO2/1000).toFixed(1):'—'}</td><td class="nm">${ef}</td><td>${st}</td></tr>`;});
+}
+
+/* ════════ RENDER ELECTRICITY ════════ */
+function rEL(){
+  const p=PR.el,mf=document.getElementById('el-mf').value;
+  const d=gEle(p,mf);
+  const tot=d.reduce((a,b)=>a+(b.u||0),0),pk=Math.max(...d.map(x=>x.u||0)),lo=Math.min(...d.filter(x=>x.u).map(x=>x.u)),avg=tot/d.length;
+  document.getElementById('el-tot').textContent=fmt(Math.round(tot));document.getElementById('el-pk').textContent=fmt(pk);document.getElementById('el-lo').textContent=fmt(lo);document.getElementById('el-av').textContent=fmt(Math.round(avg));
+  const lbs=d.map(x=>x.m),vals=d.map(x=>x.u||0),avgA=vals.map(()=>Math.round(avg));
+  dc('elLn');CH['elLn']=new Chart(document.getElementById('cElLn').getContext('2d'),{type:'line',data:{labels:lbs,datasets:[{label:'HT Units (kWh)',data:vals,borderColor:'#00c8ff',backgroundColor:'rgba(0,200,255,.09)',tension:.4,pointRadius:5,fill:true},{label:'Avg (kWh)',data:avgA,borderColor:'#ffd700',borderDash:[5,5],tension:0,pointRadius:0,fill:false}]},options:bO()});
+  dc('elBr');CH['elBr']=new Chart(document.getElementById('cElBr').getContext('2d'),{type:'bar',data:{labels:lbs,datasets:[{label:'kWh',data:vals,backgroundColor:vals.map(v=>v>avg?'rgba(255,107,53,.7)':'rgba(0,200,255,.6)'),borderColor:vals.map(v=>v>avg?'#ff6b35':'#00c8ff'),borderWidth:1.5}]},options:bO()});
+  const mom=vals.map((v,i)=>i===0?0:Number(pct(v,vals[i-1])));
+  dc('elMM');CH['elMM']=new Chart(document.getElementById('cElMM').getContext('2d'),{type:'bar',data:{labels:lbs,datasets:[{label:'MoM %',data:mom,backgroundColor:mom.map(v=>v>0?'rgba(255,61,90,.6)':'rgba(0,255,157,.6)'),borderColor:mom.map(v=>v>0?'#ff3d5a':'#00ff9d'),borderWidth:1.5}]},options:bO()});
+  const tb=document.getElementById('tb-el');tb.innerHTML='';
+  d.forEach((row,i)=>{const prev=i>0?d[i-1].u:null;const c=prev&&row.u?pct(row.u,prev):null;const cB=c!=null?(c>0?`<span class="bd bd-r">▲${c}%</span>`:`<span class="bd bd-g">▼${Math.abs(c)}%</span>`):'—';const st=row.u>850000?'<span class="bd bd-r">HIGH</span>':row.u?'<span class="bd bd-g">OK</span>':'<span class="bd bd-y">PEND.</span>';tb.innerHTML+=`<tr><td>${row.n}</td><td>${row.m}</td><td class="nm">${fmt(row.u)}</td><td>${cB}</td><td class="nm">${row.u?'₹'+fmt(Math.round(row.u*RATE)):'—'}</td><td class="nm">${fL(row.u*RATE)}</td><td class="nm">${row.u?(row.u*CO2/1000).toFixed(1):'—'}</td><td class="nm">${row.u?(row.u/AREA).toFixed(3):'—'}</td><td>${st}</td></tr>`;});
+}
+
+/* ════════ RENDER DG ════════ */
+function rDG(){
+  const p=PR.dg,mf=document.getElementById('dg-mf').value;
+  const d=gDG(p,mf!='all'?mf:null);
+  const tH=d.reduce((a,b)=>a+(b.hd||0),0),tK=d.reduce((a,b)=>a+(b.k||0),0),tD=d.reduce((a,b)=>a+(b.d||0),0);
+  document.getElementById('dg-hr').textContent=tH.toFixed(1);document.getElementById('dg-kw').textContent=fmt(Math.round(tK));document.getElementById('dg-dl').textContent=fmt(tD);document.getElementById('dg-ef').textContent=tD>0?(tK/tD).toFixed(2):'—';document.getElementById('dg-fc').textContent=fL(tD*DRATE);document.getElementById('dg-ck').textContent=tK>0?((tD*DRATE)/tK).toFixed(2):'—';
+  const lbs=d.map(x=>x.m),hrs=d.map(x=>x.hd),kwh=d.map(x=>x.k),dsl=d.map(x=>x.d),effA=d.map(x=>x.d>0?(x.k/x.d).toFixed(2):0);
+  dc('dgBr');CH['dgBr']=new Chart(document.getElementById('cDgBr').getContext('2d'),{type:'bar',data:{labels:lbs,datasets:[{label:'Run Hours',data:hrs,backgroundColor:'rgba(255,107,53,.65)',borderColor:'#ff6b35',borderWidth:1.5,yAxisID:'y'},{label:'DG kWh',data:kwh,type:'line',borderColor:'#00c8ff',backgroundColor:'rgba(0,200,255,.05)',tension:.4,pointRadius:4,fill:false,yAxisID:'y1'}]},options:{...bO(),scales:{x:{ticks:{color:'#6a9ab8'},grid:{color:'rgba(0,200,255,.04)'}},y:{ticks:{color:'#ff6b35'},position:'left',title:{display:true,text:'Hours',color:'#ff6b35',font:{size:8}},grid:{color:'rgba(0,200,255,.04)'}},y1:{ticks:{color:'#00c8ff'},position:'right',title:{display:true,text:'kWh',color:'#00c8ff',font:{size:8}},grid:{display:false}}}}});
+  dc('dgDl');CH['dgDl']=new Chart(document.getElementById('cDgDl').getContext('2d'),{type:'bar',data:{labels:lbs,datasets:[{label:'Diesel (L)',data:dsl,backgroundColor:'rgba(255,61,90,.6)',borderColor:'#ff3d5a',borderWidth:1.5}]},options:bO()});
+  dc('dgEf');CH['dgEf']=new Chart(document.getElementById('cDgEf').getContext('2d'),{type:'line',data:{labels:lbs,datasets:[{label:'Efficiency (kWh/L)',data:effA.map(Number),borderColor:'#00ff9d',backgroundColor:'rgba(0,255,157,.07)',tension:.4,fill:true,pointRadius:4},{label:'Benchmark 3.5',data:lbs.map(()=>BENCH_EFF),borderColor:'#ffd700',borderDash:[5,5],tension:0,pointRadius:0,fill:false}]},options:bO()});
+  const tb=document.getElementById('tb-dg');tb.innerHTML='';
+  d.forEach(row=>{const ef=row.d>0?(row.k/row.d).toFixed(2):'—',ck=row.k>0?((row.d*DRATE)/row.k).toFixed(2):'—';const pf=row.hd>8?'<span class="bd bd-r">HIGH</span>':row.hd>0?'<span class="bd bd-g">OK</span>':'<span class="bd bd-b">STBY</span>';tb.innerHTML+=`<tr><td>${row.n}</td><td>${row.m}</td><td class="nm">${row.h}</td><td class="nm">${row.hd.toFixed(2)}</td><td class="nm">${fmt(Math.round(row.k))}</td><td class="nm">${fmt(row.d)}</td><td class="nm">${ef}</td><td class="nm">₹${fmt(row.d*DRATE)}</td><td class="nm">${ck}</td><td>${pf}</td></tr>`;});
+}
+
+/* ════════ RENDER WATER ════════ */
+function rWT(){
+  const p=PR.wt;
+  let wD=D.water;
+  if(p==='quarter') wD=wD.filter(d=>d.v!=null).slice(-3);
+  else if(p==='half') wD=wD.filter(d=>d.v!=null).slice(-6);
+
+  const hasData=wD.some(d=>d.v!=null);
+  const alertEl=document.getElementById('wt-status-alert');
+  if(alertEl){
+    if(hasData){
+      alertEl.className='alrt ok';
+      alertEl.textContent='✅ Water consumption data loaded — '+wD.filter(d=>d.v!=null).length+' months active.';
+    } else {
+      alertEl.className='alrt warn';
+      alertEl.textContent='⚠️ Water data not yet available — upload Energy_analysys.xlsx with water _consumption sheet.';
+    }
+  }
+
+  const vals=D.water.map(d=>d.v);
+  const lbs=D.water.map(d=>d.m);
+  const hasAny=vals.some(v=>v!=null);
+  const tot=vals.reduce((a,b)=>a+(b||0),0);
+  const filled=vals.filter(v=>v!=null);
+  const avg=filled.length?tot/filled.length:0;
+  const pk=filled.length?Math.max(...filled):0;
+  const lo=filled.length?Math.min(...filled):0;
+
+  // KPI cards
+  const kpiTot=document.getElementById('wt-kpi-tot');
+  const kpiAvg=document.getElementById('wt-kpi-avg');
+  const kpiPk=document.getElementById('wt-kpi-pk');
+  const kpiInt=document.getElementById('wt-kpi-int');
+  if(kpiTot) kpiTot.textContent=hasAny?fmt(Math.round(tot)):'—';
+  if(kpiAvg) kpiAvg.textContent=hasAny?fmt(Math.round(avg)):'—';
+  if(kpiPk)  kpiPk.textContent=hasAny?fmt(pk):'—';
+  if(kpiInt) kpiInt.textContent=hasAny?(avg*1000/AREA).toFixed(3):'—';
+
+  dc('wt');CH['wt']=new Chart(document.getElementById('cWt').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:lbs,
+      datasets:[
+        {label:'Consumption (KL)',data:vals,backgroundColor:'rgba(56,189,248,.55)',borderColor:'#38bdf8',borderWidth:1.5},
+        {label:'Monthly Avg',data:lbs.map(()=>avg||null),type:'line',borderColor:'rgba(255,215,0,.6)',borderDash:[5,5],tension:0,pointRadius:0,fill:false}
+      ]
+    },
+    options:bO()
+  });
+
+  const tb=document.getElementById('tb-wt');tb.innerHTML='';
+  D.water.forEach(d=>{
+    const days=new Date(d.m.split(' ')[1], ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].indexOf(d.m.split(' ')[0])+1, 0).getDate();
+    const dayAvg=d.v!=null?(d.v/days).toFixed(1):'—';
+    const intens=d.v!=null?(d.v*1000/AREA).toFixed(3):'—';
+    const payFmt=d.pay!=null?'₹'+fmt(Math.round(d.pay)):'—';
+    const status=d.v==null
+      ?'<span class="bd bd-y">PENDING</span>'
+      :d.v>5500?'<span class="bd bd-r">HIGH</span>'
+      :d.v>4500?'<span class="bd bd-y">WATCH</span>'
+      :'<span class="bd bd-g">OK</span>';
+    tb.innerHTML+=`<tr>
+      <td>${d.n}</td><td>${d.m}</td>
+      <td class="nm">${d.v!=null?fmt(d.v):'<span class="bd bd-y">PENDING</span>'}</td>
+      <td class="nm">${dayAvg}</td>
+      <td class="nm">${intens}</td>
+      <td class="nm">${payFmt}</td>
+      <td><span class="bd bd-g">None</span></td>
+      <td>${status}</td>
+    </tr>`;
+  });
+}
+
+/* ════════ RENDER BENCHMARK ════════ */
+function rBN(){
+  const p=PR.bn,eD=gEle(p,'all'),dgD=gDG(p,null);
+  const tE=eD.reduce((a,b)=>a+(b.u||0),0),m=eD.length||1;
+  const euiY=(tE/AREA*(12/m)).toFixed(2),euiP=Math.min(100,(parseFloat(euiY)/200*100));
+  const ci=(tE*CO2/AREA).toFixed(2),ciP=Math.min(100,(parseFloat(ci)/15*100));
+  const sec=(tE/2000/m*12).toFixed(0),secP=Math.min(100,(parseInt(sec)/6000*100));
+  const intv=(820684/921450).toFixed(4),intP=Math.min(100,(parseFloat(intv)/1.5*100));
+  document.getElementById('g-eui').textContent=euiY;document.getElementById('g-eui-b').style.width=euiP+'%';
+  document.getElementById('g-int').textContent=intv;document.getElementById('g-int-b').style.width=intP+'%';
+  document.getElementById('g-ci').textContent=ci;document.getElementById('g-ci-b').style.width=ciP+'%';
+  document.getElementById('g-sec').textContent=fmt(parseInt(sec));document.getElementById('g-sec-b').style.width=secP+'%';
+  const lbs=eD.map(d=>d.m),actK=eD.map(d=>(d.u/1000).toFixed(1));
+  dc('bn');CH['bn']=new Chart(document.getElementById('cBn').getContext('2d'),{type:'bar',data:{labels:lbs,datasets:[{label:'Actual (k kWh)',data:actK.map(Number),backgroundColor:actK.map(v=>parseFloat(v)>(TARGET/1000)?'rgba(255,61,90,.6)':'rgba(0,255,157,.5)'),borderColor:actK.map(v=>parseFloat(v)>(TARGET/1000)?'#ff3d5a':'#00ff9d'),borderWidth:1.5},{label:'Target 800k',data:lbs.map(()=>TARGET/1000),type:'line',borderColor:'#ffd700',borderDash:[5,5],tension:0,pointRadius:0,fill:false}]},options:bO()});
+  dc('cb');CH['cb']=new Chart(document.getElementById('cCb').getContext('2d'),{type:'line',data:{labels:lbs,datasets:[{label:'tCO₂e',data:eD.map(d=>((d.u||0)*CO2/1000).toFixed(2)).map(Number),borderColor:'#00ff9d',backgroundColor:'rgba(0,255,157,.07)',tension:.4,fill:true,pointRadius:4}]},options:bO()});
+  const dgM={};dgD.forEach(d=>dgM[d.m]=d.k);
+  dc('sp');CH['sp']=new Chart(document.getElementById('cSp').getContext('2d'),{type:'bar',data:{labels:lbs,datasets:[{label:'Grid (kWh)',data:eD.map(d=>d.u),backgroundColor:'rgba(0,200,255,.5)',borderColor:'#00c8ff',borderWidth:1},{label:'DG (kWh)',data:lbs.map(m=>dgM[m]||0),backgroundColor:'rgba(255,107,53,.5)',borderColor:'#ff6b35',borderWidth:1}]},options:bO()});
+  const tb=document.getElementById('tb-bn');tb.innerHTML='';
+  eD.forEach(d=>{const dg=dgD.find(x=>x.m===d.m);const tot=(d.u||0)+(dg?dg.k:0);const diff=(d.u||0)-TARGET;const vs=diff>0?`<span class="bd bd-r">+${fmt(Math.round(diff))}</span>`:`<span class="bd bd-g">${fmt(Math.round(diff))}</span>`;tb.innerHTML+=`<tr><td>${d.m}</td><td class="nm">${fmt(d.u)}</td><td class="nm">${dg?fmt(Math.round(dg.k)):'—'}</td><td class="nm">${fmt(Math.round(tot))}</td><td class="nm">${((d.u||0)*CO2/1000).toFixed(1)}</td><td class="nm">${((d.u||0)/AREA).toFixed(3)}</td><td class="nm">${fmt(TARGET)}</td><td>${vs}</td><td class="nm">${((d.u||0)*RATE/AREA).toFixed(2)}</td></tr>`;});
+}
+
+/* ════════ RENDER COST ANALYSIS ════════ */
+function rCA(){
+  const eD=gEle('year','all'),dgD=gDG('year',null);
+  const tE=eD.reduce((a,b)=>a+(b.u||0),0),tD=dgD.reduce((a,b)=>a+(b.d||0),0);
+  const gridCost=tE*RATE,dgCost=tD*DRATE,total=gridCost+dgCost;
+  document.getElementById('ca-gridcost').textContent=fL(gridCost);
+  document.getElementById('ca-dgcost').textContent=fL(dgCost);
+  document.getElementById('ca-totalcost').textContent=fL(total);
+  document.getElementById('ca-costm2').textContent=(gridCost/AREA).toFixed(2);
+  document.getElementById('ca-costsft').textContent=(gridCost/921450).toFixed(2);
+  document.getElementById('ca-costmo').textContent=(eD.length?fL(gridCost/eD.length):'—');
+
+  const lbs=eD.map(d=>d.m);
+  const dgMap={};dgD.forEach(d=>dgMap[d.m]=d.d);
+  dc('cCaBar');CH['cCaBar']=new Chart(document.getElementById('cCaBar').getContext('2d'),{type:'bar',data:{labels:lbs,datasets:[{label:'Grid Cost (₹L)',data:eD.map(d=>((d.u||0)*RATE/1e5).toFixed(2)).map(Number),backgroundColor:'rgba(255,215,0,.6)',borderColor:'#ffd700',borderWidth:1.5},{label:'Diesel Cost (₹L)',data:lbs.map(m=>((dgMap[m]||0)*DRATE/1e5).toFixed(2)).map(Number),backgroundColor:'rgba(255,61,90,.5)',borderColor:'#ff3d5a',borderWidth:1.5}]},options:{...bO(),scales:{...bO().scales,x:{...bO().scales.x,stacked:false},y:{...bO().scales.y,stacked:false}}}});
+  dc('cCaKwh');const dgKwhMap={};dgD.forEach(d=>dgKwhMap[d.m]={k:d.k,d:d.d});CH['cCaKwh']=new Chart(document.getElementById('cCaKwh').getContext('2d'),{type:'bar',data:{labels:lbs,datasets:[{label:'Grid ₹/kWh',data:lbs.map(()=>RATE),backgroundColor:'rgba(0,200,255,.5)',borderColor:'#00c8ff',borderWidth:1.5},{label:'DG ₹/kWh',data:lbs.map(m=>{const r=dgKwhMap[m];return r&&r.k>0?((r.d*DRATE)/r.k).toFixed(2):null;}),backgroundColor:'rgba(255,107,53,.6)',borderColor:'#ff6b35',borderWidth:1.5}]},options:bO()});
+  dc('cCaSav');CH['cCaSav']=new Chart(document.getElementById('cCaSav').getContext('2d'),{type:'bar',data:{labels:lbs,datasets:[{label:'Excess Cost (₹L)',data:eD.map(d=>{const excess=Math.max(0,(d.u||0)-TARGET);return(excess*RATE/1e5).toFixed(2)}).map(Number),backgroundColor:'rgba(255,61,90,.6)',borderColor:'#ff3d5a',borderWidth:1.5}]},options:bO()});
+}
+
+/* ════════ RENDER ANOMALY ════════ */
+function rAN(){
+  const eD=gEle('year','all'),dgD=gDG('year',null);
+  const vals=eD.map(d=>d.u||0);
+  const mean=vals.reduce((a,b)=>a+b,0)/vals.length;
+  const std=Math.sqrt(vals.reduce((a,b)=>a+(b-mean)**2,0)/vals.length);
+
+  let spikes=0,above=0,norm=0;
+  eD.forEach((d,i)=>{if(i>0&&(d.u-eD[i-1].u)/eD[i-1].u>0.1)spikes++;if((d.u||0)>TARGET)above++;else norm++;});
+  const dgSpike=dgD.filter(d=>d.hd>8).length;
+  document.getElementById('an-spikes').textContent=spikes;
+  document.getElementById('an-highcost').textContent=above;
+  document.getElementById('an-normal').textContent=norm;
+  document.getElementById('an-dgspike').textContent=dgSpike;
+
+  const lbs=eD.map(d=>d.m);
+  const devs=vals.map(v=>Math.round(v-mean));
+  const zScores=vals.map(v=>((v-mean)/std).toFixed(2)).map(Number);
+
+  dc('cAnDev');CH['cAnDev']=new Chart(document.getElementById('cAnDev').getContext('2d'),{type:'bar',data:{labels:lbs,datasets:[{label:'Deviation from Mean (kWh)',data:devs,backgroundColor:devs.map(v=>v>0?'rgba(255,61,90,.65)':'rgba(0,255,157,.55)'),borderColor:devs.map(v=>v>0?'#ff3d5a':'#00ff9d'),borderWidth:1.5}]},options:bO()});
+  dc('cAnZ');CH['cAnZ']=new Chart(document.getElementById('cAnZ').getContext('2d'),{type:'line',data:{labels:lbs,datasets:[{label:'Z-Score',data:zScores,borderColor:'#b47cff',backgroundColor:'rgba(180,124,255,.08)',tension:.4,fill:true,pointRadius:5,pointBackgroundColor:zScores.map(z=>Math.abs(z)>1.5?'#ff3d5a':'#b47cff')},{label:'Upper Threshold (+1.5)',data:lbs.map(()=>1.5),borderColor:'rgba(255,61,90,.4)',borderDash:[4,4],tension:0,pointRadius:0,fill:false},{label:'Lower Threshold (-1.5)',data:lbs.map(()=>-1.5),borderColor:'rgba(0,255,157,.4)',borderDash:[4,4],tension:0,pointRadius:0,fill:false}]},options:bO()});
+  const dgLbs=dgD.map(d=>d.m),dgHrs=dgD.map(d=>d.hd),dgMean=dgHrs.reduce((a,b)=>a+b,0)/dgHrs.length;
+  dc('cAnDg');CH['cAnDg']=new Chart(document.getElementById('cAnDg').getContext('2d'),{type:'bar',data:{labels:dgLbs,datasets:[{label:'Run Hours',data:dgHrs,backgroundColor:dgHrs.map(h=>h>8?'rgba(255,61,90,.7)':h>dgMean?'rgba(255,184,0,.6)':'rgba(0,200,255,.5)'),borderColor:dgHrs.map(h=>h>8?'#ff3d5a':h>dgMean?'#ffb800':'#00c8ff'),borderWidth:1.5},{label:'Mean Hours',data:dgLbs.map(()=>dgMean.toFixed(2)).map(Number),type:'line',borderColor:'#ffd700',borderDash:[5,5],tension:0,pointRadius:0,fill:false}]},options:bO()});
+
+  const alrtEl=document.getElementById('anomaly-alerts');
+  const anomalies=eD.filter((d,i)=>Math.abs(zScores[i])>1.5).map((d,i)=>`<div class="insight-card ${zScores[eD.indexOf(d)]>0?'danger':'good'}"><div class="in-title">${zScores[eD.indexOf(d)]>0?'⚠️ High':'✅ Low'} Usage: ${d.m}</div><div class="in-body">Consumption: <span class="in-val">${fmt(d.u)} kWh</span> | Z-score: <span class="in-val">${zScores[eD.indexOf(d)]}</span> | ${(d.u-mean>0?'+'+(((d.u-mean)/mean)*100).toFixed(1):((d.u-mean)/mean*100).toFixed(1))}% from mean</div></div>`).join('');
+  alrtEl.innerHTML=anomalies||'<div class="alrt ok">✅ No significant anomalies detected in the dataset.</div>';
+}
+
+/* ════════ RENDER FORECAST ════════ */
+function rFC(){
+  const eD=gEle('year','all');
+  const vals=eD.map(d=>d.u||0);const n=vals.length;
+  // simple linear regression
+  const xs=vals.map((_,i)=>i+1);
+  const xm=xs.reduce((a,b)=>a+b)/n,ym=vals.reduce((a,b)=>a+b)/n;
+  const slope=(xs.reduce((a,x,i)=>a+(x-xm)*(vals[i]-ym),0))/(xs.reduce((a,x)=>a+(x-xm)**2,0));
+  const intercept=ym-slope*xm;
+  const forecast=x=>Math.round(intercept+slope*x);
+  const oct=forecast(8),nov=forecast(9),dec=forecast(10);
+  document.getElementById('fc-oct').textContent=fmt(oct);
+  document.getElementById('fc-nov').textContent=fmt(nov);
+  document.getElementById('fc-dec').textContent=fmt(dec);
+  document.getElementById('fc-3mo').textContent=fL((oct+nov+dec)*RATE);
+  const tr=Math.round(slope);document.getElementById('fc-trend').textContent=fmt(Math.abs(tr));
+  const tcel=document.getElementById('fc-trend-cl');tcel.textContent=(tr>0?'▲ Increasing':'▼ Decreasing')+' trend';tcel.className='kc-tr '+(tr>0?'dn':'up');
+  const annualProj=(vals.reduce((a,b)=>a+b)/n)*12;document.getElementById('fc-annual').textContent=(annualProj/1e5).toFixed(1);
+
+  const allLbs=[...eD.map(d=>d.m),'Oct 2025','Nov 2025','Dec 2025'];
+  const actData=[...vals,null,null,null];
+  const fcData=[...vals.map(()=>null),oct,nov,dec];
+  const upperBand=[...vals.map(()=>null),Math.round(oct*1.05),Math.round(nov*1.05),Math.round(dec*1.05)];
+  const lowerBand=[...vals.map(()=>null),Math.round(oct*0.95),Math.round(nov*0.95),Math.round(dec*0.95)];
+
+  dc('cFcLine');CH['cFcLine']=new Chart(document.getElementById('cFcLine').getContext('2d'),{type:'line',data:{labels:allLbs,datasets:[{label:'Actual (kWh)',data:actData,borderColor:'#00c8ff',backgroundColor:'rgba(0,200,255,.07)',tension:.4,pointRadius:4,fill:true},{label:'Forecast (kWh)',data:[...vals.slice(-1),...fcData.filter(x=>x!==null)],borderColor:'#b47cff',borderDash:[6,3],tension:.4,pointRadius:5,fill:false,borderWidth:2},{label:'+5% Band',data:upperBand,borderColor:'rgba(180,124,255,.2)',tension:.4,pointRadius:0,fill:false,borderWidth:1},{label:'-5% Band',data:lowerBand,borderColor:'rgba(180,124,255,.2)',tension:.4,pointRadius:0,fill:'-1',backgroundColor:'rgba(180,124,255,.06)',borderWidth:1}]},options:bO()});
+
+  // rolling average
+  const roll=vals.map((_,i)=>i>=2?Math.round((vals[i]+vals[i-1]+vals[i-2])/3):null);
+  dc('cFcRoll');CH['cFcRoll']=new Chart(document.getElementById('cFcRoll').getContext('2d'),{type:'line',data:{labels:eD.map(d=>d.m),datasets:[{label:'Actual (kWh)',data:vals,borderColor:'rgba(0,200,255,.4)',tension:.4,pointRadius:3,fill:false},{label:'3-Mo Rolling Avg',data:roll,borderColor:'#00ff9d',tension:.4,pointRadius:0,fill:false,borderWidth:2.5}]},options:bO()});
+
+  // cumulative
+  let cum=0,cumT=0;
+  const cumAct=vals.map(v=>{cum+=v;return(cum/1e5).toFixed(2)}).map(Number);
+  const cumTgt=vals.map((_,i)=>{cumT=TARGET*(i+1);return(cumT/1e5).toFixed(2)}).map(Number);
+  dc('cFcCum');CH['cFcCum']=new Chart(document.getElementById('cFcCum').getContext('2d'),{type:'line',data:{labels:eD.map(d=>d.m),datasets:[{label:'Cumulative Actual (L kWh)',data:cumAct,borderColor:'#00c8ff',backgroundColor:'rgba(0,200,255,.08)',tension:.4,fill:true},{label:'Cumulative Target (L kWh)',data:cumTgt,borderColor:'#ffd700',borderDash:[5,5],tension:0,fill:false,pointRadius:0}]},options:bO()});
+}
+
+/* ════════ RENDER WATER TANKER ════════ */
+function gTK(p,mf){
+  let d=D.tanker.filter(x=>x.trips!=null);
+  if(mf&&mf!='all')return d.filter(x=>x.m===mf);
+  if(p==='quarter')return d.slice(-3);
+  if(p==='half')return d.slice(-6);
+  return d;
+}
+
+function rTK(){
+  const p=PR.tk,mf=document.getElementById('tk-mf').value;
+  const d=gTK(p,mf);
+
+  const tTrips=d.reduce((a,b)=>a+(b.trips||0),0);
+  const tVol=d.reduce((a,b)=>a+(b.vol||0),0);
+  const totalCost=d.reduce((a,b)=>a+(b.cost!=null?b.cost:(b.vol||0)*(b.rate!=null?b.rate:350)),0);
+  const avgRate=tVol>0?(totalCost/tVol).toFixed(0):350;
+  const avgVolPerTrip=tTrips>0?(tVol/tTrips).toFixed(1):0;
+  const moAvg=d.length>0?(tVol/d.length).toFixed(1):0;
+  const intensityLSft=tVol>0?(tVol*1000/(921450*(d.length||1))).toFixed(4):0;
+  const peakRow=d.reduce((a,b)=>(b.trips||0)>(a.trips||0)?b:a,d[0]||{});
+  const coverageDays=tVol>0?((tVol/d.length)*1000/200000*30).toFixed(1):0;
+
+  document.getElementById('tk-trips').textContent=fmt(tTrips);
+  document.getElementById('tk-vol').textContent=fmt(Math.round(tVol));
+  document.getElementById('tk-cost').textContent=(totalCost/1e5).toFixed(2);
+  document.getElementById('tk-vol-per-trip').textContent=avgVolPerTrip;
+  document.getElementById('tk-mo-avg').textContent=moAvg;
+  document.getElementById('tk-cost-kl').textContent=fmt(parseInt(avgRate));
+  document.getElementById('tk-rate-tr').textContent='@ ₹'+avgRate+'/KL avg';
+  document.getElementById('tk-trips-tr').textContent=fmt(tTrips)+' total journeys';
+  document.getElementById('tk-intensity').textContent=intensityLSft;
+  document.getElementById('tk-coverage').textContent=coverageDays;
+  if(peakRow&&peakRow.m){
+    document.getElementById('tk-peak-month').textContent=peakRow.m+' ('+peakRow.trips+' trips)';
+    document.getElementById('tk-peak-vol').textContent=fmt(peakRow.vol)+' KL';
+  }
+
+  const lbs=d.map(x=>x.m);
+  const trips=d.map(x=>x.trips||0);
+  const vols=d.map(x=>x.vol||0);
+  const costs=d.map(x=>((x.vol||0)*(x.rate!=null?x.rate:350)));
+  const rates=d.map(x=>x.rate!=null?x.rate:350);
+  const roll3=vols.map((_,i)=>i>=2?parseFloat(((vols[i]+vols[i-1]+vols[i-2])/3).toFixed(1)):null);
+
+  // Bar: trips + volume line
+  dc('cTkBar');CH['cTkBar']=new Chart(document.getElementById('cTkBar').getContext('2d'),{
+    type:'bar',
+    data:{labels:lbs,datasets:[
+      {label:'Trips (count)',data:trips,backgroundColor:'rgba(56,189,248,.6)',borderColor:'#38bdf8',borderWidth:1.5,yAxisID:'y'},
+      {label:'Volume (KL)',data:vols,type:'line',borderColor:'#00ff9d',backgroundColor:'rgba(0,255,157,.06)',tension:.4,pointRadius:4,fill:false,yAxisID:'y1'}
+    ]},
+    options:{...bO(),scales:{
+      x:{ticks:{color:'#6a9ab8'},grid:{color:'rgba(0,200,255,.04)'}},
+      y:{ticks:{color:'#38bdf8'},position:'left',title:{display:true,text:'Trips',color:'#38bdf8',font:{size:8}},grid:{color:'rgba(0,200,255,.04)'}},
+      y1:{ticks:{color:'#00ff9d'},position:'right',title:{display:true,text:'KL',color:'#00ff9d',font:{size:8}},grid:{display:false}}
+    }}
+  });
+
+  // Cost bar
+  dc('cTkCost');CH['cTkCost']=new Chart(document.getElementById('cTkCost').getContext('2d'),{
+    type:'bar',
+    data:{labels:lbs,datasets:[{label:'Tanker Cost (₹)',data:costs,backgroundColor:'rgba(255,215,0,.6)',borderColor:'#ffd700',borderWidth:1.5}]},
+    options:bO()
+  });
+
+  // Volume trend + rolling avg
+  dc('cTkTrend');CH['cTkTrend']=new Chart(document.getElementById('cTkTrend').getContext('2d'),{
+    type:'line',
+    data:{labels:lbs,datasets:[
+      {label:'Volume (KL)',data:vols,borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,.09)',tension:.4,fill:true,pointRadius:4},
+      {label:'3-Mo Rolling Avg',data:roll3,borderColor:'#00ff9d',borderDash:[5,5],tension:.4,pointRadius:0,fill:false,borderWidth:2}
+    ]},
+    options:bO()
+  });
+
+  // Rate per KL
+  dc('cTkRate');CH['cTkRate']=new Chart(document.getElementById('cTkRate').getContext('2d'),{
+    type:'line',
+    data:{labels:lbs,datasets:[
+      {label:'Rate (₹/KL)',data:rates,borderColor:'#ff6b35',backgroundColor:'rgba(255,107,53,.07)',tension:.4,fill:true,pointRadius:4,pointBackgroundColor:'#ff6b35'},
+      {label:'Benchmark ₹350/KL',data:lbs.map(()=>350),borderColor:'#ffd700',borderDash:[5,5],tension:0,pointRadius:0,fill:false}
+    ]},
+    options:bO()
+  });
+
+  // Vendor doughnut
+  const vendorMap={};
+  d.forEach(x=>{if(x.vendor&&x.vendor!=='—'){vendorMap[x.vendor]=(vendorMap[x.vendor]||0)+(x.vol||0);}});
+  const vKeys=Object.keys(vendorMap);
+  const vColors=['rgba(56,189,248,.75)','rgba(255,107,53,.75)','rgba(0,255,157,.75)','rgba(255,215,0,.75)','rgba(180,124,255,.75)'];
+  dc('cTkVendor');CH['cTkVendor']=new Chart(document.getElementById('cTkVendor').getContext('2d'),{
+    type:'doughnut',
+    data:{labels:vKeys.map(k=>k+' (KL)'),datasets:[{data:vKeys.map(k=>vendorMap[k]),backgroundColor:vColors,borderColor:['#38bdf8','#ff6b35','#00ff9d','#ffd700','#b47cff'],borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{color:'#6a9ab8',font:{size:10}}}}}
+  });
+
+  // Tanker vs Municipal
+  const muniVols=d.map(()=>null); // placeholder — municipal pending
+  dc('cTkVsMuni');CH['cTkVsMuni']=new Chart(document.getElementById('cTkVsMuni').getContext('2d'),{
+    type:'bar',
+    data:{labels:lbs,datasets:[
+      {label:'Tanker (KL)',data:vols,backgroundColor:'rgba(255,107,53,.6)',borderColor:'#ff6b35',borderWidth:1.5},
+      {label:'Municipal/Borewell (KL)',data:muniVols,backgroundColor:'rgba(56,189,248,.5)',borderColor:'#38bdf8',borderWidth:1.5}
+    ]},
+    options:bO()
+  });
+
+  // Detail Table
+  const tb=document.getElementById('tb-tk');tb.innerHTML='';
+  D.tanker.forEach(row=>{
+    const hasData=row.trips!=null;
+    const costRs=hasData?fmt((row.vol||0)*(row.rate||350)):'—';
+    const costL=hasData?((row.vol||0)*(row.rate||350)/1e5).toFixed(2):'—';
+    const vpt=hasData&&row.trips>0?(row.vol/row.trips).toFixed(1):'—';
+    const intens=hasData?(row.vol*1000/921450).toFixed(4):'—';
+    const st=!hasData?'<span class="bd bd-y">PENDING</span>':row.trips>15?'<span class="bd bd-r">HIGH</span>':row.trips>0?'<span class="bd bd-g">OK</span>':'<span class="bd bd-b">NIL</span>';
+    tb.innerHTML+=`<tr>
+      <td>${row.n}</td><td>${row.m}</td>
+      <td class="nm">${hasData?row.trips:'—'}</td>
+      <td class="nm">${hasData?fmt(row.vol):'—'}</td>
+      <td class="nm">${vpt}</td>
+      <td class="nm">${hasData?'₹'+fmt(row.rate):'—'}</td>
+      <td class="nm">${costRs!=='—'?'₹'+costRs:'—'}</td>
+      <td class="nm">${costL}</td>
+      <td>${row.vendor||'—'}</td>
+      <td class="nm">${intens}</td>
+      <td>${st}</td>
+    </tr>`;
+  });
+}
+
+/* ── ADD TANKER ENTRY ── */
+function addTankerEntry(){
+  const m=document.getElementById('tk-entry-month').value;
+  const trips=parseInt(document.getElementById('tk-entry-trips').value);
+  const vol=parseFloat(document.getElementById('tk-entry-vol').value);
+  const rate=parseInt(document.getElementById('tk-entry-rate').value)||350;
+  const vendor=document.getElementById('tk-entry-vendor').value.trim()||'Unspecified';
+  const msg=document.getElementById('tk-entry-msg');
+  if(!m){msg.textContent='⚠️ Select a month.';msg.style.display='block';return;}
+  if(!trips||!vol||trips<=0||vol<=0){msg.textContent='⚠️ Enter valid trips and volume.';msg.style.display='block';return;}
+  const idx=D.tanker.findIndex(d=>d.m===m);
+  if(idx>=0){
+    D.tanker[idx]={...D.tanker[idx],trips,vol,rate,vendor};
+    msg.textContent='✅ Updated '+m+': '+trips+' trips · '+vol+' KL · ₹'+rate+'/KL · '+vendor;
+  } else {
+    msg.textContent='⚠️ Month not found in dataset.';
+  }
+  msg.style.display='block';
+  setTimeout(()=>{msg.style.display='none';},3500);
+  // clear inputs
+  ['tk-entry-trips','tk-entry-vol','tk-entry-rate','tk-entry-vendor'].forEach(id=>{document.getElementById(id).value='';});
+  rTK();
+}
+
+/* ════════ UPLOAD ════════ */
+function openUp(){document.getElementById('upMo').classList.add('show');}
+function closeUp(){document.getElementById('upMo').classList.remove('show');document.getElementById('fch').style.display='none';document.getElementById('uprg').style.display='none';document.getElementById('ust').style.display='none';document.getElementById('ubar').style.width='0';document.getElementById('fInp').value='';}
+function doDrag(e,o){e.preventDefault();document.getElementById('uaBox').classList.toggle('drag',o);}
+function doDrop(e){e.preventDefault();document.getElementById('uaBox').classList.remove('drag');if(e.dataTransfer.files[0])showFile(e.dataTransfer.files[0]);}
+function fSel(e){if(e.target.files[0])showFile(e.target.files[0]);}
+function showFile(f){const fc=document.getElementById('fch');fc.textContent='📊 '+f.name+' ('+Math.round(f.size/1024)+' KB)';fc.style.display='block';}
+function doUpload(){
+  const fi=document.getElementById('fInp');if(!fi.files[0]){alert('Select a file first.');return;}
+  const fd=new FormData();fd.append('file',fi.files[0]);
+  const pg=document.getElementById('uprg'),bar=document.getElementById('ubar'),st=document.getElementById('ust');
+  pg.style.display='block';st.style.display='block';st.textContent='Uploading…';
+  let w=0;const iv=setInterval(()=>{w=Math.min(w+12,85);bar.style.width=w+'%';},150);
+  fetch('/api/energy/upload',{method:'POST',body:fd}).then(r=>r.json()).then(d=>{clearInterval(iv);bar.style.width='100%';if(d.success){st.textContent='✅ '+d.message;document.getElementById('src-nm').textContent=fi.files[0].name;setTimeout(closeUp,1200);}else{st.textContent='ℹ️ '+d.error;}}).catch(()=>{clearInterval(iv);bar.style.width='100%';document.getElementById('src-nm').textContent=fi.files[0].name;st.textContent='ℹ️ Built-in data active (server not reachable).';});
+}
+
+/* ════════ PDF ════════ */
+function openPdf(){document.getElementById('pdfMo').classList.add('show');}
+function closePdf(){document.getElementById('pdfMo').classList.remove('show');document.getElementById('pprog').style.display='none';}
+function togPO(cb,id){document.getElementById(id).classList.toggle('ck',cb.checked);}
+
+async function genPDF(){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const W=210,H=297,M=14,CW=W-M*2;
+  const now=new Date(),ist=now.toLocaleString('en-IN',{timeZone:'Asia/Kolkata',dateStyle:'full',timeStyle:'short'});
+  let pN=1;
+  const opts={cov:document.querySelector('#po-cov input').checked,ov:document.querySelector('#po-ov input').checked,el:document.querySelector('#po-el input').checked,dg:document.querySelector('#po-dg input').checked,wt:document.querySelector('#po-wt input').checked,tk:document.querySelector('#po-tk input').checked,bn:document.querySelector('#po-bn input').checked};
+  const pg=document.getElementById('pprog'),bar=document.getElementById('ppbf'),st=document.getElementById('pst');
+  pg.style.display='block';
+  function sp(p,m){bar.style.width=p+'%';st.textContent=m;}
+  function foot(){doc.setFontSize(6.5);doc.setTextColor(80);doc.text('SLN Terminus | Energy Analytics | Page '+pN+' | '+ist,M,H-5);doc.setDrawColor(0,150,200);doc.setLineWidth(.2);doc.line(M,H-8,W-M,H-8);}
+  function np(){doc.addPage();pN++;foot();}
+
+  if(opts.cov){
+    sp(8,'Cover…');await new Promise(r=>setTimeout(r,30));
+    doc.setFillColor(5,10,15);doc.rect(0,0,W,55,'F');
+    doc.setFillColor(0,180,220);doc.rect(0,53.5,W,1.5,'F');
+    doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(0,200,255);doc.text('TERMINUS MAINTENANCE MANAGEMENT SYSTEM',M,13);
+    doc.setFontSize(20);doc.setFont('helvetica','bold');doc.setTextColor(220,244,255);doc.text('ENERGY ANALYTICS REPORT',M,28);
+    doc.setFontSize(11);doc.setTextColor(0,200,255);doc.text('COMPREHENSIVE PERFORMANCE DOCUMENTATION',M,38);
+    doc.setFontSize(7);doc.setFont('helvetica','normal');doc.setTextColor(50,80,100);doc.text('A4 PORTRAIT | CONFIDENTIAL | SLN TERMINUS',M,48);
+    doc.setFillColor(10,21,32);doc.roundedRect(M,62,CW,52,3,3,'F');
+    doc.setFillColor(0,200,255);doc.rect(M,62,2,52,'F');
+    doc.setFontSize(8.5);doc.setFont('helvetica','bold');doc.setTextColor(0,200,255);doc.text('PROPERTY & REPORTING DETAILS',M+5,71);
+    const pi=[['Property:','SLN Terminus, Hyderabad, Telangana'],['Built-up Area:','9,21,450 SFT | 85,604 m²'],['Report Period:','March 2025 – February 2026 (FY 2025-26)'],['Grid Tariff:','₹ 8.50 / kWh (TSSPDCL HT)'],['CO₂ Factor:','0.82 kg CO₂e/kWh (CEA Grid 2023)'],['Diesel Rate:','₹ 90 / Litre']];
+    pi.forEach(([k,v],i)=>{const y=79+i*6;doc.setFontSize(7);doc.setFont('helvetica','bold');doc.setTextColor(170,195,215);doc.text(k,M+5,y);doc.setFont('helvetica','normal');doc.setTextColor(110,150,175);doc.text(v,M+35,y);});
+    const eD=gEle('year','all'),dgD=gDG('year',null);
+    const tE=eD.reduce((a,b)=>a+(b.u||0),0),tDG=dgD.reduce((a,b)=>a+(b.k||0),0),tD=dgD.reduce((a,b)=>a+(b.d||0),0),tH=dgD.reduce((a,b)=>a+(b.hd||0),0);
+    doc.setFillColor(10,21,32);doc.roundedRect(M,122,CW,65,3,3,'F');
+    doc.setFillColor(0,220,140);doc.rect(M,122,2,65,'F');
+    doc.setFontSize(8.5);doc.setFont('helvetica','bold');doc.setTextColor(0,220,140);doc.text('CONSOLIDATED KPIs (YTD)',M+5,131);
+    const kpis=[['Total HT Electricity',fmt(Math.round(tE)),'kWh'],['Total DG Generation',fmt(Math.round(tDG)),'kWh'],['Carbon Footprint',(tE*CO2/1000).toFixed(1),'tCO₂e'],['Grid Cost',fL(tE*RATE),'₹ Lakhs'],['Diesel Consumed',fmt(tD),'Litres'],['DG Run Hours',tH.toFixed(1),'Hours'],['EUI',(tE/AREA*(12/(eD.length||1))).toFixed(2),'kWh/m²/yr'],['DG Efficiency',tD>0?(tDG/tD).toFixed(2):'—','kWh/L']];
+    kpis.forEach(([k,v,u],i)=>{const col=i<4?0:1,row=i%4,cx=M+5+col*(CW/2),cy=140+row*9;doc.setFontSize(6.5);doc.setFont('helvetica','normal');doc.setTextColor(100,140,165);doc.text(k,cx,cy);doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(210,235,250);doc.text(v,cx,cy+4);doc.setFontSize(6.5);doc.setFont('helvetica','normal');doc.setTextColor(0,190,220);doc.text(u,cx+doc.getTextWidth(v)+1.5,cy+4);});
+    doc.setFontSize(7);doc.setTextColor(50,80,100);doc.text('Generated: '+ist,M,H-15);doc.text('UOM: kWh=kilowatt-hours | tCO₂e=metric tonnes CO₂ | KL=kilolitres | kWh/L=efficiency',M,H-10);foot();
+  }
+
+  function secH(title,sub,col=[0,180,220]){doc.setFillColor(5,10,15);doc.rect(0,0,W,17,'F');doc.setFillColor(...col);doc.rect(0,16,W,1.2,'F');doc.setFontSize(12);doc.setFont('helvetica','bold');doc.setTextColor(220,240,255);doc.text(title,M,10.5);doc.setFontSize(6.5);doc.setFont('helvetica','normal');doc.setTextColor(100,140,165);doc.text(sub,M,15.5);}
+
+  function drawT(hdr,rows,sy,cw){let y=sy;let x=M;cw.forEach((w,i)=>{doc.setFillColor(8,18,28);doc.rect(x,y,w,10,'F');const{title,uom}=hdr[i];doc.setFontSize(6);doc.setFont('helvetica','bold');doc.setTextColor(0,200,255);doc.text(title,x+1.5,y+4);if(uom){doc.setFontSize(5);doc.setTextColor(55,90,110);doc.text('('+uom+')',x+1.5,y+8);}x+=w;});y+=11;rows.forEach((row,ri)=>{if(y>H-18){np();y=20;}doc.setFillColor(ri%2===0?10:12,ri%2===0?21:24,ri%2===0?32:38);x=M;cw.forEach(w=>{doc.rect(x,y,w,6,'F');x+=w;});x=M;row.forEach((cell,ci)=>{const plain=String(cell).replace(/<[^>]+>/g,'').replace(/&amp;/g,'&');doc.setFontSize(6);doc.setFont('helvetica','normal');doc.setTextColor(175,200,220);doc.text(plain.substring(0,Math.floor(cw[ci]/1.6)),x+1.5,y+4);x+=cw[ci];});y+=6;});return y+3;}
+
+  if(opts.ov){sp(25,'Overview…');await new Promise(r=>setTimeout(r,30));np();secH('EXECUTIVE ENERGY OVERVIEW','All systems | UOMs in column headers',[0,180,220]);const eD=gEle('year','all'),dgD=gDG('year',null);let y=21;const h=[{title:'Month',uom:null},{title:'HT Units',uom:'kWh'},{title:'DG Gen',uom:'kWh'},{title:'Run Hrs',uom:'HH:MM'},{title:'Diesel',uom:'L'},{title:'Grid Cost',uom:'₹L'},{title:'Carbon',uom:'tCO₂e'},{title:'Eff.',uom:'kWh/L'},{title:'Status',uom:null}];const cw=[24,22,20,18,18,18,18,16,22];const rows=eD.map(d=>{const g=dgD.find(x=>x.m===d.m);const du=g?g.k:0,rh=g?g.h:'—',dd=g?g.d:0,ef=dd>0&&du>0?(du/dd).toFixed(2):'—';return[d.m,fmt(d.u),fmt(Math.round(du)),rh,fmt(dd),fL((d.u||0)*RATE),((d.u||0)*CO2/1000).toFixed(1),ef,(d.u||0)>850000?'HIGH':(d.u||0)?'OK':'PEND'];});drawT(h,rows,y,cw);}
+  if(opts.el){sp(42,'Electricity…');await new Promise(r=>setTimeout(r,30));np();secH('ELECTRICITY ANALYSIS','HT Bill Units | TSSPDCL HT Meter',[0,180,220]);const eD=gEle('year','all');let y=21;const h=[{title:'#',uom:null},{title:'Month',uom:null},{title:'HT Units',uom:'kWh'},{title:'MoM',uom:'%'},{title:'Cost',uom:'₹'},{title:'Cost',uom:'₹L'},{title:'Carbon',uom:'tCO₂e'},{title:'Intensity',uom:'kWh/m²'},{title:'Status',uom:null}];const cw=[10,24,24,18,24,16,16,18,16];const rows=eD.map((d,i)=>{const prev=i>0?eD[i-1].u:null;const c=prev&&d.u?pct(d.u,prev):'—';return[d.n,d.m,fmt(d.u),c!='—'?(c>0?'+'+c:c)+'%':'—','₹'+fmt(Math.round((d.u||0)*RATE)),fL((d.u||0)*RATE),((d.u||0)*CO2/1000).toFixed(1),((d.u||0)/AREA).toFixed(3),(d.u||0)>850000?'HIGH':(d.u||0)?'OK':'PEND'];});drawT(h,rows,y,cw);}
+  if(opts.dg){sp(58,'DG…');await new Promise(r=>setTimeout(r,30));np();secH('DIESEL GENERATOR PERFORMANCE','Run Hours | Fuel | Efficiency',[220,100,40]);const dgD=gDG('year',null);let y=21;const h=[{title:'#',uom:null},{title:'Month',uom:null},{title:'Run Hrs',uom:'HH:MM'},{title:'Dec.Hrs',uom:'h'},{title:'DG Gen',uom:'kWh'},{title:'Diesel',uom:'L'},{title:'Eff.',uom:'kWh/L'},{title:'Fuel Cost',uom:'₹'},{title:'Unit Cost',uom:'₹/kWh'},{title:'Perf.',uom:null}];const cw=[10,22,16,14,18,14,14,22,16,18];const rows=dgD.map(d=>{const ef=d.d>0?(d.k/d.d).toFixed(2):'—',ck=d.k>0?((d.d*DRATE)/d.k).toFixed(2):'—';return[d.n,d.m,d.h,d.hd.toFixed(2),fmt(Math.round(d.k)),fmt(d.d),ef,'₹'+fmt(d.d*DRATE),ck,d.hd>8?'HIGH':d.hd>0?'OK':'STBY'];});drawT(h,rows,y,cw);}
+  if(opts.wt){sp(68,'Water…');await new Promise(r=>setTimeout(r,30));np();secH('WATER CONSUMPTION MONITORING','KL = Kilolitres | 1 KL = 1000 L | Net Pay = HMWSSB invoice',[40,160,220]);
+    let y=21;
+    const h=[{title:'#',uom:null},{title:'Month',uom:null},{title:'Consumption',uom:'KL'},{title:'Daily Avg',uom:'KL/day'},{title:'Intensity',uom:'L/SFT'},{title:'Net Pay',uom:'₹'},{title:'Status',uom:null}];
+    const cw=[10,26,26,24,24,28,22];
+    const wRows=D.water.map(d=>{
+      const days=new Date(d.m.split(' ')[1],['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].indexOf(d.m.split(' ')[0])+1,0).getDate();
+      const da=d.v!=null?(d.v/days).toFixed(1):'—';
+      const int=d.v!=null?(d.v*1000/AREA).toFixed(3):'—';
+      const pay=d.pay!=null?'₹'+fmt(Math.round(d.pay)):'—';
+      const st=d.v==null?'PENDING':d.v>5500?'HIGH':d.v>4500?'WATCH':'OK';
+      return[d.n,d.m,d.v!=null?fmt(d.v):'PENDING',da,int,pay,st];
+    });
+    drawT(h,wRows,y,cw);
+  }
+
+  if(opts.tk){
+    sp(76,'Water Tanker…');await new Promise(r=>setTimeout(r,30));np();
+    secH('WATER TANKER CONSUMPTION','Trips · Volume (KL) · Cost · Vendor | Source: Tanker Log Register',[40,170,255]);
+    const tkD=D.tanker;
+    const hasData=tkD.filter(x=>x.trips!=null);
+    const tTrips=hasData.reduce((a,b)=>a+(b.trips||0),0);
+    const tVol=hasData.reduce((a,b)=>a+(b.vol||0),0);
+    const tCost=hasData.reduce((a,b)=>a+((b.vol||0)*(b.rate||350)),0);
+    const avgRate=tVol>0?(tCost/tVol).toFixed(0):350;
+    const avgVpt=tTrips>0?(tVol/tTrips).toFixed(1):'—';
+    let y=21;
+
+    // KPI summary banner
+    doc.setFillColor(8,18,28);doc.roundedRect(M,y,CW,22,2,2,'F');
+    doc.setFillColor(40,170,255);doc.rect(M,y,1.5,22,'F');
+    const tkKpis=[
+      ['Total Trips',String(tTrips),'count'],
+      ['Total Volume',fmt(Math.round(tVol)),'KL'],
+      ['Total Cost',(tCost/1e5).toFixed(2),'₹ Lakhs'],
+      ['Avg Rate','₹'+avgRate,'/KL'],
+      ['Vol/Trip',avgVpt,'KL/trip'],
+      ['Monthly Avg',hasData.length?(tVol/hasData.length).toFixed(1):'—','KL/mo']
+    ];
+    tkKpis.forEach(([k,v,u],i)=>{
+      const col=Math.floor(i/2), row=i%2;
+      const cols=3, colW=CW/cols;
+      const cx=M+4+col*colW, cy=y+4+row*9;
+      doc.setFontSize(6);doc.setFont('helvetica','normal');doc.setTextColor(90,130,160);doc.text(k,cx,cy);
+      doc.setFontSize(8.5);doc.setFont('helvetica','bold');doc.setTextColor(200,230,255);doc.text(v,cx,cy+4);
+      doc.setFontSize(5.5);doc.setFont('helvetica','normal');doc.setTextColor(40,170,255);doc.text(u,cx+doc.getTextWidth(v)+1,cy+4);
+    });
+    y+=26;
+
+    // Detail table
+    const h=[
+      {title:'#',uom:null},{title:'Month',uom:null},
+      {title:'Trips',uom:'count'},{title:'Volume',uom:'KL'},
+      {title:'Vol/Trip',uom:'KL/trip'},{title:'Rate',uom:'₹/KL'},
+      {title:'Total Cost',uom:'₹'},{title:'Cost',uom:'₹ Lakhs'},
+      {title:'Vendor',uom:null},{title:'Intensity',uom:'L/SFT'},{title:'Status',uom:null}
+    ];
+    const cw=[10,20,14,16,14,14,22,14,24,16,18];
+    const rows=tkD.map(row=>{
+      const has=row.trips!=null;
+      const cost=has?(row.vol||0)*(row.rate||350):null;
+      const vpt=has&&row.trips>0?(row.vol/row.trips).toFixed(1):'—';
+      const intens=has?(row.vol*1000/921450).toFixed(4):'—';
+      const st=!has?'PENDING':row.trips>15?'HIGH':row.trips>0?'OK':'NIL';
+      return[
+        row.n, row.m,
+        has?String(row.trips):'—', has?fmt(row.vol):'—',
+        vpt, has?'₹'+fmt(row.rate):'—',
+        cost?'₹'+fmt(Math.round(cost)):'—', cost?(cost/1e5).toFixed(2):'—',
+        row.vendor||'—', intens, st
+      ];
+    });
+    drawT(h,rows,y,cw);
+  }
+
+  if(opts.bn){sp(85,'Benchmark…');await new Promise(r=>setTimeout(r,30));np();secH('BENCHMARK & EUI','ECBC/GRIHA | Performance vs Target',[0,200,130]);const eD=gEle('year','all'),dgD=gDG('year',null);const m=eD.length||1,tE=eD.reduce((a,b)=>a+(b.u||0),0);let y=21;doc.setFillColor(10,21,32);doc.roundedRect(M,y,CW,20,2,2,'F');doc.setFillColor(0,200,130);doc.rect(M,y,1.5,20,'F');const bs=[['EUI:',(tE/AREA*(12/m)).toFixed(2)+' kWh/m²/yr'],['Carbon Intens:',(tE*CO2/AREA).toFixed(2)+' kg CO₂e/m²'],['KVAH Intens:',(820684/921450).toFixed(4)+' KVAH/SFT'],['Spec.Energy:',(tE/2000/m*12).toFixed(0)+' kWh/occ/yr']];bs.forEach(([k,v],i)=>{const col=i<2?0:1,row=i%2,cx=M+4+col*(CW/2),cy=y+5+row*8;doc.setFontSize(6.5);doc.setFont('helvetica','bold');doc.setTextColor(100,140,160);doc.text(k,cx,cy);doc.setFont('helvetica','bold');doc.setTextColor(0,200,130);doc.text(v,cx,cy+4);});y+=24;const h=[{title:'Month',uom:null},{title:'HT Units',uom:'kWh'},{title:'DG Units',uom:'kWh'},{title:'Total',uom:'kWh'},{title:'Carbon',uom:'tCO₂e'},{title:'EUI',uom:'kWh/m²'},{title:'Target',uom:'kWh'},{title:'vs Target',uom:'diff'},{title:'Cost/m²',uom:'₹/m²'}];const cw=[22,22,20,22,16,18,22,20,18];const rows=eD.map(d=>{const dg=dgD.find(x=>x.m===d.m),tot=(d.u||0)+(dg?dg.k:0),diff=(d.u||0)-TARGET;return[d.m,fmt(d.u),dg?fmt(Math.round(dg.k)):'—',fmt(Math.round(tot)),((d.u||0)*CO2/1000).toFixed(1),((d.u||0)/AREA).toFixed(3),fmt(TARGET),(diff>0?'+':'')+fmt(Math.round(diff)),((d.u||0)*RATE/AREA).toFixed(2)];});drawT(h,rows,y,cw);}
+
+  sp(100,'Saving…');await new Promise(r=>setTimeout(r,200));
+  doc.save('SLN_Energy_Report_'+now.toISOString().slice(0,10)+'.pdf');
+  st.textContent='✅ Downloaded successfully.';
+  setTimeout(()=>{pg.style.display='none';},3000);
+}
+
+/* ── INIT ── */
+/* ══ FETCH LIVE DATA FROM SERVER ══════════════════════════════════════════
+   /api/energy/json parses Energy_analysys.xlsx server-side (all sheets).
+   On success all D.* arrays are replaced so every module shows live data.
+   Falls back silently to built-in data if server unreachable.          */
+async function fetchFromServer(){
+  try{
+    const r=await fetch('/api/energy/json');
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const j=await r.json();
+    if(j.error) throw new Error(j.error);
+
+    if(j.ele    && j.ele.length)    D.ele    = j.ele;
+    if(j.dg     && j.dg.length)     D.dg     = j.dg;
+    if(j.water  && j.water.length)  D.water  = j.water;
+    // Tank_cons — full data now includes Rate, Total Cost, Vendor from Excel
+    if(j.tanker && j.tanker.length){
+      D.tanker = j.tanker;
+    }
+    if(j.source) document.getElementById('src-nm').textContent = j.source;
+    console.log('[Energy] Server data loaded ✓ | source:', j.source, '| tanker rows:', (j.tanker||[]).length);
+  } catch(e){
+    console.warn('[Energy] Using built-in fallback data:', e.message);
+  }
+}
+
+function init(){
+  fetchFromServer().then(()=>{
+    setupDD();
+    rOV();
+    rWT();   // ← now runs after server data is in D.water
+  });
+}
+window.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>

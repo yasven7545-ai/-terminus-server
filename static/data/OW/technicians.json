@@ -1,0 +1,166 @@
+{
+  "technicians": [
+    {
+      "id": "T001",
+      "name": "Jagadish",
+      "phone": "+919666942315",
+      "specialization": "Supervisor"
+    },
+    {
+      "id": "T002",
+      "name": "Sri Ram",
+      "phone": "+919989668311",
+      "specialization": "Supervisor"
+    },
+    {
+      "id": "T003",
+      "name": "Ameer",
+      "phone": "+919000564662",
+      "specialization": "Supervisor"
+    },
+    {
+      "id": "T004",
+      "name": "Rakesh",
+      "phone": "+917730834084",
+      "specialization": "Supervisor"
+    },
+    {
+      "id": "T005",
+      "name": "Raghavendra",
+      "phone": "+918008883537",
+      "specialization": "BMS"
+    },
+    {
+      "id": "T006",
+      "name": "Shiva",
+      "phone": "+918885637165",
+      "specialization": "BMS"
+    },
+    {
+      "id": "T007",
+      "name": "Tanmaya",
+      "phone": "+917077689216",
+      "specialization": "BMS"
+    },
+    {
+      "id": "T008",
+      "name": "Raviteja",
+      "phone": "+919652607622",
+      "specialization": "Electrical"
+    },
+    {
+      "id": "T009",
+      "name": "Nagendra",
+      "phone": "+919347324744",
+      "specialization": "Electrical"
+    },
+    {
+      "id": "T010",
+      "name": "Yeshwanth",
+      "phone": "+919502856581",
+      "specialization": "Electrical"
+    },
+    {
+      "id": "T011",
+      "name": "Hakim",
+      "phone": "+918083360242",
+      "specialization": "Electrical"
+    },
+    {
+      "id": "T012",
+      "name": "Sai pawan",
+      "phone": "+917013987434",
+      "specialization": "Electrical"
+    },
+    {
+      "id": "T013",
+      "name": "Nikhil",
+      "phone": "+917093979479",
+      "specialization": "Asst Technician"
+    },
+    {
+      "id": "T014",
+      "name": "Vijay",
+      "phone": "+916304725703",
+      "specialization": "Asst Technician"
+    },
+    {
+      "id": "T015",
+      "name": "Karthik",
+      "phone": "+919553174565",
+      "specialization": "Asst Technician"
+    },
+    {
+      "id": "T016",
+      "name": "Ilyas",
+      "phone": "+919347732552",
+      "specialization": "HVAC"
+    },
+    {
+      "id": "T017",
+      "name": "Sai",
+      "phone": "+917794057118",
+      "specialization": "HVAC"
+    },
+    {
+      "id": "T018",
+      "name": "Venu",
+      "phone": "+919618670499",
+      "specialization": "HVAC"
+    },
+    {
+      "id": "T019",
+      "name": "Bharath",
+      "phone": "+918106869682",
+      "specialization": "HVAC"
+    },
+    {
+      "id": "T020",
+      "name": "Ismail",
+      "phone": "+919154223362",
+      "specialization": "HVAC"
+    },
+    {
+      "id": "T021",
+      "name": "Bipin",
+      "phone": "+919121261604",
+      "specialization": "Plumber"
+    },
+    {
+      "id": "T027",
+      "name": "Bichitra",
+      "phone": "+917732040540",
+      "specialization": "Plumber"
+    },
+    {
+      "id": "T022",
+      "name": "Sudarshan",
+      "phone": "+917036994079",
+      "specialization": "Plumber"
+    },
+    {
+      "id": "T023",
+      "name": "Srikanth",
+      "phone": "+917749090745",
+      "specialization": "Plumber"
+    },
+    {
+      "id": "T024",
+      "name": "Tapan",
+      "phone": "+916380896010",
+      "specialization": "Plumber"
+    },
+    {
+      "id": "T025",
+      "name": "Rohith",
+      "phone": "+919948351383",
+      "specialization": "Painter"
+    },
+    {
+      "id": "T026",
+      "name": "Laxman",
+      "phone": "+917995751392",
+      "specialization": "Carpenter"
+    }
+  ]
+}

@@ -1,0 +1,3649 @@
+{
+  "assets": [
+    {
+      "id": "HT I/C  VCB-1",
+      "name": "HT Panel I/C Source -1 VCB",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-01-25 00:00:00",
+      "nextDueDate": "2027-01-25 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "HT I/C  VCB-1",
+      "name": "HT Panel I/C Source -1 VCB",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-01-25 00:00:00",
+      "nextDueDate": "2027-01-25 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "HT I/C  VCB-2",
+      "name": "HT Panel I/C Source -2 VCB",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-01-25 00:00:00",
+      "nextDueDate": "2027-01-25 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "HT O/G-1 VCB-1",
+      "name": "HT Panel O/G VCB-1",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-01-26 00:00:00",
+      "nextDueDate": "2027-01-26 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "HT I/C from O/G VCB-4",
+      "name": "HT I/C from O/G VCB",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-01-26 00:00:00",
+      "nextDueDate": "2027-01-26 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "HT TR 01 VCB-1",
+      "name": "Transformer- HT I/C VCB-1",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-01-26 00:00:00",
+      "nextDueDate": "2027-01-26 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "HT TR 02 VCB-2",
+      "name": "Transformer- HT I/C VCB-2",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-01-27 00:00:00",
+      "nextDueDate": "2027-01-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "HT TR 03 VCB-3",
+      "name": "Transformer- HT I/C VCB-3",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-01-27 00:00:00",
+      "nextDueDate": "2027-01-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "HT TR 04 VCB-4",
+      "name": "Transformer- HT I/C VCB-4",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-01-27 00:00:00",
+      "nextDueDate": "2027-01-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "HT TR 05 VCB-5",
+      "name": "Transformer- HT I/C VCB-5",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-01-27 00:00:00",
+      "nextDueDate": "2027-01-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG-01",
+      "name": "DG set-1 1500 KVA",
+      "category": "Vendor",
+      "location": "DG Room",
+      "lastService": "2026-03-12 00:00:00",
+      "nextDueDate": "2026-03-12 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG-02",
+      "name": "DG set-2 1500 KVA",
+      "category": "Vendor",
+      "location": "DG Room",
+      "lastService": "2026-03-13 00:00:00",
+      "nextDueDate": "2026-03-12 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG-03",
+      "name": "DG set-3 1500 KVA",
+      "category": "Vendor",
+      "location": "DG Room",
+      "lastService": "2026-03-14 00:00:00",
+      "nextDueDate": "2026-03-12 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG-04",
+      "name": "DG set-4 1500 KVA",
+      "category": "Vendor",
+      "location": "DG Room",
+      "lastService": "2026-03-15 00:00:00",
+      "nextDueDate": "2026-03-12 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "TR-1",
+      "name": "Transformer-1 - 1600KVA",
+      "category": "Vendor",
+      "location": "Transformer Room",
+      "lastService": "2026-05-27 00:00:00",
+      "nextDueDate": "2026-05-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "TR-2",
+      "name": "Transformer-2 - 1600KVA",
+      "category": "Vendor",
+      "location": "Transformer Room",
+      "lastService": "2026-05-28 00:00:00",
+      "nextDueDate": "2026-05-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "TR-3",
+      "name": "Transformer-3 - 1600KVA",
+      "category": "Vendor",
+      "location": "Transformer Room",
+      "lastService": "2026-05-29 00:00:00",
+      "nextDueDate": "2026-05-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "TR-4",
+      "name": "Transformer-4 - 1600KVA",
+      "category": "Vendor",
+      "location": "Transformer Room",
+      "lastService": "2026-05-30 00:00:00",
+      "nextDueDate": "2026-05-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "TR-5",
+      "name": "Transformer-5 - 630KVA",
+      "category": "Vendor",
+      "location": "Transformer Room",
+      "lastService": "2026-05-31 00:00:00",
+      "nextDueDate": "2026-05-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "T/R-1 Isolator -1",
+      "name": "LT Kiosk panel ACB's -1",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-01-23 00:00:00",
+      "nextDueDate": "2027-01-23 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "T/R-2 Isolator -2",
+      "name": "LT Kiosk panel ACB's -2",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-01-23 00:00:00",
+      "nextDueDate": "2027-01-23 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "T/R-3 Isolator -3",
+      "name": "LT Kiosk panel ACB's -3",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-01-23 00:00:00",
+      "nextDueDate": "2027-01-23 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "T/R-4 Isolator -4",
+      "name": "LT Kiosk panel ACB's -4",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-01-24 00:00:00",
+      "nextDueDate": "2027-01-24 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "T/R-5 Isolator -5",
+      "name": "LT Kiosk panel ACB's -5",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-01-24 00:00:00",
+      "nextDueDate": "2027-01-24 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LT I/C ACB EB-1",
+      "name": "LT panel EB Incomining  ACB -1",
+      "category": "Vendor",
+      "location": "LT ROOM",
+      "lastService": "2026-01-24 00:00:00",
+      "nextDueDate": "2027-01-24 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LT I/C ACB EB-2",
+      "name": "LT panel EB Incomining  ACB -2",
+      "category": "Vendor",
+      "location": "LT ROOM",
+      "lastService": "2026-01-25 00:00:00",
+      "nextDueDate": "2027-01-25 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LT I/C ACB EB-3",
+      "name": "LT panel EB Incomining  ACB -3",
+      "category": "Vendor",
+      "location": "LT ROOM",
+      "lastService": "2026-01-25 00:00:00",
+      "nextDueDate": "2027-01-25 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LT I/C ACB EB-4",
+      "name": "LT panel EB Incomining  ACB -4",
+      "category": "Vendor",
+      "location": "LT ROOM",
+      "lastService": "2026-01-25 00:00:00",
+      "nextDueDate": "2027-01-25 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LT I/C ACB EB-5",
+      "name": "LT panel EB Incomining  ACB -5",
+      "category": "Vendor",
+      "location": "LT ROOM",
+      "lastService": "2026-01-26 00:00:00",
+      "nextDueDate": "2027-01-26 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LT I/C ACB DG-1",
+      "name": "LT panel DG Incomining  ACB -1",
+      "category": "Vendor",
+      "location": "LT ROOM",
+      "lastService": "2026-01-26 00:00:00",
+      "nextDueDate": "2027-01-26 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LT I/C ACB DG-2",
+      "name": "LT panel DG Incomining  ACB -2",
+      "category": "Vendor",
+      "location": "LT ROOM",
+      "lastService": "2026-01-26 00:00:00",
+      "nextDueDate": "2027-01-26 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LT I/C ACB DG-3",
+      "name": "LT panel DG Incomining  ACB -3",
+      "category": "Vendor",
+      "location": "LT ROOM",
+      "lastService": "2026-01-27 00:00:00",
+      "nextDueDate": "2027-01-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LT I/C ACB DG-4",
+      "name": "LT panel DG Incomining  ACB -4",
+      "category": "Vendor",
+      "location": "LT ROOM",
+      "lastService": "2026-01-27 00:00:00",
+      "nextDueDate": "2027-01-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LT Buscoupler ACB-1",
+      "name": "LT Panel BUSCOUPLER -1",
+      "category": "Vendor",
+      "location": "LT ROOM",
+      "lastService": "2026-01-27 00:00:00",
+      "nextDueDate": "2027-01-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LT Buscoupler ACB-2",
+      "name": "LT Panel BUSCOUPLER -2",
+      "category": "Vendor",
+      "location": "LT ROOM",
+      "lastService": "2026-01-28 00:00:00",
+      "nextDueDate": "2027-01-28 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LT Buscoupler ACB-3",
+      "name": "LT Panel BUSCOUPLER -3",
+      "category": "Vendor",
+      "location": "LT ROOM",
+      "lastService": "2026-01-28 00:00:00",
+      "nextDueDate": "2027-01-28 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LT Buscoupler ACB-4",
+      "name": "LT Panel BUSCOUPLER -4",
+      "category": "Vendor",
+      "location": "LT ROOM",
+      "lastService": "2026-01-28 00:00:00",
+      "nextDueDate": "2027-01-28 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller O/G ACB Source-1",
+      "name": "Chiller Source -1",
+      "category": "Vendor",
+      "location": "LT ROOM",
+      "lastService": "2026-01-29 00:00:00",
+      "nextDueDate": "2027-01-29 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller O/G ACB Source-2",
+      "name": "Chiller Source -2",
+      "category": "Vendor",
+      "location": "LT ROOM",
+      "lastService": "2026-01-29 00:00:00",
+      "nextDueDate": "2027-01-29 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Spare ACB",
+      "name": "LT Spare ACB",
+      "category": "Vendor",
+      "location": "LT ROOM",
+      "lastService": "2026-01-29 00:00:00",
+      "nextDueDate": "2027-01-29 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "PLC panel",
+      "name": "Main PLC panel",
+      "category": "In-House",
+      "location": "LT ROOM",
+      "lastService": "2026-01-29 00:00:00",
+      "nextDueDate": "2027-01-29 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "EB Capacitor panel-1",
+      "name": "400 kvar APFCR panel-1",
+      "category": "In-House",
+      "location": "LT ROOM",
+      "lastService": "2026-03-16 00:00:00",
+      "nextDueDate": "2026-03-22 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "EB Capacitor panel-2",
+      "name": "400 kvar APFCR panel-1",
+      "category": "In-House",
+      "location": "LT ROOM",
+      "lastService": "2026-03-17 00:00:00",
+      "nextDueDate": "2026-03-22 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "EB Capacitor panel-3",
+      "name": "400 kvar APFCR panel-1",
+      "category": "In-House",
+      "location": "LT ROOM",
+      "lastService": "2026-03-18 00:00:00",
+      "nextDueDate": "2026-03-22 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "EB Capacitor panel-4",
+      "name": "400 kvar APFCR panel-1",
+      "category": "In-House",
+      "location": "LT ROOM",
+      "lastService": "2026-03-19 00:00:00",
+      "nextDueDate": "2026-03-22 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "EB Capacitor panel-5",
+      "name": "150 kvar APFCR panel-1",
+      "category": "In-House",
+      "location": "LT ROOM",
+      "lastService": "2026-03-20 00:00:00",
+      "nextDueDate": "2026-03-22 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG O/G VCB-1",
+      "name": "DG AMF panel O/G  VCB-1",
+      "category": "Vendor",
+      "location": "DG Room",
+      "lastService": "2026-01-30 00:00:00",
+      "nextDueDate": "2027-01-30 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG O/G VCB-2",
+      "name": "DG AMF panel O/G  VCB-2",
+      "category": "Vendor",
+      "location": "DG Room",
+      "lastService": "2026-01-30 00:00:00",
+      "nextDueDate": "2027-01-30 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG O/G VCB-3",
+      "name": "DG AMF panel O/G  VCB-3",
+      "category": "Vendor",
+      "location": "DG Room",
+      "lastService": "2026-01-30 00:00:00",
+      "nextDueDate": "2027-01-30 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG O/G VCB-4",
+      "name": "DG AMF panel O/G  VCB-4",
+      "category": "Vendor",
+      "location": "DG Room",
+      "lastService": "2026-01-31 00:00:00",
+      "nextDueDate": "2027-01-31 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG O/G ACB -5 spare",
+      "name": "DG AMF panel O/G",
+      "category": "Vendor",
+      "location": "DG Room",
+      "lastService": "2026-01-31 00:00:00",
+      "nextDueDate": "2027-01-31 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller I/C ACB Source-1",
+      "name": "Chiller source-1 I/C ACB",
+      "category": "Vendor",
+      "location": "Plant Room",
+      "lastService": "2026-01-31 00:00:00",
+      "nextDueDate": "2027-01-31 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller I/C ACB Source-2",
+      "name": "Chiller source-2 I/C ACB",
+      "category": "Vendor",
+      "location": "Plant Room",
+      "lastService": "2026-02-01 00:00:00",
+      "nextDueDate": "2027-02-01 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Buscoupler ACB",
+      "name": "Chiller Buscoupler ACB",
+      "category": "Vendor",
+      "location": "Plant Room",
+      "lastService": "2026-02-01 00:00:00",
+      "nextDueDate": "2027-02-01 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller-1 ACB",
+      "name": "Chiller-1 O/G ACB",
+      "category": "Vendor",
+      "location": "Plant Room",
+      "lastService": "2026-02-01 00:00:00",
+      "nextDueDate": "2027-02-01 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller-2 ACB",
+      "name": "Chiller-2 O/G ACB",
+      "category": "Vendor",
+      "location": "Plant Room",
+      "lastService": "2026-02-02 00:00:00",
+      "nextDueDate": "2027-02-02 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller-3 ACB",
+      "name": "Chiller-3 O/G ACB",
+      "category": "Vendor",
+      "location": "Plant Room",
+      "lastService": "2026-02-02 00:00:00",
+      "nextDueDate": "2027-02-02 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "HT I/C Panel",
+      "name": "33kv I/C source panel",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-02-02 00:00:00",
+      "nextDueDate": "2027-02-02 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "HT O/G Panel",
+      "name": "HT TR I/C panel",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-02-03 00:00:00",
+      "nextDueDate": "2027-02-03 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LT kiosk panel",
+      "name": "LT TR O/G panel",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-02-03 00:00:00",
+      "nextDueDate": "2027-02-03 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LT PANEL",
+      "name": "LT I/C from kiosk panel",
+      "category": "Vendor",
+      "location": "LT ROOM",
+      "lastService": "2026-02-03 00:00:00",
+      "nextDueDate": "2027-02-03 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "AMF Panel-1",
+      "name": "AMF DG panel-1",
+      "category": "In-House",
+      "location": "DG Room",
+      "lastService": "2026-02-04 00:00:00",
+      "nextDueDate": "2027-02-04 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "AMF Panel-2",
+      "name": "AMF DG panel-2",
+      "category": "In-House",
+      "location": "DG Room",
+      "lastService": "2026-02-04 00:00:00",
+      "nextDueDate": "2027-02-04 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "AMF Panel-3",
+      "name": "AMF DG panel-3",
+      "category": "In-House",
+      "location": "DG Room",
+      "lastService": "2026-02-04 00:00:00",
+      "nextDueDate": "2027-02-04 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "AMF Panel-4",
+      "name": "AMF DG panel-4",
+      "category": "In-House",
+      "location": "DG Room",
+      "lastService": "2026-02-04 00:00:00",
+      "nextDueDate": "2027-02-04 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "UPS-1",
+      "name": "60 KVA ups",
+      "category": "Vendor",
+      "location": "UPS Room",
+      "lastService": "2026-05-25 00:00:00",
+      "nextDueDate": "2026-05-21 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Inverter-1",
+      "name": "Battery chargers-1",
+      "category": "Vendor",
+      "location": "HT Room",
+      "lastService": "2026-05-26 00:00:00",
+      "nextDueDate": "2026-05-21 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Inverter-2",
+      "name": "Battery chargers-2",
+      "category": "Vendor",
+      "location": "LT ROOM",
+      "lastService": "2026-05-27 00:00:00",
+      "nextDueDate": "2026-05-21 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Inverter-3",
+      "name": "Battery chargers-3",
+      "category": "Vendor",
+      "location": "Server Room",
+      "lastService": "2026-05-28 00:00:00",
+      "nextDueDate": "2026-05-21 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Elevator OE-1",
+      "name": "Office Elevator-1",
+      "category": "Vendor",
+      "location": "Level-9",
+      "lastService": "2026-03-22 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Elevator OE-2",
+      "name": "Office Elevator-2",
+      "category": "Vendor",
+      "location": "Level-9",
+      "lastService": "2026-03-22 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Elevator OE-3",
+      "name": "Office Elevator-3",
+      "category": "Vendor",
+      "location": "Level-9",
+      "lastService": "2026-03-22 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Elevator OS-1",
+      "name": "Office Service Elevator-1",
+      "category": "Vendor",
+      "location": "Level-9",
+      "lastService": "2026-03-23 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Elevator MG-1",
+      "name": "Mall Guest Elevator-1",
+      "category": "Vendor",
+      "location": "Level-3",
+      "lastService": "2026-03-23 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Elevator MG-2",
+      "name": "Mall Guest Elevator-2",
+      "category": "Vendor",
+      "location": "Level-3",
+      "lastService": "2026-03-23 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Elevator MS-1",
+      "name": "Mall Service Elevator-1",
+      "category": "Vendor",
+      "location": "Level-3",
+      "lastService": "2026-03-24 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Elevator MS-2",
+      "name": "Mall Service Elevator-2",
+      "category": "Vendor",
+      "location": "Level-3",
+      "lastService": "2026-03-24 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Escalator L3-L2",
+      "name": "L3-L2  Down Escalator",
+      "category": "Vendor",
+      "location": "Level-2",
+      "lastService": "2026-03-24 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Escalator L2-L3",
+      "name": "L2-L3  Up Escalator",
+      "category": "Vendor",
+      "location": "Level-3",
+      "lastService": "2026-03-25 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Escalator L2-L1",
+      "name": "L2-L1 Down Escalator",
+      "category": "Vendor",
+      "location": "Level-1",
+      "lastService": "2026-03-25 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Escalator L1-L2",
+      "name": "L1-L2 Up Escalator",
+      "category": "Vendor",
+      "location": "Level-2",
+      "lastService": "2026-03-25 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Escalator L1-LG",
+      "name": "L1-LG Down Escalator",
+      "category": "Vendor",
+      "location": "Level-G",
+      "lastService": "2026-03-26 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Escalator LG-L1",
+      "name": "LG-L1 Up Escalator",
+      "category": "Vendor",
+      "location": "Level-1",
+      "lastService": "2026-03-26 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Travellator LG",
+      "name": "LG-B1 Mid Down Travellator",
+      "category": "Vendor",
+      "location": "Level-G",
+      "lastService": "2026-03-26 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Travellator B1",
+      "name": "B1 Mid - B1  Down Travellator",
+      "category": "Vendor",
+      "location": "B1 Mid Level",
+      "lastService": "2026-03-27 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Travellator B2",
+      "name": "B1-B2  Down Travellator",
+      "category": "Vendor",
+      "location": "Level-B1",
+      "lastService": "2026-03-27 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Travellator L1-LG",
+      "name": "D mart inside L1-LG Down Escalator",
+      "category": "Vendor",
+      "location": "Level-1",
+      "lastService": "2026-03-27 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Condenser pump-1",
+      "name": "Chiller condenser pumps",
+      "category": "Vendor",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-04-02 00:00:00",
+      "nextDueDate": "2026-03-08 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Condenser pump-2",
+      "name": "Chiller condenser pumps",
+      "category": "Vendor",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-04-02 00:00:00",
+      "nextDueDate": "2026-03-08 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Condenser pump-3",
+      "name": "Chiller condenser pumps",
+      "category": "Vendor",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-04-02 00:00:00",
+      "nextDueDate": "2026-03-08 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Primary pump-1",
+      "name": "Chiller Primary pumps",
+      "category": "Vendor",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-04-03 00:00:00",
+      "nextDueDate": "2026-03-09 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Primary pump-2",
+      "name": "Chiller Primary pumps",
+      "category": "Vendor",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-04-03 00:00:00",
+      "nextDueDate": "2026-03-09 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Primary pump-3",
+      "name": "Chiller Primary pumps",
+      "category": "Vendor",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-04-03 00:00:00",
+      "nextDueDate": "2026-03-09 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Mall secondary pump-1",
+      "name": "Chiller Secondary pumps",
+      "category": "Vendor",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-04-04 00:00:00",
+      "nextDueDate": "2026-03-10 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Mall secondary pump-2",
+      "name": "Chiller Secondary pumps",
+      "category": "Vendor",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-04-04 00:00:00",
+      "nextDueDate": "2026-03-10 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Mall secondary pump-3",
+      "name": "Chiller Secondary pumps",
+      "category": "Vendor",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-04-04 00:00:00",
+      "nextDueDate": "2026-03-10 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Marriott Secondary pump-1",
+      "name": "Chiller Secondary pumps",
+      "category": "Vendor",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-04-05 00:00:00",
+      "nextDueDate": "2026-03-11 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Marriott Secondary pump-2",
+      "name": "Chiller Secondary pumps",
+      "category": "Vendor",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-04-05 00:00:00",
+      "nextDueDate": "2026-03-11 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Marriott Secondary pump-3",
+      "name": "Chiller Secondary pumps",
+      "category": "Vendor",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-04-05 00:00:00",
+      "nextDueDate": "2026-03-11 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Package Condenser pump-1",
+      "name": "Package condenser pumps",
+      "category": "Vendor",
+      "location": "Terrace",
+      "lastService": "2026-04-06 00:00:00",
+      "nextDueDate": "2026-03-12 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Package Condenser pump-2",
+      "name": "Package condenser pumps",
+      "category": "Vendor",
+      "location": "Terrace",
+      "lastService": "2026-04-06 00:00:00",
+      "nextDueDate": "2026-03-12 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Package Condenser pump-3",
+      "name": "Package condenser pumps",
+      "category": "Vendor",
+      "location": "Terrace",
+      "lastService": "2026-04-06 00:00:00",
+      "nextDueDate": "2026-03-12 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chilled water makeup pump-1",
+      "name": "Chilled water Pressuer makeup pumps",
+      "category": "In-House",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-04-07 00:00:00",
+      "nextDueDate": "2026-03-15 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chilled water makeup pump-2",
+      "name": "Chilled water Pressuer makeup pumps",
+      "category": "In-House",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-04-07 00:00:00",
+      "nextDueDate": "2026-03-15 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG condenser pump-1",
+      "name": "DG Condenser pumps",
+      "category": "In-House",
+      "location": "DG Room",
+      "lastService": "2026-03-07 00:00:00",
+      "nextDueDate": "2026-03-07 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG condenser pump-2",
+      "name": "DG Condenser pumps",
+      "category": "In-House",
+      "location": "DG Room",
+      "lastService": "2026-03-09 00:00:00",
+      "nextDueDate": "2026-03-08 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG condenser pump-3",
+      "name": "DG Condenser pumps",
+      "category": "In-House",
+      "location": "DG Room",
+      "lastService": "2026-03-11 00:00:00",
+      "nextDueDate": "2026-03-09 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG condenser pump-4",
+      "name": "DG Condenser pumps",
+      "category": "In-House",
+      "location": "DG Room",
+      "lastService": "2026-03-12 00:00:00",
+      "nextDueDate": "2026-03-10 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG condenser pump-5",
+      "name": "DG Condenser pumps",
+      "category": "In-House",
+      "location": "DG Room",
+      "lastService": "2026-03-13 00:00:00",
+      "nextDueDate": "2026-03-11 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "WTP Raw water Pump-1",
+      "name": "WTP pumps",
+      "category": "In-House",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-05-14 00:00:00",
+      "nextDueDate": "2026-04-01 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "WTP Raw water Pump-2",
+      "name": "WTP pumps",
+      "category": "In-House",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-05-16 00:00:00",
+      "nextDueDate": "2026-04-02 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Domestic water shifting Pump-1",
+      "name": "Domastic pumps",
+      "category": "In-House",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-05-18 00:00:00",
+      "nextDueDate": "2026-04-03 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Domestic water shifting Pump-2",
+      "name": "Domastic pumps",
+      "category": "In-House",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-05-19 00:00:00",
+      "nextDueDate": "2026-04-04 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Cooling tower-1",
+      "name": "Cooling towers",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-03-04 00:00:00",
+      "nextDueDate": "2026-03-08 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Cooling tower-2",
+      "name": "Cooling towers",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-03-05 00:00:00",
+      "nextDueDate": "2026-03-09 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Cooling tower-3",
+      "name": "Cooling towers",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-03-06 00:00:00",
+      "nextDueDate": "2026-03-10 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG Cooling tower-1",
+      "name": "Cooling towers",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-03-07 00:00:00",
+      "nextDueDate": "2026-03-11 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG Cooling tower-2",
+      "name": "Cooling towers",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-03-08 00:00:00",
+      "nextDueDate": "2026-03-12 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Package Cooling tower-1",
+      "name": "Cooling towers",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-03-09 00:00:00",
+      "nextDueDate": "2026-03-13 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Package Cooling tower-2",
+      "name": "Cooling towers",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-03-10 00:00:00",
+      "nextDueDate": "2026-03-14 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Cooling tower-1 fan -1 To 4",
+      "name": "CT Fans",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-05-10 00:00:00",
+      "nextDueDate": "2026-05-14 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Cooling tower-2 fan -1 To 4",
+      "name": "CT Fans",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-05-11 00:00:00",
+      "nextDueDate": "2026-05-15 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller Cooling tower-3 fan -1 & 2",
+      "name": "CT Fans",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-05-12 00:00:00",
+      "nextDueDate": "2026-05-16 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG Cooling tower-1 fan -1 & 2",
+      "name": "CT Fans",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-05-13 00:00:00",
+      "nextDueDate": "2026-05-17 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG Cooling tower-2 fan -1 & 2",
+      "name": "CT Fans",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-05-14 00:00:00",
+      "nextDueDate": "2026-05-18 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Package Cooling tower-1 fan -1 To 4",
+      "name": "CT Fans",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-05-15 00:00:00",
+      "nextDueDate": "2026-05-19 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Package Cooling tower-2 fan -1 To 4",
+      "name": "CT Fans",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-05-16 00:00:00",
+      "nextDueDate": "2026-05-20 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L8 common area lobby Package Unit-1",
+      "name": "Package units",
+      "category": "Vendor",
+      "location": "L8 Beside office Lift Lobby",
+      "lastService": "2026-05-17 00:00:00",
+      "nextDueDate": "2026-05-21 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L7 common area lobby Package Unit-1",
+      "name": "Package units",
+      "category": "Vendor",
+      "location": "L7 Beside office Lift Lobby",
+      "lastService": "2026-05-18 00:00:00",
+      "nextDueDate": "2026-05-22 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L6 common area lobby Package Unit-1",
+      "name": "Package units",
+      "category": "Vendor",
+      "location": "L6 Beside office Lift Lobby",
+      "lastService": "2026-05-19 00:00:00",
+      "nextDueDate": "2026-05-23 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L5 common area lobby Package Unit-1",
+      "name": "Package units",
+      "category": "Vendor",
+      "location": "L5 Beside office Lift Lobby",
+      "lastService": "2026-05-20 00:00:00",
+      "nextDueDate": "2026-05-24 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L4 common area lobby Package Unit-1",
+      "name": "Package units",
+      "category": "Vendor",
+      "location": "L4 Beside office Lift Lobby",
+      "lastService": "2026-05-21 00:00:00",
+      "nextDueDate": "2026-05-25 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L1 Common area AHU -1",
+      "name": "AHU Units",
+      "category": "In-House",
+      "location": "L1 AHU opp MS lifts",
+      "lastService": "2026-03-23 00:00:00",
+      "nextDueDate": "2026-03-04 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L2 Common area AHU -1",
+      "name": "AHU Units",
+      "category": "In-House",
+      "location": "L2AHU opp MS lifts",
+      "lastService": "2026-03-23 00:00:00",
+      "nextDueDate": "2026-03-05 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L2 Common area CSU -1",
+      "name": "CSU Units",
+      "category": "In-House",
+      "location": "L2 above LRR",
+      "lastService": "2026-03-24 00:00:00",
+      "nextDueDate": "2026-03-06 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L3 Common area AHU -1",
+      "name": "AHU Units",
+      "category": "In-House",
+      "location": "L3 above GRR",
+      "lastService": "2026-03-24 00:00:00",
+      "nextDueDate": "2026-03-07 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L3 Common area CSU -1",
+      "name": "CSU Units",
+      "category": "In-House",
+      "location": "L3 above LRR",
+      "lastService": "2026-03-25 00:00:00",
+      "nextDueDate": "2026-03-08 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LG MS Lift Lobby CSU -1",
+      "name": "CSU Units",
+      "category": "In-House",
+      "location": "LG above Ceiling  MS Lift Lobby",
+      "lastService": "2026-03-25 00:00:00",
+      "nextDueDate": "2026-03-09 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LG OE Lift Lobby CSU  -2",
+      "name": "CSU Units",
+      "category": "In-House",
+      "location": "LG Podium above Ceiling  OE Lift Lobby",
+      "lastService": "2026-03-26 00:00:00",
+      "nextDueDate": "2026-03-10 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B1 LT Room  CSU -1",
+      "name": "CSU Units",
+      "category": "In-House",
+      "location": "B1 LT Room",
+      "lastService": "2026-03-26 00:00:00",
+      "nextDueDate": "2026-03-11 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B1 HT Room CSU -1",
+      "name": "CSU Units",
+      "category": "In-House",
+      "location": "B1 HT Room",
+      "lastService": "2026-03-27 00:00:00",
+      "nextDueDate": "2026-03-12 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B1 Garbage room AC Unit-1",
+      "name": "Cold storage Unit",
+      "category": "In-House",
+      "location": "B1 Garbage Room",
+      "lastService": "2026-04-02 00:00:00",
+      "nextDueDate": "2026-04-20 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B1 UPS Room Fan coil Unit-1",
+      "name": "FCU Unit",
+      "category": "In-House",
+      "location": "B1 UPS Room",
+      "lastService": "2026-04-02 00:00:00",
+      "nextDueDate": "2026-04-20 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B1 Server Room Split  Air Conditioner -1",
+      "name": "Split AC units",
+      "category": "Vendor",
+      "location": "B1 Server Room",
+      "lastService": "2026-04-02 00:00:00",
+      "nextDueDate": "2026-04-20 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B1 Server Room Split  Air Conditioner -2",
+      "name": "Split AC units",
+      "category": "Vendor",
+      "location": "B1 Server Room",
+      "lastService": "2026-04-03 00:00:00",
+      "nextDueDate": "2026-04-21 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "CCTV Room Split  Air Conditioner -1",
+      "name": "Split AC units",
+      "category": "Vendor",
+      "location": "B1 CCTV Room",
+      "lastService": "2026-04-03 00:00:00",
+      "nextDueDate": "2026-04-21 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "CCTV Room Split  Air Conditioner -2",
+      "name": "Split AC units",
+      "category": "Vendor",
+      "location": "B1 CCTV Room",
+      "lastService": "2026-04-03 00:00:00",
+      "nextDueDate": "2026-04-21 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "BMS Room Split  Air Conditioner -1",
+      "name": "Split AC units",
+      "category": "Vendor",
+      "location": "B1 BMS Room",
+      "lastService": "2026-04-04 00:00:00",
+      "nextDueDate": "2026-04-22 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B1 UPS Room Split  Air Conditioner -1",
+      "name": "Split AC units",
+      "category": "Vendor",
+      "location": "B1 UPS Room",
+      "lastService": "2026-04-04 00:00:00",
+      "nextDueDate": "2026-04-22 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 OE Lift Lobby Split  Air Conditioner-1",
+      "name": "Split AC units",
+      "category": "Vendor",
+      "location": "B2 OE Lift Lobby",
+      "lastService": "2026-04-04 00:00:00",
+      "nextDueDate": "2026-04-22 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 OE Lift Lobby Split  Air Conditioner-1",
+      "name": "Split AC units",
+      "category": "Vendor",
+      "location": "B3 OE Lift Lobby",
+      "lastService": "2026-04-05 00:00:00",
+      "nextDueDate": "2026-04-23 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 OE Lift Lobby Split  Air Conditioner-1",
+      "name": "Split AC units",
+      "category": "Vendor",
+      "location": "B4OE Lift Lobby",
+      "lastService": "2026-04-05 00:00:00",
+      "nextDueDate": "2026-04-23 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L9 OE Lift Lobby Split  Air Conditioner -1",
+      "name": "Split AC units",
+      "category": "Vendor",
+      "location": "L9 OE Lift Lobby",
+      "lastService": "2026-04-05 00:00:00",
+      "nextDueDate": "2026-04-23 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L9 UPS Room Split  Air Conditioner -1",
+      "name": "Split AC units",
+      "category": "Vendor",
+      "location": "L9 UPS Room",
+      "lastService": "2026-04-06 00:00:00",
+      "nextDueDate": "2026-04-24 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L8 Server room split AC Unit-1",
+      "name": "Split AC units",
+      "category": "Vendor",
+      "location": "Server Room L8",
+      "lastService": "2026-04-06 00:00:00",
+      "nextDueDate": "2026-04-24 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L7 Server room split AC Unit-1",
+      "name": "Split AC units",
+      "category": "Vendor",
+      "location": "Server Room L7",
+      "lastService": "2026-04-06 00:00:00",
+      "nextDueDate": "2026-04-24 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L6 Server room split AC Unit-1",
+      "name": "Split AC units",
+      "category": "Vendor",
+      "location": "Server Room L6",
+      "lastService": "2026-04-07 00:00:00",
+      "nextDueDate": "2026-04-25 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L5 Server room split AC Unit-1",
+      "name": "Split AC units",
+      "category": "Vendor",
+      "location": "Server Room L5",
+      "lastService": "2026-04-07 00:00:00",
+      "nextDueDate": "2026-04-25 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L4 Server room split AC Unit-1",
+      "name": "Split AC units",
+      "category": "Vendor",
+      "location": "Server Room L4",
+      "lastService": "2026-04-08 00:00:00",
+      "nextDueDate": "2026-04-25 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller-1",
+      "name": "350 TR chiller-1",
+      "category": "Vendor",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-05-29 00:00:00",
+      "nextDueDate": "2026-04-26 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller-2",
+      "name": "650 TR chiller-1",
+      "category": "Vendor",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-05-29 00:00:00",
+      "nextDueDate": "2026-04-26 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller-3",
+      "name": "650 TR chiller-2",
+      "category": "Vendor",
+      "location": "B1 Chiller plant room",
+      "lastService": "2026-05-29 00:00:00",
+      "nextDueDate": "2026-04-26 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "ST-5 Fresh Air  Unit -1",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Level-9",
+      "lastService": "2025-04-01 00:00:00",
+      "nextDueDate": "2026-04-05 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "ST-5 Exahust Unit -1",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Level-9",
+      "lastService": "2025-04-01 00:00:00",
+      "nextDueDate": "2026-04-06 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Scrubber Unit -1",
+      "name": "Scrubber Units",
+      "category": "In-House",
+      "location": "Level-9",
+      "lastService": "2025-04-01 00:00:00",
+      "nextDueDate": "2026-04-07 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Air washer Unit -1",
+      "name": "Air washer Units",
+      "category": "In-House",
+      "location": "Level-9",
+      "lastService": "2025-04-02 00:00:00",
+      "nextDueDate": "2026-04-08 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG Fresh air fan -1",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "DG Room",
+      "lastService": "2025-04-02 00:00:00",
+      "nextDueDate": "2026-04-09 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG Fresh air fan -2",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "DG Room",
+      "lastService": "2025-04-02 00:00:00",
+      "nextDueDate": "2026-04-10 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG Fresh air fan -3",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "DG Room",
+      "lastService": "2025-04-03 00:00:00",
+      "nextDueDate": "2026-04-11 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG Fresh air fan -4",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "DG Room",
+      "lastService": "2025-04-03 00:00:00",
+      "nextDueDate": "2026-04-12 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG Exhaust Fan -1",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "DG Room",
+      "lastService": "2025-04-03 00:00:00",
+      "nextDueDate": "2026-04-13 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG Exhaust Fan -2",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "DG Room",
+      "lastService": "2025-04-04 00:00:00",
+      "nextDueDate": "2026-04-14 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG Exhaust Fan -3",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "DG Room",
+      "lastService": "2025-04-04 00:00:00",
+      "nextDueDate": "2026-04-15 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "DG Exhaust Fan -4",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "DG Room",
+      "lastService": "2025-04-04 00:00:00",
+      "nextDueDate": "2026-04-16 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Toilet Exhaust-1",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-05 00:00:00",
+      "nextDueDate": "2026-04-17 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B1 Toilet Exhaust-1",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 1",
+      "lastService": "2025-04-05 00:00:00",
+      "nextDueDate": "2026-04-18 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L2 GRR Toilet Exhaust-1",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Level-L2",
+      "lastService": "2025-04-05 00:00:00",
+      "nextDueDate": "2026-04-19 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L2 LRR Toilet Exhaust-1",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Level-L2",
+      "lastService": "2025-04-06 00:00:00",
+      "nextDueDate": "2026-04-20 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L3 GRR Toilet Exhaust-1",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Level-L3",
+      "lastService": "2025-04-06 00:00:00",
+      "nextDueDate": "2026-04-21 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L3 LRR Toilet Exhaust-1",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Level-L3",
+      "lastService": "2025-04-06 00:00:00",
+      "nextDueDate": "2026-04-22 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B1 Garbage Room Exhaust-1",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "B1 Garbage Room",
+      "lastService": "2025-04-07 00:00:00",
+      "nextDueDate": "2026-04-23 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 STP Fresh Air Fan-1",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-07 00:00:00",
+      "nextDueDate": "2026-04-24 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Fresh Air Fan unit -1",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-07 00:00:00",
+      "nextDueDate": "2026-04-25 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Fresh Air Fan unit -2",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-08 00:00:00",
+      "nextDueDate": "2026-04-26 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Fresh Air Fan unit -3",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-08 00:00:00",
+      "nextDueDate": "2026-04-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Fresh Air Fan unit -4",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-08 00:00:00",
+      "nextDueDate": "2026-04-28 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Fresh Air Fan unit -5",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-09 00:00:00",
+      "nextDueDate": "2026-04-29 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Fresh Air Fan unit -6",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-09 00:00:00",
+      "nextDueDate": "2026-04-30 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Fresh Air Fan unit -7",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-09 00:00:00",
+      "nextDueDate": "2026-05-01 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Fresh Air Fan unit -8",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-10 00:00:00",
+      "nextDueDate": "2026-05-02 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Fresh Air Fan unit -9",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-10 00:00:00",
+      "nextDueDate": "2026-05-03 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Fresh Air Fan unit -10",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-10 00:00:00",
+      "nextDueDate": "2026-05-04 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Fresh Air Fan unit -11",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-11 00:00:00",
+      "nextDueDate": "2026-05-05 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Fresh Air Fan unit -12",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-11 00:00:00",
+      "nextDueDate": "2026-05-06 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Fresh Air Fan unit -13",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-11 00:00:00",
+      "nextDueDate": "2026-05-07 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Fresh Air Fan unit -14",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-12 00:00:00",
+      "nextDueDate": "2026-05-08 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Fresh Air Fan unit -15",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-12 00:00:00",
+      "nextDueDate": "2026-05-09 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Exhaust Fan unit -1",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-12 00:00:00",
+      "nextDueDate": "2026-05-10 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Exhaust Fan unit -2",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-13 00:00:00",
+      "nextDueDate": "2026-05-11 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Exhaust Fan unit -3",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-13 00:00:00",
+      "nextDueDate": "2026-05-12 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Exhaust Fan unit -4",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-13 00:00:00",
+      "nextDueDate": "2026-05-13 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Exhaust Fan unit -5",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-14 00:00:00",
+      "nextDueDate": "2026-05-14 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Exhaust Fan unit -6",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-14 00:00:00",
+      "nextDueDate": "2026-05-15 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Exhaust Fan unit -7",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-14 00:00:00",
+      "nextDueDate": "2026-05-16 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Exhaust Fan unit -8",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-15 00:00:00",
+      "nextDueDate": "2026-05-17 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Exhaust Fan unit -9",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-15 00:00:00",
+      "nextDueDate": "2026-05-18 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Exhaust Fan unit -10",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-15 00:00:00",
+      "nextDueDate": "2026-05-19 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Exhaust Fan unit -11",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-16 00:00:00",
+      "nextDueDate": "2026-05-20 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Exhaust Fan unit -12",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-16 00:00:00",
+      "nextDueDate": "2026-05-21 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Fresh Air Fan unit-1",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-16 00:00:00",
+      "nextDueDate": "2026-05-22 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Fresh Air Fan unit-2",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-17 00:00:00",
+      "nextDueDate": "2026-05-23 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Fresh Air Fan unit-3",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-17 00:00:00",
+      "nextDueDate": "2026-05-24 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Fresh Air Fan unit-4",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-17 00:00:00",
+      "nextDueDate": "2026-05-25 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Fresh Air Fan unit-5",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-18 00:00:00",
+      "nextDueDate": "2026-05-26 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Fresh Air Fan unit-6",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-18 00:00:00",
+      "nextDueDate": "2026-05-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Fresh Air Fan unit-7",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-18 00:00:00",
+      "nextDueDate": "2026-05-28 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Fresh Air Fan unit-8",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-19 00:00:00",
+      "nextDueDate": "2026-05-29 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Fresh Air Fan unit-9",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-19 00:00:00",
+      "nextDueDate": "2026-05-30 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Fresh Air Fan unit-10",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-19 00:00:00",
+      "nextDueDate": "2026-05-31 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Fresh Air Fan unit-11",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-20 00:00:00",
+      "nextDueDate": "2026-03-03 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Fresh Air Fan unit-12",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-20 00:00:00",
+      "nextDueDate": "2026-03-04 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Fresh Air Fan unit-13",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-20 00:00:00",
+      "nextDueDate": "2026-03-05 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Fresh Air Fan unit-14",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-21 00:00:00",
+      "nextDueDate": "2026-03-06 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Fresh Air Fan unit-15",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-21 00:00:00",
+      "nextDueDate": "2026-03-07 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Exhaust Fan unit-1",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-21 00:00:00",
+      "nextDueDate": "2026-03-08 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Exhaust Fan unit-2",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-22 00:00:00",
+      "nextDueDate": "2026-03-09 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Exhaust Fan unit-3",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-22 00:00:00",
+      "nextDueDate": "2026-03-10 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Exhaust Fan unit-4",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-22 00:00:00",
+      "nextDueDate": "2026-03-11 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Exhaust Fan unit-5",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-23 00:00:00",
+      "nextDueDate": "2026-03-12 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Exhaust Fan unit-6",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-23 00:00:00",
+      "nextDueDate": "2026-03-13 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Exhaust Fan unit-7",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-23 00:00:00",
+      "nextDueDate": "2026-03-14 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Exhaust Fan unit-8",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-24 00:00:00",
+      "nextDueDate": "2026-03-15 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Exhaust Fan unit-9",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-24 00:00:00",
+      "nextDueDate": "2026-03-16 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Exhaust Fan unit-10",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-24 00:00:00",
+      "nextDueDate": "2026-03-17 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Exhaust Fan unit-11",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-25 00:00:00",
+      "nextDueDate": "2026-03-18 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Exhaust Fan unit-12",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-25 00:00:00",
+      "nextDueDate": "2026-03-19 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Fresh Air Fan unit-1",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-25 00:00:00",
+      "nextDueDate": "2026-03-20 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Fresh Air Fan unit-2",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-26 00:00:00",
+      "nextDueDate": "2026-03-21 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Fresh Air Fan unit-3",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-26 00:00:00",
+      "nextDueDate": "2026-03-22 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Fresh Air Fan unit-4",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-26 00:00:00",
+      "nextDueDate": "2026-03-23 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Fresh Air Fan unit-5",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-27 00:00:00",
+      "nextDueDate": "2026-03-24 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Fresh Air Fan unit-6",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-27 00:00:00",
+      "nextDueDate": "2026-03-25 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Fresh Air Fan unit-7",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-27 00:00:00",
+      "nextDueDate": "2026-03-26 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Fresh Air Fan unit-8",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-28 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Fresh Air Fan unit-9",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-28 00:00:00",
+      "nextDueDate": "2026-03-28 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Fresh Air Fan unit-10",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-28 00:00:00",
+      "nextDueDate": "2026-03-29 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Fresh Air Fan unit-11",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-29 00:00:00",
+      "nextDueDate": "2026-03-30 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Fresh Air Fan unit-12",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-29 00:00:00",
+      "nextDueDate": "2026-03-31 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Fresh Air Fan unit-13",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-29 00:00:00",
+      "nextDueDate": "2026-04-01 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Fresh Air Fan unit-14",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-30 00:00:00",
+      "nextDueDate": "2026-04-02 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Exhaust Fan  unit-1",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-30 00:00:00",
+      "nextDueDate": "2026-04-03 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Exhaust Fan  unit-2",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-30 00:00:00",
+      "nextDueDate": "2026-04-04 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Exhaust Fan  unit-3",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-05-01 00:00:00",
+      "nextDueDate": "2026-04-05 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Exhaust Fan  unit-4",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-05-01 00:00:00",
+      "nextDueDate": "2026-04-06 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Exhaust Fan  unit-5",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-05-01 00:00:00",
+      "nextDueDate": "2026-04-07 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Exhaust Fan  unit-6",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-05-02 00:00:00",
+      "nextDueDate": "2026-04-08 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Exhaust Fan  unit-7",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-05-02 00:00:00",
+      "nextDueDate": "2026-04-09 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Exhaust Fan  unit-8",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-05-02 00:00:00",
+      "nextDueDate": "2026-04-10 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Exhaust Fan  unit-9",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-05-03 00:00:00",
+      "nextDueDate": "2026-04-11 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Exhaust Fan  unit-10",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-05-03 00:00:00",
+      "nextDueDate": "2026-04-12 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Exhaust Fan  unit-11",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-05-03 00:00:00",
+      "nextDueDate": "2026-04-13 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Exhaust Fan  unit-12",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-05-04 00:00:00",
+      "nextDueDate": "2026-04-14 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B1 T/R Room Exhaust unit-1",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "Transformer Room",
+      "lastService": "2025-05-04 00:00:00",
+      "nextDueDate": "2026-04-15 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B1 T/R Room Fresh Air unit-1",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "Transformer Room",
+      "lastService": "2025-05-04 00:00:00",
+      "nextDueDate": "2026-04-16 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B1 Chiller Room Fresh Air unit-1",
+      "name": "Fresh Air Units",
+      "category": "In-House",
+      "location": "B1 Chiller plant room",
+      "lastService": "2025-05-05 00:00:00",
+      "nextDueDate": "2026-04-17 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B1 Chiller Room Exhaust unit-1",
+      "name": "Exahust Units",
+      "category": "In-House",
+      "location": "B1 Chiller plant room",
+      "lastService": "2025-05-05 00:00:00",
+      "nextDueDate": "2026-04-18 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Staircase Pressurization fans -1",
+      "name": "Pressurization units",
+      "category": "In-House",
+      "location": "Level-9",
+      "lastService": "2025-05-05 00:00:00",
+      "nextDueDate": "2026-04-19 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Staircase Pressurization fans -2",
+      "name": "Pressurization units",
+      "category": "In-House",
+      "location": "Level-9",
+      "lastService": "2025-05-06 00:00:00",
+      "nextDueDate": "2026-04-20 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "By Pass Motor  Pump-1(STP)",
+      "name": "Stp By pass pump",
+      "category": "Vendor",
+      "location": "Level-B4 STP",
+      "lastService": "2026-06-05 00:00:00",
+      "nextDueDate": "2026-04-05 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "SBR Drain Pump 1",
+      "name": "SBR pumps",
+      "category": "Vendor",
+      "location": "Level-B4 STP",
+      "lastService": "2026-06-05 00:00:00",
+      "nextDueDate": "2026-04-06 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "SBR Drain Pump 2",
+      "name": "SBR pumps",
+      "category": "Vendor",
+      "location": "Level-B4 STP",
+      "lastService": "2026-06-05 00:00:00",
+      "nextDueDate": "2026-04-07 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Raw Pump-1",
+      "name": "STP Raw water pumps",
+      "category": "Vendor",
+      "location": "Level-B4 STP",
+      "lastService": "2026-06-06 00:00:00",
+      "nextDueDate": "2026-04-08 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Raw Pump-2",
+      "name": "STP Raw water pumps",
+      "category": "Vendor",
+      "location": "Level-B4 STP",
+      "lastService": "2026-06-06 00:00:00",
+      "nextDueDate": "2026-04-09 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Sludge Pump 1",
+      "name": "sludge pumps",
+      "category": "Vendor",
+      "location": "Level-B4 STP",
+      "lastService": "2026-06-06 00:00:00",
+      "nextDueDate": "2026-04-10 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Sludge Pump 2",
+      "name": "sludge pumps",
+      "category": "Vendor",
+      "location": "Level-B4 STP",
+      "lastService": "2026-06-07 00:00:00",
+      "nextDueDate": "2026-04-11 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Screw Pump-1",
+      "name": "screw pumps",
+      "category": "Vendor",
+      "location": "Level-B4 STP",
+      "lastService": "2026-06-07 00:00:00",
+      "nextDueDate": "2026-04-12 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Screw Pump-2",
+      "name": "screw pumps",
+      "category": "Vendor",
+      "location": "Level-B4 STP",
+      "lastService": "2026-06-07 00:00:00",
+      "nextDueDate": "2026-04-13 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Feeding Pump 1",
+      "name": "STP filter feed pumps",
+      "category": "Vendor",
+      "location": "Level-B4 STP",
+      "lastService": "2026-06-08 00:00:00",
+      "nextDueDate": "2026-04-14 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Feeding Pump 2",
+      "name": "STP filter feed pumps",
+      "category": "Vendor",
+      "location": "Level-B4 STP",
+      "lastService": "2026-06-08 00:00:00",
+      "nextDueDate": "2026-04-15 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Softener Pump 1",
+      "name": "Softner pumps",
+      "category": "Vendor",
+      "location": "Level-B4 STP",
+      "lastService": "2026-06-08 00:00:00",
+      "nextDueDate": "2026-04-16 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Softener Pump 2",
+      "name": "Softner pumps",
+      "category": "Vendor",
+      "location": "Level-B4 STP",
+      "lastService": "2026-06-09 00:00:00",
+      "nextDueDate": "2026-04-17 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Drain Pump-1",
+      "name": "STP Drain pumps",
+      "category": "Vendor",
+      "location": "Level-B4 STP",
+      "lastService": "2026-06-09 00:00:00",
+      "nextDueDate": "2026-04-18 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Drain Pump-2",
+      "name": "STP Drain pumps",
+      "category": "Vendor",
+      "location": "Level-B4 STP",
+      "lastService": "2026-06-09 00:00:00",
+      "nextDueDate": "2026-04-19 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Air Blower 1",
+      "name": "Air Blower motors",
+      "category": "Vendor",
+      "location": "Level-B4 STP",
+      "lastService": "2026-06-10 00:00:00",
+      "nextDueDate": "2026-04-20 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Air Blower 2",
+      "name": "Air Blower motors",
+      "category": "Vendor",
+      "location": "Level-B4 STP",
+      "lastService": "2026-06-10 00:00:00",
+      "nextDueDate": "2026-04-21 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Air Blower 3",
+      "name": "Air Blower motors",
+      "category": "Vendor",
+      "location": "Level-B4 STP",
+      "lastService": "2026-06-10 00:00:00",
+      "nextDueDate": "2026-04-22 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Rain Water Drain Pump-1(50HP)(Over Flow Rain Water)",
+      "name": "Rain water drain pump",
+      "category": "In-House",
+      "location": "Level-B4",
+      "lastService": "2026-06-11 00:00:00",
+      "nextDueDate": "2026-04-23 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Fire Diesel generator Pump  -1",
+      "name": "Fire fighting pumps",
+      "category": "In-House",
+      "location": "B1 Fire Fighting Room",
+      "lastService": "2026-06-11 00:00:00",
+      "nextDueDate": "2026-05-29 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Fire Hydrant Pumps -Kirloskar-1",
+      "name": "Fire fighting pumps",
+      "category": "In-House",
+      "location": "B1 Fire Fighting Room",
+      "lastService": "2026-06-11 00:00:00",
+      "nextDueDate": "2026-05-29 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Fire Sprinkler Pumps -Kirloskar-1",
+      "name": "Fire fighting pumps",
+      "category": "In-House",
+      "location": "B1 Fire Fighting Room",
+      "lastService": "2026-06-12 00:00:00",
+      "nextDueDate": "2026-05-29 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Fire Stand by Pumps -Kirloskar-1",
+      "name": "Fire fighting pumps",
+      "category": "In-House",
+      "location": "B1 Fire Fighting Room",
+      "lastService": "2026-06-12 00:00:00",
+      "nextDueDate": "2026-05-29 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Fire Low Jockey Pumps -Grundfos-1",
+      "name": "Fire fighting pumps",
+      "category": "In-House",
+      "location": "B1 Fire Fighting Room",
+      "lastService": "2026-06-12 00:00:00",
+      "nextDueDate": "2026-05-29 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Fire High Jockey Pumps -Grundfos-1",
+      "name": "Fire fighting pumps",
+      "category": "In-House",
+      "location": "B1 Fire Fighting Room",
+      "lastService": "2026-06-13 00:00:00",
+      "nextDueDate": "2026-05-29 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Addressable Control panel-1 & 2",
+      "name": "Fire Alarm & PA  system",
+      "category": "Vendor",
+      "location": "B1 CCTV Room",
+      "lastService": "2026-06-13 00:00:00",
+      "nextDueDate": "2026-04-28 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Camera - 256 Nos",
+      "name": "CCTV",
+      "category": "In-House",
+      "location": "All Locations",
+      "lastService": "2026-06-13 00:00:00",
+      "nextDueDate": "2026-04-29 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Primary Rate Interface(Telephone PRI)",
+      "name": "PRI",
+      "category": "In-House",
+      "location": "B1 Server Room",
+      "lastService": "2026-06-14 00:00:00",
+      "nextDueDate": "2026-04-30 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Air Washer & Scrubber PCC Panel (L 9)",
+      "name": "Air Washer & Scrubber PCC Panel (L 9)",
+      "category": "In-House",
+      "location": "Level-9",
+      "lastService": "2026-03-04 00:00:00",
+      "nextDueDate": "2026-03-16 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Secondary Pumps VFD panel-B1",
+      "name": "Secondary Pumps VFD panel-B1",
+      "category": "In-House",
+      "location": "B1 Pump Room",
+      "lastService": "2026-03-05 00:00:00",
+      "nextDueDate": "2026-03-17 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "STP MCC Panel Basement - 4 (B4-4.0)",
+      "name": "STP MCC Panel Basement - 4 (B4-4.0)",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2026-03-06 00:00:00",
+      "nextDueDate": "2026-03-18 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Stack Parking MCC Panel-1.1 No's 3",
+      "name": "Stack Parking MCC Panel-1.1 No's 3",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2026-03-07 00:00:00",
+      "nextDueDate": "2026-03-19 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Scrubber MCC Panel -1(L9)",
+      "name": "Scrubber MCC Panel -1(L9)",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-03-08 00:00:00",
+      "nextDueDate": "2026-03-20 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Air Washer  MCC Panel -1(L9)",
+      "name": "Air Washer  MCC Panel -1(L9)",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-03-09 00:00:00",
+      "nextDueDate": "2026-03-21 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Package Cooling Tower Fans MCC Panels -1",
+      "name": "Package Cooling Tower Fans MCC Panels -1",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-03-10 00:00:00",
+      "nextDueDate": "2026-03-22 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Package Cooling Tower Fans MCC Panels -2",
+      "name": "Package Cooling Tower Fans MCC Panels -2",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-03-11 00:00:00",
+      "nextDueDate": "2026-03-23 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller  cooling Tower Fans MCC Panel -1",
+      "name": "Chiller  cooling Tower Fans MCC Panel -1",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-03-12 00:00:00",
+      "nextDueDate": "2026-03-24 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller  cooling Tower Fans MCC Panel -2",
+      "name": "Chiller  cooling Tower Fans MCC Panel -2",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-03-13 00:00:00",
+      "nextDueDate": "2026-03-25 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller  cooling Tower Fans MCC Panel -3",
+      "name": "Chiller  cooling Tower Fans MCC Panel -3",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-03-14 00:00:00",
+      "nextDueDate": "2026-03-26 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "All Earth Pits - 76 Nos",
+      "name": "All Earth Pits - 76 Nos",
+      "category": "Vendor",
+      "location": "LG",
+      "lastService": "2026-06-26 00:00:00",
+      "nextDueDate": "2026-03-28 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Lighting arrester-1 To 2",
+      "name": "Lighting arrester-1 To 2",
+      "category": "Vendor",
+      "location": "Terrace",
+      "lastService": "2026-06-27 00:00:00",
+      "nextDueDate": "2026-03-29 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4-MDB-1",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-01 00:00:00",
+      "nextDueDate": "2026-03-03 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4-MDB-2",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-01 00:00:00",
+      "nextDueDate": "2026-03-04 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4-MDB-3",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-01 00:00:00",
+      "nextDueDate": "2026-03-05 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3-MDB-1",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-02 00:00:00",
+      "nextDueDate": "2026-03-06 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3-MDB-2",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-02 00:00:00",
+      "nextDueDate": "2026-03-07 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3-MDB-3",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-02 00:00:00",
+      "nextDueDate": "2026-03-08 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2-MDB-1",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-03 00:00:00",
+      "nextDueDate": "2026-03-09 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2-MDB-2",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-03 00:00:00",
+      "nextDueDate": "2026-03-10 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2-MDB-3",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-03 00:00:00",
+      "nextDueDate": "2026-03-11 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B1-MDB-1",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Basement - 1",
+      "lastService": "2025-04-04 00:00:00",
+      "nextDueDate": "2026-03-12 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B1-MDB-2",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Basement - 1",
+      "lastService": "2025-04-04 00:00:00",
+      "nextDueDate": "2026-03-13 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LG MDB-1",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "LG",
+      "lastService": "2025-04-04 00:00:00",
+      "nextDueDate": "2026-03-14 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LG MDB-2",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "LG",
+      "lastService": "2025-04-05 00:00:00",
+      "nextDueDate": "2026-03-15 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L1 MDB -1",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Level - 1",
+      "lastService": "2025-04-05 00:00:00",
+      "nextDueDate": "2026-03-16 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L2 MDB-1",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Level - 2",
+      "lastService": "2025-04-05 00:00:00",
+      "nextDueDate": "2026-03-17 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L2 MDB-2",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Level - 2",
+      "lastService": "2025-04-06 00:00:00",
+      "nextDueDate": "2026-03-18 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L3 MDB-1",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Level - 3",
+      "lastService": "2025-04-06 00:00:00",
+      "nextDueDate": "2026-03-19 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L3 MDB-2",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Level - 3",
+      "lastService": "2025-04-06 00:00:00",
+      "nextDueDate": "2026-03-20 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L4 MDB-1",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Level - 4",
+      "lastService": "2025-04-07 00:00:00",
+      "nextDueDate": "2026-03-21 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L4 MDB-2",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Level - 4",
+      "lastService": "2025-04-07 00:00:00",
+      "nextDueDate": "2026-03-22 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L5 MDB-1",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Level - 5",
+      "lastService": "2025-04-07 00:00:00",
+      "nextDueDate": "2026-03-23 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L5 MDB-2",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Level - 5",
+      "lastService": "2025-04-08 00:00:00",
+      "nextDueDate": "2026-03-24 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L6 MDB-1",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Level - 6",
+      "lastService": "2025-04-08 00:00:00",
+      "nextDueDate": "2026-03-25 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L6 MDB-2",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Level - 6",
+      "lastService": "2025-04-08 00:00:00",
+      "nextDueDate": "2026-03-26 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L7 MDB-1",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Level - 7",
+      "lastService": "2025-04-09 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L7 MDB-2",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Level - 7",
+      "lastService": "2025-04-09 00:00:00",
+      "nextDueDate": "2026-03-28 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L8 MDB-1",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Level - 8",
+      "lastService": "2025-04-09 00:00:00",
+      "nextDueDate": "2026-03-29 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L8 MDB-2",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Level - 8",
+      "lastService": "2025-04-10 00:00:00",
+      "nextDueDate": "2026-03-30 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L9 MDB-1",
+      "name": "Basment MDB`s",
+      "category": "In-House",
+      "location": "Level - 9",
+      "lastService": "2025-04-10 00:00:00",
+      "nextDueDate": "2026-03-31 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4-SDB -1.1 No's 3",
+      "name": "Basment SDB`s",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-10 00:00:00",
+      "nextDueDate": "2026-04-01 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B1-SDB - 1.1",
+      "name": "Basment SDB`s",
+      "category": "In-House",
+      "location": "Basement - 1",
+      "lastService": "2025-04-11 00:00:00",
+      "nextDueDate": "2026-03-03 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 EL Lighting  DB-1 & 2",
+      "name": "ELDB`s",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-11 00:00:00",
+      "nextDueDate": "2026-03-04 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 EL Lighting  DB-1 & 2",
+      "name": "ELDB`s",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-11 00:00:00",
+      "nextDueDate": "2026-03-05 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 EL Lighting  DB-1 & 2",
+      "name": "ELDB`s",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-12 00:00:00",
+      "nextDueDate": "2026-03-06 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B1 EL Lighting  DB-1 To 3",
+      "name": "ELDB`s",
+      "category": "In-House",
+      "location": "Basement - 1",
+      "lastService": "2025-04-12 00:00:00",
+      "nextDueDate": "2026-03-07 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LG EL Lighting  DB-1",
+      "name": "ELDB`s",
+      "category": "In-House",
+      "location": "Lower Ground",
+      "lastService": "2025-04-12 00:00:00",
+      "nextDueDate": "2026-03-08 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L1 EL Lighting  DB-1",
+      "name": "ELDB`s",
+      "category": "In-House",
+      "location": "Level - 1",
+      "lastService": "2025-04-13 00:00:00",
+      "nextDueDate": "2026-03-09 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L2 EL Lighting  DB-1 & 2",
+      "name": "ELDB`s",
+      "category": "In-House",
+      "location": "Level - 2",
+      "lastService": "2025-04-13 00:00:00",
+      "nextDueDate": "2026-03-10 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L3 EL Lighting  DB-1 & 2",
+      "name": "ELDB`s",
+      "category": "In-House",
+      "location": "Level - 3",
+      "lastService": "2025-04-13 00:00:00",
+      "nextDueDate": "2026-03-11 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L4 EL Lighting  DB-1",
+      "name": "ELDB`s",
+      "category": "In-House",
+      "location": "Level - 4",
+      "lastService": "2025-04-14 00:00:00",
+      "nextDueDate": "2026-03-12 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L5 EL Lighting  DB-1",
+      "name": "ELDB`s",
+      "category": "In-House",
+      "location": "Level - 5",
+      "lastService": "2025-04-14 00:00:00",
+      "nextDueDate": "2026-03-13 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L6 EL Lighting  DB-1",
+      "name": "ELDB`s",
+      "category": "In-House",
+      "location": "Level - 6",
+      "lastService": "2025-04-14 00:00:00",
+      "nextDueDate": "2026-03-14 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L7 EL Lighting  DB-1",
+      "name": "ELDB`s",
+      "category": "In-House",
+      "location": "Level - 7",
+      "lastService": "2025-04-15 00:00:00",
+      "nextDueDate": "2026-03-15 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L8 EL Lighting  DB-1",
+      "name": "ELDB`s",
+      "category": "In-House",
+      "location": "Level - 8",
+      "lastService": "2025-04-15 00:00:00",
+      "nextDueDate": "2026-03-16 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L9 EL Lighting  DB-1",
+      "name": "ELDB`s",
+      "category": "In-House",
+      "location": "Level - 9",
+      "lastService": "2025-04-15 00:00:00",
+      "nextDueDate": "2026-03-17 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B4 Raw power Lighting DB -1 To 4",
+      "name": "RPDB`s",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-16 00:00:00",
+      "nextDueDate": "2026-03-18 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B3 Raw power Lighting DB -1 To 4",
+      "name": "RPDB`s",
+      "category": "In-House",
+      "location": "Basement - 3",
+      "lastService": "2025-04-16 00:00:00",
+      "nextDueDate": "2026-03-19 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B2 Raw power Lighting DB -1 To 4",
+      "name": "RPDB`s",
+      "category": "In-House",
+      "location": "Basement - 2",
+      "lastService": "2025-04-16 00:00:00",
+      "nextDueDate": "2026-03-20 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "B1 Raw power Lighting DB -1 To 4",
+      "name": "RPDB`s",
+      "category": "In-House",
+      "location": "Basement - 1",
+      "lastService": "2025-04-17 00:00:00",
+      "nextDueDate": "2026-03-21 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "LG Raw power Lighting DB -1 To 4",
+      "name": "RPDB`s",
+      "category": "In-House",
+      "location": "Lower Ground",
+      "lastService": "2025-04-17 00:00:00",
+      "nextDueDate": "2026-03-22 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L1 Raw power Lighting DB -1 To 3",
+      "name": "RPDB`s",
+      "category": "In-House",
+      "location": "Level - 1",
+      "lastService": "2025-04-17 00:00:00",
+      "nextDueDate": "2026-03-23 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L2 Raw power Lighting DB -1 To 4",
+      "name": "RPDB`s",
+      "category": "In-House",
+      "location": "Level - 2",
+      "lastService": "2025-04-18 00:00:00",
+      "nextDueDate": "2026-03-24 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L3 Raw power Lighting DB -1 To 3",
+      "name": "RPDB`s",
+      "category": "In-House",
+      "location": "Level - 3",
+      "lastService": "2025-04-18 00:00:00",
+      "nextDueDate": "2026-03-25 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "L9 Raw power Lighting DB -1",
+      "name": "RPDB`s",
+      "category": "In-House",
+      "location": "Level - 9",
+      "lastService": "2025-04-18 00:00:00",
+      "nextDueDate": "2026-03-26 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Drain Sump pump-1",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-19 00:00:00",
+      "nextDueDate": "2026-03-27 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Drain Sump pump-2",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-19 00:00:00",
+      "nextDueDate": "2026-03-28 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Drain Sump pump-3",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-19 00:00:00",
+      "nextDueDate": "2026-03-29 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Drain Sump pump-4",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-20 00:00:00",
+      "nextDueDate": "2026-03-30 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Drain Sump pump-5",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-20 00:00:00",
+      "nextDueDate": "2026-03-31 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Drain Sump Starter Panel-1",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-20 00:00:00",
+      "nextDueDate": "2026-04-01 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Drain Sump Starter Panel-2",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-21 00:00:00",
+      "nextDueDate": "2026-03-03 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Drain Sump Starter Panel-3",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-21 00:00:00",
+      "nextDueDate": "2026-03-04 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Drain Sump Starter Panel-4",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-21 00:00:00",
+      "nextDueDate": "2026-03-05 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Drain Sump Starter Panel-5",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-22 00:00:00",
+      "nextDueDate": "2026-03-06 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Raw water shifting Pump Starter 1",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-22 00:00:00",
+      "nextDueDate": "2026-03-07 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Raw water shifting Pump Starter 2",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-22 00:00:00",
+      "nextDueDate": "2026-03-08 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "SBR Pumps Starter -1",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-23 00:00:00",
+      "nextDueDate": "2026-03-09 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "SBR Pumps Starter -2",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-23 00:00:00",
+      "nextDueDate": "2026-03-10 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Drain Pump Starter-1",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-23 00:00:00",
+      "nextDueDate": "2026-03-11 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Drain Pump Starter-2",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-24 00:00:00",
+      "nextDueDate": "2026-03-12 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Air Blowers Starter -1",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-24 00:00:00",
+      "nextDueDate": "2026-03-13 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Air Blowers Starter -2",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-24 00:00:00",
+      "nextDueDate": "2026-03-14 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Air Blowers Starter -3",
+      "name": "Starter panels",
+      "category": "In-House",
+      "location": "Basement - 4",
+      "lastService": "2025-04-25 00:00:00",
+      "nextDueDate": "2026-03-15 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Domestic Tank - 1 To 3",
+      "name": "Water storage Tanks",
+      "category": "In-House",
+      "location": "B1 Pump Room",
+      "lastService": "2026-04-20 00:00:00",
+      "nextDueDate": "2026-03-28 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Raw Water Tank - 1 To 2",
+      "name": "Water storage Tanks",
+      "category": "In-House",
+      "location": "B1 Pump Room",
+      "lastService": "2026-04-21 00:00:00",
+      "nextDueDate": "2026-03-29 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Fire Tank 1 To 2",
+      "name": "Water storage Tanks",
+      "category": "In-House",
+      "location": "B1 Pump Room",
+      "lastService": "2026-04-22 00:00:00",
+      "nextDueDate": "2026-03-30 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Domestic Tank",
+      "name": "Water storage Tanks",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-04-23 00:00:00",
+      "nextDueDate": "2026-03-31 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Flush Tank",
+      "name": "Water storage Tanks",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-04-24 00:00:00",
+      "nextDueDate": "2026-04-01 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Softner Tank",
+      "name": "Water storage Tanks",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-04-25 00:00:00",
+      "nextDueDate": "2026-04-02 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Fire Tank",
+      "name": "Water storage Tanks",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-04-26 00:00:00",
+      "nextDueDate": "2026-04-03 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "STP Final Tank",
+      "name": "Water storage Tanks",
+      "category": "In-House",
+      "location": "B4 STP Plant",
+      "lastService": "2026-04-27 00:00:00",
+      "nextDueDate": "2026-04-04 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "STP Softner Tank",
+      "name": "Water storage Tanks",
+      "category": "In-House",
+      "location": "B4 STP Plant",
+      "lastService": "2026-04-28 00:00:00",
+      "nextDueDate": "2026-04-05 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Stainers (1 - 5)",
+      "name": "Stainers",
+      "category": "In-House",
+      "location": "B1 DG Room",
+      "lastService": "2026-04-20 00:00:00",
+      "nextDueDate": "2026-03-13 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Stainers (1 & 2)",
+      "name": "Stainers",
+      "category": "In-House",
+      "location": "B1 Domestic Tank",
+      "lastService": "2026-04-21 00:00:00",
+      "nextDueDate": "2026-03-14 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Stainers (1 & 2)",
+      "name": "Stainers",
+      "category": "In-House",
+      "location": "B1 Raw Water Tank",
+      "lastService": "2026-04-22 00:00:00",
+      "nextDueDate": "2026-03-15 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Stainers (1 & 2)",
+      "name": "Stainers",
+      "category": "In-House",
+      "location": "B1 Fire tank",
+      "lastService": "2026-04-23 00:00:00",
+      "nextDueDate": "2026-03-16 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Chiller (1 - 3) Stainers",
+      "name": "Stainers",
+      "category": "In-House",
+      "location": "B1 Chiller Plant",
+      "lastService": "2026-04-24 00:00:00",
+      "nextDueDate": "2026-03-17 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Condensor Pumps Stainers",
+      "name": "Stainers",
+      "category": "In-House",
+      "location": "B1 Chiller Plant",
+      "lastService": "2026-04-25 00:00:00",
+      "nextDueDate": "2026-03-18 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Secondary Pumps Stainers",
+      "name": "Stainers",
+      "category": "In-House",
+      "location": "B1 Chiller Plant",
+      "lastService": "2026-04-26 00:00:00",
+      "nextDueDate": "2026-03-19 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Primary Pumps  Stainers",
+      "name": "Stainers",
+      "category": "In-House",
+      "location": "B1 Chiller Plant",
+      "lastService": "2026-04-27 00:00:00",
+      "nextDueDate": "2026-03-20 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Package condenser Stainers",
+      "name": "Stainers",
+      "category": "In-House",
+      "location": "Terrace",
+      "lastService": "2026-04-28 00:00:00",
+      "nextDueDate": "2026-03-21 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Condensing tank for chiller",
+      "name": "Condensing Tank",
+      "category": "In-House",
+      "location": "Service Floor",
+      "lastService": "2026-04-29 00:00:00",
+      "nextDueDate": "2026-03-22 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Pressure Release Valves",
+      "name": "PRV`s",
+      "category": "In-House",
+      "location": "All Shafts",
+      "lastService": "2026-04-30 00:00:00",
+      "nextDueDate": "2026-03-23 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Sliding Door",
+      "name": "Glas doors",
+      "category": "In-House",
+      "location": "LG",
+      "lastService": "2026-05-31 00:00:00",
+      "nextDueDate": "2026-03-24 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Staricase Emergency Doors",
+      "name": "Staircase Doors",
+      "category": "In-House",
+      "location": "Staircase 1 to 5",
+      "lastService": "2026-03-30 00:00:00",
+      "nextDueDate": "2026-03-30 00:00:00",
+      "colorCode": "Red"
+    },
+    {
+      "id": "Multi stack Parking - 106 Nos",
+      "name": "Stack Parking",
+      "category": "Vendor",
+      "location": "Basement - 3",
+      "lastService": "2026-03-05 00:00:00",
+      "nextDueDate": "2026-05-31 00:00:00",
+      "colorCode": "Red"
+    }
+  ]
+}

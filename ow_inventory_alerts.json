@@ -1,0 +1,18 @@
+{
+  "alerts": [],
+  "last_updated": "2025-11-22T00:00:00",
+  "property": "ONEWEST",
+  "notification_settings": {
+    "email_enabled": true,
+    "daily_summary": true,
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "engineering@terminus-global.com"
+    ]
+  },
+  "threshold_config": {
+    "critical_percentage": 25,
+    "warning_percentage": 50
+  }
+}

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>KRA Report</title>
+<style>
+    body {
+        background: #ffffff;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        color: #000;
+        margin: 20px;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .header img {
+        width: 130px;
+        margin-bottom: 8px;
+    }
+
+    .title {
+        font-weight: bold;
+        font-size: 15px;
+        margin-bottom: 3px;
+        text-align: center;
+        text-decoration: underline;
+    }
+
+    .subtitle {
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 8px;
+        page-break-inside: avoid;
+    }
+
+    table th, table td {
+        border: 1px solid #000;
+        padding: 5px;
+        font-size: 12px;
+        vertical-align: top;
+    }
+
+    .section-title {
+        font-weight: bold;
+        margin-top: 18px;
+        margin-bottom: 6px;
+        text-decoration: underline;
+    }
+
+    .sign-row {
+        margin-top: 40px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .sign-box {
+        width: 40%;
+        text-align: center;
+        font-size: 12px;
+    }
+
+</style>
+</head>
+<body>
+
+<div class="header">
+    <img src="{{ logo_path }}" alt="Company Logo">
+    <div class="title">EMERZHANT PROPERTY MANAGEMENT SERVICES LLP</div>
+    <div class="subtitle">KRA PERFORMANCE REPORT</div>
+</div>
+
+<!-- EMPLOYEE INFO -->
+<table>
+    <tr>
+        <td><b>Name:</b> {{ employee_name }}</td>
+        <td><b>Designation:</b> {{ designation }}</td>
+        <td><b>Grade:</b> {{ grade }}</td>
+    </tr>
+    <tr>
+        <td><b>Employee Code:</b> {{ employee_code }}</td>
+        <td><b>Review Period:</b> {{ review_period }}</td>
+        <td><b>Evaluator:</b> {{ evaluator }}</td>
+    </tr>
+</table>
+
+<!-- ===================== PART I – KRA TABLE ===================== -->
+<div class="section-title">Part I – Key Result Areas (KRAs)</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Sr.No</th>
+            <th>KRA Description</th>
+            <th>%</th>
+            <th>Benchmark</th>
+            <th>Self Rating</th>
+            <th>KPI Wt (Self)</th>
+            <th>Lead Rating</th>
+            <th>KPI Wt (Lead)</th>
+            <th>Comments</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in kra %}
+        <tr>
+            <td>{{ item.srno }}</td>
+            <td>{{ item.description }}</td>
+            <td>{{ item.percent }}</td>
+            <td>{{ item.benchmark }}</td>
+            <td>{{ item.self_rating }}</td>
+            <td>{{ item.kpi_wt_self }}</td>
+            <td>{{ item.lead_rating }}</td>
+            <td>{{ item.kpi_wt_lead }}</td>
+            <td>{{ item.comments }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- FINAL SCORE -->
+<table style="margin-top:10px;">
+    <tr>
+        <td><b>Final Score:</b> {{ final_score }}</td>
+        <td><b>Grade:</b> {{ grade }}</td>
+    </tr>
+</table>
+
+<!-- SIGNATURES -->
+<div class="sign-row">
+    <div class="sign-box">
+        ______________________________ <br>
+        Employee Signature
+    </div>
+
+    <div class="sign-box">
+        ____________________

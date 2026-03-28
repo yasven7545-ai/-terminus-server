@@ -1,0 +1,14 @@
+{
+  "assets": [
+    {
+      "id": "OW-AHU-01",
+      "name": "AHU Floor 1",
+      "category": "In-House",
+      "location": "Floor 1",
+      "lastService": "01/01/26",
+      "nextDueDate": "01/02/26",
+      "frequency": "Monthly"
+    }
+  ],
+  "property": "ONEWEST"
+}

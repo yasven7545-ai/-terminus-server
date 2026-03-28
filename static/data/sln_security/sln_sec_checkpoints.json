@@ -1,0 +1,52 @@
+[
+  {
+    "id": "cp1",
+    "zone": "Main Gate",
+    "checklist": [
+      "ID verification",
+      "Entry logging",
+      "Vehicle check",
+      "Lights working"
+    ]
+  },
+  {
+    "id": "cp2",
+    "zone": "Basement-1",
+    "checklist": [
+      "Suspicious vehicles",
+      "Proper parking",
+      "Lighting OK",
+      "Fire exits clear"
+    ]
+  },
+  {
+    "id": "cp3",
+    "zone": "Ninth Floor Reception",
+    "checklist": [
+      "No unauthorized persons",
+      "CCTV working",
+      "Lights functioning",
+      "Access log updated"
+    ]
+  },
+  {
+    "id": "cp4",
+    "zone": "Service Gate",
+    "checklist": [
+      "Gate locked",
+      "No blockage",
+      "Lighting OK",
+      "Camera functional"
+    ]
+  },
+  {
+    "id": "cp5",
+    "zone": "Mall Entrance",
+    "checklist": [
+      "Crowd control",
+      "Suspicious activity check",
+      "CCTV working",
+      "Emergency exits clear"
+    ]
+  }
+]

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Portal | Glass Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #0f172a, #020617);
+            color: #f8fafc;
+            min-height: 100vh;
+            margin: 0;
+            padding-bottom: 80px; /* Space for bottom nav */
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+        }
+
+        .glass-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .bottom-nav {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-glow-green { box-shadow: 0 0 10px rgba(34, 197, 94, 0.4); }
+        .status-glow-orange { box-shadow: 0 0 10px rgba(249, 115, 22, 0.4); }
+    </style>
+</head>
+<body>
+
+    <div class="px-6 pt-8 pb-4 flex justify-between items-center">
+        <div>
+           
+            <h1 class="text-xl font-semibold">SLN Terminus<span class="text-gray-400 font-light"></span></h1>
+        </div>
+        <div class="glass-card p-2 border-blue-500/30">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-400"></div>
+        </div>
+    </div>
+
+    <div class="flex gap-4 overflow-x-auto px-6 mb-8 no-scrollbar">
+        <div class="glass-card p-4 min-w-[140px] border-l-4 border-l-blue-500">
+            <p class="text-xs text-gray-400">Active</p>
+            <p class="text-2xl font-bold">02</p>
+        </div>
+        <div class="glass-card p-4 min-w-[140px] border-l-4 border-l-green-500">
+            <p class="text-xs text-gray-400">Resolved</p>
+            <p class="text-2xl font-bold">14</p>
+        </div>
+        <div class="glass-card p-4 min-w-[140px] border-l-4 border-l-purple-500">
+            <p class="text-xs text-gray-400">Notices</p>
+            <p class="text-2xl font-bold">01</p>
+        </div>
+    </div>
+
+    <div class="px-6 space-y-6">
+        
+        <div class="glass-card p-6 border-white/20 shadow-2xl">
+            <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
+                Report an Issue
+            </h2>
+            
+            <form class="space-y-4">
+                <select class="glass-input w-full p-4 rounded-xl appearance-none">
+                    <option>Maintenance Request</option>
+                    <option>Observation/Safety</option>
+                    <option>Complaint</option>
+                </select>
+
+                <textarea class="glass-input w-full p-4 rounded-xl text-sm" rows="3" placeholder="What's happening?"></textarea>
+                
+                <div class="flex gap-2">
+                    <button type="button" class="glass-card flex-1 py-3 text-xs flex items-center justify-center gap-2 border-dashed border-white/30">
+                        📸 Add Media
+                    </button>
+                    <button type="submit" class="flex-[2] bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl shadow-lg shadow-blue-900/40 transition-all active:scale-95">
+                        Submit Report
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-widest px-2">Active Trackers</h3>
+        
+        <div class="space-y-3">
+            <div class="glass-card p-4 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center text-orange-500">🛠️</div>
+                    <div>
+                        <h4 class="text-sm font-semibold">AC Not Cooling</h4>
+                        <p class="text-xs text-gray-500">Technician assigned • 2h ago</p>
+                    </div>
+                </div>
+                <div class="h-2 w-2 rounded-full bg-orange-500 status-glow-orange"></div>
+            </div>
+
+            <div class="glass-card p-4 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center text-green-500">💡</div>
+                    <div>
+                        <h4 class="text-sm font-semibold">B1 Service lift lobby Light blinking</h4>
+                        <p class="text-xs text-gray-500">Completed Yesterday</p>
+                    </div>
+                </div>
+                <div class="h-2 w-2 rounded-full bg-green-500 status-glow-green"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <nav class="fixed bottom-0 left-0 right-0 h-20 bottom-nav px-8 flex justify-between items-center z-50">
+        <div class="flex flex-col items-center text-blue-500">
+            <span class="text-xl">🏠</span>
+            <span class="text-[10px] mt-1 font-bold">Home</span>
+        </div>
+        <div class="flex flex-col items-center text-gray-500">
+            <span class="text-xl">📄</span>
+            <span class="text-[10px] mt-1 font-bold">History</span>
+        </div>
+        <div class="bg-blue-600 w-12 h-12 rounded-full flex items-center justify-center -mt-10 border-4 border-[#0f172a] shadow-xl text-xl">
+            +
+        </div>
+        <div class="flex flex-col items-center text-gray-500">
+            <span class="text-xl">🔔</span>
+            <span class="text-[10px] mt-1 font-bold">Alerts</span>
+        </div>
+        <div class="flex flex-col items-center text-gray-500">
+            <span class="text-xl">⚙️</span>
+            <span class="text-[10px] mt-1 font-bold">Profile</span>
+        </div>
+    </nav>
+</body>
+</html>

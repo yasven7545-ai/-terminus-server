@@ -1,0 +1,2039 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SLN — Housekeeping</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+/* ── TOKENS ── */
+[data-theme="dark"]{
+  --bg:#020b12;--bg2:#071520;--surf:#071520;--surf2:#0c1e2e;--card:#010810;
+  --bdr:rgba(6,182,212,.12);--bdr2:rgba(6,182,212,.26);
+  --tx:#b8dde8;--tx2:#daf0f7;--tx3:#4a7a8a;
+  --teal:#0d9488;--cyan:#06b6d4;--cyan-g:rgba(6,182,212,.12);
+  --emerald:#10b981;--em-g:rgba(16,185,129,.12);
+  --amber:#f59e0b;--am-g:rgba(245,158,11,.12);
+  --rose:#ef4444;--rose-g:rgba(239,68,68,.12);
+  --orange:#F47920;--orange-g:rgba(244,121,32,.14);
+  --indigo:#818cf8;--sky:#38bdf8;--lime:#a3e635;--violet:#8b5cf6;
+  --ga:linear-gradient(135deg,#0d9488,#06b6d4);
+  --gb:linear-gradient(135deg,#F47920,#f59e0b);
+  --gc:linear-gradient(135deg,#10b981,#06b6d4);
+  --sh:0 8px 36px rgba(0,0,0,.70);--sh2:0 2px 24px rgba(0,0,0,.5);
+  --header-bg:#010810;
+}
+[data-theme="light"]{
+  --bg:#f0fafa;--bg2:#e0f5f5;--surf:#fff;--surf2:#cdeeed;--card:#fff;
+  --bdr:rgba(13,148,136,.14);--bdr2:rgba(13,148,136,.30);
+  --tx:#0f2e35;--tx2:#07191e;--tx3:#3d7080;
+  --teal:#0d9488;--cyan:#0891b2;--cyan-g:rgba(8,145,178,.1);
+  --emerald:#059669;--em-g:rgba(5,150,105,.1);
+  --amber:#d97706;--am-g:rgba(217,119,6,.1);
+  --rose:#e11d48;--rose-g:rgba(225,29,72,.1);
+  --orange:#ea580c;--orange-g:rgba(234,88,12,.1);
+  --indigo:#4f46e5;--sky:#0284c7;--lime:#65a30d;--violet:#7c3aed;
+  --ga:linear-gradient(135deg,#0f766e,#0891b2);
+  --gb:linear-gradient(135deg,#ea580c,#d97706);
+  --gc:linear-gradient(135deg,#059669,#0284c7);
+  --sh:0 6px 28px rgba(0,0,0,.1);--sh2:0 2px 10px rgba(0,0,0,.07);
+  --header-bg:rgba(255,255,255,.95);
+}
+:root{--hh:56px;--sw:236px;--r:12px;--rsm:8px;
+  --ease:cubic-bezier(.4,0,.2,1);--bounce:cubic-bezier(.34,1.3,.64,1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--tx);
+  min-height:100vh;overflow-x:hidden;transition:background .35s,color .35s;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:4px;}
+
+/* ── HEADER ── */
+header{position:fixed;top:0;left:0;right:0;height:var(--hh);background:var(--header-bg);
+  backdrop-filter:blur(20px);border-bottom:1px solid var(--bdr);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;z-index:700;box-shadow:var(--sh2);transition:background .35s;}
+.logo-wrap{display:flex;align-items:center;gap:10px;min-width:0;}
+.logo-box{background:#000;border:1px solid rgba(244,121,32,.4);border-radius:9px;padding:4px 10px;
+  display:flex;align-items:center;box-shadow:0 0 18px rgba(244,121,32,.2);flex-shrink:0;}
+.logo-box img{height:28px;width:auto;}
+.logo-text{display:flex;flex-direction:column;}
+.logo-name{font-size:13px;font-weight:800;color:var(--tx2);letter-spacing:-.3px;}
+.logo-sub{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--tx2);text-transform:uppercase;letter-spacing:1px;}
+.hdr-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.clock-pill{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;
+  background:var(--surf2);border:1px solid var(--bdr);
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan);white-space:nowrap;}
+.clock-pill svg{width:11px;height:11px;}
+.theme-toggle{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;
+  background:var(--surf2);border:1px solid var(--bdr2);cursor:pointer;user-select:none;transition:border-color .2s;}
+.theme-toggle:hover{border-color:var(--cyan);}
+.t-icon{width:13px;height:13px;color:var(--tx2);}
+.tt-track{width:30px;height:17px;border-radius:9px;background:var(--bdr2);position:relative;transition:background .25s;}
+[data-theme="light"] .tt-track{background:var(--teal);}
+.tt-thumb{position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3);transition:transform .25s;}
+[data-theme="light"] .tt-thumb{transform:translateX(13px);}
+.btn-back-portal{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;
+  color:#FFD700;text-decoration:none;padding:5px 12px;border:1.5px solid #FFD700;
+  border-radius:20px;background:transparent;cursor:pointer;white-space:nowrap;
+  animation:sln-hk-gold-blink 1.6s ease-in-out infinite;}
+.btn-back-portal:hover{background:rgba(255,215,0,.10);}
+.btn-back-portal svg{width:13px;height:13px;}
+@keyframes sln-hk-gold-blink{
+  0%,100%{border-color:#FFD700;box-shadow:none;color:#FFD700;}
+  50%{border-color:#ffe066;box-shadow:0 0 14px rgba(255,215,0,.55);color:#ffe066;}}
+.burger{display:none;align-items:center;justify-content:center;width:36px;height:36px;
+  border-radius:var(--rsm);background:var(--surf2);border:1px solid var(--bdr2);
+  color:var(--tx2);cursor:pointer;transition:all .2s;}
+.burger:hover{border-color:var(--cyan);color:var(--cyan);}
+.burger svg{width:16px;height:16px;}
+
+/* ── SIDEBAR ── */
+.sidebar{position:fixed;top:var(--hh);left:0;bottom:0;width:var(--sw);
+  background:var(--surf);border-right:1px solid var(--bdr);
+  display:flex;flex-direction:column;z-index:600;overflow:hidden;
+  transition:transform .3s var(--ease);}
+.sb-top{padding:10px 13px 8px;border-bottom:1px solid var(--bdr);flex-shrink:0;}
+.sb-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;
+  font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1px;
+  color:var(--teal);background:rgba(13,148,136,.12);border:1px solid rgba(13,148,136,.25);}
+.sb-badge svg{width:10px;height:10px;}
+.sb-scroll{flex:1;overflow-y:auto;padding:6px 10px 10px;}
+.nav-grp{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.3px;
+  color:var(--tx3);padding:9px 8px 3px;}
+.nav-btn{display:flex;align-items:center;gap:9px;width:100%;padding:8px 10px;border-radius:var(--rsm);
+  background:transparent;border:none;color:var(--tx2);font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;text-align:left;margin-bottom:1px;}
+.nav-btn svg{width:14px;height:14px;flex-shrink:0;opacity:.65;transition:opacity .15s;}
+.nav-btn:hover{background:rgba(13,148,136,.10);}
+.nav-btn:hover svg{opacity:1;}
+.nav-btn.active{background:var(--cyan-g);color:var(--cyan);border-left:3px solid var(--cyan);font-weight:600;}
+.nav-btn.active svg{opacity:1;color:var(--cyan);}
+.nav-pip{width:6px;height:6px;border-radius:50%;margin-left:auto;flex-shrink:0;
+  animation:pdot 2s ease-in-out infinite;}
+@keyframes pdot{0%{box-shadow:0 0 0 0 rgba(16,185,129,.8);}70%{box-shadow:0 0 0 6px rgba(16,185,129,0);}100%{box-shadow:0 0 0 0 rgba(16,185,129,0);}}
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:599;}
+.sb-overlay.show{display:block;}
+
+/* ── MAIN ── */
+main{margin-left:var(--sw);margin-top:var(--hh);min-height:calc(100vh - var(--hh));
+  padding:20px 22px 60px;transition:margin-left .3s;}
+.page-hdr{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px;}
+.page-title{font-size:20px;font-weight:800;color:var(--tx2);letter-spacing:-.5px;}
+.page-title span{color:var(--teal);}
+.page-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+
+/* ── KPI CARDS (clickable) ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:18px;}
+.kpi-card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:14px 16px;
+  display:flex;flex-direction:column;gap:5px;box-shadow:var(--sh2);
+  position:relative;overflow:hidden;cursor:pointer;
+  transition:transform .2s,box-shadow .2s,border-color .2s;}
+.kpi-card:hover{transform:translateY(-3px);box-shadow:var(--sh);border-color:var(--bdr2);}
+.kpi-card:active{transform:translateY(-1px);}
+.kpi-card::before{content:'';position:absolute;inset:0;background:var(--kpi-grad,var(--ga));opacity:.06;pointer-events:none;}
+.kpi-card-ripple{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  opacity:0;background:var(--kpi-grad,var(--ga));transition:opacity .2s;pointer-events:none;}
+.kpi-card:hover .kpi-card-ripple{opacity:.04;}
+.kpi-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  background:var(--kpi-grad,var(--ga));margin-bottom:3px;}
+.kpi-icon svg{width:16px;height:16px;color:#fff;}
+.kpi-val{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;line-height:1;color:var(--tx2);}
+.kpi-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--tx3);}
+.kpi-sub{font-size:10.5px;color:var(--tx3);}
+.kpi-arrow{position:absolute;top:10px;right:10px;opacity:0;transition:opacity .2s;color:var(--cyan);}
+.kpi-card:hover .kpi-arrow{opacity:.6;}
+.kpi-arrow svg{width:12px;height:12px;}
+
+/* zone-type strip */
+.zt-strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-bottom:18px;}
+.zt-card{background:var(--card);border:1px solid var(--bdr);border-radius:9px;padding:10px 12px;
+  border-left:3px solid var(--zt-color,var(--cyan));cursor:pointer;transition:all .2s;}
+.zt-card:hover{transform:translateY(-2px);border-color:var(--zt-color,var(--cyan));}
+.zt-label{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--tx3);margin-bottom:3px;}
+.zt-counts{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+.zt-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;}
+.zt-sep{color:var(--tx3);font-size:9px;}
+
+/* ── PANELS ── */
+.panel{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);
+  padding:20px 22px;margin-bottom:20px;box-shadow:var(--sh2);display:none;}
+.panel.active{display:block;animation:sec-in .35s var(--ease) both;}
+@keyframes sec-in{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+.panel-hdr{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px;}
+.panel-title{font-size:15px;font-weight:700;color:var(--tx2);display:flex;align-items:center;gap:8px;}
+.panel-title::before{content:'';display:block;width:4px;height:17px;background:var(--ga);border-radius:2px;}
+.panel-title svg{width:16px;height:16px;color:var(--cyan);}
+.panel-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;border-radius:var(--rsm);border:1px solid var(--bdr);}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;min-width:560px;}
+th{padding:9px 12px;text-align:left;background:var(--surf2);color:var(--tx3);
+  font-size:10px;text-transform:uppercase;letter-spacing:.7px;font-weight:700;
+  border-bottom:1px solid var(--bdr);white-space:nowrap;}
+td{padding:9px 12px;color:var(--tx2);border-bottom:1px solid var(--bdr);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--surf2);}
+
+/* badges */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;white-space:nowrap;}
+.bg{background:var(--em-g);color:var(--emerald);border:1px solid rgba(16,185,129,.25);}
+.ba{background:var(--am-g);color:var(--amber);border:1px solid rgba(245,158,11,.25);}
+.br{background:var(--rose-g);color:var(--rose);border:1px solid rgba(239,68,68,.25);}
+.bc{background:var(--cyan-g);color:var(--cyan);border:1px solid rgba(6,182,212,.25);}
+.bo{background:var(--orange-g);color:var(--orange);border:1px solid rgba(244,121,32,.25);}
+.bp{background:rgba(129,140,248,.12);color:var(--indigo);border:1px solid rgba(129,140,248,.25);}
+.bsk{background:rgba(56,189,248,.12);color:var(--sky);border:1px solid rgba(56,189,248,.25);}
+.blm{background:rgba(163,230,53,.12);color:var(--lime);border:1px solid rgba(163,230,53,.25);}
+.bv{background:rgba(139,92,246,.12);color:var(--violet);border:1px solid rgba(139,92,246,.25);}
+.pri-dot{width:7px;height:7px;border-radius:50%;display:inline-block;}
+.ph{background:#ef4444;}.pm{background:#f59e0b;}.pl{background:#10b981;}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--rsm);
+  font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all .2s;
+  white-space:nowrap;font-family:'Plus Jakarta Sans',sans-serif;}
+.btn svg{width:13px;height:13px;}
+.btn-primary{background:var(--ga);color:#fff;}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.btn-outline{background:transparent;border:1.5px solid var(--bdr2);color:var(--tx2);}
+.btn-outline:hover{border-color:var(--cyan);color:var(--cyan);}
+.btn-sm{padding:5px 10px;font-size:11px;}
+.btn-danger{background:var(--rose-g);color:var(--rose);border:1px solid rgba(239,68,68,.3);}
+.btn-danger:hover{background:var(--rose);color:#fff;}
+.btn-success{background:var(--em-g);color:var(--emerald);border:1px solid rgba(16,185,129,.3);}
+.btn-success:hover{background:var(--emerald);color:#fff;}
+.btn-export{background:var(--am-g);color:var(--amber);border:1px solid rgba(245,158,11,.3);}
+.btn-export:hover{background:var(--amber);color:#000;}
+.btn-upload{background:rgba(139,92,246,.12);color:var(--violet);border:1px solid rgba(139,92,246,.3);}
+.btn-upload:hover{background:var(--violet);color:#fff;}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);
+  backdrop-filter:blur(6px);z-index:900;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.show{display:flex;}
+.modal{background:var(--surf);border:1px solid var(--bdr2);border-radius:18px;padding:26px;
+  width:100%;max-width:560px;box-shadow:var(--sh);animation:modal-in .3s var(--bounce) both;
+  max-height:90vh;overflow-y:auto;}
+@keyframes modal-in{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:none;}}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.modal-title{font-size:15px;font-weight:700;color:var(--tx2);}
+.modal-close{width:28px;height:28px;border-radius:50%;border:none;background:var(--surf2);
+  color:var(--tx3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.modal-close:hover{background:var(--rose-g);color:var(--rose);}
+.modal-close svg{width:14px;height:14px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-grid.c1{grid-template-columns:1fr;}
+.form-group{display:flex;flex-direction:column;gap:4px;}
+.form-group.full{grid-column:1/-1;}
+label{font-size:11px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.6px;}
+input,select,textarea{background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--rsm);
+  padding:8px 11px;font-size:12.5px;color:var(--tx2);font-family:'Plus Jakarta Sans',sans-serif;
+  transition:border-color .2s;outline:none;width:100%;}
+input:focus,select:focus,textarea:focus{border-color:var(--cyan);}
+select option{background:var(--surf2);}
+textarea{resize:vertical;min-height:65px;}
+.form-footer{display:flex;justify-content:flex-end;gap:9px;margin-top:16px;}
+
+/* ── FILTER BAR ── */
+.filter-bar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:14px;}
+.filter-bar input,.filter-bar select{width:auto;padding:6px 10px;font-size:11.5px;}
+.filter-bar input{min-width:150px;}
+
+/* ── CHART ── */
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.chart-card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:18px;box-shadow:var(--sh2);}
+.chart-card canvas{max-height:230px;}
+.chart-title{font-size:12px;font-weight:700;color:var(--tx2);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.chart-title svg{width:13px;height:13px;color:var(--cyan);}
+
+/* ── ZONE GRID ── */
+.zone-group{margin-bottom:22px;}
+.zone-group-hdr{display:flex;align-items:center;gap:9px;margin-bottom:10px;
+  padding-bottom:7px;border-bottom:2px solid var(--zg-color,var(--bdr2));}
+.zone-group-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:var(--zg-color,var(--cyan));}
+.zone-group-icon svg{width:15px;height:15px;color:#fff;}
+.zone-group-title{font-size:13px;font-weight:800;color:var(--tx2);}
+.zone-group-sub{font-size:10px;color:var(--tx3);margin-left:auto;font-family:'JetBrains Mono',monospace;}
+.zone-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:9px;}
+.zone-card{background:var(--surf2);border:1.5px solid var(--bdr);border-radius:var(--r);
+  padding:12px 11px;display:flex;flex-direction:column;gap:4px;cursor:pointer;transition:all .2s;
+  position:relative;overflow:hidden;}
+.zone-card:hover{transform:translateY(-3px);box-shadow:var(--sh2);}
+.zone-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--zc,var(--bdr2));transition:width .2s;}
+.zone-card:hover::before{width:6px;}
+.zone-card.cleaned{border-color:var(--emerald);--zc:var(--emerald);}
+.zone-card.pending{border-color:var(--amber);--zc:var(--amber);}
+.zone-card.in-progress{border-color:var(--cyan);--zc:var(--cyan);}
+.zone-card-id{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--tx3);}
+.zone-card-name{font-size:11px;font-weight:700;color:var(--tx2);line-height:1.3;}
+.zone-card-cat{font-size:9.5px;color:var(--tx3);}
+.zone-card-status{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;
+  display:flex;align-items:center;gap:3px;margin-top:2px;}
+.zone-card-status::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--zc,var(--bdr2));flex-shrink:0;}
+.zone-card-time{font-size:9px;color:var(--tx3);font-family:'JetBrains Mono',monospace;}
+.zone-hint{font-size:10px;color:var(--tx3);margin-bottom:12px;display:flex;align-items:center;gap:5px;}
+
+/* ── WASHROOM CHECKLIST ── */
+.wc-location-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:18px;}
+.wc-loc-card{background:var(--surf2);border:1.5px solid var(--bdr);border-radius:var(--r);
+  padding:14px;cursor:pointer;transition:all .2s;text-align:center;}
+.wc-loc-card:hover{border-color:var(--cyan);transform:translateY(-2px);box-shadow:var(--sh2);}
+.wc-loc-emoji{font-size:22px;margin-bottom:6px;}
+.wc-loc-name{font-size:11.5px;font-weight:700;color:var(--tx2);}
+.wc-loc-floor{font-size:10px;color:var(--tx3);margin-top:2px;}
+.wc-loc-gender{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;
+  font-size:10px;font-weight:700;margin-top:5px;}
+.wc-loc-gender.ladies{background:rgba(244,114,182,.12);color:#f472b6;border:1px solid rgba(244,114,182,.3);}
+.wc-loc-gender.gents{background:rgba(56,189,248,.12);color:var(--sky);border:1px solid rgba(56,189,248,.3);}
+.wc-checklist-form{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.wc-check-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--rsm);
+  background:var(--surf2);border:1px solid var(--bdr);cursor:pointer;transition:all .15s;}
+.wc-check-item:hover{border-color:var(--cyan);}
+.wc-check-item input[type=checkbox]{width:14px;height:14px;accent-color:var(--cyan);cursor:pointer;}
+.wc-check-item label{font-size:11.5px;color:var(--tx2);cursor:pointer;font-weight:500;text-transform:none;letter-spacing:0;}
+.wc-log-entry{background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;}
+.wc-log-hdr{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.wc-log-loc{font-size:12px;font-weight:700;color:var(--tx2);}
+.wc-log-meta{font-size:10px;color:var(--tx3);font-family:'JetBrains Mono',monospace;}
+.wc-items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:4px;}
+.wc-item-pill{font-size:10px;padding:3px 7px;border-radius:4px;display:inline-flex;align-items:center;gap:4px;}
+.wc-item-ok{background:var(--em-g);color:var(--emerald);}
+.wc-item-fail{background:var(--rose-g);color:var(--rose);}
+
+/* ── INVENTORY UPLOAD ── */
+.upload-zone{border:2px dashed var(--bdr2);border-radius:var(--r);padding:28px;text-align:center;
+  cursor:pointer;transition:all .2s;margin-bottom:14px;}
+.upload-zone:hover,.upload-zone.drag-over{border-color:var(--cyan);background:var(--cyan-g);}
+.upload-zone-icon{font-size:32px;margin-bottom:8px;}
+.upload-zone-text{font-size:13px;font-weight:600;color:var(--tx2);}
+.upload-zone-sub{font-size:11px;color:var(--tx3);margin-top:4px;}
+#inv-file-input{display:none;}
+.upload-status{padding:10px 14px;border-radius:var(--rsm);font-size:12px;font-weight:600;margin-top:10px;display:none;}
+.upload-status.ok{background:var(--em-g);color:var(--emerald);border:1px solid rgba(16,185,129,.3);}
+.upload-status.err{background:var(--rose-g);color:var(--rose);border:1px solid rgba(239,68,68,.3);}
+
+/* ── SCHEDULE CARD ── */
+.schedule-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;}
+.sch-card{background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r);padding:14px 16px;}
+.sch-card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.sch-name{font-size:13px;font-weight:700;color:var(--tx2);}
+.sch-time{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan);}
+.sch-row{font-size:11px;color:var(--tx3);margin-bottom:4px;display:flex;gap:6px;}
+.sch-row strong{color:var(--tx2);}
+
+/* ── SOW TABLE ── */
+.sow-freq{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;}
+
+/* ── PEST CARD ── */
+.pest-card{background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r);padding:14px;margin-bottom:10px;}
+.pest-hdr{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.pest-id{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tx3);}
+.pest-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.pest-field{font-size:11px;color:var(--tx3);display:flex;flex-direction:column;gap:1px;}
+.pest-field strong{font-size:12px;color:var(--tx2);}
+
+/* ── TRAINING ── */
+.trn-card{background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--r);padding:14px;margin-bottom:10px;}
+.trn-hdr{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:6px;}
+.trn-topic{font-size:13px;font-weight:700;color:var(--tx2);}
+.trn-thumb{width:72px;height:54px;object-fit:cover;border-radius:6px;border:1px solid var(--bdr);margin-top:8px;cursor:pointer;}
+.trn-doc-link{font-size:11px;color:var(--cyan);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-top:6px;}
+.trn-doc-link:hover{text-decoration:underline;}
+.trn-upload-row{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap;}
+
+/* ── STAFF DIRECTORY ── */
+.staff-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;}
+.staff-card{background:var(--surf2);border:1.5px solid var(--bdr);border-radius:var(--r);padding:16px;
+  display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;position:relative;}
+.staff-card:hover{border-color:var(--bdr2);box-shadow:var(--sh2);}
+.staff-avatar{width:68px;height:68px;border-radius:50%;object-fit:cover;border:2px solid var(--bdr2);}
+.staff-avatar-placeholder{width:68px;height:68px;border-radius:50%;background:var(--cyan-g);border:2px solid var(--bdr2);
+  display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--cyan);}
+.staff-name{font-size:13px;font-weight:800;color:var(--tx2);margin-top:2px;}
+.staff-role{font-size:11px;color:var(--tx3);}
+.staff-shift{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--cyan);}
+.staff-contact{font-size:11px;color:var(--tx3);}
+.staff-card-actions{display:flex;gap:6px;margin-top:6px;}
+.staff-id-badge{position:absolute;top:8px;left:8px;font-size:9px;font-family:'JetBrains Mono',monospace;
+  color:var(--tx3);background:var(--bg2);padding:2px 6px;border-radius:4px;border:1px solid var(--bdr);}
+
+/* ── PHOTO UPLOAD ZONE ── */
+.photo-upload-zone{border:2px dashed var(--bdr2);border-radius:var(--rsm);padding:14px;text-align:center;
+  cursor:pointer;transition:all .2s;background:transparent;}
+.photo-upload-zone:hover{border-color:var(--cyan);background:var(--cyan-g);}
+.photo-upload-zone input[type=file]{display:none;}
+.photo-preview{width:100%;max-height:120px;object-fit:cover;border-radius:var(--rsm);margin-top:8px;display:none;}
+
+/* ── ZONE PHOTO THUMB ── */
+.zone-photo-btn{position:absolute;bottom:6px;right:6px;width:24px;height:24px;border-radius:50%;
+  background:var(--surf2);border:1px solid var(--bdr2);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:var(--cyan);transition:all .15s;}
+.zone-photo-btn:hover{background:var(--cyan);color:#fff;}
+.zone-photo-btn svg{width:11px;height:11px;}
+
+/* ── TASK PHOTO THUMB ── */
+.task-photo-thumb{width:44px;height:34px;object-fit:cover;border-radius:4px;border:1px solid var(--bdr);cursor:pointer;vertical-align:middle;}
+
+/* ── LIGHTBOX ── */
+#hk-lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9999;
+  align-items:center;justify-content:center;cursor:zoom-out;}
+#hk-lightbox.show{display:flex;}
+#hk-lightbox img{max-width:90vw;max-height:90vh;border-radius:8px;box-shadow:var(--sh);}
+
+/* ── PROGRESS ── */
+.progress-wrap{background:var(--surf2);border-radius:4px;height:5px;overflow:hidden;}
+.progress-bar{height:100%;border-radius:4px;transition:width .6s var(--ease);}
+
+/* ── TOAST ── */
+#sln-hk-toast{position:fixed;bottom:22px;right:22px;z-index:999;display:flex;flex-direction:column;gap:7px;}
+.toast{padding:10px 16px;border-radius:var(--rsm);font-size:12.5px;font-weight:600;color:#fff;
+  box-shadow:var(--sh);animation:toast-in .3s var(--bounce);display:flex;align-items:center;gap:7px;min-width:210px;}
+.ts{background:#059669;}.te{background:#dc2626;}.ti{background:#0891b2;}
+@keyframes toast-in{from{opacity:0;transform:translateX(20px);}to{opacity:1;transform:none;}}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:44px 20px;color:var(--tx3);}
+.empty-state svg{width:38px;height:38px;margin-bottom:10px;opacity:.25;}
+.empty-state p{font-size:12.5px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){.chart-grid{grid-template-columns:1fr;}}
+@media(max-width:768px){
+  :root{--sw:0px;}
+  .sidebar{transform:translateX(-236px);}
+  .sidebar.open{transform:none;width:236px;}
+  main{margin-left:0!important;}
+  .burger{display:flex;}
+  .clock-pill{display:none;}
+  .logo-text{display:none;}
+  .kpi-grid{grid-template-columns:repeat(2,1fr);}
+  .zt-strip{grid-template-columns:repeat(2,1fr);}
+  .form-grid{grid-template-columns:1fr;}
+  .wc-checklist-form{grid-template-columns:1fr;}
+}
+@media(max-width:420px){
+  .kpi-grid{grid-template-columns:1fr 1fr;}
+  main{padding:14px 14px 50px;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-wrap">
+    <button class="burger" id="hk-burger"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <a href="/sln_terminus" class="logo-box">
+      <img src="/static/img/logo.png" alt="SLN" onerror="this.style.display='none';this.parentNode.innerHTML='<span style=\'color:#F47920;font-weight:900;font-size:14px\'>SLN</span>'"/>
+    </a>
+    <div class="logo-text">
+      <span class="logo-name">Housekeeping</span>
+      <span class="logo-sub">SLN Terminus — HK Module v3</span>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="clock-pill">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      <span id="hk-clock">--:--:--</span>
+    </div>
+    <div class="theme-toggle" id="hk-theme-btn">
+      <svg class="t-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <div class="tt-track"><div class="tt-thumb"></div></div>
+      <svg class="t-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    </div>
+    <a href="/sln_terminus" class="btn-back-portal">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1V10"/></svg>
+      Back to Portal
+    </a>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<div class="sb-overlay" id="hk-overlay"></div>
+<aside class="sidebar" id="hk-sidebar">
+  <div class="sb-top">
+    <div class="sb-badge">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      HK Module v3
+    </div>
+  </div>
+  <div class="sb-scroll">
+    <div class="nav-grp">Dashboard</div>
+    <button class="nav-btn active" data-panel="overview" onclick="hk_show('overview',this)">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Overview<span class="nav-pip" style="background:var(--emerald);"></span>
+    </button>
+
+    <div class="nav-grp">Operations</div>
+    <button class="nav-btn" data-panel="tasks" onclick="hk_show('tasks',this)">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+      Task Management
+    </button>
+    <button class="nav-btn" data-panel="checklist" onclick="hk_show('checklist',this)">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      Daily Checklist
+    </button>
+    <button class="nav-btn" data-panel="zones" onclick="hk_show('zones',this)">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      Zone Status
+    </button>
+    <button class="nav-btn" data-panel="washroom" onclick="hk_show('washroom',this)">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"/></svg>
+      Washroom Checklists<span class="nav-pip" style="background:#06b6d4;"></span>
+    </button>
+
+    <div class="nav-grp">Planning</div>
+    <button class="nav-btn" data-panel="sow" onclick="hk_show('sow',this)">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Scope of Work
+    </button>
+    <button class="nav-btn" data-panel="schedules" onclick="hk_show('schedules',this)">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Work Schedules
+    </button>
+    <button class="nav-btn" data-panel="pest" onclick="hk_show('pest',this)">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Pest Control<span class="nav-pip" style="background:var(--rose);animation:pdot 1.5s ease-in-out infinite;"></span>
+    </button>
+
+    <div class="nav-grp">Resources</div>
+    <button class="nav-btn" data-panel="inventory" onclick="hk_show('inventory',this)">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+      Stock Inventory
+    </button>
+    <button class="nav-btn" data-panel="training" onclick="hk_show('training',this)">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      Training Sessions
+    </button>
+    <button class="nav-btn" data-panel="staff" onclick="hk_show('staff',this)">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      Staff Directory
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main id="hk-main">
+  <div class="page-hdr">
+    <div>
+      <div class="page-title">Housekeeping <span>Dashboard</span></div>
+      <div style="font-size:11px;color:var(--tx3);margin-top:2px;font-family:'JetBrains Mono',monospace;">SLN Terminus — Mall · Basement · Office · Staircases · Terrace</div>
+    </div>
+    <div class="page-actions">
+      <button class="btn btn-export" onclick="hk_export()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export All
+      </button>
+      <button class="btn btn-primary" onclick="hk_loadAll()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- KPI GRID — all clickable -->
+  <div class="kpi-grid">
+    <div class="kpi-card" style="--kpi-grad:var(--ga);" onclick="hk_show('tasks',document.querySelector('[data-panel=tasks]'))" title="Go to Tasks">
+      <div class="kpi-arrow"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      <div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
+      <div class="kpi-val" id="k-total">—</div>
+      <div class="kpi-lbl">Total Tasks</div>
+      <div class="kpi-sub" id="k-today">Today: —</div>
+    </div>
+    <div class="kpi-card" style="--kpi-grad:var(--gc);" onclick="hk_show('tasks',document.querySelector('[data-panel=tasks]'))" title="Go to Tasks">
+      <div class="kpi-arrow"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      <div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="kpi-val" id="k-comp">—</div>
+      <div class="kpi-lbl">Completed</div>
+      <div class="kpi-sub" id="k-rate">Rate: —%</div>
+    </div>
+    <div class="kpi-card" style="--kpi-grad:var(--gb);" onclick="hk_show('tasks',document.querySelector('[data-panel=tasks]'))" title="Go to Tasks">
+      <div class="kpi-arrow"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      <div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div class="kpi-val" id="k-pend">—</div>
+      <div class="kpi-lbl">Pending</div>
+      <div class="kpi-sub" id="k-inprog">In Progress: —</div>
+    </div>
+    <div class="kpi-card" style="--kpi-grad:linear-gradient(135deg,#0d9488,#2dd4bf);" onclick="hk_show('zones',document.querySelector('[data-panel=zones]'))" title="Go to Zone Status">
+      <div class="kpi-arrow"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      <div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div>
+      <div class="kpi-val" id="k-zones">—</div>
+      <div class="kpi-lbl">Total Zones</div>
+      <div class="kpi-sub" id="k-cleaned">Cleaned: —</div>
+    </div>
+    <div class="kpi-card" style="--kpi-grad:linear-gradient(135deg,#06b6d4,#8b5cf6);" onclick="hk_show('washroom',document.querySelector('[data-panel=washroom]'))" title="Go to Washroom Checklists">
+      <div class="kpi-arrow"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      <div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"/></svg></div>
+      <div class="kpi-val" id="k-wc">—</div>
+      <div class="kpi-lbl">WC Checks Today</div>
+      <div class="kpi-sub">Washroom Logs</div>
+    </div>
+    <div class="kpi-card" style="--kpi-grad:linear-gradient(135deg,#ef4444,#f59e0b);" onclick="hk_show('inventory',document.querySelector('[data-panel=inventory]'))" title="Go to Stock Inventory">
+      <div class="kpi-arrow"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      <div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+      <div class="kpi-val" id="k-low">—</div>
+      <div class="kpi-lbl">Low Stock Items</div>
+      <div class="kpi-sub">Inventory Alerts</div>
+    </div>
+    <div class="kpi-card" style="--kpi-grad:linear-gradient(135deg,#8b5cf6,#ef4444);" onclick="hk_show('pest',document.querySelector('[data-panel=pest]'))" title="Go to Pest Control">
+      <div class="kpi-arrow"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      <div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div class="kpi-val" style="font-size:13px;font-weight:700;" id="k-pest">—</div>
+      <div class="kpi-lbl">Pest Control</div>
+      <div class="kpi-sub">Next Due</div>
+    </div>
+    <div class="kpi-card" style="--kpi-grad:linear-gradient(135deg,#818cf8,#06b6d4);" onclick="hk_show('training',document.querySelector('[data-panel=training]'))" title="Go to Training">
+      <div class="kpi-arrow"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      <div class="kpi-icon"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg></div>
+      <div class="kpi-val" id="k-trn">—</div>
+      <div class="kpi-lbl">Training Sessions</div>
+      <div style="margin-top:4px;"><div class="progress-wrap"><div class="progress-bar" id="k-prog" style="background:var(--ga);width:0%;"></div></div></div>
+    </div>
+  </div>
+
+  <!-- Zone Type Strip -->
+  <div class="zt-strip" id="hk-zt-strip"></div>
+
+  <!-- OVERVIEW PANEL -->
+  <div class="panel active" id="panel-overview">
+    <div class="panel-hdr">
+      <div class="panel-title"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Overview</div>
+      <div class="panel-actions">
+        <span style="font-size:11px;color:var(--tx3);" id="ov-date"></span>
+      </div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="chart-title"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Tasks by Zone Type</div>
+        <canvas id="chart-tasks"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg> Zone Cleaning Status</div>
+        <canvas id="chart-zones"></canvas>
+      </div>
+    </div>
+    <!-- Quick zone type summary -->
+    <div id="ov-zone-groups"></div>
+  </div>
+
+  <!-- TASKS PANEL -->
+  <div class="panel" id="panel-tasks">
+    <div class="panel-hdr">
+      <div class="panel-title"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg> Task Management</div>
+      <div class="panel-actions">
+        <button class="btn btn-primary btn-sm" onclick="hk_openTaskModal()">+ Add Task</button>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <input id="tf-search" placeholder="Search tasks..." oninput="hk_renderTasks()"/>
+      <select id="tf-status" onchange="hk_renderTasks()"><option value="">All Status</option><option>Pending</option><option>In Progress</option><option>Completed</option></select>
+      <select id="tf-zt" onchange="hk_renderTasks()"><option value="">All Zones</option><option>Mall</option><option>Basement</option><option>Office</option><option>Special</option><option>Staircase</option><option>Terrace</option></select>
+      <select id="tf-pri" onchange="hk_renderTasks()"><option value="">All Priority</option><option>High</option><option>Medium</option><option>Low</option></select>
+    </div>
+    <div class="tbl-wrap">
+      <table id="tasks-table">
+        <thead><tr><th>ID</th><th>Date</th><th>Zone</th><th>Task Type</th><th>Priority</th><th>Status</th><th>Assigned</th><th>Remarks</th><th>Photo</th><th>Actions</th></tr></thead>
+        <tbody id="tasks-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CHECKLIST PANEL -->
+  <div class="panel" id="panel-checklist">
+    <div class="panel-hdr">
+      <div class="panel-title"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg> Daily Checklist</div>
+      <div class="panel-actions">
+        <button class="btn btn-primary btn-sm" onclick="hk_openCheckModal()">+ Add Entry</button>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <input id="cf-search" placeholder="Search..." oninput="hk_renderChecklist()"/>
+      <select id="cf-status" onchange="hk_renderChecklist()"><option value="">All Status</option><option>OK</option><option>Pending</option><option>Issue</option></select>
+      <select id="cf-zt" onchange="hk_renderChecklist()"><option value="">All Zone Type</option><option>Mall</option><option>Basement</option><option>Office</option><option>Special</option><option>Staircase</option><option>Terrace</option></select>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>ID</th><th>Date</th><th>Zone</th><th>Category</th><th>Item</th><th>Status</th><th>Checked By</th><th>Time</th><th>Actions</th></tr></thead>
+        <tbody id="checklist-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ZONE STATUS PANEL -->
+  <div class="panel" id="panel-zones">
+    <div class="panel-hdr">
+      <div class="panel-title"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg> Zone Status</div>
+      <div class="panel-actions">
+        <select id="zf-type" onchange="hk_renderZones()"><option value="">All Zone Types</option><option>Mall</option><option>Basement</option><option>Office</option><option>Special</option><option>Staircase</option><option>Terrace</option></select>
+        <button class="btn btn-success btn-sm" onclick="hk_markAllCleaned()">✓ Mark All Cleaned</button>
+        <button class="btn btn-outline btn-sm" onclick="hk_resetAllZones()">↺ Reset All</button>
+      </div>
+    </div>
+    <div class="zone-hint"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="12" height="12"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> Click any zone card to cycle: Pending → In Progress → Cleaned</div>
+    <div id="zone-groups-container"></div>
+  </div>
+
+  <!-- WASHROOM CHECKLIST PANEL -->
+  <div class="panel" id="panel-washroom">
+    <div class="panel-hdr">
+      <div class="panel-title"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"/></svg> Washroom Checklists</div>
+    </div>
+    <p style="font-size:12px;color:var(--tx3);margin-bottom:14px;">Select a washroom to log a cleaning check:</p>
+    <div class="wc-location-grid" id="wc-loc-grid"></div>
+    <div class="panel-hdr" style="margin-top:20px;">
+      <div class="panel-title" style="font-size:13px;">Recent Logs</div>
+      <div class="panel-actions">
+        <select id="wc-filter-loc" onchange="hk_renderWcLogs()"><option value="">All Locations</option></select>
+        <select id="wc-filter-gender" onchange="hk_renderWcLogs()"><option value="">All</option><option>Ladies</option><option>Gents</option></select>
+      </div>
+    </div>
+    <div id="wc-log-container"></div>
+  </div>
+
+  <!-- SCOPE OF WORK -->
+  <div class="panel" id="panel-sow">
+    <div class="panel-hdr">
+      <div class="panel-title"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Scope of Work</div>
+      <div class="panel-actions">
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('sow-modal').classList.add('show')">+ Add Activity</button>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <select id="sow-filter" onchange="hk_renderSow()"><option value="">All Zone Types</option><option>Mall Floors</option><option>Basement</option><option>Office</option><option>Special</option><option>Staircase</option><option>Terrace</option><option>All Zones</option></select>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>SOW ID</th><th>Zone Type</th><th>Activity</th><th>Description</th><th>Frequency</th><th>Timing</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="sow-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- WORK SCHEDULES -->
+  <div class="panel" id="panel-schedules">
+    <div class="panel-hdr">
+      <div class="panel-title"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Work Schedules</div>
+      <div class="panel-actions">
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('sch-modal').classList.add('show')">+ Add Shift</button>
+      </div>
+    </div>
+    <div class="schedule-grid" id="sch-grid"></div>
+  </div>
+
+  <!-- PEST CONTROL -->
+  <div class="panel" id="panel-pest">
+    <div class="panel-hdr">
+      <div class="panel-title"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Pest Control</div>
+      <div class="panel-actions">
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('pest-modal').classList.add('show')">+ Log Treatment</button>
+      </div>
+    </div>
+    <div id="pest-container"></div>
+  </div>
+
+  <!-- STOCK INVENTORY -->
+  <div class="panel" id="panel-inventory">
+    <div class="panel-hdr">
+      <div class="panel-title"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg> Stock Inventory</div>
+      <div class="panel-actions">
+        <button class="btn btn-upload btn-sm" onclick="document.getElementById('inv-upload-area').style.display=document.getElementById('inv-upload-area').style.display==='none'?'block':'none'">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Upload Source
+        </button>
+        <button class="btn btn-export btn-sm" onclick="hk_downloadInventory()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="document.getElementById('stock-move-modal').classList.add('show')">± Stock Movement</button>
+      </div>
+    </div>
+    <!-- Upload zone (hidden by default) -->
+    <div id="inv-upload-area" style="display:none;margin-bottom:16px;">
+      <div class="upload-zone" id="inv-drop-zone" onclick="document.getElementById('inv-file-input').click()">
+        <div class="upload-zone-icon">📂</div>
+        <div class="upload-zone-text">Click or drag & drop Excel file</div>
+        <div class="upload-zone-sub">Columns required: Item_Code · Item_Name · Unit · Current_Stock · Min_Stock</div>
+        <input type="file" id="inv-file-input" accept=".xlsx,.xls" onchange="hk_uploadInventory(this.files[0])"/>
+      </div>
+      <div id="inv-upload-status" class="upload-status"></div>
+    </div>
+    <div class="filter-bar">
+      <input id="inv-search" placeholder="Search items..." oninput="hk_renderInventory()"/>
+      <select id="inv-cat" onchange="hk_renderInventory()"><option value="">All Categories</option></select>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Code</th><th>Item Name</th><th>Category</th><th>Unit</th><th>Current Stock</th><th>Min Stock</th><th>Status</th><th>Last Updated</th><th>Source</th></tr></thead>
+        <tbody id="inv-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TRAINING -->
+  <div class="panel" id="panel-training">
+    <div class="panel-hdr">
+      <div class="panel-title"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg> Training Sessions</div>
+      <div class="panel-actions">
+        <button class="btn btn-primary btn-sm" onclick="document.getElementById('trn-modal').classList.add('show')">+ Schedule Training</button>
+      </div>
+    </div>
+    <div id="trn-container"></div>
+  </div>
+
+  <!-- STAFF -->
+  <div class="panel" id="panel-staff">
+    <div class="panel-hdr">
+      <div class="panel-title"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> Staff Directory</div>
+      <div class="panel-actions">
+        <input id="staff-search" placeholder="Search staff..." style="padding:6px 10px;font-size:11.5px;width:160px;" oninput="hk_renderStaff()"/>
+        <select id="staff-shift-filter" style="padding:6px 10px;font-size:11.5px;" onchange="hk_renderStaff()">
+          <option value="">All Shifts</option><option>Morning</option><option>Afternoon</option><option>Night</option><option>General</option>
+        </select>
+        <button class="btn btn-primary btn-sm" onclick="hk_openStaffModal()">+ Add Staff</button>
+      </div>
+    </div>
+    <div class="staff-grid" id="staff-grid"></div>
+  </div>
+</main>
+
+<!-- LIGHTBOX -->
+<div id="hk-lightbox" onclick="this.classList.remove('show')">
+  <img id="hk-lightbox-img" src="" alt=""/>
+</div>
+
+<!-- ════════════════ MODALS ════════════════ -->
+
+<!-- TASK MODAL -->
+<div class="modal-overlay" id="task-modal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Add Task</div>
+      <button class="modal-close" onclick="document.getElementById('task-modal').classList.remove('show')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Zone</label><select id="t-zone" onchange="hk_onZoneSelect('t')"><option value="">Select Zone</option></select></div>
+      <div class="form-group"><label>Floor Level</label><input id="t-floor" readonly placeholder="Auto-filled"/></div>
+      <div class="form-group"><label>Zone Type</label><input id="t-ztype" readonly placeholder="Auto-filled"/></div>
+      <div class="form-group"><label>Task Type</label><input id="t-type" placeholder="Cleaning / Inspection..."/></div>
+      <div class="form-group"><label>Priority</label><select id="t-priority"><option>High</option><option selected>Medium</option><option>Low</option></select></div>
+      <div class="form-group"><label>Status</label><select id="t-status"><option selected>Pending</option><option>In Progress</option><option>Completed</option></select></div>
+      <div class="form-group"><label>Assigned To</label><select id="t-assigned"><option value="">Select Staff</option></select></div>
+      <div class="form-group"><label>Date</label><input type="date" id="t-date"/></div>
+      <div class="form-group full"><label>Remarks</label><textarea id="t-remarks" rows="2"></textarea></div>
+      <div class="form-group full">
+        <label>Photo (optional)</label>
+        <div class="photo-upload-zone" onclick="document.getElementById('t-photo-input').click()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;color:var(--tx3);margin-bottom:4px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <div style="font-size:11px;color:var(--tx3)">Click to attach photo (jpg/png/webp)</div>
+          <input type="file" id="t-photo-input" accept="image/*" onchange="hk_previewPhoto(this,'t-photo-preview')"/>
+          <img id="t-photo-preview" class="photo-preview" alt=""/>
+        </div>
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('task-modal').classList.remove('show')">Cancel</button>
+      <button class="btn btn-primary" onclick="hk_addTask()">Add Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKLIST MODAL -->
+<div class="modal-overlay" id="check-modal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Add Checklist Entry</div>
+      <button class="modal-close" onclick="document.getElementById('check-modal').classList.remove('show')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Zone</label><select id="c-zone" onchange="hk_onZoneSelect('c')"><option value="">Select Zone</option></select></div>
+      <div class="form-group"><label>Zone Type</label><input id="c-ztype" readonly placeholder="Auto-filled"/></div>
+      <div class="form-group"><label>Category</label><input id="c-cat" placeholder="e.g. Restroom, Corridor"/></div>
+      <div class="form-group"><label>Item</label><input id="c-item" placeholder="What was checked?"/></div>
+      <div class="form-group"><label>Status</label><select id="c-status"><option>OK</option><option selected>Pending</option><option>Issue</option></select></div>
+      <div class="form-group"><label>Checked By</label><select id="c-by"><option value="">Select Staff</option></select></div>
+      <div class="form-group full"><label>Remarks</label><textarea id="c-remarks" rows="2"></textarea></div>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('check-modal').classList.remove('show')">Cancel</button>
+      <button class="btn btn-primary" onclick="hk_addChecklist()">Add Entry</button>
+    </div>
+  </div>
+</div>
+
+<!-- WASHROOM CHECKLIST MODAL -->
+<div class="modal-overlay" id="wc-modal">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal-hdr">
+      <div class="modal-title" id="wc-modal-title">Washroom Check — L3 Ladies</div>
+      <button class="modal-close" onclick="document.getElementById('wc-modal').classList.remove('show')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <input type="hidden" id="wc-location"/>
+    <input type="hidden" id="wc-floor"/>
+    <input type="hidden" id="wc-gender"/>
+    <div class="form-grid" style="margin-bottom:14px;">
+      <div class="form-group"><label>Checked By</label><select id="wc-checked-by"><option value="">Select Staff</option></select></div>
+      <div class="form-group"><label>Supervisor</label><input id="wc-supervisor" placeholder="Supervisor name"/></div>
+      <div class="form-group"><label>Date</label><input type="date" id="wc-date"/></div>
+      <div class="form-group"><label>Time</label><input type="time" id="wc-time"/></div>
+    </div>
+    <p style="font-size:11px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:9px;">Checklist Items</p>
+    <div class="wc-checklist-form" id="wc-items-form"></div>
+    <div class="form-grid" style="margin-top:12px;">
+      <div class="form-group"><label>Overall Status</label><select id="wc-overall"><option>OK</option><option>Minor Issues</option><option>Major Issues</option></select></div>
+      <div class="form-group full"><label>Remarks</label><textarea id="wc-remarks" rows="2"></textarea></div>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('wc-modal').classList.remove('show')">Cancel</button>
+      <button class="btn btn-success" onclick="hk_saveWcCheck()">✓ Submit Check</button>
+    </div>
+  </div>
+</div>
+
+<!-- SOW MODAL -->
+<div class="modal-overlay" id="sow-modal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Add Scope of Work Activity</div>
+      <button class="modal-close" onclick="document.getElementById('sow-modal').classList.remove('show')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Zone Type</label><select id="sow-zt"><option>Mall Floors</option><option>Basement</option><option>Office</option><option>Special</option><option>Staircase</option><option>Terrace</option><option>All Zones</option></select></div>
+      <div class="form-group"><label>Activity</label><input id="sow-act" placeholder="e.g. Mopping"/></div>
+      <div class="form-group"><label>Frequency</label><input id="sow-freq" placeholder="Daily / Weekly..."/></div>
+      <div class="form-group"><label>Timing</label><input id="sow-timing" placeholder="Morning / All shifts..."/></div>
+      <div class="form-group full"><label>Description</label><textarea id="sow-desc" rows="2"></textarea></div>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('sow-modal').classList.remove('show')">Cancel</button>
+      <button class="btn btn-primary" onclick="hk_addSow()">Add Activity</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCHEDULE MODAL -->
+<div class="modal-overlay" id="sch-modal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Add Work Shift</div>
+      <button class="modal-close" onclick="document.getElementById('sch-modal').classList.remove('show')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Shift Name</label><input id="sch-name" placeholder="Morning Shift"/></div>
+      <div class="form-group"><label>Days</label><input id="sch-days" placeholder="Weekdays / Daily..."/></div>
+      <div class="form-group"><label>Start Time</label><input type="time" id="sch-start"/></div>
+      <div class="form-group"><label>End Time</label><input type="time" id="sch-end"/></div>
+      <div class="form-group"><label>Staff IDs</label><input id="sch-staff" placeholder="HK001,HK002..."/></div>
+      <div class="form-group"><label>Zone Coverage</label><input id="sch-zones" placeholder="Mall LG-L3..."/></div>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('sch-modal').classList.remove('show')">Cancel</button>
+      <button class="btn btn-primary" onclick="hk_addSchedule()">Add Shift</button>
+    </div>
+  </div>
+</div>
+
+<!-- PEST MODAL -->
+<div class="modal-overlay" id="pest-modal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Log Pest Control Treatment</div>
+      <button class="modal-close" onclick="document.getElementById('pest-modal').classList.remove('show')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Date</label><input type="date" id="pest-date"/></div>
+      <div class="form-group"><label>Contractor</label><input id="pest-contractor" placeholder="Company name"/></div>
+      <div class="form-group"><label>Contact</label><input id="pest-contact" placeholder="Phone / Email"/></div>
+      <div class="form-group"><label>Treatment Type</label><select id="pest-type"><option>General Pest Control</option><option>Rodent Control</option><option>Cockroach Treatment</option><option>Termite Treatment</option><option>Mosquito Fogging</option><option>Disinfection Spray</option><option>Other</option></select></div>
+      <div class="form-group"><label>Areas Covered</label><input id="pest-areas" placeholder="All zones / Basement..."/></div>
+      <div class="form-group"><label>Chemical Used</label><input id="pest-chem" placeholder="Chemical name"/></div>
+      <div class="form-group"><label>Dosage</label><input id="pest-dosage" placeholder="e.g. 5ml/L"/></div>
+      <div class="form-group"><label>Next Due Date</label><input type="date" id="pest-next"/></div>
+      <div class="form-group"><label>Status</label><select id="pest-status"><option>Scheduled</option><option>Completed</option><option>Cancelled</option></select></div>
+      <div class="form-group full"><label>Remarks</label><textarea id="pest-remarks" rows="2"></textarea></div>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('pest-modal').classList.remove('show')">Cancel</button>
+      <button class="btn btn-primary" onclick="hk_addPest()">Log Treatment</button>
+    </div>
+  </div>
+</div>
+
+<!-- TRAINING MODAL -->
+<div class="modal-overlay" id="trn-modal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Schedule Training Session</div>
+      <button class="modal-close" onclick="document.getElementById('trn-modal').classList.remove('show')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Date</label><input type="date" id="trn-date"/></div>
+      <div class="form-group"><label>Topic</label><input id="trn-topic" placeholder="e.g. Chemical Safety"/></div>
+      <div class="form-group"><label>Trainer</label><input id="trn-trainer" placeholder="Trainer name"/></div>
+      <div class="form-group"><label>Attendees</label><input id="trn-attendees" placeholder="HK001,HK002 / All Staff"/></div>
+      <div class="form-group"><label>Duration (hrs)</label><input type="number" id="trn-dur" placeholder="2" min="0.5" step="0.5"/></div>
+      <div class="form-group"><label>Venue</label><input id="trn-venue" placeholder="Training Room / Online"/></div>
+      <div class="form-group"><label>Status</label><select id="trn-status"><option>Scheduled</option><option>Completed</option><option>Cancelled</option></select></div>
+      <div class="form-group full"><label>Remarks</label><textarea id="trn-remarks" rows="2"></textarea></div>
+      <div class="form-group full">
+        <label>Training Photo (optional)</label>
+        <div class="photo-upload-zone" onclick="document.getElementById('trn-photo-input').click()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--tx3)"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <div style="font-size:11px;color:var(--tx3);margin-top:4px">Attach session photo</div>
+          <input type="file" id="trn-photo-input" accept="image/*" onchange="hk_previewPhoto(this,'trn-photo-preview')"/>
+          <img id="trn-photo-preview" class="photo-preview" alt=""/>
+        </div>
+      </div>
+      <div class="form-group full">
+        <label>Document / Certificate (PDF or Word, optional)</label>
+        <div class="photo-upload-zone" id="trn-doc-zone" onclick="document.getElementById('trn-doc-input').click()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--tx3)"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <div style="font-size:11px;color:var(--tx3);margin-top:4px">Attach PDF / Word document</div>
+          <input type="file" id="trn-doc-input" accept=".pdf,.doc,.docx" onchange="hk_showDocName(this,'trn-doc-label')"/>
+          <div id="trn-doc-label" style="font-size:11px;color:var(--cyan);margin-top:4px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('trn-modal').classList.remove('show')">Cancel</button>
+      <button class="btn btn-primary" onclick="hk_addTraining()">Schedule</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD STAFF MODAL -->
+<div class="modal-overlay" id="staff-modal">
+  <div class="modal" style="max-width:580px;">
+    <div class="modal-hdr">
+      <div class="modal-title" id="staff-modal-title">Add Staff Member</div>
+      <button class="modal-close" onclick="document.getElementById('staff-modal').classList.remove('show')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <input type="hidden" id="staff-edit-id"/>
+    <div class="form-grid">
+      <div class="form-group"><label>Full Name</label><input id="sf-name" placeholder="Staff full name"/></div>
+      <div class="form-group"><label>Role / Designation</label><input id="sf-role" placeholder="e.g. Housekeeper, Supervisor"/></div>
+      <div class="form-group"><label>Shift</label><select id="sf-shift"><option value="">Select</option><option>Morning</option><option>Afternoon</option><option>Night</option><option>General</option></select></div>
+      <div class="form-group"><label>Contact</label><input id="sf-contact" placeholder="Phone number"/></div>
+      <div class="form-group"><label>Email</label><input id="sf-email" placeholder="email@example.com"/></div>
+      <div class="form-group"><label>Join Date</label><input type="date" id="sf-join"/></div>
+      <div class="form-group"><label>Supervisor</label><input id="sf-supervisor" placeholder="Reporting supervisor"/></div>
+      <div class="form-group"><label>Status</label><select id="sf-status"><option>Active</option><option>On Leave</option><option>Inactive</option></select></div>
+      <div class="form-group full"><label>Remarks</label><textarea id="sf-remarks" rows="2" placeholder="Zone assignment, notes..."></textarea></div>
+      <div class="form-group full">
+        <label>Staff Photo (optional)</label>
+        <div class="photo-upload-zone" onclick="document.getElementById('sf-photo-input').click()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;color:var(--tx3)"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <div style="font-size:11px;color:var(--tx3);margin-top:4px">Click to upload staff photo</div>
+          <input type="file" id="sf-photo-input" accept="image/*" onchange="hk_previewPhoto(this,'sf-photo-preview')"/>
+          <img id="sf-photo-preview" class="photo-preview" alt=""/>
+        </div>
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('staff-modal').classList.remove('show')">Cancel</button>
+      <button class="btn btn-primary" id="staff-save-btn" onclick="hk_saveStaff()">Add Staff</button>
+    </div>
+  </div>
+</div>
+
+<!-- STOCK MOVEMENT MODAL -->
+<div class="modal-overlay" id="stock-move-modal">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-hdr">
+      <div class="modal-title">Stock Movement</div>
+      <button class="modal-close" onclick="document.getElementById('stock-move-modal').classList.remove('show')"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="form-grid c1">
+      <div class="form-group"><label>Item</label><select id="sm-item"><option value="">Select Item</option></select></div>
+      <div class="form-group"><label>Movement Type</label><select id="sm-type"><option value="IN">IN (Stock Received)</option><option value="OUT">OUT (Stock Used)</option></select></div>
+      <div class="form-group"><label>Quantity</label><input type="number" id="sm-qty" min="1" placeholder="0"/></div>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('stock-move-modal').classList.remove('show')">Cancel</button>
+      <button class="btn btn-primary" onclick="hk_stockMove()">Update Stock</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="sln-hk-toast"></div>
+
+<script>
+/* ══════════════════════════════════════════════════
+   SLN HK MODULE v3 — FULL JAVASCRIPT
+══════════════════════════════════════════════════ */
+
+// ── STATE ──────────────────────────────────────────
+let HK = {
+  zones:[], tasks:[], checklist:[], staff:[], inventory:[],
+  sow:[], schedules:[], wc:[], training:[], pest:[],
+  wcItems:[], wcLocations:[]
+};
+
+const ZONE_GROUPS = [
+  {key:"Mall",  label:"Mall",      color:"#06b6d4", icon:`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>`},
+  {key:"Basement",label:"Basement",color:"#8b5cf6", icon:`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>`},
+  {key:"Office", label:"Office",   color:"#10b981", icon:`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>`},
+  {key:"Special",label:"Special",  color:"#f59e0b", icon:`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`},
+  {key:"Staircase",label:"Staircase",color:"#818cf8",icon:`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polyline points="4 20 8 20 8 16 12 16 12 12 16 12 16 8 20 8 20 4"/></svg>`},
+  {key:"Terrace", label:"Terrace", color:"#a3e635", icon:`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`},
+];
+
+// ── UTILITIES ──────────────────────────────────────
+function hk_toast(msg, type="s") {
+  const t=document.getElementById("sln-hk-toast");
+  const d=document.createElement("div");
+  const icons={s:"✓",e:"✗",i:"ℹ"};
+  d.className=`toast t${type}`; d.textContent=`${icons[type]||"•"} ${msg}`;
+  t.appendChild(d); setTimeout(()=>d.remove(),3200);
+}
+
+function hk_statusBadge(s) {
+  const m={"Completed":"bg","Cleaned":"bg","OK":"bg","Active":"bg","Scheduled":"bc","In Progress":"bc","Pending":"ba","Low":"ba","Out":"br","Major Issues":"br","Cancelled":"br","Issue":"br","Minor Issues":"bo"};
+  return `<span class="badge ${m[s]||'bo'}">${s||'—'}</span>`;
+}
+function hk_priBadge(p) {
+  const m={High:"<span class='pri-dot ph'></span>",Medium:"<span class='pri-dot pm'></span>",Low:"<span class='pri-dot pl'></span>"};
+  return `${m[p]||''} ${p||'—'}`;
+}
+function hk_freqBadge(f) {
+  const colors={"Daily":"var(--emerald)","Weekly":"var(--cyan)","Bi-weekly":"var(--indigo)","Every 2 hrs":"var(--amber)","3× Daily":"var(--sky)"};
+  const c=colors[f]||"var(--tx3)";
+  return `<span class="sow-freq" style="color:${c};background:${c}22;border:1px solid ${c}44">${f||'—'}</span>`;
+}
+function hk_stockBadge(cur,min) {
+  const c=parseFloat(cur)||0, m=parseFloat(min)||0;
+  if(c<=0) return `<span class="badge br">Out of Stock</span>`;
+  if(c<m)  return `<span class="badge ba">Low Stock</span>`;
+  return `<span class="badge bg">In Stock</span>`;
+}
+
+async function hk_api(url, method="GET", body=null) {
+  const opts={method,headers:{}};
+  if(body && !(body instanceof FormData)){
+    opts.headers["Content-Type"]="application/json";
+    opts.body=JSON.stringify(body);
+  } else if(body instanceof FormData){
+    opts.body=body; // let browser set multipart boundary
+  }
+  const r=await fetch(url,opts);
+  const ct=r.headers.get("content-type")||"";
+  if(!r.ok||!ct.includes("application/json")){
+    const txt=await r.text();
+    throw new Error(`API ${r.status} @ ${url}: ${txt.slice(0,120)}`);
+  }
+  return r.json();
+}
+
+// ── CLOCK ──────────────────────────────────────────
+function hk_clock() {
+  const n=new Date();
+  document.getElementById("hk-clock").textContent=n.toLocaleTimeString("en-IN",{hour12:false});
+}
+setInterval(hk_clock, 1000); hk_clock();
+
+// ── THEME ──────────────────────────────────────────
+document.getElementById("hk-theme-btn").onclick=()=>{
+  const h=document.documentElement;
+  h.setAttribute("data-theme",h.getAttribute("data-theme")==="dark"?"light":"dark");
+};
+
+// ── BURGER ─────────────────────────────────────────
+document.getElementById("hk-burger").onclick=()=>{
+  document.getElementById("hk-sidebar").classList.toggle("open");
+  document.getElementById("hk-overlay").classList.toggle("show");
+};
+document.getElementById("hk-overlay").onclick=()=>{
+  document.getElementById("hk-sidebar").classList.remove("open");
+  document.getElementById("hk-overlay").classList.remove("show");
+};
+
+// ── PANEL NAV ─────────────────────────────────────
+function hk_show(panel, btn) {
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  const p=document.getElementById(`panel-${panel}`);
+  if(p) p.classList.add("active");
+  if(btn) btn.classList.add("active");
+  else {const b=document.querySelector(`[data-panel="${panel}"]`); if(b) b.classList.add("active");}
+  // close sidebar on mobile
+  document.getElementById("hk-sidebar").classList.remove("open");
+  document.getElementById("hk-overlay").classList.remove("show");
+}
+
+// ── INIT ──────────────────────────────────────────
+async function hk_loadAll() {
+  await Promise.all([
+    hk_loadKpi(), hk_loadZones(), hk_loadTasks(), hk_loadChecklist(),
+    hk_loadStaff(), hk_loadInventory(), hk_loadSow(), hk_loadSchedules(),
+    hk_loadWc(), hk_loadTraining(), hk_loadPest()
+  ]);
+  hk_renderAll();
+  hk_loadCharts();
+  document.getElementById("ov-date").textContent=new Date().toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"});
+}
+
+// ── KPI ──────────────────────────────────────────
+async function hk_loadKpi() {
+  try {
+    const d=await hk_api("/sln_hk/api/sln_hk_kpi");
+    document.getElementById("k-total").textContent=d.total_tasks||0;
+    document.getElementById("k-today").textContent=`Today: ${d.today_tasks||0}`;
+    document.getElementById("k-comp").textContent=d.completed||0;
+    document.getElementById("k-rate").textContent=`Rate: ${d.completion_rate||0}%`;
+    document.getElementById("k-pend").textContent=d.pending||0;
+    document.getElementById("k-inprog").textContent=`In Progress: ${d.in_progress||0}`;
+    document.getElementById("k-zones").textContent=d.total_zones||0;
+    document.getElementById("k-cleaned").textContent=`Cleaned: ${d.cleaned_zones||0}`;
+    document.getElementById("k-low").textContent=d.low_stock_items||0;
+    document.getElementById("k-wc").textContent=d.wc_today||0;
+    document.getElementById("k-pest").textContent=d.pest_next_due||"N/A";
+    document.getElementById("k-trn").textContent=d.training_total||0;
+    const rate=d.completion_rate||0;
+    document.getElementById("k-prog").style.width=`${rate}%`;
+    // Zone type strip
+    const strip=document.getElementById("hk-zt-strip"); strip.innerHTML="";
+    const zs=d.zone_summary||{};
+    ZONE_GROUPS.forEach(g=>{
+      const z=zs[g.key]||{total:0,cleaned:0,pending:0,inprog:0};
+      const card=document.createElement("div");
+      card.className="zt-card"; card.style.setProperty("--zt-color",g.color);
+      card.style.cursor="pointer";
+      card.innerHTML=`<div class="zt-label">${g.label}</div><div class="zt-counts"><span class="zt-num" style="color:${g.color}">${z.cleaned}</span><span class="zt-sep">/</span><span class="zt-num" style="color:var(--amber)">${z.pending}</span><span class="zt-sep">/</span><span class="zt-num">${z.total}</span></div><div style="font-size:9px;color:var(--tx3);margin-top:2px;">Cleaned / Pending / Total</div>`;
+      card.onclick=()=>{ hk_show("zones",document.querySelector("[data-panel=zones]")); document.getElementById("zf-type").value=g.key; hk_renderZones(); };
+      strip.appendChild(card);
+    });
+  } catch(e){console.error("KPI error",e);}
+}
+
+// ── ZONES ─────────────────────────────────────────
+async function hk_loadZones() { try{ HK.zones=await hk_api("/sln_hk/api/sln_hk_zones"); }catch(e){} }
+
+function hk_renderZones() {
+  const ft=document.getElementById("zf-type").value;
+  const ctr=document.getElementById("zone-groups-container"); ctr.innerHTML="";
+  ZONE_GROUPS.forEach(g=>{
+    if(ft && ft!==g.key) return;
+    const zones=HK.zones.filter(z=>z.Zone_Type===g.key);
+    if(!zones.length) return;
+    const cleaned=zones.filter(z=>z.Status==="Cleaned").length;
+    const div=document.createElement("div"); div.className="zone-group";
+    div.innerHTML=`<div class="zone-group-hdr" style="--zg-color:${g.color}">
+      <div class="zone-group-icon" style="background:${g.color}">${g.icon}</div>
+      <div class="zone-group-title">${g.label}</div>
+      <div class="zone-group-sub">${cleaned}/${zones.length} cleaned</div></div>
+      <div class="zone-grid" id="zg-${g.key}"></div>`;
+    ctr.appendChild(div);
+    const grid=document.getElementById(`zg-${g.key}`);
+    zones.forEach(z=>{
+      const s=(z.Status||"Pending").toLowerCase().replace(" ","-");
+      const card=document.createElement("div");
+      card.className=`zone-card ${s}`; card.dataset.zid=z.Zone_ID;
+      card.innerHTML=`<div class="zone-card-id">${z.Zone_ID}</div>
+        <div class="zone-card-name">${z.Zone_Name}</div>
+        <div class="zone-card-cat">${z.Area_Category||''} · ${z.Area_sqft||''}sqft</div>
+        <div class="zone-card-status" style="--zc:${s==='cleaned'?'var(--emerald)':s==='in-progress'?'var(--cyan)':'var(--amber)'}">
+          ${z.Status||"Pending"}</div>
+        <div class="zone-card-time">${z.Last_Cleaned?'✓ '+z.Last_Cleaned:''}</div>
+        ${z.Photo?`<img src="/sln_hk/uploads/zone_photos/${z.Photo}" style="width:100%;height:50px;object-fit:cover;border-radius:5px;margin-top:5px;cursor:pointer" onclick="event.stopPropagation();hk_lightbox(this.src)" alt="zone photo"/>`:''} 
+        <label class="zone-photo-btn" title="Upload zone photo" onclick="event.stopPropagation()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <input type="file" style="display:none" accept="image/*" onchange="hk_uploadZonePhoto('${z.Zone_ID}',this)"/>
+        </label>`;
+      card.onclick=()=>hk_cycleZone(z.Zone_ID);
+      grid.appendChild(card);
+    });
+  });
+}
+
+const ZONE_CYCLE=["Pending","In Progress","Cleaned"];
+async function hk_cycleZone(zid) {
+  const z=HK.zones.find(x=>x.Zone_ID===zid);
+  if(!z) return;
+  const idx=ZONE_CYCLE.indexOf(z.Status||"Pending");
+  const next=ZONE_CYCLE[(idx+1)%ZONE_CYCLE.length];
+  await hk_api(`/sln_hk/api/sln_hk_zones/${zid}`,"PUT",{status:next});
+  z.Status=next;
+  if(next==="Cleaned") z.Last_Cleaned=new Date().toLocaleString("en-IN");
+  hk_renderZones();
+  hk_loadKpi();
+  hk_toast(`${z.Zone_Name} → ${next}`,"i");
+}
+
+async function hk_markAllCleaned() {
+  const ft=document.getElementById("zf-type").value;
+  const targets=HK.zones.filter(z=>!ft||z.Zone_Type===ft);
+  await Promise.all(targets.map(z=>hk_api(`/sln_hk/api/sln_hk_zones/${z.Zone_ID}`,"PUT",{status:"Cleaned"})));
+  targets.forEach(z=>{z.Status="Cleaned";z.Last_Cleaned=new Date().toLocaleString("en-IN");});
+  hk_renderZones(); hk_loadKpi(); hk_toast("All zones marked Cleaned","s");
+}
+
+async function hk_resetAllZones() {
+  const ft=document.getElementById("zf-type").value;
+  const targets=HK.zones.filter(z=>!ft||z.Zone_Type===ft);
+  await Promise.all(targets.map(z=>hk_api(`/sln_hk/api/sln_hk_zones/${z.Zone_ID}`,"PUT",{status:"Pending"})));
+  targets.forEach(z=>{z.Status="Pending";z.Last_Cleaned="";});
+  hk_renderZones(); hk_loadKpi(); hk_toast("Zones reset to Pending","i");
+}
+
+// ── TASKS ─────────────────────────────────────────
+async function hk_loadTasks() { try{ HK.tasks=await hk_api("/sln_hk/api/sln_hk_tasks"); }catch(e){} }
+
+function hk_renderTasks() {
+  const q=(document.getElementById("tf-search").value||"").toLowerCase();
+  const sf=document.getElementById("tf-status").value;
+  const zt=document.getElementById("tf-zt").value;
+  const pf=document.getElementById("tf-pri").value;
+  let rows=HK.tasks.filter(t=>{
+    if(q&&!JSON.stringify(t).toLowerCase().includes(q)) return false;
+    if(sf&&t.Status!==sf) return false;
+    if(zt&&t.Zone_Type!==zt) return false;
+    if(pf&&t.Priority!==pf) return false;
+    return true;
+  });
+  const tb=document.getElementById("tasks-body");
+  if(!rows.length){tb.innerHTML=`<tr><td colspan="9" class="empty-state"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/></svg><p>No tasks found</p></td></tr>`;return;}
+  tb.innerHTML=rows.map(t=>`<tr>
+    <td><span class="badge bc">${t.Task_ID}</span></td>
+    <td>${t.Date||'—'}</td>
+    <td><div style="font-size:11px;font-weight:700">${t.Zone_Name||'—'}</div><div style="font-size:9.5px;color:var(--tx3)">${t.Zone_Type||''} · ${t.Floor_Level||''}</div></td>
+    <td>${t.Task_Type||'—'}</td>
+    <td>${hk_priBadge(t.Priority)}</td>
+    <td>${hk_statusBadge(t.Status)}</td>
+    <td>${t.Assigned_To||'—'}</td>
+    <td style="max-width:120px;font-size:11px;color:var(--tx3)">${t.Remarks||''}</td>
+    <td>${t.Photo?`<img class="task-photo-thumb" src="/sln_hk/uploads/task_photos/${t.Photo}" alt="photo" onclick="hk_lightbox(this.src)" title="View photo"/>`:'<span style="font-size:10px;color:var(--tx3)">—</span>'}</td>
+    <td style="white-space:nowrap">
+      <button class="btn btn-upload btn-sm" title="Upload photo" onclick="hk_quickPhotoUpload('${t.Task_ID}')">📷</button>
+      <button class="btn btn-danger btn-sm" onclick="hk_deleteTask('${t.Task_ID}')">✕</button>
+    </td>
+  </tr>`).join("");
+}
+
+function hk_openTaskModal(){
+  hk_populateZoneDropdown("t-zone");
+  hk_populateStaffDropdown("t-assigned");
+  document.getElementById("t-date").value=new Date().toISOString().split("T")[0];
+  document.getElementById("task-modal").classList.add("show");
+}
+
+async function hk_addTask() {
+  const zid=document.getElementById("t-zone").value;
+  const fd=new FormData();
+  fd.append("zone_id",zid);
+  fd.append("task_type",document.getElementById("t-type").value);
+  fd.append("priority",document.getElementById("t-priority").value);
+  fd.append("status",document.getElementById("t-status").value);
+  fd.append("assigned_to",document.getElementById("t-assigned").value);
+  fd.append("date",document.getElementById("t-date").value);
+  fd.append("remarks",document.getElementById("t-remarks").value);
+  fd.append("zone_name",document.getElementById("t-zone").options[document.getElementById("t-zone").selectedIndex]?.text||"");
+  fd.append("floor_level",document.getElementById("t-floor").value);
+  fd.append("zone_type",document.getElementById("t-ztype").value);
+  const photoFile=document.getElementById("t-photo-input").files[0];
+  if(photoFile) fd.append("photo",photoFile);
+  try{
+    const r=await hk_api("/sln_hk/api/sln_hk_tasks","POST",fd);
+    if(r.success){
+      hk_toast(`Task ${r.task_id} added`,"s");
+      document.getElementById("task-modal").classList.remove("show");
+      document.getElementById("t-photo-input").value="";
+      document.getElementById("t-photo-preview").style.display="none";
+      await hk_loadTasks(); hk_renderTasks(); hk_loadKpi();
+    } else hk_toast("Failed to add task","e");
+  }catch(e){hk_toast("Error: "+e.message,"e");}
+}
+
+async function hk_deleteTask(tid) {
+  if(!confirm("Delete this task?")) return;
+  const r=await hk_api(`/sln_hk/api/sln_hk_tasks/${tid}`,"DELETE");
+  if(r.success){hk_toast("Task deleted","i");await hk_loadTasks();hk_renderTasks();}
+}
+
+// ── CHECKLIST ──────────────────────────────────────
+async function hk_loadChecklist(){try{HK.checklist=await hk_api("/sln_hk/api/sln_hk_checklist");}catch(e){}}
+
+function hk_renderChecklist(){
+  const q=(document.getElementById("cf-search").value||"").toLowerCase();
+  const sf=document.getElementById("cf-status").value;
+  const zt=document.getElementById("cf-zt").value;
+  let rows=HK.checklist.filter(c=>{
+    if(q&&!JSON.stringify(c).toLowerCase().includes(q)) return false;
+    if(sf&&c.Status!==sf) return false;
+    if(zt&&c.Zone_Type!==zt) return false;
+    return true;
+  });
+  const tb=document.getElementById("checklist-body");
+  if(!rows.length){tb.innerHTML=`<tr><td colspan="9" class="empty-state"><p>No entries found</p></td></tr>`;return;}
+  tb.innerHTML=rows.map(c=>`<tr>
+    <td><span class="badge bc">${c.Check_ID}</span></td>
+    <td>${c.Date||'—'}</td>
+    <td><div style="font-size:11px;font-weight:700">${c.Zone_Name||'—'}</div><div style="font-size:9.5px;color:var(--tx3)">${c.Zone_Type||''}</div></td>
+    <td>${c.Category||'—'}</td>
+    <td>${c.Item||'—'}</td>
+    <td>${hk_statusBadge(c.Status)}</td>
+    <td>${c.Checked_By||'—'}</td>
+    <td style="font-family:'JetBrains Mono',monospace;font-size:11px">${c.Time||'—'}</td>
+    <td><select class="btn btn-sm btn-outline" style="padding:4px 6px;font-size:11px" onchange="hk_updateCheck('${c.Check_ID}',this.value)">
+      <option ${c.Status==='OK'?'selected':''}>OK</option>
+      <option ${c.Status==='Pending'?'selected':''}>Pending</option>
+      <option ${c.Status==='Issue'?'selected':''}>Issue</option>
+    </select></td>
+  </tr>`).join("");
+}
+
+function hk_openCheckModal(){
+  hk_populateZoneDropdown("c-zone");
+  hk_populateStaffDropdown("c-by");
+  document.getElementById("check-modal").classList.add("show");
+}
+
+async function hk_addChecklist(){
+  const zid=document.getElementById("c-zone").value;
+  const body={zone_id:zid,category:document.getElementById("c-cat").value,
+    item:document.getElementById("c-item").value,status:document.getElementById("c-status").value,
+    checked_by:document.getElementById("c-by").value,remarks:document.getElementById("c-remarks").value,
+    zone_type:document.getElementById("c-ztype").value};
+  const r=await hk_api("/sln_hk/api/sln_hk_checklist","POST",body);
+  if(r.success){hk_toast("Entry added","s");document.getElementById("check-modal").classList.remove("show");await hk_loadChecklist();hk_renderChecklist();}
+  else hk_toast("Failed","e");
+}
+
+async function hk_updateCheck(cid, status){
+  await hk_api(`/sln_hk/api/sln_hk_checklist/${cid}`,"PUT",{status});
+  const c=HK.checklist.find(x=>x.Check_ID===cid); if(c) c.Status=status;
+  hk_toast(`Status → ${status}`,"i");
+}
+
+// ── STAFF ──────────────────────────────────────────
+function hk_populateStaffDropdown(id){
+  const sel=document.getElementById(id); sel.innerHTML=`<option value="">Select Staff</option>`;
+  HK.staff.forEach(s=>{const o=document.createElement("option");o.value=s.Staff_ID;o.textContent=`${s.Staff_ID} - ${s.Name}`;sel.appendChild(o);});
+}
+
+function hk_populateZoneDropdown(id){
+  const sel=document.getElementById(id); sel.innerHTML=`<option value="">Select Zone</option>`;
+  const groups={};
+  HK.zones.forEach(z=>{if(!groups[z.Zone_Type]) groups[z.Zone_Type]=[];groups[z.Zone_Type].push(z);});
+  Object.entries(groups).forEach(([gt,zones])=>{
+    const og=document.createElement("optgroup"); og.label=gt;
+    zones.forEach(z=>{const o=document.createElement("option");o.value=z.Zone_ID;o.textContent=z.Zone_Name;
+      o.dataset.floor=z.Floor_Level;o.dataset.ztype=z.Zone_Type;o.dataset.acat=z.Area_Category;og.appendChild(o);});
+    sel.appendChild(og);
+  });
+}
+
+function hk_onZoneSelect(prefix){
+  const sel=document.getElementById(`${prefix}-zone`);
+  const opt=sel.options[sel.selectedIndex];
+  const fid=document.getElementById(`${prefix}-floor`);
+  const tid=document.getElementById(`${prefix}-ztype`);
+  if(fid) fid.value=opt?.dataset?.floor||"";
+  if(tid) tid.value=opt?.dataset?.ztype||"";
+}
+
+// ── INVENTORY ──────────────────────────────────────
+async function hk_loadInventory(){try{HK.inventory=await hk_api("/sln_hk/api/sln_hk_inventory");}catch(e){}}
+
+function hk_renderInventory(){
+  const q=(document.getElementById("inv-search").value||"").toLowerCase();
+  const cf=document.getElementById("inv-cat").value;
+  let rows=HK.inventory.filter(i=>{
+    if(q&&!JSON.stringify(i).toLowerCase().includes(q)) return false;
+    if(cf&&i.Category!==cf) return false;
+    return true;
+  });
+  // populate category filter
+  const cats=[...new Set(HK.inventory.map(i=>i.Category).filter(Boolean))];
+  const catSel=document.getElementById("inv-cat");
+  const curr=catSel.value;
+  catSel.innerHTML=`<option value="">All Categories</option>`;
+  cats.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;if(c===curr)o.selected=true;catSel.appendChild(o);});
+  // populate stock move dropdown
+  const sm=document.getElementById("sm-item"); sm.innerHTML=`<option value="">Select Item</option>`;
+  HK.inventory.forEach(i=>{const o=document.createElement("option");o.value=i.Item_Code;o.textContent=`${i.Item_Code} — ${i.Item_Name}`;sm.appendChild(o);});
+  const tb=document.getElementById("inv-body");
+  if(!rows.length){tb.innerHTML=`<tr><td colspan="9" class="empty-state"><p>No items found</p></td></tr>`;return;}
+  tb.innerHTML=rows.map(i=>{
+    const c=parseFloat(i.Current_Stock)||0, m=parseFloat(i.Min_Stock)||0;
+    const pct=m?Math.min(c/m*100,100):100;
+    const barC=c<=0?"var(--rose)":c<m?"var(--amber)":"var(--emerald)";
+    return `<tr>
+      <td><span class="badge bc">${i.Item_Code}</span></td>
+      <td style="font-weight:600">${i.Item_Name}</td>
+      <td>${i.Category||'—'}</td>
+      <td>${i.Unit}</td>
+      <td><div style="font-weight:700;font-family:'JetBrains Mono',monospace">${c}</div>
+          <div class="progress-wrap" style="margin-top:3px;width:60px"><div class="progress-bar" style="background:${barC};width:${pct}%"></div></div></td>
+      <td style="font-family:'JetBrains Mono',monospace">${m}</td>
+      <td>${hk_stockBadge(c,m)}</td>
+      <td style="font-size:11px;color:var(--tx3)">${i.Last_Updated||'—'}</td>
+      <td style="font-size:10px;color:var(--tx3)">${i.Source_File||'Manual'}</td>
+    </tr>`;
+  }).join("");
+}
+
+async function hk_uploadInventory(file){
+  if(!file) return;
+  const fd=new FormData(); fd.append("file",file);
+  try{
+    const r=await fetch("/sln_hk/api/sln_hk_inventory/upload",{method:"POST",body:fd});
+    const d=await r.json();
+    const st=document.getElementById("inv-upload-status");
+    st.style.display="block";
+    if(d.success){
+      st.className="upload-status ok";
+      st.textContent=`✓ Uploaded "${d.filename}" — ${d.rows} items imported`;
+      hk_toast(`Inventory updated — ${d.rows} rows`,"s");
+      await hk_loadInventory(); hk_renderInventory();
+    } else {
+      st.className="upload-status err";
+      st.textContent=`✗ ${d.error}`;
+      hk_toast(d.error,"e");
+    }
+  }catch(e){hk_toast("Upload failed","e");}
+}
+
+async function hk_downloadInventory(){
+  window.open("/sln_hk/api/sln_hk_inventory/download","_blank");
+}
+
+async function hk_stockMove(){
+  const code=document.getElementById("sm-item").value;
+  const qty=parseInt(document.getElementById("sm-qty").value)||0;
+  const type=document.getElementById("sm-type").value;
+  if(!code||!qty){hk_toast("Select item and quantity","e");return;}
+  const r=await hk_api("/sln_hk/api/sln_hk_inventory/update","POST",{item_code:code,quantity:qty,movement_type:type});
+  if(r.success){hk_toast(`Stock updated — ${type} ${qty}`,"s");document.getElementById("stock-move-modal").classList.remove("show");await hk_loadInventory();hk_renderInventory();hk_loadKpi();}
+  else hk_toast(r.error||"Failed","e");
+}
+
+// drag-drop on upload zone
+const dz=document.getElementById("inv-drop-zone");
+if(dz){
+  dz.addEventListener("dragover",e=>{e.preventDefault();dz.classList.add("drag-over");});
+  dz.addEventListener("dragleave",()=>dz.classList.remove("drag-over"));
+  dz.addEventListener("drop",e=>{e.preventDefault();dz.classList.remove("drag-over");
+    const f=e.dataTransfer.files[0]; if(f) hk_uploadInventory(f);});
+}
+
+// ── SCOPE OF WORK ──────────────────────────────────
+async function hk_loadSow(){try{HK.sow=await hk_api("/sln_hk/api/sln_hk_sow");}catch(e){}}
+function hk_renderSow(){
+  const ft=document.getElementById("sow-filter").value;
+  let rows=ft?HK.sow.filter(s=>s.Zone_Type===ft):HK.sow;
+  const tb=document.getElementById("sow-body");
+  if(!rows.length){tb.innerHTML=`<tr><td colspan="8" class="empty-state"><p>No activities found</p></td></tr>`;return;}
+  tb.innerHTML=rows.map(s=>`<tr>
+    <td><span class="badge bc">${s.SOW_ID}</span></td>
+    <td><span class="badge bsk">${s.Zone_Type}</span></td>
+    <td style="font-weight:600">${s.Activity}</td>
+    <td style="font-size:11.5px;color:var(--tx3);max-width:200px">${s.Description}</td>
+    <td>${hk_freqBadge(s.Frequency)}</td>
+    <td style="font-size:11px">${s.Timing||'—'}</td>
+    <td>${hk_statusBadge(s.Status)}</td>
+    <td><button class="btn btn-danger btn-sm" onclick="hk_deleteSow('${s.SOW_ID}')">✕</button></td>
+  </tr>`).join("");
+}
+
+async function hk_addSow(){
+  const body={zone_type:document.getElementById("sow-zt").value,activity:document.getElementById("sow-act").value,
+    description:document.getElementById("sow-desc").value,frequency:document.getElementById("sow-freq").value,
+    timing:document.getElementById("sow-timing").value,status:"Active"};
+  const r=await hk_api("/sln_hk/api/sln_hk_sow","POST",body);
+  if(r.success){hk_toast("Activity added","s");document.getElementById("sow-modal").classList.remove("show");await hk_loadSow();hk_renderSow();}
+  else hk_toast("Failed","e");
+}
+
+async function hk_deleteSow(sid){
+  if(!confirm("Delete this activity?")) return;
+  await hk_api(`/sln_hk/api/sln_hk_sow/${sid}`,"DELETE");
+  hk_toast("Deleted","i"); await hk_loadSow(); hk_renderSow();
+}
+
+// ── SCHEDULES ─────────────────────────────────────
+async function hk_loadSchedules(){try{HK.schedules=await hk_api("/sln_hk/api/sln_hk_schedules");}catch(e){}}
+function hk_renderSchedules(){
+  const ctr=document.getElementById("sch-grid"); ctr.innerHTML="";
+  if(!HK.schedules.length){ctr.innerHTML=`<div class="empty-state"><p>No schedules found</p></div>`;return;}
+  const shiftColors={"Morning Shift":"var(--amber)","Afternoon Shift":"var(--cyan)","Night Shift":"var(--indigo)","Deep Clean Shift":"var(--violet)"};
+  HK.schedules.forEach(s=>{
+    const c=shiftColors[s.Shift_Name]||"var(--teal)";
+    const d=document.createElement("div"); d.className="sch-card";
+    d.style.borderTop=`3px solid ${c}`;
+    d.innerHTML=`<div class="sch-card-hdr">
+      <div class="sch-name">${s.Shift_Name}</div>
+      <div class="sch-time">${s.Start_Time}–${s.End_Time}</div></div>
+      <div class="sch-row"><strong>Days:</strong> ${s.Days}</div>
+      <div class="sch-row"><strong>Staff:</strong> ${s.Staff_IDs}</div>
+      <div class="sch-row"><strong>Coverage:</strong> ${s.Zone_Coverage}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+        ${hk_statusBadge(s.Status)}
+        <button class="btn btn-danger btn-sm" onclick="hk_deleteSchedule('${s.Schedule_ID}')">✕</button>
+      </div>`;
+    ctr.appendChild(d);
+  });
+}
+
+async function hk_addSchedule(){
+  const body={shift_name:document.getElementById("sch-name").value,start_time:document.getElementById("sch-start").value,
+    end_time:document.getElementById("sch-end").value,staff_ids:document.getElementById("sch-staff").value,
+    zone_coverage:document.getElementById("sch-zones").value,days:document.getElementById("sch-days").value,status:"Active"};
+  const r=await hk_api("/sln_hk/api/sln_hk_schedules","POST",body);
+  if(r.success){hk_toast("Shift added","s");document.getElementById("sch-modal").classList.remove("show");await hk_loadSchedules();hk_renderSchedules();}
+  else hk_toast("Failed","e");
+}
+
+async function hk_deleteSchedule(sid){
+  if(!confirm("Delete this shift?")) return;
+  await hk_api(`/sln_hk/api/sln_hk_schedules/${sid}`,"DELETE");
+  hk_toast("Deleted","i"); await hk_loadSchedules(); hk_renderSchedules();
+}
+
+// ── WASHROOM CHECKLIST ─────────────────────────────
+async function hk_loadWc(){
+  try{
+    HK.wc=await hk_api("/sln_hk/api/sln_hk_wc_checklist");
+    const d=await hk_api("/sln_hk/api/sln_hk_wc_items");
+    HK.wcItems=d.items||[]; HK.wcLocations=d.locations||[];
+  }catch(e){}
+}
+
+function hk_renderWcLocationGrid(){
+  const ctr=document.getElementById("wc-loc-grid"); ctr.innerHTML="";
+  const locFilterSel=document.getElementById("wc-filter-loc");
+  locFilterSel.innerHTML=`<option value="">All Locations</option>`;
+  HK.wcLocations.forEach(loc=>{
+    const o=document.createElement("option");o.value=loc.name;o.textContent=loc.name;locFilterSel.appendChild(o);
+    const card=document.createElement("div"); card.className="wc-loc-card";
+    const emoji=loc.gender==="Ladies"?"🚺":"🚹";
+    const gCls=loc.gender==="Ladies"?"ladies":"gents";
+    card.innerHTML=`<div class="wc-loc-emoji">${emoji}</div>
+      <div class="wc-loc-name">${loc.name}</div>
+      <div class="wc-loc-floor">Floor: ${loc.floor}</div>
+      <div><span class="wc-loc-gender ${gCls}">${loc.gender}</span></div>`;
+    card.onclick=()=>hk_openWcModal(loc);
+    ctr.appendChild(card);
+  });
+}
+
+function hk_openWcModal(loc){
+  document.getElementById("wc-modal-title").textContent=`Washroom Check — ${loc.name}`;
+  document.getElementById("wc-location").value=loc.name;
+  document.getElementById("wc-floor").value=loc.floor;
+  document.getElementById("wc-gender").value=loc.gender;
+  document.getElementById("wc-date").value=new Date().toISOString().split("T")[0];
+  document.getElementById("wc-time").value=new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit",hour12:false});
+  hk_populateStaffDropdown("wc-checked-by");
+  // build checklist items
+  const form=document.getElementById("wc-items-form"); form.innerHTML="";
+  HK.wcItems.forEach(item=>{
+    const d=document.createElement("div"); d.className="wc-check-item";
+    const cid=`wci-${item.replace(/\W/g,"_")}`;
+    d.innerHTML=`<input type="checkbox" id="${cid}" name="wc-item" value="${item}" checked/>
+      <label for="${cid}">${item}</label>`;
+    form.appendChild(d);
+  });
+  document.getElementById("wc-modal").classList.add("show");
+}
+
+async function hk_saveWcCheck(){
+  const items={};
+  document.querySelectorAll("#wc-items-form input[name='wc-item']").forEach(cb=>{
+    items[cb.value]=cb.checked?"✓":"✗";
+  });
+  const body={location:document.getElementById("wc-location").value,
+    floor:document.getElementById("wc-floor").value,
+    gender:document.getElementById("wc-gender").value,
+    date:document.getElementById("wc-date").value,
+    time:document.getElementById("wc-time").value,
+    checked_by:document.getElementById("wc-checked-by").value,
+    supervisor:document.getElementById("wc-supervisor").value,
+    items,overall_status:document.getElementById("wc-overall").value,
+    remarks:document.getElementById("wc-remarks").value};
+  const r=await hk_api("/sln_hk/api/sln_hk_wc_checklist","POST",body);
+  if(r.success){hk_toast(`WC Check ${r.wc_id} saved`,"s");document.getElementById("wc-modal").classList.remove("show");await hk_loadWc();hk_renderWcLogs();hk_loadKpi();}
+  else hk_toast("Failed to save","e");
+}
+
+function hk_renderWcLogs(){
+  const floc=document.getElementById("wc-filter-loc").value;
+  const fgen=document.getElementById("wc-filter-gender").value;
+  let logs=[...HK.wc].reverse();
+  if(floc) logs=logs.filter(l=>l.Location===floc);
+  if(fgen) logs=logs.filter(l=>l.Gender===fgen);
+  const ctr=document.getElementById("wc-log-container");
+  if(!logs.length){ctr.innerHTML=`<div class="empty-state"><p>No washroom logs yet. Click a washroom above to log a check.</p></div>`;return;}
+  ctr.innerHTML=logs.slice(0,30).map(l=>{
+    const okItems=HK.wcItems.filter(i=>l[i]==="✓");
+    const failItems=HK.wcItems.filter(i=>l[i]==="✗");
+    const gCls=l.Gender==="Ladies"?"ladies":"gents";
+    return `<div class="wc-log-entry">
+      <div class="wc-log-hdr">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="wc-log-loc">${l.Location||'—'}</span>
+          <span class="wc-loc-gender ${gCls}">${l.Gender||''}</span>
+          ${hk_statusBadge(l.Overall_Status||'OK')}
+        </div>
+        <div class="wc-log-meta">${l.Date||''} ${l.Time||''} · By: ${l.Checked_By||'—'}</div>
+      </div>
+      <div class="wc-items-grid">
+        ${okItems.map(i=>`<span class="wc-item-pill wc-item-ok">✓ ${i}</span>`).join("")}
+        ${failItems.map(i=>`<span class="wc-item-pill wc-item-fail">✗ ${i}</span>`).join("")}
+      </div>
+      ${l.Remarks?`<div style="font-size:11px;color:var(--tx3);margin-top:6px">Note: ${l.Remarks}</div>`:''}
+    </div>`;
+  }).join("");
+}
+
+// ── PEST CONTROL ─────────────────────────────────
+async function hk_loadPest(){try{HK.pest=await hk_api("/sln_hk/api/sln_hk_pest");}catch(e){}}
+function hk_renderPest(){
+  const ctr=document.getElementById("pest-container");
+  if(!HK.pest.length){ctr.innerHTML=`<div class="empty-state"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><p>No pest control records. Click "+ Log Treatment" to add.</p></div>`;return;}
+  ctr.innerHTML=[...HK.pest].reverse().map(p=>`<div class="pest-card">
+    <div class="pest-hdr">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="pest-id">${p.Pest_ID}</span>
+        <strong style="font-size:13px;color:var(--tx2)">${p.Treatment_Type||'—'}</strong>
+        ${hk_statusBadge(p.Status)}
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:11px;color:var(--tx3)">Next Due: <strong style="color:${p.Next_Due?'var(--rose)':'var(--tx3)'}">${p.Next_Due||'—'}</strong></span>
+        <button class="btn btn-danger btn-sm" onclick="hk_deletePest('${p.Pest_ID}')">✕</button>
+      </div>
+    </div>
+    <div class="pest-meta">
+      <div class="pest-field"><span>Contractor</span><strong>${p.Contractor||'—'}</strong></div>
+      <div class="pest-field"><span>Contact</span><strong>${p.Contact||'—'}</strong></div>
+      <div class="pest-field"><span>Date</span><strong>${p.Date||'—'}</strong></div>
+      <div class="pest-field"><span>Areas Covered</span><strong>${p.Areas_Covered||'—'}</strong></div>
+      <div class="pest-field"><span>Chemical</span><strong>${p.Chemical_Used||'—'}</strong></div>
+      <div class="pest-field"><span>Dosage</span><strong>${p.Dosage||'—'}</strong></div>
+    </div>
+    ${p.Remarks?`<div style="font-size:11px;color:var(--tx3);margin-top:8px;border-top:1px solid var(--bdr);padding-top:6px">Remarks: ${p.Remarks}</div>`:''}
+  </div>`).join("");
+}
+
+async function hk_addPest(){
+  const body={date:document.getElementById("pest-date").value,contractor:document.getElementById("pest-contractor").value,
+    contact:document.getElementById("pest-contact").value,treatment_type:document.getElementById("pest-type").value,
+    areas_covered:document.getElementById("pest-areas").value,chemical_used:document.getElementById("pest-chem").value,
+    dosage:document.getElementById("pest-dosage").value,next_due:document.getElementById("pest-next").value,
+    status:document.getElementById("pest-status").value,remarks:document.getElementById("pest-remarks").value};
+  const r=await hk_api("/sln_hk/api/sln_hk_pest","POST",body);
+  if(r.success){hk_toast(`Pest record ${r.pest_id} added`,"s");document.getElementById("pest-modal").classList.remove("show");await hk_loadPest();hk_renderPest();hk_loadKpi();}
+  else hk_toast("Failed","e");
+}
+
+async function hk_deletePest(pid){
+  if(!confirm("Delete this pest record?")) return;
+  await hk_api(`/sln_hk/api/sln_hk_pest/${pid}`,"DELETE");
+  hk_toast("Deleted","i"); await hk_loadPest(); hk_renderPest();
+}
+
+// ── TRAINING ─────────────────────────────────────
+async function hk_loadTraining(){try{HK.training=await hk_api("/sln_hk/api/sln_hk_training");}catch(e){}}
+function hk_renderTraining(){
+  const ctr=document.getElementById("trn-container");
+  if(!HK.training.length){ctr.innerHTML=`<div class="empty-state"><p>No training sessions. Click "+ Schedule Training" to add.</p></div>`;return;}
+  ctr.innerHTML=[...HK.training].reverse().map(t=>{
+    const sColors={"Completed":"var(--emerald)","Scheduled":"var(--cyan)","Cancelled":"var(--rose)"};
+    const c=sColors[t.Status]||"var(--tx3)";
+    const photoHtml=t.Photo?`<img class="trn-thumb" src="/sln_hk/uploads/training/${t.Photo}" alt="session photo" onclick="hk_lightbox(this.src)" title="View photo"/>`:'';
+    const docHtml=t.Document?`<a class="trn-doc-link" href="/sln_hk/uploads/training/${t.Document}" target="_blank">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      View Document</a>`:'';
+    return `<div class="trn-card" style="border-left:3px solid ${c}">
+      <div class="trn-hdr">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tx3)">${t.Training_ID}</span>
+          <div class="trn-topic">${t.Topic}</div>
+          ${hk_statusBadge(t.Status)}
+        </div>
+        <div style="display:flex;gap:6px">
+          <label class="btn btn-upload btn-sm" title="Upload photo/doc" style="cursor:pointer">
+            📎 Upload
+            <input type="file" style="display:none" accept="image/*,.pdf,.doc,.docx"
+              onchange="hk_uploadTrainingFile('${t.Training_ID}',this)"/>
+          </label>
+          <button class="btn btn-danger btn-sm" onclick="hk_deleteTraining('${t.Training_ID}')">✕</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;font-size:11px;color:var(--tx3)">
+        <span><strong style="color:var(--tx2)">Date:</strong> ${t.Date||'—'}</span>
+        <span><strong style="color:var(--tx2)">Trainer:</strong> ${t.Trainer||'—'}</span>
+        <span><strong style="color:var(--tx2)">Duration:</strong> ${t.Duration_hrs||'—'} hrs</span>
+        <span><strong style="color:var(--tx2)">Venue:</strong> ${t.Venue||'—'}</span>
+        <span style="grid-column:1/-1"><strong style="color:var(--tx2)">Attendees:</strong> ${t.Attendees||'—'}</span>
+        ${t.Remarks?`<span style="grid-column:1/-1"><strong style="color:var(--tx2)">Remarks:</strong> ${t.Remarks}</span>`:''}
+      </div>
+      ${photoHtml||docHtml?`<div style="display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap">${photoHtml}${docHtml}</div>`:''}
+    </div>`;
+  }).join("");
+}
+
+async function hk_addTraining(){
+  const fd=new FormData();
+  fd.append("date",document.getElementById("trn-date").value);
+  fd.append("topic",document.getElementById("trn-topic").value);
+  fd.append("trainer",document.getElementById("trn-trainer").value);
+  fd.append("attendees",document.getElementById("trn-attendees").value);
+  fd.append("duration_hrs",document.getElementById("trn-dur").value);
+  fd.append("venue",document.getElementById("trn-venue").value);
+  fd.append("status",document.getElementById("trn-status").value);
+  fd.append("remarks",document.getElementById("trn-remarks").value);
+  const photoFile=document.getElementById("trn-photo-input").files[0];
+  if(photoFile) fd.append("photo",photoFile);
+  const docFile=document.getElementById("trn-doc-input").files[0];
+  if(docFile) fd.append("document",docFile);
+  try{
+    const r=await hk_api("/sln_hk/api/sln_hk_training","POST",fd);
+    if(r.success){
+      hk_toast(`Training ${r.training_id} scheduled`,"s");
+      document.getElementById("trn-modal").classList.remove("show");
+      // reset file inputs
+      document.getElementById("trn-photo-input").value="";
+      document.getElementById("trn-photo-preview").style.display="none";
+      document.getElementById("trn-doc-input").value="";
+      document.getElementById("trn-doc-label").textContent="";
+      await hk_loadTraining(); hk_renderTraining(); hk_loadKpi();
+    } else hk_toast("Failed","e");
+  }catch(e){hk_toast("Error: "+e.message,"e");}
+}
+
+async function hk_uploadTrainingFile(tid, input){
+  const file=input.files[0];
+  if(!file) return;
+  const fd=new FormData();
+  const isImg=/\.(png|jpg|jpeg|gif|webp)$/i.test(file.name);
+  fd.append(isImg?"photo":"document", file);
+  try{
+    const r=await hk_api(`/sln_hk/api/sln_hk_training/${tid}/upload`,"POST",fd);
+    if(r.success){hk_toast("File uploaded","s"); await hk_loadTraining(); hk_renderTraining();}
+    else hk_toast("Upload failed","e");
+  }catch(e){hk_toast("Error: "+e.message,"e");}
+  input.value="";
+}
+
+async function hk_deleteTraining(tid){
+  if(!confirm("Delete this session?")) return;
+  await hk_api(`/sln_hk/api/sln_hk_training/${tid}`,"DELETE");
+  hk_toast("Deleted","i"); await hk_loadTraining(); hk_renderTraining();
+}
+
+// ── STAFF DIRECTORY ──────────────────────────────
+async function hk_loadStaff(){try{HK.staff=await hk_api("/sln_hk/api/sln_hk_staff");}catch(e){}}
+
+function hk_renderStaff(){
+  const q=(document.getElementById("staff-search").value||"").toLowerCase();
+  const sf=document.getElementById("staff-shift-filter").value;
+  const grid=document.getElementById("staff-grid");
+  let list=HK.staff.filter(s=>{
+    if(sf&&s.Shift!==sf) return false;
+    if(q&&!JSON.stringify(s).toLowerCase().includes(q)) return false;
+    return true;
+  });
+  if(!list.length){
+    grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><p>No staff found. Click "+ Add Staff" to add a member.</p></div>`;
+    return;
+  }
+  grid.innerHTML=list.map(s=>{
+    const avatar=s.Photo
+      ?`<img class="staff-avatar" src="/sln_hk/uploads/staff_photos/${s.Photo}" alt="${s.Name}" onclick="hk_lightbox(this.src)">`
+      :`<div class="staff-avatar-placeholder">👤</div>`;
+    const statusColor=s.Status==="Active"?"var(--emerald)":s.Status==="On Leave"?"var(--amber)":"var(--rose)";
+    return `<div class="staff-card">
+      <span class="staff-id-badge">${s.Staff_ID}</span>
+      ${avatar}
+      <div class="staff-name">${s.Name||'—'}</div>
+      <div class="staff-role">${s.Role||'—'}</div>
+      <div class="staff-shift">${s.Shift||'—'}</div>
+      <div class="staff-contact">${s.Contact||'—'}</div>
+      <span class="badge" style="background:${statusColor}22;color:${statusColor};border:1px solid ${statusColor}44;font-size:9px">${s.Status||'Active'}</span>
+      ${s.Remarks?`<div style="font-size:10px;color:var(--tx3);text-align:center">${s.Remarks}</div>`:''}
+      <div class="staff-card-actions">
+        <button class="btn btn-outline btn-sm" onclick="hk_openStaffModal('${s.Staff_ID}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="hk_deleteStaff('${s.Staff_ID}')">✕</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function hk_openStaffModal(sid=null){
+  const modal=document.getElementById("staff-modal");
+  const titleEl=document.getElementById("staff-modal-title");
+  const saveBtn=document.getElementById("staff-save-btn");
+  document.getElementById("staff-edit-id").value=sid||"";
+  // Reset form
+  ["sf-name","sf-role","sf-contact","sf-email","sf-supervisor","sf-remarks"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("sf-shift").value="";
+  document.getElementById("sf-status").value="Active";
+  document.getElementById("sf-join").value="";
+  document.getElementById("sf-photo-input").value="";
+  document.getElementById("sf-photo-preview").style.display="none";
+
+  if(sid){
+    const s=HK.staff.find(x=>x.Staff_ID===sid);
+    if(s){
+      document.getElementById("sf-name").value=s.Name||"";
+      document.getElementById("sf-role").value=s.Role||"";
+      document.getElementById("sf-shift").value=s.Shift||"";
+      document.getElementById("sf-contact").value=s.Contact||"";
+      document.getElementById("sf-email").value=s.Email||"";
+      document.getElementById("sf-join").value=s.Join_Date||"";
+      document.getElementById("sf-supervisor").value=s.Supervisor||"";
+      document.getElementById("sf-status").value=s.Status||"Active";
+      document.getElementById("sf-remarks").value=s.Remarks||"";
+      if(s.Photo){
+        const prev=document.getElementById("sf-photo-preview");
+        prev.src=`/sln_hk/uploads/staff_photos/${s.Photo}`;
+        prev.style.display="block";
+      }
+    }
+    titleEl.textContent="Edit Staff Member";
+    saveBtn.textContent="Save Changes";
+  } else {
+    titleEl.textContent="Add Staff Member";
+    saveBtn.textContent="Add Staff";
+  }
+  modal.classList.add("show");
+}
+
+async function hk_saveStaff(){
+  const sid=document.getElementById("staff-edit-id").value;
+  const fd=new FormData();
+  fd.append("name",document.getElementById("sf-name").value);
+  fd.append("role",document.getElementById("sf-role").value);
+  fd.append("shift",document.getElementById("sf-shift").value);
+  fd.append("contact",document.getElementById("sf-contact").value);
+  fd.append("email",document.getElementById("sf-email").value);
+  fd.append("join_date",document.getElementById("sf-join").value);
+  fd.append("supervisor",document.getElementById("sf-supervisor").value);
+  fd.append("status",document.getElementById("sf-status").value);
+  fd.append("remarks",document.getElementById("sf-remarks").value);
+  const photoFile=document.getElementById("sf-photo-input").files[0];
+  if(photoFile) fd.append("photo",photoFile);
+  try{
+    let r;
+    if(sid){
+      r=await hk_api(`/sln_hk/api/sln_hk_staff/${sid}`,"PUT",fd);
+    } else {
+      r=await hk_api("/sln_hk/api/sln_hk_staff","POST",fd);
+    }
+    if(r.success){
+      hk_toast(sid?"Staff updated":"Staff added","s");
+      document.getElementById("staff-modal").classList.remove("show");
+      await hk_loadStaff(); hk_renderStaff();
+    } else hk_toast("Failed","e");
+  }catch(e){hk_toast("Error: "+e.message,"e");}
+}
+
+async function hk_deleteStaff(sid){
+  if(!confirm("Remove this staff member?")) return;
+  const r=await hk_api(`/sln_hk/api/sln_hk_staff/${sid}`,"DELETE");
+  if(r.success){hk_toast("Staff removed","i"); await hk_loadStaff(); hk_renderStaff();}
+}
+
+// ── ZONE PHOTO quick upload ───────────────────────
+async function hk_uploadZonePhoto(zid, input){
+  const file=input.files[0];
+  if(!file) return;
+  const fd=new FormData();
+  fd.append("photo",file);
+  try{
+    const r=await hk_api(`/sln_hk/api/sln_hk_zones/${zid}/photo`,"POST",fd);
+    if(r.success){hk_toast("Zone photo saved","s"); await hk_loadZones(); hk_renderZones();}
+    else hk_toast("Upload failed","e");
+  }catch(e){hk_toast("Error: "+e.message,"e");}
+  input.value="";
+}
+
+// ── TASK quick photo upload (existing task) ───────
+function hk_quickPhotoUpload(tid){
+  const inp=document.createElement("input");
+  inp.type="file"; inp.accept="image/*";
+  inp.onchange=async()=>{
+    const file=inp.files[0];
+    if(!file) return;
+    const fd=new FormData();
+    fd.append("photo",file);
+    try{
+      const r=await hk_api(`/sln_hk/api/sln_hk_tasks/${tid}/photo`,"POST",fd);
+      if(r.success){hk_toast("Photo uploaded","s"); await hk_loadTasks(); hk_renderTasks();}
+      else hk_toast("Upload failed","e");
+    }catch(e){hk_toast("Error: "+e.message,"e");}
+  };
+  inp.click();
+}
+
+// ── LIGHTBOX ─────────────────────────────────────
+function hk_lightbox(src){
+  document.getElementById("hk-lightbox-img").src=src;
+  document.getElementById("hk-lightbox").classList.add("show");
+}
+
+// ── PHOTO PREVIEW helper ──────────────────────────
+function hk_previewPhoto(input, previewId){
+  const file=input.files[0];
+  const prev=document.getElementById(previewId);
+  if(!file||!prev) return;
+  const reader=new FileReader();
+  reader.onload=e=>{prev.src=e.target.result; prev.style.display="block";};
+  reader.readAsDataURL(file);
+}
+
+function hk_showDocName(input, labelId){
+  const lbl=document.getElementById(labelId);
+  if(lbl && input.files[0]) lbl.textContent="📄 "+input.files[0].name;
+}
+
+// ── CHARTS ────────────────────────────────────────
+let HK_charts={};
+async function hk_loadCharts(){
+  try{
+    const d=await hk_api("/sln_hk/api/sln_hk_chart_data");
+    // Bar chart
+    const ctx1=document.getElementById("chart-tasks").getContext("2d");
+    if(HK_charts.bar){HK_charts.bar.destroy();}
+    HK_charts.bar=new Chart(ctx1,{type:"bar",data:{labels:d.task_labels,
+      datasets:[{label:"Completed",data:d.completed,backgroundColor:"rgba(16,185,129,.8)",borderRadius:4},
+        {label:"Pending",data:d.pending,backgroundColor:"rgba(245,158,11,.8)",borderRadius:4},
+        {label:"In Progress",data:d.in_progress,backgroundColor:"rgba(6,182,212,.8)",borderRadius:4}]},
+      options:{responsive:true,plugins:{legend:{labels:{color:"#b8dde8",font:{size:10}}}},
+        scales:{x:{ticks:{color:"#4a7a8a",font:{size:10}},grid:{color:"rgba(6,182,212,.06)"}},
+          y:{ticks:{color:"#4a7a8a",font:{size:10}},grid:{color:"rgba(6,182,212,.06)"},beginAtZero:true}}}});
+    // Donut chart
+    const ctx2=document.getElementById("chart-zones").getContext("2d");
+    if(HK_charts.donut){HK_charts.donut.destroy();}
+    HK_charts.donut=new Chart(ctx2,{type:"doughnut",data:{labels:["Cleaned","Pending","In Progress"],
+      datasets:[{data:[d.zone_cleaned,d.zone_pending,d.zone_inprog],
+        backgroundColor:["rgba(16,185,129,.8)","rgba(245,158,11,.8)","rgba(6,182,212,.8)"],borderWidth:0,hoverOffset:4}]},
+      options:{responsive:true,plugins:{legend:{labels:{color:"#b8dde8",font:{size:10}}}},cutout:"65%"}});
+  }catch(e){}
+}
+
+// ── EXPORT ────────────────────────────────────────
+function hk_export(){window.open("/sln_hk/api/sln_hk_export","_blank"); hk_toast("Exporting all data...","i");}
+
+// ── RENDER ALL ────────────────────────────────────
+function hk_renderAll(){
+  hk_renderTasks(); hk_renderChecklist(); hk_renderZones();
+  hk_renderStaff(); hk_renderInventory(); hk_renderSow();
+  hk_renderSchedules(); hk_renderWcLocationGrid(); hk_renderWcLogs();
+  hk_renderPest(); hk_renderTraining();
+}
+
+// ── CLOSE MODALS on overlay click ─────────────────
+document.querySelectorAll(".modal-overlay").forEach(mo=>{
+  mo.addEventListener("click",e=>{if(e.target===mo) mo.classList.remove("show");});
+});
+
+// ── INIT ──────────────────────────────────────────
+hk_loadAll();
+</script>
+</body>
+</html>

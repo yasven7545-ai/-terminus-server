@@ -1,0 +1,53 @@
+[
+  {
+    "Title": "Brief incident title",
+    "Type": "Select from list",
+    "Severity": "Critical/High/Medium/Low",
+    "Location / Zone": "Where it occurred",
+    "Description": "Detailed description",
+    "Reported By": "Guard/staff name",
+    "Date": "DD-MM-YYYY",
+    "Time": "HH:MM",
+    "Action Taken": "Immediate response",
+    "Status": "Open/In Progress/Closed",
+    "Assigned To": "Handler name",
+    "Closure Date": "DD-MM-YYYY",
+    "RCA / Root Cause": "Root cause analysis",
+    "id": "INC-B05CCBC6",
+    "imported_at": "2026-03-23 15:16:04"
+  },
+  {
+    "Title": "Brief incident title",
+    "Type": "Select from list",
+    "Severity": "Critical/High/Medium/Low",
+    "Location / Zone": "Where it occurred",
+    "Description": "Detailed description",
+    "Reported By": "Guard/staff name",
+    "Date": "DD-MM-YYYY",
+    "Time": "HH:MM",
+    "Action Taken": "Immediate response",
+    "Status": "Open/In Progress/Closed",
+    "Assigned To": "Handler name",
+    "Closure Date": "DD-MM-YYYY",
+    "RCA / Root Cause": "Root cause analysis",
+    "id": "INC-BEFDCE70",
+    "imported_at": "2026-03-23 15:11:07"
+  },
+  {
+    "Title": "Brief incident title",
+    "Type": "Select from list",
+    "Severity": "Critical/High/Medium/Low",
+    "Location / Zone": "Where it occurred",
+    "Description": "Detailed description",
+    "Reported By": "Guard/staff name",
+    "Date": "DD-MM-YYYY",
+    "Time": "HH:MM",
+    "Action Taken": "Immediate response",
+    "Status": "Open/In Progress/Closed",
+    "Assigned To": "Handler name",
+    "Closure Date": "DD-MM-YYYY",
+    "RCA / Root Cause": "Root cause analysis",
+    "id": "INC-BA27CEB7",
+    "imported_at": "2026-03-23 15:09:06"
+  }
+]

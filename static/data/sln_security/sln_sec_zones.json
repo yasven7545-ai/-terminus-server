@@ -1,0 +1,82 @@
+[
+  {
+    "id": "z1",
+    "name": "Main Gate",
+    "active": true
+  },
+  {
+    "id": "z2",
+    "name": "Podium Office Entry",
+    "active": true
+  },
+  {
+    "id": "z3",
+    "name": "Service Gate",
+    "active": true
+  },
+  {
+    "id": "z4",
+    "name": "Ramp Turning Point",
+    "active": true
+  },
+  {
+    "id": "z5",
+    "name": "Basement-1",
+    "active": true
+  },
+  {
+    "id": "z6",
+    "name": "Basement-2",
+    "active": true
+  },
+  {
+    "id": "z7",
+    "name": "Basement-3",
+    "active": true
+  },
+  {
+    "id": "z8",
+    "name": "Basement-4",
+    "active": true
+  },
+  {
+    "id": "z9",
+    "name": "Traffic Control",
+    "active": true
+  },
+  {
+    "id": "z10",
+    "name": "Dropping Point",
+    "active": true
+  },
+  {
+    "id": "z11",
+    "name": "Mall Entrance",
+    "active": true
+  },
+  {
+    "id": "z12",
+    "name": "Service Lift",
+    "active": true
+  },
+  {
+    "id": "z13",
+    "name": "Patrolling",
+    "active": true
+  },
+  {
+    "id": "z14",
+    "name": "CCTV",
+    "active": true
+  },
+  {
+    "id": "z15",
+    "name": "Service Areas",
+    "active": true
+  },
+  {
+    "id": "z16",
+    "name": "Ninth Floor Reception",
+    "active": true
+  }
+]

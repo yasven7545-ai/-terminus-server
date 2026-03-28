@@ -1,0 +1,104 @@
+{
+  "issues": [
+    {
+      "issue_id": "OW-ISS-2026-0001",
+      "title": "Gas Pressure",
+      "description": "Low",
+      "priority": "Medium",
+      "status": "Closed",
+      "category": "Electrical",
+      "location": "Basement 1",
+      "reported_by": "admin",
+      "assigned_to": "",
+      "property": "ONEWEST",
+      "property_code": "OW",
+      "created_at": "2026-02-22T13:01:37.550363",
+      "updated_at": "2026-02-22T13:55:02.395406",
+      "sla_deadline": "",
+      "escalation_level": "Level 1",
+      "photos": []
+    },
+    {
+      "issue_id": "OW-ISS-2026-0002",
+      "title": "Pressure Low",
+      "description": "Gas",
+      "priority": "Medium",
+      "status": "Closed",
+      "category": "Electrical",
+      "location": "Basement 1",
+      "reported_by": "admin",
+      "assigned_to": "",
+      "property": "ONEWEST",
+      "property_code": "OW",
+      "created_at": "2026-02-22T13:20:02.254531",
+      "updated_at": "2026-02-22T13:54:52.228436",
+      "sla_deadline": "",
+      "escalation_level": "Level 1",
+      "photos": []
+    },
+    {
+      "issue_id": "OW-ISS-2026-0003",
+      "title": "Gas",
+      "description": "Pressure Low",
+      "priority": "High",
+      "status": "Closed",
+      "category": "Electrical",
+      "location": "Basement 1",
+      "reported_by": "admin",
+      "assigned_to": "Venu",
+      "property": "ONEWEST",
+      "property_code": "OW",
+      "created_at": "2026-02-22T13:27:36.006037",
+      "updated_at": "2026-02-22T13:56:11.037956",
+      "sla_deadline": "",
+      "escalation_level": "Level 1",
+      "photos": [
+        "/uploads/OW/issues/20260222_132735_WhatsApp_Image_2026-02-21_at_17.44.49.jpeg"
+      ],
+      "whatsapp_sent": false
+    },
+    {
+      "issue_id": "OW-ISS-2026-0004",
+      "title": "Gas",
+      "description": "Pressure low",
+      "priority": "Critical",
+      "status": "Closed",
+      "category": "Electrical",
+      "location": "Basement 1",
+      "reported_by": "admin",
+      "assigned_to": "Venu",
+      "property": "ONEWEST",
+      "property_code": "OW",
+      "created_at": "2026-02-23T10:03:29.802548",
+      "updated_at": "2026-03-01T10:34:45.005647",
+      "sla_deadline": "",
+      "escalation_level": "Level 1",
+      "photos": [
+        "/uploads/OW/issues/20260223_100329_WhatsApp_Image_2026-02-21_at_17.44.49.jpeg"
+      ],
+      "whatsapp_sent": false
+    },
+    {
+      "issue_id": "OW-ISS-2026-0005",
+      "title": "Ckeanin",
+      "description": "Oil drums",
+      "priority": "Low",
+      "status": "Closed",
+      "category": "Electrical",
+      "location": "Basement 1",
+      "reported_by": "admin",
+      "assigned_to": "Venu",
+      "property": "ONEWEST",
+      "property_code": "OW",
+      "created_at": "2026-02-23T13:58:15.728732",
+      "updated_at": "2026-03-01T10:34:57.539774",
+      "sla_deadline": "",
+      "escalation_level": "Level 1",
+      "photos": [
+        "/uploads/OW/issues/20260223_135815_1000869003.jpg"
+      ],
+      "whatsapp_sent": false
+    }
+  ],
+  "last_updated": "2026-02-23T13:58:15.728761"
+}

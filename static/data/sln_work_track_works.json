@@ -1,0 +1,33 @@
+[
+  {
+    "id": "SLT-0001",
+    "title": "EV Charging Station Installation",
+    "location": "SLN Terminus",
+    "description": "Also, what is the stays on EV charging station setup at SLN?",
+    "priority": "Medium",
+    "estimated_cost": "",
+    "identified_by": "Mr. Madhav Reddy",
+    "vendor": "",
+    "start_date": "2026-03-15",
+    "end_date": "2026-04-01",
+    "progress": 0,
+    "remarks": "",
+    "inspection": "Yes",
+    "current_stage": "Issue Identification",
+    "status": "Active",
+    "type": "Cost Implication",
+    "daily_updates": [],
+    "history": [
+      {
+        "stage": "Issue Identification",
+        "action": "Work Created",
+        "by": "admin",
+        "timestamp": "2026-03-08T14:55:31.850447",
+        "notes": "Also, what is the stays on EV charging station setup at SLN?"
+      }
+    ],
+    "created_at": "2026-03-08T14:55:31.850447",
+    "updated_at": "2026-03-08T14:55:31.850447",
+    "created_by": "admin"
+  }
+]

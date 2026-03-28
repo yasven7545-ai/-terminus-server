@@ -1,0 +1,54 @@
+[
+  {
+    "id": "TD_FIRE_1774251066712",
+    "property_id": "The District",
+    "date": "",
+    "conducted_by": "",
+    "drill_type": "",
+    "participants": "Total",
+    "duration": "",
+    "score": "",
+    "remarks": "",
+    "status": "Avg Score",
+    "created_at": "2026-03-23T13:01:06.712317"
+  },
+  {
+    "id": "TD_FIRE_1774251066592",
+    "property_id": "The District",
+    "date": "30-Mar-2025",
+    "conducted_by": "Safety Officer",
+    "drill_type": "evacuation",
+    "participants": "140",
+    "duration": "",
+    "score": "",
+    "remarks": "Q1 quarterly drill",
+    "status": "Scheduled",
+    "created_at": "2026-03-23T13:01:06.592632"
+  },
+  {
+    "id": "TD_FIRE_1774251066480",
+    "property_id": "The District",
+    "date": "20-Feb-2025",
+    "conducted_by": "Fire Marshal",
+    "drill_type": "fire_response",
+    "participants": "25",
+    "duration": "40",
+    "score": "74",
+    "remarks": "Needs improvement",
+    "status": "Completed",
+    "created_at": "2026-03-23T13:01:06.480588"
+  },
+  {
+    "id": "TD_FIRE_1774251066362",
+    "property_id": "The District",
+    "date": "15-Jan-2025",
+    "conducted_by": "Safety Officer",
+    "drill_type": "evacuation",
+    "participants": "130",
+    "duration": "27",
+    "score": "86",
+    "remarks": "Good overall",
+    "status": "Completed",
+    "created_at": "2026-03-23T13:01:06.362095"
+  }
+]

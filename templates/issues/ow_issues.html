@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+<title>ONEWEST — Incident SLA Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* ═══════════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════════ */
+:root {
+  --sidebar-w: 230px;
+  --hh: 58px;
+  --r: 10px;
+  --rl: 14px;
+  --ease: cubic-bezier(.4,0,.2,1);
+  --bounce: cubic-bezier(.34,1.56,.64,1);
+
+  /* accent spectrum */
+  --cyan:    #06b6d4;
+  --cyan-g:  rgba(6,182,212,.14);
+  --cyan-b:  rgba(6,182,212,.06);
+  --rose:    #f43f5e;
+  --rose-g:  rgba(244,63,94,.14);
+  --amber:   #f59e0b;
+  --amber-g: rgba(245,158,11,.13);
+  --emerald: #10b981;
+  --em-g:    rgba(16,185,129,.12);
+  --violet:  #8b5cf6;
+  --vio-g:   rgba(139,92,246,.12);
+  --sky:     #0ea5e9;
+  --sky-g:   rgba(14,165,233,.12);
+  --wa:      #25d366;
+
+  /* gradients */
+  --g-head:  linear-gradient(135deg,#06b6d4,#0ea5e9);
+  --g-open:  linear-gradient(135deg,#f43f5e,#f97316);
+  --g-prog:  linear-gradient(135deg,#f59e0b,#f97316);
+  --g-res:   linear-gradient(135deg,#10b981,#06b6d4);
+  --g-cls:   linear-gradient(135deg,#8b5cf6,#06b6d4);
+}
+
+[data-theme="dark"] {
+  --bg:       #060b14;
+  --bg2:      #09101d;
+  --card:     #0e1624;
+  --card2:    #131e2e;
+  --card3:    #172033;
+  --bdr:      #1a2540;
+  --bdr2:     #1e2c4a;
+  --tx:       #e0eaf8;
+  --tx2:      #6b85a8;
+  --tx3:      #283c58;
+  --sh:       0 8px 40px rgba(0,0,0,.65);
+  --sh2:      0 2px 12px rgba(0,0,0,.4);
+  --glass:    rgba(9,16,29,.85);
+  --sidebar-bg: #080f1c;
+  --topbar-bg:  rgba(6,11,20,.92);
+  --input-bg:   #0d1829;
+}
+[data-theme="light"] {
+  --bg:       #eef2fa;
+  --bg2:      #e4eaf6;
+  --card:     #ffffff;
+  --card2:    #f5f8ff;
+  --card3:    #edf2ff;
+  --bdr:      #d0daf0;
+  --bdr2:     #c0ccec;
+  --tx:       #0c1a30;
+  --tx2:      #4a6080;
+  --tx3:      #9aaccb;
+  --sh:       0 4px 24px rgba(0,30,80,.09);
+  --sh2:      0 2px 8px rgba(0,30,80,.07);
+  --glass:    rgba(238,242,250,.9);
+  --sidebar-bg: #f0f4ff;
+  --topbar-bg:  rgba(238,242,250,.92);
+  --input-bg:   #f0f5ff;
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Nunito',sans-serif;
+  background:var(--bg);
+  color:var(--tx);
+  min-height:100vh;
+  overflow-x:hidden;
+  font-size:14px;
+  transition:background .3s,color .3s;
+}
+
+/* ── SCROLLBARS ── */
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--bdr2); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--tx3); }
+
+/* ── ANIMATED BACKGROUND ── */
+.bg-mesh {
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  overflow:hidden;
+}
+.mesh-orb {
+  position:absolute; border-radius:50%; filter:blur(90px);
+  animation:meshFloat 20s ease-in-out infinite alternate;
+}
+[data-theme="dark"] .mesh-orb { opacity:.055; }
+[data-theme="light"] .mesh-orb { opacity:.04; }
+.mo-1 { width:500px;height:500px;background:var(--g-head);top:-150px;right:-100px;animation-delay:0s; }
+.mo-2 { width:380px;height:380px;background:var(--g-open);bottom:-120px;left:-80px;animation-delay:-8s; }
+.mo-3 { width:300px;height:300px;background:var(--g-cls);top:40%;left:35%;animation-delay:-15s; }
+
+@keyframes meshFloat {
+  from { transform:translate(0,0) scale(1); }
+  to   { transform:translate(40px,30px) scale(1.1); }
+}
+
+/* ── APP SHELL ── */
+.app-shell {
+  display:flex;
+  height:100vh;
+  overflow:hidden;
+  position:relative;
+  z-index:1;
+}
+
+/* ═══════════════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════════════ */
+#sidebar {
+  width:var(--sidebar-w);
+  background:var(--sidebar-bg);
+  border-right:1px solid var(--bdr);
+  display:flex;
+  flex-direction:column;
+  flex-shrink:0;
+  transition:transform .28s var(--ease);
+  z-index:100;
+  overflow-y:auto;
+}
+
+.sidebar-brand {
+  padding:16px;
+  border-bottom:1px solid var(--bdr);
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+.sidebar-brand-icon {
+  width:38px; height:38px;
+  border-radius:10px;
+  background:var(--g-head);
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px; color:#fff; flex-shrink:0;
+  box-shadow:0 4px 14px rgba(6,182,212,.35);
+}
+.brand-name { font-family:'Geologica',sans-serif; font-weight:800; font-size:.95rem; color:var(--tx); letter-spacing:.3px; }
+.brand-sub  { font-size:.6rem; color:var(--tx3); letter-spacing:1.2px; text-transform:uppercase; margin-top:1px; font-family:'JetBrains Mono',monospace; }
+.sidebar-close {
+  display:none; margin-left:auto; background:none; border:none;
+  color:var(--tx3); cursor:pointer; font-size:16px; padding:4px;
+}
+
+.sidebar-nav { flex:1; padding:12px 8px; overflow-y:auto; }
+.nav-group-label {
+  font-size:.6rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:1.4px; color:var(--tx3);
+  padding:8px 10px 4px; margin-top:6px;
+  font-family:'JetBrains Mono',monospace;
+}
+.nav-group-label:first-child { margin-top:0; }
+
+.sidebar-item {
+  display:flex; align-items:center; gap:9px;
+  padding:9px 12px;
+  border-radius:var(--r); margin-bottom:2px;
+  color:var(--tx2); text-decoration:none;
+  font-size:.82rem; font-weight:600;
+  transition:all .15s; border:1px solid transparent;
+}
+.sidebar-item i { width:16px; text-align:center; font-size:13px; flex-shrink:0; }
+.sidebar-item:hover { background:var(--cyan-g); color:var(--tx); border-color:rgba(6,182,212,.15); }
+.sidebar-item.active {
+  background:var(--cyan-g); color:var(--cyan);
+  border-color:rgba(6,182,212,.2);
+}
+.sidebar-item.active i { color:var(--cyan); }
+
+.sidebar-footer {
+  padding:12px 16px;
+  border-top:1px solid var(--bdr);
+}
+.logout-btn {
+  display:flex; align-items:center; gap:8px;
+  background:none; border:none; color:var(--tx3);
+  cursor:pointer; padding:6px 10px; border-radius:var(--r);
+  font-size:.78rem; font-weight:600; font-family:'Nunito',sans-serif;
+  transition:all .15s; width:100%;
+}
+.logout-btn:hover { color:var(--rose); background:var(--rose-g); }
+
+/* ═══════════════════════════════════════════════════
+   TOPBAR
+═══════════════════════════════════════════════════ */
+.main-content {
+  flex:1; display:flex; flex-direction:column;
+  overflow:hidden; min-width:0;
+}
+
+.topbar {
+  height:var(--hh);
+  background:var(--topbar-bg);
+  border-bottom:1px solid var(--bdr);
+  display:flex; align-items:center;
+  justify-content:space-between;
+  padding:0 20px; gap:10px;
+  flex-shrink:0;
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  position:sticky; top:0; z-index:50;
+}
+.topbar-left  { display:flex; align-items:center; gap:10px; }
+.topbar-right { display:flex; align-items:center; gap:8px; flex-wrap:nowrap; }
+
+.menu-toggle {
+  display:none; background:var(--cyan-g); border:1px solid rgba(6,182,212,.25);
+  color:var(--cyan); cursor:pointer; border-radius:8px;
+  width:34px; height:34px; align-items:center; justify-content:center;
+  font-size:14px; flex-shrink:0;
+}
+
+.page-title { font-family:'Geologica',sans-serif; font-weight:800; font-size:.95rem; color:var(--tx); }
+.page-sub   { font-size:.65rem; color:var(--tx3); margin-top:1px; font-family:'JetBrains Mono',monospace; }
+
+/* clock */
+.clock-box { text-align:right; }
+.clock-time { font-family:'JetBrains Mono',monospace; font-size:.82rem; color:var(--tx); font-weight:600; }
+.clock-date { font-size:.62rem; color:var(--tx3); margin-top:1px; }
+
+/* portal back btn */
+.portal-back {
+  display:inline-flex; align-items:center; gap:7px;
+  padding:6px 13px 6px 9px;
+  background:var(--cyan-g); border:1px solid rgba(6,182,212,.3);
+  border-radius:20px; color:var(--cyan); font-size:.74rem; font-weight:700;
+  text-decoration:none; white-space:nowrap;
+  transition:all .2s; animation:portalPulse 2.5s ease-in-out infinite;
+  font-family:'JetBrains Mono',monospace;
+}
+.portal-back:hover { background:var(--cyan); color:#fff; border-color:var(--cyan); animation:none; box-shadow:0 0 18px rgba(6,182,212,.4); }
+.portal-dot { width:7px; height:7px; border-radius:50%; background:var(--cyan); animation:blink-c 1.6s ease-in-out infinite; }
+@keyframes blink-c  { 0%,100%{opacity:1;box-shadow:0 0 6px var(--cyan)} 50%{opacity:.2;box-shadow:none} }
+@keyframes portalPulse { 0%,100%{box-shadow:0 0 0 0 rgba(6,182,212,.3)} 50%{box-shadow:0 0 0 6px rgba(6,182,212,0)} }
+
+/* theme toggle */
+.theme-toggle {
+  display:flex; align-items:center; gap:6px;
+  background:var(--card2); border:1px solid var(--bdr);
+  border-radius:20px; padding:5px 11px;
+  cursor:pointer; font-size:.72rem; font-weight:700;
+  color:var(--tx2); transition:all .2s;
+  user-select:none; white-space:nowrap;
+  font-family:'JetBrains Mono',monospace;
+}
+.theme-toggle:hover { border-color:var(--cyan); color:var(--cyan); }
+.theme-toggle svg { width:13px; height:13px; flex-shrink:0; }
+
+/* ── BUTTONS ── */
+.btn {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:7px 14px; border-radius:var(--r);
+  border:1px solid transparent;
+  font-family:'Nunito',sans-serif; font-size:.78rem; font-weight:700;
+  cursor:pointer; transition:all .18s; white-space:nowrap;
+  text-decoration:none;
+}
+.btn-ghost   { background:transparent; border-color:var(--bdr2); color:var(--tx2); }
+.btn-ghost:hover { background:var(--card2); color:var(--tx); }
+.btn-primary { background:var(--g-head); color:#fff; border-color:transparent; box-shadow:0 4px 14px rgba(6,182,212,.3); }
+.btn-primary:hover { opacity:.9; transform:translateY(-1px); box-shadow:0 6px 20px rgba(6,182,212,.4); }
+.btn-success { background:var(--em-g); color:var(--emerald); border-color:rgba(16,185,129,.3); }
+.btn-success:hover { background:var(--emerald); color:#fff; }
+.btn-danger  { background:var(--rose-g); color:var(--rose); border-color:rgba(244,63,94,.3); }
+.btn-danger:hover  { background:var(--rose); color:#fff; }
+.btn-info    { background:var(--sky-g); color:var(--sky); border-color:rgba(14,165,233,.3); }
+.btn-info:hover    { background:var(--sky); color:#fff; }
+.btn-wa      { background:rgba(37,211,102,.1); color:var(--wa); border-color:rgba(37,211,102,.3); }
+.btn-wa:hover      { background:var(--wa); color:#fff; }
+.btn-full { width:100%; justify-content:center; padding:10px; }
+
+.icon-btn {
+  width:30px; height:30px; display:inline-flex;
+  align-items:center; justify-content:center;
+  border-radius:7px; border:none; cursor:pointer;
+  font-size:12px; transition:all .15s; background:transparent;
+}
+.ib-view    { color:var(--sky); }
+.ib-view:hover    { background:var(--sky-g); }
+.ib-wa      { color:var(--wa); }
+.ib-wa:hover      { background:rgba(37,211,102,.12); }
+.ib-start   { color:var(--amber); }
+.ib-start:hover   { background:var(--amber-g); }
+.ib-resolve { color:var(--emerald); }
+.ib-resolve:hover { background:var(--em-g); }
+.ib-close   { color:var(--violet); }
+.ib-reopen  { color:#f97316; }
+.ib-close:hover   { background:var(--vio-g); }
+
+/* ═══════════════════════════════════════════════════
+   PAGE BODY
+═══════════════════════════════════════════════════ */
+.page-body { flex:1; overflow-y:auto; padding:20px; }
+
+/* ── STATS GRID ── */
+.stats-grid {
+  display:grid; grid-template-columns:repeat(5,1fr);
+  gap:12px; margin-bottom:22px;
+}
+.stat-card {
+  background:var(--card); border:1px solid var(--bdr);
+  border-radius:var(--rl); padding:16px;
+  display:flex; align-items:center; gap:12px;
+  transition:all .2s; cursor:pointer;
+  animation:cardPop .5s var(--ease) both;
+  position:relative; overflow:hidden;
+}
+.stat-card::before {
+  content:''; position:absolute; inset:0; opacity:0;
+  transition:opacity .2s;
+}
+.stat-card:hover { transform:translateY(-2px); box-shadow:var(--sh); }
+.stat-card.active-filter { border-color:var(--cyan); box-shadow:0 0 0 2px rgba(6,182,212,.22),var(--sh); transform:translateY(-2px); }
+.stat-card.active-filter .stat-val { color:var(--cyan); }
+.stat-card:nth-child(1) { animation-delay:.05s; }
+.stat-card:nth-child(2) { animation-delay:.1s; }
+.stat-card:nth-child(3) { animation-delay:.15s; }
+.stat-card:nth-child(4) { animation-delay:.2s; }
+.stat-card:nth-child(5) { animation-delay:.25s; }
+
+@keyframes cardPop { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
+
+.stat-icon {
+  width:42px; height:42px; border-radius:11px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px; flex-shrink:0;
+}
+.si-total { background:var(--cyan-g);   color:var(--cyan);    border:1px solid rgba(6,182,212,.2); }
+.si-open  { background:var(--rose-g);   color:var(--rose);    border:1px solid rgba(244,63,94,.2); }
+.si-prog  { background:var(--amber-g);  color:var(--amber);   border:1px solid rgba(245,158,11,.2); }
+.si-res   { background:var(--em-g);     color:var(--emerald); border:1px solid rgba(16,185,129,.2); }
+.si-cls   { background:var(--vio-g);    color:var(--violet);  border:1px solid rgba(139,92,246,.2); }
+
+.stat-val { font-family:'JetBrains Mono',monospace; font-size:1.5rem; font-weight:700; color:var(--tx); line-height:1; }
+.stat-lbl { font-size:.62rem; color:var(--tx3); text-transform:uppercase; letter-spacing:1px; margin-top:4px; }
+.stat-emoji { font-size:1.3rem; }
+
+/* ── CARD ── */
+.card {
+  background:var(--card); border:1px solid var(--bdr);
+  border-radius:var(--rl); overflow:hidden;
+  margin-bottom:20px;
+  animation:cardPop .5s var(--ease) .3s both;
+}
+.card-head {
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:10px;
+  padding:14px 18px;
+  border-bottom:1px solid var(--bdr);
+  background:var(--card2);
+}
+.card-title {
+  font-family:'Geologica',sans-serif;
+  font-size:.8rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:1px;
+  color:var(--tx2);
+  display:flex; align-items:center; gap:8px;
+}
+.card-title-bar { width:3px; height:15px; border-radius:2px; background:var(--g-head); flex-shrink:0; }
+.card-body { padding:16px 18px; }
+
+/* ── ARCHIVE ── */
+.archive-controls {
+  display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+}
+.date-input {
+  appearance:none; background:var(--input-bg); border:1px solid var(--bdr2);
+  color:var(--tx); padding:6px 10px; border-radius:var(--r);
+  font-size:.78rem; font-family:'JetBrains Mono',monospace; outline:none;
+  transition:border-color .2s; color-scheme:dark;
+}
+[data-theme="light"] .date-input { color-scheme:light; }
+.date-input:focus { border-color:var(--cyan); }
+
+/* ── FILTERS ── */
+.filter-select {
+  appearance:none; background:var(--input-bg); border:1px solid var(--bdr2);
+  color:var(--tx); padding:7px 28px 7px 10px; border-radius:var(--r);
+  font-size:.78rem; font-family:'Nunito',sans-serif; cursor:pointer; outline:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b85a8'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 9px center;
+  transition:border-color .2s;
+}
+.filter-select:focus { border-color:var(--cyan); }
+.filter-select option { background:var(--card); }
+
+/* search */
+.search-wrap { position:relative; }
+.search-wrap svg {
+  position:absolute; left:9px; top:50%; transform:translateY(-50%);
+  width:13px; height:13px; color:var(--tx3); pointer-events:none;
+}
+.search-input {
+  background:var(--input-bg); border:1px solid var(--bdr2); color:var(--tx);
+  padding:7px 11px 7px 28px; border-radius:var(--r);
+  font-size:.78rem; font-family:'Nunito',sans-serif; outline:none;
+  transition:border-color .2s, width .25s; width:170px;
+}
+.search-input:focus { border-color:var(--cyan); width:210px; }
+.search-input::placeholder { color:var(--tx3); }
+
+/* ── TABLE ── */
+.tbl-wrap { width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.tbl-wrap::-webkit-scrollbar { height:4px; }
+.tbl-wrap::-webkit-scrollbar-thumb { background:var(--bdr2); border-radius:2px; }
+
+table { width:100%; border-collapse:collapse; min-width:680px; }
+thead { background:var(--card2); }
+th {
+  padding:10px 14px; text-align:left;
+  font-size:.62rem; font-weight:700; color:var(--tx3);
+  text-transform:uppercase; letter-spacing:1px;
+  border-bottom:1px solid var(--bdr); white-space:nowrap;
+  font-family:'JetBrains Mono',monospace;
+}
+td {
+  padding:11px 14px; font-size:.82rem;
+  border-bottom:1px solid var(--bdr); vertical-align:middle;
+  color:var(--tx);
+}
+tbody tr { transition:background .12s; animation:rowIn .3s var(--ease) both; }
+tbody tr:hover td { background:var(--card2); }
+tbody tr:last-child td { border-bottom:none; }
+@keyframes rowIn { from{opacity:0;transform:translateX(-4px)} to{opacity:1;transform:none} }
+
+.td-id   { font-family:'JetBrains Mono',monospace; font-size:.74rem; color:var(--cyan); font-weight:600; }
+.td-date { font-family:'JetBrains Mono',monospace; font-size:.7rem; color:var(--tx3); }
+.td-sub  { font-size:.72rem; color:var(--tx3); margin-top:2px; }
+
+/* ── BADGES ── */
+.badge {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:3px 9px; border-radius:5px;
+  font-size:.66rem; font-weight:700; letter-spacing:.4px;
+  font-family:'JetBrains Mono',monospace;
+}
+.badge-dot { width:5px; height:5px; border-radius:50%; background:currentColor; flex-shrink:0; }
+
+.badge-open        { background:var(--rose-g);  color:var(--rose);    border:1px solid rgba(244,63,94,.25); }
+.badge-in-progress { background:var(--amber-g); color:var(--amber);   border:1px solid rgba(245,158,11,.25); }
+.badge-resolved    { background:var(--em-g);    color:var(--emerald); border:1px solid rgba(16,185,129,.2); }
+.badge-closed      { background:var(--vio-g);   color:var(--violet);  border:1px solid rgba(139,92,246,.2); }
+
+.badge-critical { background:rgba(244,63,94,.15);   color:var(--rose);    border:1px solid rgba(244,63,94,.25); }
+.badge-high     { background:rgba(245,158,11,.15);  color:var(--amber);   border:1px solid rgba(245,158,11,.25); }
+.badge-medium   { background:rgba(14,165,233,.12);  color:var(--sky);     border:1px solid rgba(14,165,233,.2); }
+.badge-low      { background:rgba(16,185,129,.1);   color:var(--emerald); border:1px solid rgba(16,185,129,.2); }
+
+/* photo grid */
+.photo-grid { display:flex; gap:5px; flex-wrap:wrap; margin-top:6px; }
+.photo-thumb {
+  width:52px; height:52px; object-fit:cover; border-radius:6px;
+  cursor:pointer; border:1px solid var(--bdr2); transition:all .2s;
+}
+.photo-thumb:hover { transform:scale(1.08); border-color:var(--cyan); }
+.photo-more {
+  width:52px; height:52px; border-radius:6px;
+  background:var(--card3); display:flex; align-items:center; justify-content:center;
+  font-size:.72rem; color:var(--tx3); cursor:pointer; border:1px solid var(--bdr);
+  transition:background .15s; font-family:'JetBrains Mono',monospace;
+}
+.photo-more:hover { background:var(--card2); color:var(--tx2); }
+
+.action-row { display:flex; gap:3px; flex-wrap:wrap; }
+
+/* empty state */
+.empty-state { text-align:center; padding:50px 20px; }
+.empty-emoji { font-size:3rem; display:block; margin-bottom:12px; animation:bob 3s ease-in-out infinite; }
+@keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.empty-text  { color:var(--tx3); font-size:.85rem; line-height:1.6; }
+
+/* ═══════════════════════════════════════════════════
+   MODALS
+═══════════════════════════════════════════════════ */
+.modal-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,.75); backdrop-filter:blur(8px);
+  z-index:500; align-items:center; justify-content:center; padding:16px;
+}
+.modal-overlay.open { display:flex; }
+
+.modal-box {
+  background:var(--card2); border:1px solid var(--bdr2);
+  border-radius:var(--rl); width:100%; max-width:520px;
+  max-height:90vh; overflow-y:auto; box-shadow:var(--sh);
+  animation:modalIn .22s var(--bounce);
+}
+.modal-box::-webkit-scrollbar { width:3px; }
+.modal-box::-webkit-scrollbar-thumb { background:var(--bdr2); border-radius:2px; }
+.modal-wide   { max-width:640px; }
+.modal-narrow { max-width:420px; }
+@keyframes modalIn { from{opacity:0;transform:scale(.95) translateY(-8px)} to{opacity:1;transform:none} }
+
+.modal-head {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 20px; border-bottom:1px solid var(--bdr);
+}
+.modal-title {
+  font-family:'Geologica',sans-serif; font-size:.95rem; font-weight:800;
+  color:var(--tx); display:flex; align-items:center; gap:9px;
+}
+.modal-title-icon { font-size:1.1rem; }
+.modal-close {
+  background:none; border:none; color:var(--tx3);
+  cursor:pointer; font-size:16px; padding:4px; border-radius:5px;
+  transition:all .15s;
+}
+.modal-close:hover { color:var(--tx); background:var(--card3); }
+
+.modal-body { padding:20px; }
+
+/* form */
+.form-group { margin-bottom:14px; }
+.form-label {
+  display:block; font-size:.63rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:1px; color:var(--tx3);
+  margin-bottom:5px; font-family:'JetBrains Mono',monospace;
+}
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width:100%; background:var(--input-bg); border:1px solid var(--bdr2);
+  color:var(--tx); padding:9px 12px; border-radius:var(--r);
+  font-family:'Nunito',sans-serif; font-size:.85rem; outline:none;
+  transition:border-color .2s; resize:vertical;
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus  { border-color:var(--cyan); }
+.form-group input::placeholder,
+.form-group textarea::placeholder { color:var(--tx3); }
+.form-group input[readonly] { opacity:.6; cursor:default; }
+.form-group select option { background:var(--card); }
+.form-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+/* upload zone */
+.upload-zone {
+  border:2px dashed var(--bdr2); border-radius:var(--r);
+  padding:22px; text-align:center; cursor:pointer;
+  transition:all .2s;
+}
+.upload-zone:hover { border-color:var(--cyan); background:var(--cyan-b); }
+.upload-zone-icon { font-size:28px; margin-bottom:8px; display:block; animation:bob 3s ease-in-out infinite; }
+.upload-zone p   { font-size:.8rem; color:var(--tx2); }
+.upload-zone small { font-size:.7rem; color:var(--tx3); }
+
+.modal-foot {
+  display:flex; gap:8px; padding:14px 20px;
+  border-top:1px solid var(--bdr);
+}
+.modal-foot .btn { flex:1; justify-content:center; padding:10px; }
+
+/* photo preview */
+.photo-preview-modal { max-width:90vw; }
+.photo-preview-modal img { max-width:100%; max-height:72vh; object-fit:contain; border-radius:var(--r); display:block; margin:0 auto; }
+
+/* ── PRIORITY PICKER ── */
+.priority-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+.prio-opt {
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  padding:10px 6px; border-radius:var(--r); border:2px solid var(--bdr2);
+  cursor:pointer; transition:all .18s; font-size:.72rem; font-weight:700;
+  font-family:'JetBrains Mono',monospace;
+}
+.prio-opt-emoji { font-size:1.4rem; }
+.prio-opt.low      { color:var(--emerald); }
+.prio-opt.medium   { color:var(--sky); }
+.prio-opt.high     { color:var(--amber); }
+.prio-opt.critical { color:var(--rose); }
+.prio-opt.low.sel      { background:var(--em-g);    border-color:var(--emerald); }
+.prio-opt.medium.sel   { background:var(--sky-g);   border-color:var(--sky); }
+.prio-opt.high.sel     { background:var(--amber-g); border-color:var(--amber); }
+.prio-opt.critical.sel { background:var(--rose-g);  border-color:var(--rose); }
+
+/* ── TOAST ── */
+.toast {
+  position:fixed; top:70px; right:20px; z-index:2000;
+  display:flex; align-items:center; gap:10px;
+  padding:12px 16px; border-radius:var(--r);
+  background:var(--card); border:1px solid var(--bdr2);
+  box-shadow:var(--sh); font-size:.82rem; color:var(--tx);
+  transform:translateX(130%); transition:transform .3s var(--ease);
+  max-width:320px;
+}
+.toast.show { transform:translateX(0); }
+.toast.success { border-color:rgba(16,185,129,.4); }
+.toast.error   { border-color:rgba(244,63,94,.4); }
+.toast.info    { border-color:rgba(6,182,212,.4); }
+.toast-emoji   { font-size:1.1rem; }
+
+/* ── SIDEBAR OVERLAY ── */
+.sidebar-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,.55); z-index:99;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width:900px) {
+  .stats-grid { grid-template-columns:repeat(3,1fr); }
+  .hide-tab   { display:none !important; }
+}
+@media (max-width:768px) {
+  #sidebar {
+    position:fixed; top:0; left:0; height:100vh;
+    transform:translateX(-100%);
+  }
+  #sidebar.open { transform:translateX(0); }
+  .sidebar-overlay.open { display:block; }
+  .sidebar-close { display:flex; }
+  .menu-toggle   { display:flex; }
+  .stats-grid    { grid-template-columns:repeat(2,1fr); }
+  .form-grid-2   { grid-template-columns:1fr; }
+  .archive-controls { flex-direction:column; align-items:stretch; }
+  .date-input    { width:100%; }
+  .priority-grid { grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width:480px) {
+  .stats-grid    { grid-template-columns:repeat(2,1fr); }
+  .page-body     { padding:12px; }
+  .topbar        { padding:0 12px; }
+  .clock-box     { display:none; }
+  .hide-mob      { display:none !important; }
+  .portal-back span.lbl { display:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- animated mesh -->
+<div class="bg-mesh" aria-hidden="true">
+  <div class="mesh-orb mo-1"></div>
+  <div class="mesh-orb mo-2"></div>
+  <div class="mesh-orb mo-3"></div>
+</div>
+
+<div class="app-shell">
+
+  <!-- sidebar overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside id="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon">🚨</div>
+      <div>
+        <div class="brand-name">ONEWEST</div>
+        <div class="brand-sub">Incident Hub</div>
+      </div>
+      <button class="sidebar-close" onclick="toggleSidebar()"><i class="fas fa-xmark"></i></button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-label">Main</div>
+      
+      <a href="/ow_issues" class="sidebar-item active">
+        <i class="fas fa-circle-exclamation"></i> Issues
+      </a>
+
+      <div class="nav-group-label">Operations</div>
+      <a href="/onewest" class="sidebar-item">
+        <i class="fas fa-chart-bar"></i> Reports
+      </a>
+      
+    </nav>
+
+    <div class="sidebar-footer">
+      
+    </div>
+  </aside>
+
+  <!-- ══ MAIN CONTENT ══ -->
+  <div class="main-content">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <div>
+          <div class="page-title">🚨 Incident SLA Hub</div>
+          <div class="page-sub">ONEWEST Property Issues</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="clock-box">
+          <div class="clock-time" id="current-time"></div>
+          <div class="clock-date" id="current-date"></div>
+        </div>
+        <button class="btn btn-ghost hide-mob" onclick="exportIssues()">
+          <i class="fas fa-download"></i><span class="hide-tab">Export</span>
+        </button>
+        <button class="btn btn-primary hide-mob" onclick="openNewIssueModal()">
+          <i class="fas fa-plus"></i><span>New Issue</span>
+        </button>
+        <!-- theme toggle -->
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+          <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <span id="theme-label">LIGHT</span>
+        </button>
+        <!-- back to portal -->
+        <a href="/onewest" class="portal-back" title="Back to Portal">
+          <span class="portal-dot"></span>
+          <span class="lbl">← Portal</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- PAGE BODY -->
+    <div class="page-body">
+
+      <!-- STATS -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon si-total"><span class="stat-emoji">📋</span></div>
+          <div>
+            <div class="stat-val" id="stat-total">0</div>
+            <div class="stat-lbl">Total Issues</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-open"><span class="stat-emoji">🔴</span></div>
+          <div>
+            <div class="stat-val" id="stat-open">0</div>
+            <div class="stat-lbl">Open</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-prog"><span class="stat-emoji">⚙️</span></div>
+          <div>
+            <div class="stat-val" id="stat-in-progress">0</div>
+            <div class="stat-lbl">In Progress</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-res"><span class="stat-emoji">✅</span></div>
+          <div>
+            <div class="stat-val" id="stat-resolved">0</div>
+            <div class="stat-lbl">Resolved</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-cls"><span class="stat-emoji">🔒</span></div>
+          <div>
+            <div class="stat-val" id="stat-closed">0</div>
+            <div class="stat-lbl">Closed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MOBILE NEW ISSUE BUTTON -->
+      <div style="display:none;margin-bottom:14px;" class="mob-btn-row">
+        <button class="btn btn-primary btn-full" onclick="openNewIssueModal()">
+          <i class="fas fa-plus"></i> New Issue
+        </button>
+      </div>
+
+      <!-- ARCHIVE CARD -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">
+            <span class="card-title-bar"></span>
+            📅 Day-Wise Archive
+          </div>
+          <div class="archive-controls">
+            <input type="date" id="archive-date" class="date-input">
+            <button class="btn btn-info" onclick="viewArchive()"><i class="fas fa-eye"></i> View</button>
+            <button class="btn btn-success" onclick="exportByDate()"><i class="fas fa-download"></i> Export</button>
+            <button class="btn btn-ghost" onclick="loadArchiveList()"><i class="fas fa-list"></i> All</button>
+          </div>
+        </div>
+
+        <div id="archive-list" class="card-body hidden">
+          <div class="tbl-wrap">
+            <table>
+              <thead>
+                <tr><th>Date</th><th>Total</th><th>Open</th><th>Resolved</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="archive-list-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="archive-view" class="card-body hidden">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <span class="card-title" id="archive-view-title" style="font-size:.78rem;"></span>
+            <button class="btn btn-ghost" onclick="closeArchiveView()" style="padding:5px 10px;">
+              <i class="fas fa-xmark"></i>
+            </button>
+          </div>
+          <div class="tbl-wrap">
+            <table>
+              <thead>
+                <tr><th>Issue ID</th><th>Title</th><th>Status</th><th>Assigned To</th></tr>
+              </thead>
+              <tbody id="archive-view-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ISSUES TABLE CARD -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">
+            <span class="card-title-bar"></span>
+            🗂️ All Issues
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <div class="search-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input class="search-input" id="search-input" type="search" placeholder="Search…" oninput="filterIssues()">
+            </div>
+            <select id="filter-status" class="filter-select" onchange="loadIssues()">
+              <option value="all">All Status</option>
+              <option value="open">🔴 Open</option>
+              <option value="in-progress">⚙️ In Progress</option>
+              <option value="resolved">✅ Resolved</option>
+              <option value="closed">🔒 Closed</option>
+            </select>
+            <select id="filter-priority" class="filter-select" onchange="loadIssues()">
+              <option value="all">All Priority</option>
+              <option value="critical">🚨 Critical</option>
+              <option value="high">🔥 High</option>
+              <option value="medium">🔵 Medium</option>
+              <option value="low">🟢 Low</option>
+            </select>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Issue</th>
+                <th class="hide-tab">Priority</th>
+                <th>Status</th>
+                <th class="hide-tab">Assigned</th>
+                <th class="hide-tab">Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="issues-table">
+              <tr><td colspan="7">
+                <div class="empty-state">
+                  <span class="empty-emoji">⏳</span>
+                  <div class="empty-text">Loading issues…</div>
+                </div>
+              </td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /page-body -->
+  </div><!-- /main-content -->
+</div><!-- /app-shell -->
+
+<!-- ══ NEW ISSUE MODAL ══ -->
+<div class="modal-overlay" id="new-issue-modal" onclick="backdropClose(event,'new-issue-modal')">
+  <div class="modal-box modal-wide" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="modal-title"><span class="modal-title-icon">🆕</span> Create New Issue</div>
+      <button class="modal-close" onclick="closeNewIssueModal()"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <form id="new-issue-form" onsubmit="createIssue(event)">
+
+        <div class="form-group">
+          <label class="form-label">Issue Title *</label>
+          <input type="text" name="title" required placeholder="Describe the issue briefly…">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea name="description" rows="3" placeholder="Provide more details about the issue…"></textarea>
+        </div>
+
+        <!-- Priority picker -->
+        <div class="form-group">
+          <label class="form-label">Priority *</label>
+          <div class="priority-grid">
+            <div class="prio-opt low sel" data-val="Low" onclick="selectPriority(this)">
+              <span class="prio-opt-emoji">🟢</span>Low
+            </div>
+            <div class="prio-opt medium" data-val="Medium" onclick="selectPriority(this)">
+              <span class="prio-opt-emoji">🔵</span>Medium
+            </div>
+            <div class="prio-opt high" data-val="High" onclick="selectPriority(this)">
+              <span class="prio-opt-emoji">🔥</span>High
+            </div>
+            <div class="prio-opt critical" data-val="Critical" onclick="selectPriority(this)">
+              <span class="prio-opt-emoji">🚨</span>Critical
+            </div>
+          </div>
+          <input type="hidden" id="selected-priority" name="priority" value="Low">
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select name="category">
+              <option value="General">🏢 General</option>
+              <option value="Electrical">⚡ Electrical</option>
+              <option value="Plumbing">🔧 Plumbing</option>
+              <option value="HVAC">❄️ HVAC</option>
+              <option value="Security">🔐 Security</option>
+              <option value="Fire Safety">🔥 Fire Safety</option>
+              <option value="Carpentry">🪚 Carpentry</option>
+              <option value="Civil">🏗️ Civil</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Location</label>
+            <input type="text" name="location" placeholder="e.g. Floor 5, Lobby…">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Assign To Technician</label>
+          <select name="assigned_to" id="assigned-to-select">
+            <option value="">Select Technician</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">📸 Upload Photos</label>
+          <div class="upload-zone" onclick="document.getElementById('photo-input').click()">
+            <span class="upload-zone-icon">📷</span>
+            <p>Click to upload photos</p>
+            <small>JPG, PNG · Max 5MB each</small>
+            <input type="file" id="photo-input" name="photos" multiple accept="image/*" style="display:none" onchange="handlePhotoUpload(event)">
+          </div>
+          <div id="photo-preview" class="photo-grid" style="margin-top:10px;"></div>
+        </div>
+
+        <div class="modal-foot" style="padding:0;margin-top:16px;border:none;">
+          <button type="submit" class="btn btn-primary btn-full">
+            <i class="fas fa-check"></i> Create Issue
+          </button>
+          <button type="button" class="btn btn-ghost btn-full" onclick="closeNewIssueModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ══ VIEW ISSUE MODAL ══ -->
+<div class="modal-overlay" id="view-issue-modal" onclick="backdropClose(event,'view-issue-modal')">
+  <div class="modal-box modal-wide" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="modal-title"><span class="modal-title-icon">🔍</span> Issue Details</div>
+      <button class="modal-close" onclick="closeModal('view-issue-modal')"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" id="view-issue-body">
+      <div style="text-align:center;padding:30px;color:var(--tx3)">Loading…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PHOTO PREVIEW MODAL ══ -->
+<div class="modal-overlay" id="photo-preview-modal" onclick="closeModal('photo-preview-modal')">
+  <div class="modal-box photo-preview-modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="modal-title"><span class="modal-title-icon">🖼️</span> Photo Preview</div>
+      <button class="modal-close" onclick="closeModal('photo-preview-modal')"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <img id="preview-image" src="" alt="Preview">
+      <div style="text-align:center;margin-top:14px;">
+        <a id="download-link" href="#" download class="btn btn-primary">
+          <i class="fas fa-download"></i> Download
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ WHATSAPP MODAL ══ -->
+<div class="modal-overlay" id="whatsapp-modal" onclick="backdropClose(event,'whatsapp-modal')">
+  <div class="modal-box modal-narrow" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="modal-title"><span class="modal-title-icon">💬</span> Send WhatsApp</div>
+      <button class="modal-close" onclick="closeModal('whatsapp-modal')"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Select Technician *</label>
+        <select id="whatsapp-technician"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input type="text" id="whatsapp-phone" placeholder="+919876543210" readonly>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message Preview</label>
+        <textarea id="whatsapp-message" rows="6" style="font-family:'JetBrains Mono',monospace;font-size:.78rem;"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-wa btn-full" onclick="sendWhatsApp()">
+        <i class="fab fa-whatsapp"></i> Send on WhatsApp
+      </button>
+      <button class="btn btn-ghost btn-full" onclick="closeModal('whatsapp-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CLOSE ISSUE MODAL ══ -->
+<div class="modal-overlay" id="close-issue-modal" onclick="backdropClose(event,'close-issue-modal')">
+  <div class="modal-box modal-narrow" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="modal-title"><span class="modal-title-icon">🔒</span> Close Issue</div>
+      <button class="modal-close" onclick="closeModal('close-issue-modal')"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Issue ID</label>
+        <input type="text" id="close-issue-id" readonly>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Resolution Notes *</label>
+        <textarea id="close-issue-notes" rows="4" placeholder="Describe how the issue was resolved…"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-success btn-full" onclick="confirmCloseIssue()">
+        <i class="fas fa-check"></i> Confirm Close
+      </button>
+      <button class="btn btn-ghost btn-full" onclick="closeModal('close-issue-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ REOPEN ISSUE MODAL ══ -->
+<div class="modal-overlay" id="reopen-issue-modal" onclick="backdropClose(event,'reopen-issue-modal')">
+  <div class="modal-box modal-narrow" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div class="modal-title"><span class="modal-title-icon">🔓</span> Reopen Issue</div>
+      <button class="modal-close" onclick="closeModal('reopen-issue-modal')"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Issue ID</label>
+        <input type="text" id="reopen-issue-id" readonly>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Reason for Reopening *</label>
+        <textarea id="reopen-issue-reason" rows="4" placeholder="Why is this issue being reopened?"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-full" style="background:#f97316;color:#fff;border:none;" onclick="confirmReopenIssue()">
+        <i class="fas fa-rotate-left"></i> Confirm Reopen
+      </button>
+      <button class="btn btn-ghost btn-full" onclick="closeModal('reopen-issue-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ TOAST ══ -->
+<div class="toast" id="toast">
+  <span class="toast-emoji" id="toastEmoji"></span>
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+/* -- SAFE JSON FETCH -- */
+async function apiFetch(url, opts) {
+  const res = await fetch(url, opts);
+  const ct  = res.headers.get('content-type') || '';
+  if (!ct.includes('application/json')) {
+    if (res.status === 401) throw new Error('Session expired — please log in again.');
+    throw new Error('Server error ' + res.status + ' (got HTML, expected JSON)');
+  }
+  return res.json();
+}
+
+/* ═══════════════════════════════════════════════════
+   ONEWEST — INCIDENT SLA HUB
+   Global page · All API calls preserved
+═══════════════════════════════════════════════════ */
+
+/* ── STATE ── */
+let uploadedPhotos = [];
+let currentIssueId = null;
+let technicians    = [];
+let _allIssues     = [];  // cache for client-side search
+
+/* ── THEME ── */
+function toggleTheme() {
+  const d   = document.documentElement;
+  const cur = d.getAttribute('data-theme');
+  const nxt = cur === 'dark' ? 'light' : 'dark';
+  d.setAttribute('data-theme', nxt);
+  localStorage.setItem('ow_issues_theme', nxt);
+  updateThemeIcon(nxt);
+}
+function updateThemeIcon(t) {
+  const lbl = document.getElementById('theme-label');
+  const ico = document.getElementById('theme-icon');
+  if (t === 'light') {
+    lbl.textContent = 'DARK';
+    ico.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  } else {
+    lbl.textContent = 'LIGHT';
+    ico.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+  }
+}
+(function initTheme() {
+  const t = localStorage.getItem('ow_issues_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+  updateThemeIcon(t);
+})();
+
+/* ── MOBILE NEW ISSUE BTN ── */
+(function showMobBtn() {
+  if (window.innerWidth <= 768) {
+    const el = document.querySelector('.mob-btn-row');
+    if (el) el.style.display = 'block';
+  }
+})();
+window.addEventListener('resize', () => {
+  const el = document.querySelector('.mob-btn-row');
+  if (el) el.style.display = window.innerWidth <= 768 ? 'block' : 'none';
+});
+
+/* ── TOAST ── */
+let _toastTimer;
+function showToast(msg, type = 'success') {
+  const t   = document.getElementById('toast');
+  const ico = document.getElementById('toastEmoji');
+  const ms  = document.getElementById('toastMsg');
+  const map = { success:'✅', error:'❌', info:'ℹ️', warning:'⚠️' };
+  ico.textContent   = map[type] || 'ℹ️';
+  t.className       = `toast ${type}`;
+  ms.textContent    = msg;
+  t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => t.classList.remove('show'), 3800);
+}
+
+/* ── CLOCK ── */
+function updateClock() {
+  const now = new Date();
+  document.getElementById('current-time').textContent =
+    now.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true });
+  document.getElementById('current-date').textContent =
+    now.toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+/* ── SIDEBAR ── */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+
+/* ── MODAL HELPERS ── */
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function backdropClose(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+
+/* ── PRIORITY PICKER ── */
+function selectPriority(el) {
+  document.querySelectorAll('.prio-opt').forEach(o => o.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('selected-priority').value = el.getAttribute('data-val');
+}
+
+/* ── BADGE HELPERS ── */
+function statusBadge(status) {
+  const map = {
+    'Open':        ['badge-open',        '🔴'],
+    'In Progress': ['badge-in-progress', '⚙️'],
+    'Resolved':    ['badge-resolved',    '✅'],
+    'Closed':      ['badge-closed',      '🔒']
+  };
+  const [cls, emoji] = map[status] || ['badge-open', '❓'];
+  return `<span class="badge ${cls}"><span class="badge-dot"></span>${status || 'Open'}</span>`;
+}
+
+function priorityBadge(priority) {
+  const map = {
+    'Critical': ['badge-critical', '🚨'],
+    'High':     ['badge-high',     '🔥'],
+    'Medium':   ['badge-medium',   '🔵'],
+    'Low':      ['badge-low',      '🟢']
+  };
+  const [cls, emoji] = map[priority] || ['badge-medium', '🔵'];
+  return `<span class="badge ${cls}">${emoji} ${priority || 'Medium'}</span>`;
+}
+
+/* ── ESCAPE KEY ── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    ['new-issue-modal','view-issue-modal','photo-preview-modal',
+     'whatsapp-modal','close-issue-modal','reopen-issue-modal'].forEach(closeModal);
+    if (document.getElementById('sidebar').classList.contains('open')) toggleSidebar();
+  }
+});
+
+/* ── LOGOUT ── */
+function logout() { window.location.href = '/logout'; }
+
+
+/* -- FILTER BY STAT CARD -- */
+function filterByStatus(status) {
+  document.getElementById('filter-status').value = status;
+  _highlightStatCard(status);
+  loadIssues();
+}
+function _highlightStatCard(status) {
+  const map = { all:'sc-all', open:'sc-open', 'in-progress':'sc-in-progress', resolved:'sc-resolved', closed:'sc-closed' };
+  document.querySelectorAll('.stat-card').forEach(c => c.classList.remove('active-filter'));
+  const el = document.getElementById(map[status] || 'sc-all');
+  if (el) el.classList.add('active-filter');
+}
+
+/* ── LOAD TECHNICIANS ── */
+async function loadTechnicians() {
+  try {
+    const res  = await apiFetch('/ow_api/technicians');
+    const data = await res.json();
+    technicians = data.technicians || [];
+
+    const bySpec = {};
+    technicians.forEach(t => {
+      if (!bySpec[t.specialization]) bySpec[t.specialization] = [];
+      bySpec[t.specialization].push(t);
+    });
+
+    // assign select
+    const aSelect = document.getElementById('assigned-to-select');
+    aSelect.innerHTML = '<option value="">Select Technician</option>';
+    Object.entries(bySpec).forEach(([spec, list]) => {
+      const og = document.createElement('optgroup');
+      og.label = spec;
+      list.forEach(tech => {
+        const opt = document.createElement('option');
+        opt.value = tech.name;
+        opt.textContent = tech.name;
+        opt.setAttribute('data-phone', tech.phone);
+        og.appendChild(opt);
+      });
+      aSelect.appendChild(og);
+    });
+
+    // whatsapp select
+    const wSelect = document.getElementById('whatsapp-technician');
+    wSelect.innerHTML = '<option value="">Select Technician</option>';
+    Object.entries(bySpec).forEach(([spec, list]) => {
+      const og = document.createElement('optgroup');
+      og.label = spec;
+      list.forEach(tech => {
+        const opt = document.createElement('option');
+        opt.value = tech.phone;
+        opt.textContent = `${tech.name} — ${tech.phone}`;
+        og.appendChild(opt);
+      });
+      wSelect.appendChild(og);
+    });
+
+    wSelect.addEventListener('change', function() {
+      document.getElementById('whatsapp-phone').value = this.value;
+    });
+  } catch (e) { console.error('loadTechnicians:', e); }
+}
+loadTechnicians();
+
+/* ── LOAD ISSUES ── */
+async function loadIssues() {
+  const statusFilter   = document.getElementById('filter-status').value;
+  const priorityFilter = document.getElementById('filter-priority').value;
+  try {
+    const res  = await apiFetch(`/ow_api/issues?status=${statusFilter}&priority=${priorityFilter}`);
+    const data = await res.json();
+    _allIssues = data.issues || [];
+    renderIssues(_allIssues);
+    loadIssueStats();
+  } catch (e) {
+    console.error('loadIssues:', e);
+    document.getElementById('issues-table').innerHTML =
+      `<tr><td colspan="7"><div class="empty-state">
+        <span class="empty-emoji">⚠️</span>
+        <div class="empty-text">Could not connect to server</div>
+      </div></td></tr>`;
+  }
+}
+
+/* ── CLIENT-SIDE SEARCH ── */
+function filterIssues() {
+  const q = (document.getElementById('search-input').value || '').toLowerCase().trim();
+  if (!q) { renderIssues(_allIssues); return; }
+  const filtered = _allIssues.filter(i =>
+    `${i.issue_id} ${i.title} ${i.location} ${i.assigned_to} ${i.status}`.toLowerCase().includes(q)
+  );
+  renderIssues(filtered);
+}
+
+/* ── RENDER ISSUES ── */
+function renderIssues(issues) {
+  const tbody = document.getElementById('issues-table');
+  if (!issues || !issues.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">
+      <span class="empty-emoji">📭</span>
+      <div class="empty-text">No issues found.<br>Click <strong>New Issue</strong> to get started.</div>
+    </div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = issues.map((issue, idx) => {
+    const canStart   = issue.status === 'Open';
+    const canResolve = issue.status === 'In Progress';
+    const canClose   = issue.status === 'In Progress' || issue.status === 'Resolved';
+    const canReopen  = issue.status === 'Closed' || issue.status === 'Resolved';
+    const idEsc      = esc(issue.issue_id || '');
+    const titleEsc   = esc(issue.title || '');
+    const statusEsc  = esc(issue.status || '');
+
+    const photos = issue.photos && issue.photos.length > 0
+      ? `<div class="photo-grid">
+          ${issue.photos.slice(0,3).map(p => `<img src="${p}" class="photo-thumb" onclick="openPhotoPreview('${p}')">`).join('')}
+          ${issue.photos.length > 3 ? `<div class="photo-more" onclick="openPhotoPreview('${issue.photos[0]}')">+${issue.photos.length-3}</div>` : ''}
+         </div>`
+      : '';
+
+    const catEmoji = {General:'🏢',Electrical:'⚡',Plumbing:'🔧',HVAC:'❄️',Security:'🔐','Fire Safety':'🔥',Carpentry:'🪚',Civil:'🏗️'};
+    const em = catEmoji[issue.category] || '📌';
+
+    return `<tr style="animation-delay:${idx*0.03}s">
+      <td class="td-id">${idEsc}</td>
+      <td>
+        <div style="font-weight:700;">${em} ${titleEsc}</div>
+        <div class="td-sub">${esc(issue.location || '')}</div>
+        ${photos}
+      </td>
+      <td class="hide-tab">${priorityBadge(issue.priority)}</td>
+      <td>${statusBadge(issue.status)}</td>
+      <td class="hide-tab" style="color:var(--tx2);font-size:.8rem;">${esc(issue.assigned_to || '—')}</td>
+      <td class="hide-tab td-date">${issue.created_at ? new Date(issue.created_at).toLocaleDateString() : '—'}</td>
+      <td>
+        <div class="action-row">
+          <button class="icon-btn ib-view"    title="View"         onclick="viewIssue('${idEsc}')"><i class="fas fa-eye"></i></button>
+          <button class="icon-btn ib-wa"      title="WhatsApp"     onclick="openWhatsAppModal('${idEsc}','${titleEsc}','${statusEsc}')"><i class="fab fa-whatsapp"></i></button>
+          ${canStart   ? `<button class="icon-btn ib-start"   title="Start Work" onclick="updateStatus('${idEsc}','In Progress')"><i class="fas fa-play"></i></button>` : ''}
+          ${canResolve ? `<button class="icon-btn ib-resolve" title="Resolve"    onclick="updateStatus('${idEsc}','Resolved')"><i class="fas fa-check"></i></button>` : ''}
+          ${canClose   ? `<button class="icon-btn ib-close"   title="Close"      onclick="openCloseModal('${idEsc}')"><i class="fas fa-circle-check"></i></button>` : ''}
+          ${canReopen  ? `<button class="icon-btn ib-reopen"  title="Reopen"     onclick="openReopenModal('${idEsc}')"><i class="fas fa-rotate-left"></i></button>` : ''}
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+/* ── STATS ── */
+async function loadIssueStats() {
+  try {
+    const res   = await apiFetch('/ow_api/issues/stats');
+    const stats = await res.json();
+    animNum('stat-total',       stats.total       || 0);
+    animNum('stat-open',        stats.open        || 0);
+    animNum('stat-in-progress', stats.in_progress || 0);
+    animNum('stat-resolved',    stats.resolved    || 0);
+    animNum('stat-closed',      stats.closed      || 0);
+  } catch (e) { console.error('loadIssueStats:', e); }
+}
+function animNum(id, target) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const start = parseInt(el.textContent) || 0;
+  const dur = 600; const s = performance.now();
+  (function step(now) {
+    const p = Math.min((now - s) / dur, 1);
+    el.textContent = Math.round(start + (target - start) * p);
+    if (p < 1) requestAnimationFrame(step);
+  })(performance.now());
+}
+
+/* ── VIEW ISSUE ── */
+async function viewIssue(issueId) {
+  openModal('view-issue-modal');
+  document.getElementById('view-issue-body').innerHTML =
+    '<div style="text-align:center;padding:30px;color:var(--tx3)">⏳ Loading…</div>';
+
+  const issue = _allIssues.find(i => i.issue_id === issueId);
+  if (!issue) {
+    document.getElementById('view-issue-body').innerHTML =
+      '<div style="text-align:center;padding:30px;color:var(--tx3)">❌ Issue not found</div>';
+    return;
+  }
+
+  const catEmoji = {General:'🏢',Electrical:'⚡',Plumbing:'🔧',HVAC:'❄️',Security:'🔐','Fire Safety':'🔥',Carpentry:'🪚',Civil:'🏗️'};
+  const photos = issue.photos && issue.photos.length
+    ? `<div class="form-group">
+        <label class="form-label">📸 Photos</label>
+        <div class="photo-grid">${issue.photos.map(p=>`<img src="${p}" class="photo-thumb" onclick="openPhotoPreview('${p}')">`).join('')}</div>
+      </div>` : '';
+
+  document.getElementById('view-issue-body').innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap;">
+      <span class="td-id" style="font-size:.9rem;">${esc(issue.issue_id)}</span>
+      ${statusBadge(issue.status)}
+      ${priorityBadge(issue.priority)}
+    </div>
+    <div class="form-group">
+      <label class="form-label">Title</label>
+      <div style="font-weight:700;font-size:.95rem;">${catEmoji[issue.category]||'📌'} ${esc(issue.title)}</div>
+    </div>
+    ${issue.description ? `<div class="form-group">
+      <label class="form-label">Description</label>
+      <div style="color:var(--tx2);line-height:1.6;">${esc(issue.description)}</div>
+    </div>` : ''}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <div>${catEmoji[issue.category]||''} ${esc(issue.category||'General')}</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Location</label>
+        <div>${esc(issue.location||'—')}</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Assigned To</label>
+        <div>${esc(issue.assigned_to||'—')}</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Created</label>
+        <div class="td-date">${issue.created_at ? new Date(issue.created_at).toLocaleString() : '—'}</div>
+      </div>
+    </div>
+    ${photos}
+    ${issue.resolution_notes ? `<div class="form-group">
+      <label class="form-label">✅ Resolution Notes</label>
+      <div style="color:var(--emerald);line-height:1.6;">${esc(issue.resolution_notes)}</div>
+    </div>` : ''}
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:16px;border-top:1px solid var(--bdr);">
+      ${(issue.status==='In Progress'||issue.status==='Resolved') ? `<button class="btn btn-success" onclick="closeModal('view-issue-modal');openCloseModal('${esc(issue.issue_id)}')"><i class="fas fa-circle-check"></i> Close Issue</button>` : ''}
+      ${(issue.status==='Closed'||issue.status==='Resolved') ? `<button class="btn btn-full" style="background:#f97316;color:#fff;border:none;" onclick="closeModal('view-issue-modal');openReopenModal('${esc(issue.issue_id)}')"><i class="fas fa-rotate-left"></i> Reopen</button>` : ''}
+      ${issue.status==='Open' ? `<button class="btn btn-primary" onclick="closeModal('view-issue-modal');updateStatus('${esc(issue.issue_id)}','In Progress')"><i class="fas fa-play"></i> Start Work</button>` : ''}
+      ${issue.status==='In Progress' ? `<button class="btn" style="background:var(--emerald);color:#fff;border:none;" onclick="closeModal('view-issue-modal');updateStatus('${esc(issue.issue_id)}','Resolved')"><i class="fas fa-check"></i> Mark Resolved</button>` : ''}
+      <button class="btn btn-ghost" onclick="closeModal('view-issue-modal')">Dismiss</button>
+    </div>
+  `;
+}
+
+/* ── NEW ISSUE MODAL ── */
+function openNewIssueModal() {
+  uploadedPhotos = [];
+  document.getElementById('photo-preview').innerHTML = '';
+  document.getElementById('new-issue-form').reset();
+  // reset priority to Low
+  document.querySelectorAll('.prio-opt').forEach(o => o.classList.remove('sel'));
+  document.querySelector('.prio-opt.low').classList.add('sel');
+  document.getElementById('selected-priority').value = 'Low';
+  openModal('new-issue-modal');
+}
+function closeNewIssueModal() {
+  closeModal('new-issue-modal');
+  document.getElementById('new-issue-form').reset();
+}
+
+/* ── PHOTO UPLOAD ── */
+function handlePhotoUpload(event) {
+  const preview = document.getElementById('photo-preview');
+  for (const file of event.target.files) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      uploadedPhotos.push({ file, preview: e.target.result });
+      const idx = uploadedPhotos.length - 1;
+      const wrap = document.createElement('div');
+      wrap.style.position = 'relative';
+      wrap.innerHTML = `
+        <img src="${e.target.result}" class="photo-thumb" onclick="openPhotoPreview('${e.target.result}')">
+        <button type="button" onclick="removePhoto(${idx})"
+          style="position:absolute;top:-5px;right:-5px;width:18px;height:18px;border-radius:50%;
+                 background:var(--rose);border:none;color:#fff;cursor:pointer;font-size:10px;
+                 display:flex;align-items:center;justify-content:center;">✕</button>`;
+      preview.appendChild(wrap);
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function removePhoto(index) {
+  uploadedPhotos.splice(index, 1);
+  const preview = document.getElementById('photo-preview');
+  preview.innerHTML = '';
+  uploadedPhotos.forEach((photo, i) => {
+    const wrap = document.createElement('div');
+    wrap.style.position = 'relative';
+    wrap.innerHTML = `
+      <img src="${photo.preview}" class="photo-thumb" onclick="openPhotoPreview('${photo.preview}')">
+      <button type="button" onclick="removePhoto(${i})"
+        style="position:absolute;top:-5px;right:-5px;width:18px;height:18px;border-radius:50%;
+               background:var(--rose);border:none;color:#fff;cursor:pointer;font-size:10px;
+               display:flex;align-items:center;justify-content:center;">✕</button>`;
+    preview.appendChild(wrap);
+  });
+}
+
+function openPhotoPreview(url) {
+  document.getElementById('preview-image').src = url;
+  document.getElementById('download-link').href = url;
+  openModal('photo-preview-modal');
+}
+
+/* ── WHATSAPP ── */
+function openWhatsAppModal(issueId, title, status) {
+  currentIssueId = issueId;
+  const wSelect  = document.getElementById('whatsapp-technician');
+  wSelect.innerHTML = '<option value="">Select Technician</option>';
+
+  const bySpec = {};
+  technicians.forEach(t => {
+    if (!bySpec[t.specialization]) bySpec[t.specialization] = [];
+    bySpec[t.specialization].push(t);
+  });
+  Object.entries(bySpec).forEach(([spec, list]) => {
+    const og = document.createElement('optgroup');
+    og.label = spec;
+    list.forEach(tech => {
+      const opt = document.createElement('option');
+      opt.value = tech.phone;
+      opt.textContent = `${tech.name} — ${tech.phone}`;
+      og.appendChild(opt);
+    });
+    wSelect.appendChild(og);
+  });
+
+  document.getElementById('whatsapp-message').value =
+    `🚨 *NEW ISSUE — ONEWEST*\n\n*Issue ID:* ${issueId}\n*Title:* ${title}\n*Status:* ${status}\n*Property:* ONEWEST\n\nPlease take immediate action and update the system.`;
+  document.getElementById('whatsapp-phone').value = '';
+  openModal('whatsapp-modal');
+}
+
+function sendWhatsApp() {
+  const phone   = document.getElementById('whatsapp-phone').value;
+  const message = document.getElementById('whatsapp-message').value;
+  if (!phone) { showToast('Please select a technician', 'error'); return; }
+  const clean = phone.replace(/[^0-9]/g, '');
+  window.open(`https://wa.me/${clean}?text=${encodeURIComponent(message)}`, '_blank');
+  closeModal('whatsapp-modal');
+}
+
+/* ── CLOSE ISSUE ── */
+function openCloseModal(issueId) {
+  currentIssueId = issueId;
+  document.getElementById('close-issue-id').value    = issueId;
+  document.getElementById('close-issue-notes').value = '';
+  openModal('close-issue-modal');
+}
+
+async function confirmCloseIssue() {
+  if (!currentIssueId) return;
+  const notes = document.getElementById('close-issue-notes').value.trim();
+  if (!notes) { showToast('Please enter resolution notes', 'error'); return; }
+  try {
+    const res = await apiFetch('/ow_api/issues/close', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ issue_id:currentIssueId, reason:notes })
+    });
+    const result = await res.json();
+    if (result.success) {
+      showToast('Issue closed successfully 🔒');
+      closeModal('close-issue-modal');
+      currentIssueId = null;
+      loadIssues();
+    } else { showToast('Error: ' + result.error, 'error'); }
+  } catch (e) { showToast('Failed to close issue', 'error'); }
+}
+
+/* ── REOPEN ISSUE ── */
+function openReopenModal(issueId) {
+  currentIssueId = issueId;
+  document.getElementById('reopen-issue-id').value     = issueId;
+  document.getElementById('reopen-issue-reason').value = '';
+  openModal('reopen-issue-modal');
+}
+
+async function confirmReopenIssue() {
+  if (!currentIssueId) return;
+  const reason = document.getElementById('reopen-issue-reason').value.trim();
+  if (!reason) { showToast('Please enter a reason for reopening', 'error'); return; }
+  try {
+    const result = await apiFetch('/ow_api/issues/reopen', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ issue_id:currentIssueId, reason })
+    });
+    if (result.success) {
+      showToast('Issue reopened 🔓');
+      closeModal('reopen-issue-modal');
+      currentIssueId = null;
+      loadIssues();
+    } else { showToast('Error: ' + result.error, 'error'); }
+  } catch (e) { showToast('Failed to reopen: ' + e.message, 'error'); }
+}
+
+/* ── UPDATE STATUS ── */
+async function updateStatus(issueId, newStatus) {
+  const emoji = { 'In Progress':'⚙️', 'Resolved':'✅', 'Closed':'🔒' };
+  try {
+    const res = await fetch(`/ow_api/issues/update/${issueId}`, {
+      method:'PUT', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ status:newStatus })
+    });
+    const result = await res.json();
+    if (result.success) {
+      showToast(`${emoji[newStatus]||'✅'} Status → ${newStatus}`);
+      loadIssues();
+    } else { showToast('Error: ' + result.error, 'error'); }
+  } catch (e) { showToast('Failed to update issue', 'error'); }
+}
+
+/* ── CREATE ISSUE ── */
+async function createIssue(event) {
+  event.preventDefault();
+  const form     = event.target;
+  const formData = new FormData(form);
+  const data     = Object.fromEntries(formData);
+
+  // override priority from picker
+  data.priority = document.getElementById('selected-priority').value;
+
+  // upload photos
+  const photoUrls = [];
+  for (const p of uploadedPhotos) {
+    const pf = new FormData();
+    pf.append('photo', p.file);
+    try {
+      const r = await fetch('/ow_api/issues/upload-photo', { method:'POST', body:pf });
+      const j = await r.json();
+      if (j.success) photoUrls.push(j.photo_url);
+    } catch (e) { console.error('Photo upload:', e); }
+  }
+  data.photos = photoUrls;
+
+  try {
+    const res = await fetch('/ow_api/issues/create', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (result.success) {
+      showToast('Issue created successfully 🆕');
+      closeNewIssueModal();
+      loadIssues();
+    } else { showToast('Error: ' + result.error, 'error'); }
+  } catch (e) { showToast('Failed to create issue', 'error'); }
+}
+
+/* ── EXPORT ── */
+function exportIssues() { window.open('/ow_api/issues/export', '_blank'); }
+function exportByDate() {
+  const date = document.getElementById('archive-date').value;
+  if (!date) { showToast('Please select a date', 'error'); return; }
+  window.open(`/ow_api/issues/export-by-date?date=${date}`, '_blank');
+}
+
+/* ── ARCHIVE ── */
+async function viewArchive() {
+  const date = document.getElementById('archive-date').value;
+  if (!date) { showToast('Please select a date', 'error'); return; }
+  try {
+    const res    = await fetch(`/ow_api/issues/view-archive/${date}`);
+    const result = await res.json();
+    if (result.success) {
+      document.getElementById('archive-view-title').textContent = `Archived Issues — ${date}`;
+      document.getElementById('archive-view-body').innerHTML = result.data.issues.map(i => `
+        <tr>
+          <td class="td-id">${esc(i.issue_id||'N/A')}</td>
+          <td>${esc(i.title||'Untitled')}</td>
+          <td>${statusBadge(i.status)}</td>
+          <td style="color:var(--tx2);font-size:.8rem;">${esc(i.assigned_to||'—')}</td>
+        </tr>`).join('');
+      document.getElementById('archive-view').classList.remove('hidden');
+      document.getElementById('archive-list').classList.add('hidden');
+    } else { showToast('No archive found for this date', 'error'); }
+  } catch (e) { showToast('Failed to load archive', 'error'); }
+}
+
+async function loadArchiveList() {
+  try {
+    const res    = await fetch('/ow_api/issues/archive-list');
+    const result = await res.json();
+    if (result.success) {
+      document.getElementById('archive-list-body').innerHTML = result.archives.map(a => `
+        <tr>
+          <td class="td-id">${esc(a.date)}</td>
+          <td>${a.total}</td>
+          <td style="color:var(--rose)">${a.summary.open||0}</td>
+          <td style="color:var(--emerald)">${a.summary.resolved||0}</td>
+          <td>
+            <div class="action-row">
+              <button class="icon-btn ib-view"    title="View"   onclick="viewArchiveDate('${esc(a.date)}')"><i class="fas fa-eye"></i></button>
+              <button class="icon-btn ib-resolve" title="Export" onclick="exportArchive('${esc(a.date)}')"><i class="fas fa-download"></i></button>
+            </div>
+          </td>
+        </tr>`).join('');
+      document.getElementById('archive-list').classList.remove('hidden');
+      document.getElementById('archive-view').classList.add('hidden');
+    }
+  } catch (e) { console.error('loadArchiveList:', e); }
+}
+
+function viewArchiveDate(date) {
+  document.getElementById('archive-date').value = date;
+  viewArchive();
+}
+function exportArchive(date) { window.open(`/ow_api/issues/export-by-date?date=${date}`, '_blank'); }
+function closeArchiveView() {
+  document.getElementById('archive-view').classList.add('hidden');
+  document.getElementById('archive-list').classList.add('hidden');
+}
+
+/* ── USER PROFILE ── */
+async function loadUserProfile() {
+  try {
+    const res  = await fetch('/api/user_profile');
+    const data = await res.json();
+    if (document.getElementById('user-name')) document.getElementById('user-name').textContent = data.username || 'User';
+    if (document.getElementById('user-role')) document.getElementById('user-role').textContent = data.role || 'Role';
+  } catch (e) {}
+}
+loadUserProfile();
+
+/* ── ESC HELPER ── */
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+/* ── DEFAULT DATE ── */
+document.getElementById('archive-date').value = new Date().toISOString().split('T')[0];
+
+/* ── INIT ── */
+loadIssues();
+</script>
+</body>
+</html>

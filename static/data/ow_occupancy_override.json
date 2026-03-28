@@ -1,0 +1,225 @@
+[
+  {
+    "id": "1",
+    "floorId": "B3-18",
+    "officeName": "ADP",
+    "unitNo": "",
+    "occupiedArea": 720352,
+    "area": 720352,
+    "camRate": 18,
+    "camRateDate": "2026-01-01",
+    "amount": 12966336,
+    "gst": 2333940.48,
+    "total": 15300276.48
+  },
+  {
+    "id": "2",
+    "floorId": "19F",
+    "officeName": "TekFriday Processing Solutions Pvt Ltd",
+    "unitNo": "",
+    "occupiedArea": 18594.97,
+    "area": 18594.97,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "3",
+    "floorId": "19F",
+    "officeName": "ATLANTIC MEDIA",
+    "unitNo": "",
+    "occupiedArea": 6000,
+    "area": 6000,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "4",
+    "floorId": "19F",
+    "officeName": "YOUR Volta Services",
+    "unitNo": "",
+    "occupiedArea": 7500,
+    "area": 7500,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "5",
+    "floorId": "19F",
+    "officeName": "ASPYRAILABS PRIVATE LIMITED",
+    "unitNo": "",
+    "occupiedArea": 7500,
+    "area": 7500,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "6",
+    "floorId": "19F",
+    "officeName": "Sibersentinel Technologies Pvt Ltd",
+    "unitNo": "",
+    "occupiedArea": 2787.3,
+    "area": 2787.3,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "7",
+    "floorId": "20F",
+    "officeName": "Blisscape",
+    "unitNo": "",
+    "occupiedArea": 3800,
+    "area": 3800,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "8",
+    "floorId": "20F",
+    "officeName": "Agasthya Super foods pvt ltd",
+    "unitNo": "",
+    "occupiedArea": 7545,
+    "area": 7545,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "9",
+    "floorId": "20F",
+    "officeName": "Gramener",
+    "unitNo": "",
+    "occupiedArea": 10566,
+    "area": 10566,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "10",
+    "floorId": "20F",
+    "officeName": "CK Birla",
+    "unitNo": "",
+    "occupiedArea": 8752.84,
+    "area": 8752.84,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "11",
+    "floorId": "20F",
+    "officeName": "Abjyon",
+    "unitNo": "",
+    "occupiedArea": 8687,
+    "area": 8687,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "12",
+    "floorId": "20F",
+    "officeName": "Marvel Business",
+    "unitNo": "",
+    "occupiedArea": 3000,
+    "area": 3000,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "13",
+    "floorId": "1F",
+    "officeName": "Landmark",
+    "unitNo": "",
+    "occupiedArea": 38512,
+    "area": 38512,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "14",
+    "floorId": "22F",
+    "officeName": "Innovacx",
+    "unitNo": "",
+    "occupiedArea": 42565.65,
+    "area": 42565.65,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "15",
+    "floorId": "23F",
+    "officeName": "Netenrich",
+    "unitNo": "",
+    "occupiedArea": 42565.65,
+    "area": 42565.65,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "16",
+    "floorId": "24F",
+    "officeName": "SPS-Single point Solution",
+    "unitNo": "",
+    "occupiedArea": 24974,
+    "area": 24974,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "17",
+    "floorId": "24F",
+    "officeName": "U-HUB",
+    "unitNo": "",
+    "occupiedArea": 7335,
+    "area": 7335,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "18",
+    "floorId": "24F",
+    "officeName": "JV Venture",
+    "unitNo": "",
+    "occupiedArea": 10241,
+    "area": 10241,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "19",
+    "floorId": "25F",
+    "officeName": "Terminus Corporate Office",
+    "unitNo": "",
+    "occupiedArea": 6705,
+    "area": 6705,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "20",
+    "floorId": "1F",
+    "officeName": "Tejase Group, D&H Chartered Accountants",
+    "unitNo": "",
+    "occupiedArea": 5225,
+    "area": 5225,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "21",
+    "floorId": "GF",
+    "officeName": "The Epic Café",
+    "unitNo": "",
+    "occupiedArea": 500,
+    "area": 500,
+    "camRate": 0,
+    "camRateDate": ""
+  },
+  {
+    "id": "22",
+    "floorId": "GF",
+    "officeName": "Milange café",
+    "unitNo": "",
+    "occupiedArea": 2122,
+    "area": 2122,
+    "camRate": 0,
+    "camRateDate": ""
+  }
+]

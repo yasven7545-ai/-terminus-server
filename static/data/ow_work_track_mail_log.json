@@ -1,0 +1,1904 @@
+[
+  {
+    "work_id": "OWT-0001",
+    "stage": "EMERGENCY",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "engineering@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-03T17:33:20.449819"
+  },
+  {
+    "work_id": "OWT-0001",
+    "stage": "EMERGENCY",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "engineering@terminus-global.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-03T17:39:29.416452"
+  },
+  {
+    "work_id": "OWT-0001",
+    "stage": "Management Approval",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "engineering@terminus-global.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-03T18:25:24.438947"
+  },
+  {
+    "work_id": "OWT-0003",
+    "stage": "Management Approval",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "engineering@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-04T12:44:23.194063"
+  },
+  {
+    "work_id": "OWT-0003",
+    "stage": "Management Approval",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "engineering@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-04T12:56:54.338963"
+  },
+  {
+    "work_id": "OWT-0003",
+    "stage": "Management Approval",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "engineering@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-04T13:03:04.247753"
+  },
+  {
+    "work_id": "OWT-0002",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "engineering@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-04T13:04:50.381012"
+  },
+  {
+    "work_id": "OWT-0001",
+    "stage": "Contract Awarded",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-04T16:40:03.863229"
+  },
+  {
+    "work_id": "OWT-0002",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-04T16:40:07.364808"
+  },
+  {
+    "work_id": "OWT-0003",
+    "stage": "Management Approval",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-04T16:40:10.810790"
+  },
+  {
+    "work_id": "OWT-0001",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-05T08:00:05.618487"
+  },
+  {
+    "work_id": "OWT-0002",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-05T08:00:09.247153"
+  },
+  {
+    "work_id": "OWT-0003",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-05T08:00:12.843058"
+  },
+  {
+    "work_id": "OWT-0004",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-05T08:00:16.609816"
+  },
+  {
+    "work_id": "OWT-0005",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-05T08:00:20.331938"
+  },
+  {
+    "work_id": "OWT-0006",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-05T08:00:24.272919"
+  },
+  {
+    "work_id": "OWT-0007",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-05T08:00:27.943693"
+  },
+  {
+    "work_id": "OWT-0008",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-05T08:00:32.812725"
+  },
+  {
+    "work_id": "OWT-0009",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-05T08:00:36.701251"
+  },
+  {
+    "work_id": "OWT-0010",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-05T08:00:40.373249"
+  },
+  {
+    "work_id": "OWT-0011",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-05T08:00:44.117123"
+  },
+  {
+    "work_id": "OWT-0001",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T08:00:04.648038"
+  },
+  {
+    "work_id": "OWT-0002",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T08:00:08.595920"
+  },
+  {
+    "work_id": "OWT-0003",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T08:00:12.578914"
+  },
+  {
+    "work_id": "OWT-0004",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T08:00:16.261493"
+  },
+  {
+    "work_id": "OWT-0005",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T08:00:20.190965"
+  },
+  {
+    "work_id": "OWT-0006",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T08:00:23.958789"
+  },
+  {
+    "work_id": "OWT-0007",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T08:00:27.766984"
+  },
+  {
+    "work_id": "OWT-0008",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T08:00:31.420451"
+  },
+  {
+    "work_id": "OWT-0009",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T08:00:35.025929"
+  },
+  {
+    "work_id": "OWT-0010",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T08:00:38.954776"
+  },
+  {
+    "work_id": "OWT-0011",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T08:00:42.694276"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|Observation Raised",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T11:22:24.331627"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|Observation Raised",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T11:22:27.792340"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|PM Review & Response",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T11:23:42.312148"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|PM Review & Response",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T11:24:02.352108"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|Approval",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T11:24:10.051593"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|Work In Progress",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T11:24:49.627505"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|Completed",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T15:49:13.272180"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|Completed",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T15:49:16.734900"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|Completed",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T15:49:17.156429"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|Completed",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T15:49:20.583433"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|Observation Raised",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T16:03:39.322124"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|PM Review & Response",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T16:06:58.118536"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|Work In Progress",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T16:07:38.642438"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|Observation Raised",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T16:16:01.700090"
+  },
+  {
+    "work_id": "OBS-0003",
+    "stage": "OBS|Observation Raised",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T16:16:01.828270"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|PM Review & Response",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T16:17:06.038868"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|Approval",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T16:17:09.539763"
+  },
+  {
+    "work_id": "OWT-0001",
+    "stage": "EMERGENCY",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T16:17:47.589264"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|Work In Progress",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T16:34:49.618825"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|Work In Progress",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T16:55:45.705703"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|EMERGENCY",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T17:14:33.157945"
+  },
+  {
+    "work_id": "OBS-0003",
+    "stage": "OBS|Observation Raised",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T17:17:35.188211"
+  },
+  {
+    "work_id": "OBS-0003",
+    "stage": "OBS|Observation Raised",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T17:30:22.828056"
+  },
+  {
+    "work_id": "OBS-0003",
+    "stage": "OBS|PM Review & Response",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com",
+      "chvenu04@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T17:32:53.867063"
+  },
+  {
+    "work_id": "OBS-0003",
+    "stage": "OBS|EMERGENCY",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "engineering@terminus-global.com",
+      "chvenu04@gmail.com",
+      "kiran@terminus-global.com",
+      "uniyash7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T17:34:55.434613"
+  },
+  {
+    "work_id": "OBS-0003",
+    "stage": "OBS|Work In Progress",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com",
+      "chvenu04@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T17:36:55.263239"
+  },
+  {
+    "work_id": "OBS-0003",
+    "stage": "OBS|Completed",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "engineering@terminus-global.com",
+      "chvenu04@gmail.com",
+      "kiran@terminus-global.com",
+      "uniyash7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T17:38:55.714010"
+  },
+  {
+    "work_id": "OBS-0003",
+    "stage": "OBS|Completed",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "engineering@terminus-global.com",
+      "chvenu04@gmail.com",
+      "kiran@terminus-global.com",
+      "uniyash7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T17:39:00.271655"
+  },
+  {
+    "work_id": "OWT-0001",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T18:45:04.838106"
+  },
+  {
+    "work_id": "OWT-0002",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T18:45:08.475915"
+  },
+  {
+    "work_id": "OWT-0003",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T18:45:11.792966"
+  },
+  {
+    "work_id": "OWT-0004",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T18:45:15.062940"
+  },
+  {
+    "work_id": "OWT-0005",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T18:45:18.314369"
+  },
+  {
+    "work_id": "OWT-0006",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T18:45:21.618115"
+  },
+  {
+    "work_id": "OWT-0007",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T18:45:24.962021"
+  },
+  {
+    "work_id": "OWT-0008",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T18:45:28.444113"
+  },
+  {
+    "work_id": "OWT-0009",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T18:45:31.766125"
+  },
+  {
+    "work_id": "OWT-0011",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T18:45:35.341448"
+  },
+  {
+    "work_id": "OWT-0001",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:15:03.819867"
+  },
+  {
+    "work_id": "OWT-0002",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:15:07.171145"
+  },
+  {
+    "work_id": "OWT-0003",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:15:10.583542"
+  },
+  {
+    "work_id": "OWT-0004",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:15:13.929190"
+  },
+  {
+    "work_id": "OWT-0005",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:15:17.302795"
+  },
+  {
+    "work_id": "OWT-0006",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:15:20.725037"
+  },
+  {
+    "work_id": "OWT-0007",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:15:24.435323"
+  },
+  {
+    "work_id": "OWT-0008",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:15:27.762043"
+  },
+  {
+    "work_id": "OWT-0009",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:15:31.097515"
+  },
+  {
+    "work_id": "OWT-0011",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:15:34.455995"
+  },
+  {
+    "work_id": "OBS-0003",
+    "stage": "OBS|Completed",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:17:59.177781"
+  },
+  {
+    "work_id": "OWT-0001",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:30:03.663919"
+  },
+  {
+    "work_id": "OWT-0002",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:30:07.073415"
+  },
+  {
+    "work_id": "OWT-0003",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:30:10.846359"
+  },
+  {
+    "work_id": "OWT-0004",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:30:14.341978"
+  },
+  {
+    "work_id": "OWT-0005",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:30:17.720045"
+  },
+  {
+    "work_id": "OWT-0006",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:30:21.045931"
+  },
+  {
+    "work_id": "OWT-0007",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:30:24.355946"
+  },
+  {
+    "work_id": "OWT-0008",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:30:27.872654"
+  },
+  {
+    "work_id": "OWT-0009",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:30:31.253304"
+  },
+  {
+    "work_id": "OWT-0011",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:30:34.729737"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|Work In Progress",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:30:42.118276"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|Approval",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-06T19:30:45.543530"
+  },
+  {
+    "work_id": "OWT-0001",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-07T08:00:04.364567"
+  },
+  {
+    "work_id": "OWT-0002",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-07T08:00:08.175623"
+  },
+  {
+    "work_id": "OWT-0003",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-07T08:00:12.006861"
+  },
+  {
+    "work_id": "OWT-0004",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-07T08:00:15.683131"
+  },
+  {
+    "work_id": "OWT-0005",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-07T08:00:19.373551"
+  },
+  {
+    "work_id": "OWT-0006",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-07T08:00:23.145765"
+  },
+  {
+    "work_id": "OWT-0007",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-07T08:00:26.648924"
+  },
+  {
+    "work_id": "OWT-0008",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-07T08:00:30.375446"
+  },
+  {
+    "work_id": "OWT-0009",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-07T08:00:34.200588"
+  },
+  {
+    "work_id": "OWT-0011",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-07T08:00:37.766314"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|Work In Progress",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-07T08:00:41.484609"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|Approval",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "auto-sent",
+    "error": "",
+    "timestamp": "2026-03-07T08:00:45.191060"
+  },
+  {
+    "work_id": "OBS-0003",
+    "stage": "OBS|EMERGENCY",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-07T09:58:02.534226"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|Approval",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-07T10:13:58.630755"
+  },
+  {
+    "work_id": "OBS-0004",
+    "stage": "OBS|Observation Raised by GM/Management",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-07T15:05:16.797084"
+  },
+  {
+    "work_id": "OBS-0005",
+    "stage": "OBS|Observation Raised by GM/Management",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-07T15:13:33.153316"
+  },
+  {
+    "work_id": "OBS-0005",
+    "stage": "OBS|Observation Raised by GM/Management",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-07T15:15:51.530153"
+  },
+  {
+    "work_id": "OBS-0005",
+    "stage": "OBS|EMERGENCY",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-07T15:17:46.242596"
+  },
+  {
+    "work_id": "OBS-0005",
+    "stage": "OBS|PM Review & Response",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-07T15:28:34.287198"
+  },
+  {
+    "work_id": "OBS-0005",
+    "stage": "OBS|PM Review & Response",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-07T15:29:00.148100"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-07T15:45:03.621924"
+  },
+  {
+    "work_id": "OBS-0004",
+    "stage": "OBS|EMERGENCY",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-07T15:50:56.561647"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|PM Review & Response",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-07T16:13:28.003855"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|Completed",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-07T16:13:31.482766"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|GM Verification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-07T16:13:34.514654"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|Completed",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-07T16:13:37.830343"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|Observation Raised by GM/Management",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-07T16:31:02.833254"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|Observation Raised by GM/Management",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-07T17:13:26.380925"
+  },
+  {
+    "work_id": "OWT-0001",
+    "stage": "Issue Identification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-07T17:35:01.261029"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|Observation Raised by GM/Management",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-08T10:45:44.539107"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|PM Review & Response",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-08T10:48:54.755108"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-08T11:15:03.701388"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-08T11:55:05.361777"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|PM Review & Response",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-08T12:35:56.461316"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|EMERGENCY",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-08T12:36:19.710290"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-08T12:45:03.724716"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|EMERGENCY",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-08T13:18:22.920539"
+  },
+  {
+    "work_id": "OBS-0001",
+    "stage": "OBS|Procurement/Finance Action",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-08T13:18:59.133326"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-08T15:45:03.397037"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-09T08:00:04.106027"
+  },
+  {
+    "work_id": "OWT-0002",
+    "stage": "Management Approval",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-09T15:13:48.502371"
+  },
+  {
+    "work_id": "OWT-0002",
+    "stage": "Management Approval",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-09T15:13:55.822985"
+  },
+  {
+    "work_id": "OWT-0002",
+    "stage": "Management Approval",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-09T17:00:59.576850"
+  },
+  {
+    "work_id": "OWT-0002",
+    "stage": "Management Approval",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-09T17:03:09.156003"
+  },
+  {
+    "work_id": "OWT-0002",
+    "stage": "Management Approval",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-09T17:03:37.432479"
+  },
+  {
+    "work_id": "OBS-0002",
+    "stage": "OBS|Observation Raised by GM/Management",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-09T17:05:40.390645"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-10T08:00:05.899932"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-11T08:00:04.595876"
+  },
+  {
+    "work_id": "OBS-0003",
+    "stage": "OBS|Observation Raised by GM/Management",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-11T18:30:01.238977"
+  },
+  {
+    "work_id": "OBS-0003",
+    "stage": "OBS|PM Review & Response",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-11T18:30:39.484564"
+  },
+  {
+    "work_id": "OBS-0003",
+    "stage": "OBS|PM Review & Response",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-11T18:31:50.099445"
+  },
+  {
+    "work_id": "OBS-0003",
+    "stage": "OBS|GM Verification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-11T18:32:13.368599"
+  },
+  {
+    "work_id": "OBS-0003",
+    "stage": "OBS|Management Approval",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-11T18:32:14.880405"
+  },
+  {
+    "work_id": "OBS-0003",
+    "stage": "OBS|GM Verification",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "sent",
+    "error": "",
+    "timestamp": "2026-03-11T18:44:32.603028"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-12T08:00:04.287166"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-13T08:00:06.337577"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-14T08:00:04.351299"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-15T08:00:05.138373"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-16T08:00:04.196636"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-17T08:00:04.886506"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-18T08:00:04.462730"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-19T08:00:04.811622"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-20T08:00:04.334411"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-21T08:00:04.937837"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-22T08:00:04.424205"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-23T08:00:04.815769"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-24T08:00:05.325802"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-25T08:00:05.902811"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-26T08:00:07.258385"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-27T08:00:07.044754"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-28T08:00:06.351356"
+  }
+]

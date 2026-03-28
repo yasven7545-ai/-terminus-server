@@ -1,0 +1,44 @@
+[
+  {
+    "Guard Name": "Name of patrolling guard",
+    "Route": "Select route name",
+    "Date": "DD-MM-YYYY",
+    "Start Time": "HH:MM (24hr)",
+    "End Time": "HH:MM (24hr)",
+    "Status": "Completed / Missed / In Progress",
+    "Checkpoints Done": "Number completed",
+    "Checkpoints Missed": "Number missed",
+    "Compliance %": "0\u2013100",
+    "Notes / Observations": "Observations during patrol",
+    "id": "PAT-E595F2D2",
+    "imported_at": "2026-03-23 15:16:04"
+  },
+  {
+    "Guard Name": "Name of patrolling guard",
+    "Route": "Select route name",
+    "Date": "DD-MM-YYYY",
+    "Start Time": "HH:MM (24hr)",
+    "End Time": "HH:MM (24hr)",
+    "Status": "Completed / Missed / In Progress",
+    "Checkpoints Done": "Number completed",
+    "Checkpoints Missed": "Number missed",
+    "Compliance %": "0\u2013100",
+    "Notes / Observations": "Observations during patrol",
+    "id": "PAT-37F7A504",
+    "imported_at": "2026-03-23 15:11:07"
+  },
+  {
+    "Guard Name": "Name of patrolling guard",
+    "Route": "Select route name",
+    "Date": "DD-MM-YYYY",
+    "Start Time": "HH:MM (24hr)",
+    "End Time": "HH:MM (24hr)",
+    "Status": "Completed / Missed / In Progress",
+    "Checkpoints Done": "Number completed",
+    "Checkpoints Missed": "Number missed",
+    "Compliance %": "0\u2013100",
+    "Notes / Observations": "Observations during patrol",
+    "id": "PAT-AF9A78D0",
+    "imported_at": "2026-03-23 15:09:06"
+  }
+]

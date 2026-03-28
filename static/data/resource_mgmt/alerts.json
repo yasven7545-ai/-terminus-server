@@ -1,0 +1,37 @@
+[
+  {
+    "type": "critical",
+    "title": "Staff Shortage — Tower A Housekeeping",
+    "desc": "Deployed 20/22 planned. Gap of 2 staff since morning shift.",
+    "time": "19:23",
+    "dismissed": false
+  },
+  {
+    "type": "critical",
+    "title": "Vendor Under-Deployment — HireFleet India",
+    "desc": "Admin support: 9/12 contracted staff deployed. SLA breach risk.",
+    "time": "08:45",
+    "dismissed": false
+  },
+  {
+    "type": "warning",
+    "title": "Late Reporting — 2 Security Staff",
+    "desc": "Suresh Babu & Lakshmi Narayan checked in late today.",
+    "time": "14:28",
+    "dismissed": false
+  },
+  {
+    "type": "warning",
+    "title": "Vendor Compliance Drop — HireFleet India",
+    "desc": "Compliance down to 75% this week. Review required.",
+    "time": "09:00",
+    "dismissed": false
+  },
+  {
+    "type": "info",
+    "title": "Shift Handover Pending — Plant Room",
+    "desc": "Maintenance shift handover not logged for evening shift.",
+    "time": "14:00",
+    "dismissed": false
+  }
+]

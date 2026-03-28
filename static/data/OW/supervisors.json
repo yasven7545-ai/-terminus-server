@@ -1,0 +1,16 @@
+{
+  "supervisors": [
+    {
+      "id": "S001",
+      "name": "Anil Kumar",
+      "phone": "+919876543220",
+      "email": "anil@onewest.com"
+    },
+    {
+      "id": "S002",
+      "name": "Ravi Shankar",
+      "phone": "+919876543221",
+      "email": "ravi@onewest.com"
+    }
+  ]
+}

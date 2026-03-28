@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5"/>
+<title>SLN Security — SLN Terminus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+/* ═══ TOKENS ═══ */
+[data-theme="dark"]{
+  --bg:#020b12;--bg2:#071520;--surf:#071520;--surf2:#0c1e2e;--card:#010810;
+  --bdr:rgba(6,182,212,.12);--bdr2:rgba(6,182,212,.26);
+  --tx:#b8dde8;--tx2:#daf0f7;--tx3:#4a7a8a;
+  --cyan:#06b6d4;--cyan-g:rgba(6,182,212,.12);
+  --emerald:#10b981;--em-g:rgba(16,185,129,.12);
+  --amber:#f59e0b;--am-g:rgba(245,158,11,.12);
+  --violet:#2dd4bf;--violet-g:rgba(13,148,136,.14);
+  --orange:#F47920;--orange-g:rgba(244,121,32,.14);
+  --red:#ef4444;--red-g:rgba(239,68,68,.12);
+  --pink:#f472b6;--teal:#0d9488;--teal2:#0f766e;--teal3:#2dd4bf;
+  --lime:#a3e635;--sky:#67e8f9;
+  --ga:linear-gradient(135deg,#0d9488,#06b6d4);
+  --gb:linear-gradient(135deg,#F47920,#f59e0b);
+  --gc:linear-gradient(135deg,#10b981,#06b6d4);
+  --sh:0 8px 36px rgba(0,0,0,.70);--sh2:0 2px 24px rgba(0,0,0,.5);
+  --header-bg:#010810;
+}
+[data-theme="light"]{
+  --bg:#f0fafa;--bg2:#e0f5f5;--surf:#ffffff;--surf2:#cdeeed;--card:#ffffff;
+  --bdr:rgba(13,148,136,.14);--bdr2:rgba(13,148,136,.30);
+  --tx:#0f2e35;--tx2:#07191e;--tx3:#3d7080;
+  --cyan:#0891b2;--cyan-g:rgba(8,145,178,.1);
+  --emerald:#059669;--em-g:rgba(5,150,105,.1);
+  --amber:#d97706;--am-g:rgba(217,119,6,.1);
+  --violet:#0d9488;--violet-g:rgba(15,118,110,.1);
+  --orange:#ea580c;--orange-g:rgba(234,88,12,.1);
+  --red:#e11d48;--red-g:rgba(225,29,72,.1);
+  --pink:#db2777;--teal:#0d9488;--teal2:#115e59;--teal3:#0d9488;
+  --lime:#65a30d;--sky:#06b6d4;
+  --ga:linear-gradient(135deg,#0f766e,#0891b2);
+  --gb:linear-gradient(135deg,#ea580c,#d97706);
+  --gc:linear-gradient(135deg,#059669,#0284c7);
+  --sh:0 6px 28px rgba(0,0,0,.1);--sh2:0 2px 10px rgba(0,0,0,.07);
+  --header-bg:rgba(255,255,255,.95);
+}
+:root{--hh:56px;--sw:252px;--r:12px;--rsm:8px;--ease:cubic-bezier(.4,0,.2,1);--bounce:cubic-bezier(.34,1.3,.64,1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;line-height:1.6;transition:background .35s,color .35s;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:4px;}
+
+/* ═══ HEADER ═══ */
+header{position:fixed;top:0;left:0;right:0;height:var(--hh);background:var(--header-bg);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;padding:0 18px;z-index:600;box-shadow:var(--sh2);transition:background .35s,border-color .35s;}
+.logo-link{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.logo-box{background:#000;border:1px solid rgba(244,121,32,.4);border-radius:9px;padding:4px 10px;display:flex;align-items:center;box-shadow:0 0 18px rgba(244,121,32,.2);transition:box-shadow .3s;}
+.logo-box:hover{box-shadow:0 0 30px rgba(244,121,32,.4);}
+.logo-box img{height:30px;width:auto;display:block;}
+.logo-text{display:flex;flex-direction:column;}
+.logo-name{font-size:14px;font-weight:800;color:var(--tx);letter-spacing:-.3px;line-height:1.1;}
+.logo-sub{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--tx2);text-transform:uppercase;letter-spacing:1px;}
+.hdr-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.clock-pill{display:flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;background:var(--surf2);border:1px solid var(--bdr);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan);white-space:nowrap;}
+.clock-pill svg{width:11px;height:11px;flex-shrink:0;}
+.live-dot{display:flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--emerald);}
+.pdot{width:7px;height:7px;border-radius:50%;background:var(--emerald);flex-shrink:0;animation:pdot 2s ease-in-out infinite;}
+@keyframes pdot{0%{box-shadow:0 0 0 0 rgba(16,185,129,.8);}70%{box-shadow:0 0 0 8px rgba(16,185,129,0);}100%{box-shadow:0 0 0 0 rgba(16,185,129,0);}}
+.theme-toggle{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;background:var(--surf2);border:1px solid var(--bdr2);cursor:pointer;user-select:none;flex-shrink:0;transition:border-color .2s;}
+.theme-toggle:hover{border-color:var(--cyan);}
+.t-icon{width:13px;height:13px;color:var(--tx2);flex-shrink:0;}
+.tt-track{width:32px;height:18px;border-radius:9px;background:var(--bdr2);position:relative;flex-shrink:0;transition:background .25s;}
+[data-theme="light"] .tt-track{background:var(--teal);}
+.tt-thumb{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3);transition:transform .25s;}
+[data-theme="light"] .tt-thumb{transform:translateX(14px);}
+.btn-back-portal{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#FFD700;text-decoration:none;padding:5px 13px;border:1.5px solid #FFD700;border-radius:20px;background:transparent;cursor:pointer;white-space:nowrap;flex-shrink:0;animation:portal-blink 1.7s ease-in-out infinite;}
+.btn-back-portal svg{width:13px;height:13px;}
+@keyframes portal-blink{0%,100%{border-color:#FFD700;color:#FFD700;box-shadow:none;}50%{border-color:#FFA500;color:#FFA500;box-shadow:0 0 14px rgba(255,215,0,.55);}}
+.burger{display:none;align-items:center;justify-content:center;width:36px;height:36px;border-radius:var(--rsm);background:var(--surf2);border:1px solid var(--bdr2);color:var(--tx2);cursor:pointer;transition:all .2s;flex-shrink:0;}
+.burger:hover{border-color:var(--cyan);color:var(--cyan);}
+.burger svg{width:16px;height:16px;}
+
+/* ═══ SIDEBAR ═══ */
+.sidebar{position:fixed;top:var(--hh);left:0;bottom:0;width:var(--sw);background:var(--surf);border-right:1px solid var(--bdr);display:flex;flex-direction:column;z-index:500;overflow:hidden;transition:transform .3s var(--ease),background .35s;}
+.sb-top{padding:14px 13px 10px;border-bottom:1px solid var(--bdr);flex-shrink:0;}
+.sb-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--red);background:var(--red-g);border:1px solid rgba(239,68,68,.25);}
+.sb-role{margin-top:7px;font-size:11px;color:var(--tx3);font-family:'JetBrains Mono',monospace;}
+.sb-role span{color:var(--tx2);}
+.sb-scroll{flex:1;overflow-y:auto;padding:8px 10px 20px;}
+.nav-grp{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.3px;color:var(--tx3);padding:10px 8px 4px;}
+.nav-btn{display:flex;align-items:center;gap:10px;width:100%;padding:9px 11px;border-radius:var(--rsm);background:transparent;border:none;color:var(--tx2);font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;font-weight:500;cursor:pointer;transition:all .15s;text-align:left;margin-bottom:1px;}
+.nav-btn i{width:15px;height:15px;flex-shrink:0;opacity:.65;transition:opacity .15s,transform .2s;}
+.nav-btn:hover{background:rgba(239,68,68,.08);color:var(--tx);}
+.nav-btn:hover i{opacity:1;transform:scale(1.1);}
+.nav-btn.active{background:var(--red-g);color:var(--red);border:1px solid rgba(239,68,68,.2);}
+.nav-btn.active i{opacity:1;}
+.nav-pip{width:7px;height:7px;border-radius:50%;margin-left:auto;flex-shrink:0;animation:pdot 2s ease-in-out infinite;}
+.sb-foot{padding:10px 13px 14px;border-top:1px solid var(--bdr);flex-shrink:0;}
+.sf-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--tx3);margin-bottom:8px;}
+.sf-row{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--tx2);margin-bottom:5px;}
+.sf-label{display:flex;align-items:center;gap:6px;}
+.sf-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.sd-ok{background:var(--emerald);box-shadow:0 0 5px var(--emerald);}
+.sd-warn{background:var(--amber);box-shadow:0 0 5px var(--amber);}
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:499;}
+.sb-overlay.show{display:block;}
+
+/* ═══ MAIN ═══ */
+main{margin-left:var(--sw);margin-top:var(--hh);min-height:calc(100vh - var(--hh));padding:22px 24px 60px;transition:margin-left .3s;}
+
+/* ═══ PAGE HEADER ═══ */
+.page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;}
+.page-hdr-left{display:flex;align-items:center;gap:12px;}
+.page-icon{width:44px;height:44px;border-radius:12px;background:var(--red-g);border:1px solid rgba(239,68,68,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.page-icon i{width:20px;height:20px;color:var(--red);}
+.page-title{font-size:20px;font-weight:800;color:var(--tx2);letter-spacing:-.3px;}
+.page-sub{font-size:12px;color:var(--tx3);font-family:'JetBrains Mono',monospace;}
+.page-hdr-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+
+/* ═══ STAT CARDS — CLICKABLE ═══ */
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:13px;margin-bottom:20px;}
+.stat-card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:16px 18px;position:relative;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;user-select:none;}
+.stat-card:hover{transform:translateY(-3px);box-shadow:var(--sh);border-color:var(--bdr2);}
+.stat-card:active{transform:translateY(0);}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r) var(--r) 0 0;}
+.stat-card.c-red::before{background:var(--red);}
+.stat-card.c-cyan::before{background:var(--cyan);}
+.stat-card.c-green::before{background:var(--emerald);}
+.stat-card.c-amber::before{background:var(--amber);}
+.stat-card.c-orange::before{background:var(--orange);}
+.sc-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+.sc-icon i{width:16px;height:16px;}
+.sc-val{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;line-height:1;color:var(--tx2);}
+.sc-lbl{font-size:10.5px;color:var(--tx3);margin-top:4px;text-transform:uppercase;letter-spacing:.6px;}
+.sc-sub{font-size:10px;margin-top:6px;display:flex;align-items:center;gap:3px;font-family:'JetBrains Mono',monospace;color:var(--tx3);}
+.sc-hint{position:absolute;bottom:8px;right:10px;font-size:9px;color:var(--tx3);opacity:0;transition:opacity .2s;}
+.stat-card:hover .sc-hint{opacity:1;}
+
+/* ═══ PANELS ═══ */
+.panel{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);margin-bottom:20px;overflow:hidden;box-shadow:var(--sh2);}
+.panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--bdr);gap:10px;flex-wrap:wrap;}
+.panel-title{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--tx2);}
+.panel-title i{width:14px;height:14px;color:var(--red);}
+.panel-title::before{content:'';display:block;width:3px;height:16px;background:var(--red);border-radius:2px;flex-shrink:0;}
+.panel-body{padding:16px 18px;}
+.panel-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px;}
+
+/* ═══ BUTTONS ═══ */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--rsm);font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:all .2s;font-family:'Plus Jakarta Sans',sans-serif;white-space:nowrap;}
+.btn i{width:13px;height:13px;flex-shrink:0;}
+.btn-primary{background:var(--red);color:#fff;border-color:var(--red);}
+.btn-primary:hover{filter:brightness(1.15);transform:translateY(-1px);box-shadow:0 4px 16px rgba(239,68,68,.4);}
+.btn-outline{background:transparent;color:var(--tx2);border-color:var(--bdr2);}
+.btn-outline:hover{border-color:var(--red);color:var(--red);}
+.btn-green{background:var(--emerald);color:#fff;border-color:var(--emerald);}
+.btn-green:hover{filter:brightness(1.1);}
+.btn-amber{background:var(--amber);color:#000;border-color:var(--amber);}
+.btn-amber:hover{filter:brightness(1.1);}
+.btn-cyan{background:var(--cyan);color:#000;border-color:var(--cyan);}
+.btn-cyan:hover{filter:brightness(1.1);}
+.btn-sm{padding:5px 10px;font-size:11px;}
+
+/* ═══ FORMS ═══ */
+.form-group{margin-bottom:13px;}
+label{font-size:11px;font-weight:600;color:var(--tx2);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
+input,select,textarea{width:100%;padding:9px 12px;border-radius:var(--rsm);background:var(--surf2);border:1px solid var(--bdr2);color:var(--tx);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;transition:border-color .2s,box-shadow .2s;outline:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(239,68,68,.12);}
+select option{background:var(--surf);}
+textarea{resize:vertical;min-height:70px;}
+
+/* ═══ BADGE ═══ */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10.5px;font-weight:600;white-space:nowrap;}
+.badge-red{background:var(--red-g);color:var(--red);border:1px solid rgba(239,68,68,.25);}
+.badge-amber{background:var(--am-g);color:var(--amber);border:1px solid rgba(245,158,11,.25);}
+.badge-green{background:var(--em-g);color:var(--emerald);border:1px solid rgba(16,185,129,.25);}
+.badge-cyan{background:var(--cyan-g);color:var(--cyan);border:1px solid rgba(6,182,212,.25);}
+.badge-violet{background:var(--violet-g);color:var(--violet);border:1px solid rgba(45,212,191,.25);}
+.badge-orange{background:var(--orange-g);color:var(--orange);border:1px solid rgba(244,121,32,.25);}
+.badge-gray{background:var(--surf2);color:var(--tx3);border:1px solid var(--bdr);}
+
+/* ═══ TABLE ═══ */
+.tbl-wrap{overflow-x:auto;border-radius:var(--rsm);}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px;min-width:600px;}
+th{padding:10px 13px;text-align:left;background:var(--surf);color:var(--tx2);font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;font-weight:700;border-bottom:1px solid var(--bdr2);white-space:nowrap;}
+td{padding:10px 13px;color:var(--tx);border-bottom:1px solid var(--bdr);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:var(--red-g);}
+
+/* ═══ GATE MONITOR ═══ */
+.gate-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.gate-card{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh2);}
+.gate-header{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bdr);}
+.gate-title{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:700;color:var(--tx2);}
+.gate-title i{width:17px;height:17px;}
+.gate-counts{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid var(--bdr);}
+.gate-count{padding:14px 10px;text-align:center;border-right:1px solid var(--bdr);}
+.gate-count:last-child{border-right:none;}
+.gate-count-val{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;line-height:1;}
+.gate-count-lbl{font-size:9.5px;color:var(--tx3);text-transform:uppercase;letter-spacing:.6px;margin-top:3px;}
+.gate-log-wrap{max-height:240px;overflow-y:auto;}
+.gate-log-item{display:flex;align-items:center;gap:8px;padding:8px 16px;border-bottom:1px solid var(--bdr);font-size:12px;}
+.gate-log-item:last-child{border-bottom:none;}
+.gate-log-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tx3);flex-shrink:0;min-width:48px;}
+.dir-badge{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.dir-in{background:var(--em-g);color:var(--emerald);}
+.dir-out{background:var(--am-g);color:var(--amber);}
+.gate-log-name{flex:1;font-weight:600;color:var(--tx2);}
+.gate-log-type{font-size:10px;color:var(--tx3);flex-shrink:0;}
+.gate-add{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:11px;border:none;border-top:1px solid var(--bdr);background:transparent;color:var(--cyan);font-size:12px;font-weight:600;cursor:pointer;transition:background .2s;font-family:'Plus Jakarta Sans',sans-serif;}
+.gate-add:hover{background:var(--cyan-g);}
+.gate-add i{width:13px;height:13px;}
+.gate-empty{text-align:center;padding:20px;color:var(--tx3);font-size:12px;}
+
+/* ═══ CCTV COUNT ═══ */
+.cctv-count-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;}
+.cctv-zone-card{background:var(--surf2);border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:14px;transition:border-color .2s;}
+.cctv-zone-card:hover{border-color:var(--bdr2);}
+.cctv-zone-icon{width:42px;height:42px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cctv-zone-icon i{width:18px;height:18px;}
+.cctv-zone-name{font-size:12.5px;font-weight:700;color:var(--tx2);}
+.cctv-zone-sub{font-size:10px;color:var(--tx3);margin-top:1px;}
+.cctv-zone-count{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;margin-left:auto;flex-shrink:0;}
+.cctv-total-bar{background:var(--surf2);border:1px solid var(--bdr);border-radius:10px;padding:16px 22px;margin-bottom:16px;display:flex;align-items:center;gap:18px;}
+.cctv-total-num{font-family:'JetBrains Mono',monospace;font-size:48px;font-weight:800;color:var(--cyan);line-height:1;}
+.cctv-total-info{flex:1;}
+.cctv-total-lbl{font-size:13px;font-weight:700;color:var(--tx2);}
+.cctv-total-sub{font-size:11px;color:var(--tx3);font-family:'JetBrains Mono',monospace;margin-top:2px;}
+
+/* ═══ FLOOR MAP ═══ */
+.floor-map{display:grid;gap:6px;}
+.floor-row{display:grid;grid-template-columns:80px 1fr;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--bdr);}
+.floor-row:last-child{border-bottom:none;}
+.floor-lbl{font-size:10px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.8px;font-family:'JetBrains Mono',monospace;text-align:right;padding-top:7px;}
+.floor-zones{display:flex;flex-wrap:wrap;gap:5px;}
+.zone-pill{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid transparent;}
+.zone-pill .zdot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.zone-pill.secure{background:var(--em-g);border-color:rgba(16,185,129,.25);color:var(--emerald);}
+.zone-pill.alert{background:var(--red-g);border-color:rgba(239,68,68,.35);color:var(--red);animation:zone-alert 2s ease-in-out infinite;}
+.zone-pill.warning{background:var(--am-g);border-color:rgba(245,158,11,.3);color:var(--amber);}
+.zone-pill.offline{background:var(--surf2);border-color:var(--bdr);color:var(--tx3);}
+@keyframes zone-alert{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4);}50%{box-shadow:0 0 0 5px rgba(239,68,68,0);}}
+
+/* ═══ GUARD ═══ */
+.guard-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bdr);}
+.guard-row:last-child{border-bottom:none;}
+.g-avatar{width:34px;height:34px;border-radius:50%;background:var(--ga);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.g-info{flex:1;min-width:0;}
+.g-name{font-size:13px;font-weight:700;color:var(--tx2);}
+.g-meta{font-size:11px;color:var(--tx3);}
+.g-actions{display:flex;gap:5px;flex-shrink:0;}
+
+/* ═══ PATROL TIMELINE ═══ */
+.timeline{position:relative;padding-left:26px;}
+.timeline::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:2px;background:var(--bdr2);}
+.tl-item{position:relative;margin-bottom:12px;padding-left:10px;}
+.tl-item::before{content:'';position:absolute;left:-20px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--surf2);border:2px solid var(--bdr2);}
+.tl-item.done::before{background:var(--emerald);border-color:var(--emerald);box-shadow:0 0 8px var(--emerald);}
+.tl-item.missed::before{background:var(--red);border-color:var(--red);}
+.tl-item.upcoming::before{background:var(--cyan);border-color:var(--cyan);animation:pdot 1.5s ease-in-out infinite;}
+.tl-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--tx3);}
+.tl-loc{font-size:12.5px;font-weight:600;color:var(--tx2);}
+.tl-note{font-size:11px;color:var(--tx3);margin-top:1px;}
+
+/* ═══ PATROL CHECKLIST ═══ */
+.chk-section{margin-bottom:18px;}
+.chk-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--cyan);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:7px;}
+.chk-section-title i{width:13px;height:13px;flex-shrink:0;}
+.chk-item{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:7px;cursor:pointer;transition:background .15s;margin-bottom:2px;}
+.chk-item:hover{background:var(--surf2);}
+.chk-item input[type="checkbox"]{width:16px;height:16px;accent-color:var(--emerald);cursor:pointer;flex-shrink:0;}
+.chk-item-label{flex:1;font-size:12.5px;color:var(--tx2);}
+.chk-item.done .chk-item-label{text-decoration:line-through;color:var(--tx3);}
+.chk-item-done{font-size:10px;color:var(--emerald);font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.progress-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.progress-bar{flex:1;height:7px;background:var(--surf2);border-radius:4px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--gc);border-radius:4px;transition:width .4s;}
+.progress-txt{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--emerald);white-space:nowrap;}
+
+/* ═══ INCIDENT CARDS ═══ */
+.inc-card{background:var(--surf2);border:1px solid var(--bdr);border-radius:var(--rsm);padding:13px 15px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start;border-left-width:3px;}
+.inc-card.crit{border-left-color:var(--red);}
+.inc-card.mod{border-left-color:var(--amber);}
+.inc-card.res{border-left-color:var(--emerald);opacity:.75;}
+.inc-ic{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.inc-ic i{width:15px;height:15px;}
+.inc-body{flex:1;min-width:0;}
+.inc-title{font-size:13px;font-weight:700;color:var(--tx2);}
+.inc-meta{font-size:11px;color:var(--tx3);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;}
+.inc-meta i{width:10px;height:10px;vertical-align:middle;}
+.inc-desc{font-size:11.5px;color:var(--tx3);margin-top:4px;}
+.inc-acts{display:flex;gap:5px;flex-shrink:0;flex-wrap:wrap;}
+
+/* ═══ MODAL ═══ */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:20000;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:16px;}
+.modal.open{display:flex;}
+.modal-box{background:var(--surf);border:1px solid var(--bdr2);border-radius:18px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;padding:22px;box-shadow:0 32px 80px rgba(0,0,0,.6);animation:mod-in .3s var(--bounce);}
+.modal-box.wide{max-width:660px;}
+@keyframes mod-in{from{transform:translateY(40px);opacity:0;}to{transform:none;opacity:1;}}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.modal-hdr h3{font-size:15px;font-weight:700;color:var(--tx);display:flex;align-items:center;gap:8px;}
+.modal-hdr h3 i{width:16px;height:16px;color:var(--red);}
+.modal-close{width:30px;height:30px;border-radius:var(--rsm);background:var(--surf2);border:1px solid var(--bdr2);color:var(--tx2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.modal-close:hover{border-color:var(--red);color:var(--red);}
+.modal-close i{width:14px;height:14px;}
+.modal-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:14px;border-top:1px solid var(--bdr);}
+
+/* ═══ SEARCH ═══ */
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--surf2);border:1px solid var(--bdr2);border-radius:var(--rsm);padding:7px 12px;transition:border-color .2s;}
+.search-bar:focus-within{border-color:var(--red);}
+.search-bar i{width:14px;height:14px;color:var(--tx3);flex-shrink:0;}
+.search-bar input{flex:1;background:transparent;border:none;outline:none;color:var(--tx);font-size:13px;min-width:0;}
+
+/* ═══ REPORTS ═══ */
+.stat-row-rpt{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--surf2);border-radius:8px;border:1px solid var(--bdr);margin-bottom:8px;}
+.stat-row-rpt-label{font-size:12px;color:var(--tx2);}
+.stat-row-rpt-val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;}
+
+/* ═══ TOAST ═══ */
+#toast{position:fixed;top:calc(var(--hh) + 12px);right:18px;z-index:99999;background:var(--surf);border:1px solid var(--bdr2);color:var(--tx);padding:11px 18px;border-radius:10px;box-shadow:var(--sh);transform:translateY(-14px);opacity:0;transition:all .3s;pointer-events:none;display:flex;align-items:center;gap:8px;font-size:13px;max-width:320px;}
+#toast.show{transform:none;opacity:1;}
+#toast.success i{color:var(--emerald);}
+#toast.error i{color:var(--red);}
+#toast i{width:15px;height:15px;flex-shrink:0;}
+
+/* ═══ TABS ═══ */
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+/* ═══ EMPTY ═══ */
+.empty-state{text-align:center;padding:36px 20px;color:var(--tx3);}
+.empty-state i{width:36px;height:36px;margin:0 auto 10px;display:block;opacity:.3;}
+.empty-state p{font-size:13px;}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:960px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:none;box-shadow:var(--sh);}
+  main{margin-left:0;}
+  .burger{display:flex;}
+  .logo-text{display:none;}
+  .live-dot span:last-child{display:none;}
+  .stats-row{grid-template-columns:repeat(3,1fr);}
+  .gate-grid,.grid-2{grid-template-columns:1fr;}
+}
+@media(max-width:580px){
+  header{padding:0 12px;}
+  main{padding:12px 12px 50px;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .hdr-right{gap:5px;}
+  .clock-pill span{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="toast"><i data-lucide="check-circle"></i><span id="toastMsg">Saved</span></div>
+
+<!-- ══════ HEADER ══════ -->
+<header>
+  <div style="display:flex;align-items:center;gap:10px">
+    <button class="burger" id="burgerBtn" aria-label="Menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="{{ url_for('dashboard') }}" class="logo-link">
+      <div class="logo-box"><img src="{{ url_for('static', filename='T_Logo.jpg') }}" alt="SLN"/></div>
+      <div class="logo-text">
+        <div class="logo-name">SLN Terminus</div>
+        <div class="logo-sub">Security Module</div>
+      </div>
+    </a>
+  </div>
+  <div class="hdr-right">
+    <div class="clock-pill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span id="currentTime">00:00:00</span>
+    </div>
+    <div class="live-dot"><span class="pdot"></span><span>Live</span></div>
+    <div class="theme-toggle" onclick="sln_hk_toggleTheme()" title="Toggle theme">
+      <svg class="t-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <div class="tt-track"><div class="tt-thumb"></div></div>
+      <svg class="t-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </div>
+    <a class="btn-back-portal" href="/sln_terminus">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Portal
+    </a>
+  </div>
+</header>
+
+<div class="sb-overlay" id="sbOverlay" onclick="sln_hk_closeSidebar()"></div>
+
+<!-- ══════ SIDEBAR ══════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-top">
+    <div class="sb-badge">🔒 Security Module</div>
+    <div class="sb-role">Role: <span id="sidebarRoleLabel">—</span></div>
+  </div>
+  <div class="sb-scroll">
+    <div class="nav-grp">Overview</div>
+    <button class="nav-btn active" id="nav-dashboard" onclick="sln_hk_showTab('dashboard',this)"><i data-lucide="shield"></i><span>Dashboard</span></button>
+    <button class="nav-btn" id="nav-incidents" onclick="sln_hk_showTab('incidents',this)"><i data-lucide="alert-triangle"></i><span>Incidents</span><span class="nav-pip" id="incidentPip" style="background:var(--red);box-shadow:0 0 8px var(--red);display:none;"></span></button>
+
+    <div class="nav-grp">Gate Monitoring</div>
+    <button class="nav-btn" id="nav-gates" onclick="sln_hk_showTab('gates',this)"><i data-lucide="door-open"></i><span>Gate Monitor</span></button>
+
+    <div class="nav-grp">Monitoring</div>
+    <button class="nav-btn" id="nav-cctv" onclick="sln_hk_showTab('cctv',this)"><i data-lucide="camera"></i><span>CCTV — 235 Cams</span></button>
+    <button class="nav-btn" id="nav-floormap" onclick="sln_hk_showTab('floormap',this)"><i data-lucide="map"></i><span>Floor Map</span></button>
+
+    <div class="nav-grp">Personnel</div>
+    <button class="nav-btn" id="nav-guards" onclick="sln_hk_showTab('guards',this)"><i data-lucide="user-check"></i><span>Guard Management</span></button>
+    <button class="nav-btn" id="nav-patrol" onclick="sln_hk_showTab('patrol',this)"><i data-lucide="navigation"></i><span>Patrol &amp; Checklist</span></button>
+    <button class="nav-btn" id="nav-visitors" onclick="sln_hk_showTab('visitors',this)"><i data-lucide="users"></i><span>Visitor Passes</span></button>
+
+    <div class="nav-grp">Reports</div>
+    <button class="nav-btn" id="nav-reports" onclick="sln_hk_showTab('reports',this)"><i data-lucide="file-text"></i><span>Security Reports</span></button>
+  </div>
+  <div class="sb-foot">
+    <div class="sf-lbl">System Status</div>
+    <div class="sf-row"><span class="sf-label"><span class="sf-dot sd-ok"></span>CCTV Network</span><span style="font-family:'JetBrains Mono',monospace;">235 Cams</span></div>
+    <div class="sf-row"><span class="sf-label"><span class="sf-dot sd-ok"></span>Main Gate</span><span id="sb-mg-status">Live</span></div>
+    <div class="sf-row"><span class="sf-label"><span class="sf-dot sd-ok"></span>Mall Entrance</span><span id="sb-me-status">Live</span></div>
+    <div class="sf-row"><span class="sf-label"><span class="sf-dot sd-warn"></span>Alarm System</span><span>Standby</span></div>
+  </div>
+</aside>
+
+<!-- ══════ MAIN ══════ -->
+<main>
+
+  <!-- PAGE HEADER -->
+  <div class="page-hdr">
+    <div class="page-hdr-left">
+      <div class="page-icon"><i data-lucide="shield-alert"></i></div>
+      <div>
+        <div class="page-title">Security Operations</div>
+        <div class="page-sub">SLN Terminus — Integrated Security Module</div>
+      </div>
+    </div>
+    <div class="page-hdr-right">
+      <button class="btn btn-primary btn-sm" onclick="sln_hk_openModal('incModal')"><i data-lucide="plus"></i>Log Incident</button>
+      <button class="btn btn-outline btn-sm" onclick="sln_hk_exportExcel()"><i data-lucide="download"></i>Export</button>
+    </div>
+  </div>
+
+  <!-- ██ STAT CARDS — all clickable ██ -->
+  <div class="stats-row">
+    <div class="stat-card c-red" onclick="sln_hk_showTab('incidents',document.getElementById('nav-incidents'))" title="View Incidents">
+      <div class="sc-icon" style="background:var(--red-g)"><i data-lucide="alert-triangle" style="color:var(--red)"></i></div>
+      <div class="sc-val" id="stat-incidents">0</div>
+      <div class="sc-lbl">Open Incidents</div>
+      <div class="sc-sub" id="stat-inc-trend">Click to view →</div>
+      <span class="sc-hint">Incidents Log</span>
+    </div>
+    <div class="stat-card c-cyan" onclick="sln_hk_showTab('cctv',document.getElementById('nav-cctv'))" title="View CCTV">
+      <div class="sc-icon" style="background:var(--cyan-g)"><i data-lucide="camera" style="color:var(--cyan)"></i></div>
+      <div class="sc-val" style="color:var(--cyan)">235</div>
+      <div class="sc-lbl">CCTV Cameras</div>
+      <div class="sc-sub">All Zones Active</div>
+      <span class="sc-hint">Camera Count</span>
+    </div>
+    <div class="stat-card c-green" onclick="sln_hk_showTab('guards',document.getElementById('nav-guards'))" title="View Guards">
+      <div class="sc-icon" style="background:var(--em-g)"><i data-lucide="user-check" style="color:var(--emerald)"></i></div>
+      <div class="sc-val" id="stat-guards">0</div>
+      <div class="sc-lbl">Guards on Duty</div>
+      <div class="sc-sub" id="stat-guards-sub">Click to manage →</div>
+      <span class="sc-hint">Guard Management</span>
+    </div>
+    <div class="stat-card c-amber" onclick="sln_hk_showTab('visitors',document.getElementById('nav-visitors'))" title="View Visitors">
+      <div class="sc-icon" style="background:var(--am-g)"><i data-lucide="users" style="color:var(--amber)"></i></div>
+      <div class="sc-val" id="stat-visitors">0</div>
+      <div class="sc-lbl">Visitors Today</div>
+      <div class="sc-sub" id="stat-vis-sub">Click to manage →</div>
+      <span class="sc-hint">Visitor Passes</span>
+    </div>
+    <div class="stat-card c-orange" onclick="sln_hk_showTab('gates',document.getElementById('nav-gates'))" title="View Gate Log">
+      <div class="sc-icon" style="background:var(--orange-g)"><i data-lucide="door-open" style="color:var(--orange)"></i></div>
+      <div class="sc-val" id="stat-gate-total">0</div>
+      <div class="sc-lbl">Gate Entries Today</div>
+      <div class="sc-sub" id="stat-gate-sub">Click to view →</div>
+      <span class="sc-hint">Gate Monitor</span>
+    </div>
+  </div>
+
+  <!-- ████ DASHBOARD ████ -->
+  <div class="tab-pane active" id="tab-dashboard">
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-hdr">
+          <div class="panel-title"><i data-lucide="alert-circle"></i>Recent Incidents</div>
+          <button class="btn btn-outline btn-sm" onclick="sln_hk_showTab('incidents',document.getElementById('nav-incidents'))">View All</button>
+        </div>
+        <div class="panel-body" id="dash-incidents"><div class="empty-state"><i data-lucide="check-circle"></i><p>No open incidents</p></div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-hdr">
+          <div class="panel-title"><i data-lucide="door-open"></i>Gate Summary — Today</div>
+          <button class="btn btn-outline btn-sm" onclick="sln_hk_showTab('gates',document.getElementById('nav-gates'))">Full Monitor</button>
+        </div>
+        <div class="panel-body">
+          <div class="grid-2" style="gap:10px;">
+            <div style="background:var(--surf2);border:1px solid var(--bdr);border-radius:9px;padding:14px;text-align:center;">
+              <div style="font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;">Main Gate</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--emerald)" id="dash-mg-in">0</div>
+              <div style="font-size:10px;color:var(--tx3);">IN &nbsp;|&nbsp; <span id="dash-mg-out" style="color:var(--amber)">0</span> OUT</div>
+            </div>
+            <div style="background:var(--surf2);border:1px solid var(--bdr);border-radius:9px;padding:14px;text-align:center;">
+              <div style="font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;">Mall Entrance</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--cyan)" id="dash-me-in">0</div>
+              <div style="font-size:10px;color:var(--tx3);">IN &nbsp;|&nbsp; <span id="dash-me-out" style="color:var(--amber)">0</span> OUT</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-hdr">
+          <div class="panel-title"><i data-lucide="user-check"></i>Guard Status</div>
+          <span class="badge badge-green" id="dash-guard-badge">0 On Duty</span>
+        </div>
+        <div class="panel-body" id="dash-guards"><div class="empty-state"><i data-lucide="users"></i><p>No guard data</p></div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-hdr">
+          <div class="panel-title"><i data-lucide="navigation"></i>Patrol Progress</div>
+          <span class="badge badge-cyan" id="dash-patrol-badge">0/0 Done</span>
+        </div>
+        <div class="panel-body">
+          <div class="timeline" id="dash-patrol"><div class="empty-state"><i data-lucide="navigation"></i><p>No patrol data</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ████ INCIDENTS ████ -->
+  <div class="tab-pane" id="tab-incidents">
+    <div class="panel">
+      <div class="panel-hdr">
+        <div class="panel-title"><i data-lucide="alert-triangle"></i>Incident Log</div>
+        <div class="panel-actions">
+          <div class="search-bar" style="min-width:180px;flex:unset;"><i data-lucide="search"></i><input type="text" id="inc-search" placeholder="Search…" oninput="sln_hk_filterIncidents()"/></div>
+          <select id="inc-filter-status" onchange="sln_hk_filterIncidents()" style="width:auto;padding:7px 10px;font-size:12px;"><option value="">All Status</option><option>Open</option><option>In Progress</option><option>Resolved</option></select>
+          <button class="btn btn-primary btn-sm" onclick="sln_hk_openModal('incModal')"><i data-lucide="plus"></i>New</button>
+        </div>
+      </div>
+      <div class="panel-body" id="incidents-list"><div class="empty-state"><i data-lucide="shield-check"></i><p>No incidents recorded</p></div></div>
+    </div>
+  </div>
+
+  <!-- ████ GATE MONITOR ████ -->
+  <div class="tab-pane" id="tab-gates">
+    <div class="gate-grid">
+
+      <!-- MAIN GATE -->
+      <div class="gate-card">
+        <div class="gate-header">
+          <div class="gate-title" style="color:var(--emerald)"><i data-lucide="shield" style="color:var(--emerald)"></i>Main Gate <span style="font-size:11px;color:var(--tx3);font-weight:400;">(Podium / Office Entry)</span></div>
+          <span class="badge badge-green"><span style="width:5px;height:5px;border-radius:50%;background:var(--emerald);display:inline-block;animation:pdot 2s ease-in-out infinite;margin-right:3px;"></span>Live</span>
+        </div>
+        <div class="gate-counts">
+          <div class="gate-count">
+            <div class="gate-count-val" id="mg-total" style="color:var(--cyan)">0</div>
+            <div class="gate-count-lbl">Total</div>
+          </div>
+          <div class="gate-count">
+            <div class="gate-count-val" id="mg-in" style="color:var(--emerald)">0</div>
+            <div class="gate-count-lbl">Inward ↓</div>
+          </div>
+          <div class="gate-count">
+            <div class="gate-count-val" id="mg-out" style="color:var(--amber)">0</div>
+            <div class="gate-count-lbl">Outward ↑</div>
+          </div>
+        </div>
+        <div class="gate-log-wrap" id="mg-log"><div class="gate-empty">No entries today</div></div>
+        <button class="gate-add" onclick="sln_hk_openGateModal('MG')"><i data-lucide="plus-circle"></i>Log Inward / Outward Entry</button>
+      </div>
+
+      <!-- MALL ENTRANCE -->
+      <div class="gate-card">
+        <div class="gate-header">
+          <div class="gate-title" style="color:var(--cyan)"><i data-lucide="shopping-bag" style="color:var(--cyan)"></i>Mall Entrance <span style="font-size:11px;color:var(--tx3);font-weight:400;">(LG Public Entry)</span></div>
+          <span class="badge badge-cyan"><span style="width:5px;height:5px;border-radius:50%;background:var(--cyan);display:inline-block;animation:pdot 2s ease-in-out infinite;margin-right:3px;"></span>Live</span>
+        </div>
+        <div class="gate-counts">
+          <div class="gate-count">
+            <div class="gate-count-val" id="me-total" style="color:var(--cyan)">0</div>
+            <div class="gate-count-lbl">Total</div>
+          </div>
+          <div class="gate-count">
+            <div class="gate-count-val" id="me-in" style="color:var(--emerald)">0</div>
+            <div class="gate-count-lbl">Inward ↓</div>
+          </div>
+          <div class="gate-count">
+            <div class="gate-count-val" id="me-out" style="color:var(--amber)">0</div>
+            <div class="gate-count-lbl">Outward ↑</div>
+          </div>
+        </div>
+        <div class="gate-log-wrap" id="me-log"><div class="gate-empty">No entries today</div></div>
+        <button class="gate-add" onclick="sln_hk_openGateModal('ME')"><i data-lucide="plus-circle"></i>Log Inward / Outward Entry</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ████ CCTV COUNT ████ -->
+  <div class="tab-pane" id="tab-cctv">
+    <div class="panel">
+      <div class="panel-hdr">
+        <div class="panel-title"><i data-lucide="camera"></i>CCTV Camera Inventory</div>
+        <div class="panel-actions">
+          <span class="badge badge-green"><span class="pdot" style="width:5px;height:5px;margin-right:4px;"></span>All Online</span>
+          <button class="btn btn-outline btn-sm" onclick="sln_hk_exportExcel()"><i data-lucide="download"></i>Export</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="cctv-total-bar">
+          <div class="cctv-total-num">235</div>
+          <div class="cctv-total-info">
+            <div class="cctv-total-lbl">Total CCTV Cameras — SLN Terminus</div>
+            <div class="cctv-total-sub">Across all zones · B4 to Terrace · 18 locations</div>
+          </div>
+          <span class="badge badge-green" style="font-size:13px;padding:6px 14px;">● All Online</span>
+        </div>
+        <div class="cctv-count-grid" id="cctv-count-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ████ FLOOR MAP ████ -->
+  <div class="tab-pane" id="tab-floormap">
+    <div class="panel">
+      <div class="panel-hdr">
+        <div class="panel-title"><i data-lucide="map"></i>SLN Terminus — Security Floor Map</div>
+        <div class="panel-actions">
+          <span class="badge badge-green">● Secure</span>
+          <span class="badge badge-red">● Alert</span>
+          <span class="badge badge-amber">● Warning</span>
+          <span class="badge badge-gray">● Offline</span>
+        </div>
+      </div>
+      <div class="panel-body"><div class="floor-map" id="floor-map"></div></div>
+    </div>
+  </div>
+
+  <!-- ████ GUARDS ████ -->
+  <div class="tab-pane" id="tab-guards">
+    <div class="panel">
+      <div class="panel-hdr">
+        <div class="panel-title"><i data-lucide="user-check"></i>Guard Management</div>
+        <div class="panel-actions">
+          <button class="btn btn-primary btn-sm" onclick="sln_hk_openModal('guardModal')"><i data-lucide="plus"></i>Add Guard</button>
+          <button class="btn btn-outline btn-sm" onclick="sln_hk_exportExcel()"><i data-lucide="download"></i>Export</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="tbl-wrap">
+          <table><thead><tr><th>Name</th><th>Badge</th><th>Shift</th><th>Post</th><th>Status</th><th>Contact</th><th>Actions</th></tr></thead>
+          <tbody id="guards-tbody"></tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ████ PATROL & CHECKLIST ████ -->
+  <div class="tab-pane" id="tab-patrol">
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-hdr">
+          <div class="panel-title"><i data-lucide="navigation"></i>Patrol Schedule</div>
+          <button class="btn btn-primary btn-sm" onclick="sln_hk_openModal('patrolModal')"><i data-lucide="plus"></i>Add Route</button>
+        </div>
+        <div class="panel-body" id="patrol-list"><div class="empty-state"><i data-lucide="navigation"></i><p>No patrol routes</p></div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-hdr">
+          <div class="panel-title"><i data-lucide="clock"></i>Today's Timeline</div>
+          <span class="badge badge-cyan" id="patrol-badge">—</span>
+        </div>
+        <div class="panel-body">
+          <div class="timeline" id="patrol-timeline"><div class="empty-state"><i data-lucide="clock"></i><p>No data</p></div></div>
+        </div>
+      </div>
+    </div>
+    <!-- CHECKLIST PANEL -->
+    <div class="panel">
+      <div class="panel-hdr">
+        <div class="panel-title"><i data-lucide="clipboard-check"></i>Patrol Checklist — Current Round</div>
+        <div class="panel-actions">
+          <div class="progress-row" style="margin:0;flex:1;min-width:160px;max-width:300px;">
+            <div class="progress-bar"><div class="progress-fill" id="chk-bar" style="width:0%"></div></div>
+            <span class="progress-txt" id="chk-pct">0%</span>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="sln_hk_resetChecklist()"><i data-lucide="refresh-cw"></i>New Round</button>
+          <button class="btn btn-cyan btn-sm" onclick="sln_hk_saveChecklistExcel()"><i data-lucide="download"></i>Save Round</button>
+        </div>
+      </div>
+      <div class="panel-body" id="checklist-body"></div>
+    </div>
+
+    <!-- LATE NIGHT VEHICLES PANEL -->
+    <div class="panel">
+      <div class="panel-hdr">
+        <div class="panel-title"><i data-lucide="truck"></i>Late Night Vehicles Log</div>
+        <div class="panel-actions">
+          <span class="badge badge-amber" id="lnv-count-badge">0 tonight</span>
+          <button class="btn btn-primary btn-sm" onclick="sln_hk_openModal('lnvModal')"><i data-lucide="plus"></i>Log Vehicle</button>
+          <button class="btn btn-outline btn-sm" onclick="sln_hk_exportLNV()"><i data-lucide="download"></i>Export</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Time In</th><th>Vehicle No.</th><th>Type</th><th>Driver</th><th>Purpose</th><th>Gate</th><th>Host / Contact</th><th>Time Out</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="lnv-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ████ VISITORS ████ -->
+  <div class="tab-pane" id="tab-visitors">
+    <div class="panel">
+      <div class="panel-hdr">
+        <div class="panel-title"><i data-lucide="users"></i>Visitor Pass Management</div>
+        <div class="panel-actions">
+          <div class="search-bar" style="min-width:160px;flex:unset;"><i data-lucide="search"></i><input type="text" id="vis-search" placeholder="Search…" oninput="sln_hk_filterVisitors()"/></div>
+          <button class="btn btn-primary btn-sm" onclick="sln_hk_openModal('visitorModal')"><i data-lucide="plus"></i>Issue Pass</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="tbl-wrap">
+          <table><thead><tr><th>Visitor</th><th>Company / Purpose</th><th>Host</th><th>Floor</th><th>Pass No.</th><th>In</th><th>Out</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="visitors-tbody"></tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ████ REPORTS ████ -->
+  <div class="tab-pane" id="tab-reports">
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-hdr"><div class="panel-title"><i data-lucide="file-text"></i>Generate Report</div></div>
+        <div class="panel-body">
+          <div class="form-group"><label>Report Type</label>
+            <select id="rpt-type"><option>Daily Security Report</option><option>Incident Summary</option><option>Visitor Log</option><option>Patrol Compliance</option><option>Guard Attendance</option><option>Gate Inward / Outward Log</option></select>
+          </div>
+          <div class="grid-2">
+            <div class="form-group"><label>From</label><input type="date" id="rpt-from"/></div>
+            <div class="form-group"><label>To</label><input type="date" id="rpt-to"/></div>
+          </div>
+          <div class="form-group"><label>Sections to Include</label>
+            <div style="display:flex;flex-direction:column;gap:7px;margin-top:4px;">
+              <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" id="rpt-chk-incidents" checked style="width:auto"> Incidents</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" id="rpt-chk-gates" checked style="width:auto"> Gate Inward / Outward Log</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" id="rpt-chk-visitors" checked style="width:auto"> Visitor Log</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" id="rpt-chk-guards" checked style="width:auto"> Guard Roster</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" id="rpt-chk-patrol" checked style="width:auto"> Patrol Summary</label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0;cursor:pointer;"><input type="checkbox" id="rpt-chk-lnv" checked style="width:auto"> Late Night Vehicles Log</label>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="sln_hk_generateReport()" style="width:100%;justify-content:center;margin-top:8px;"><i data-lucide="download"></i>Generate &amp; Download Excel</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-hdr"><div class="panel-title"><i data-lucide="bar-chart-2"></i>Quick Stats</div></div>
+        <div class="panel-body" id="rpt-stats"></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ══════════════ MODALS ══════════════ -->
+
+<!-- INCIDENT -->
+<div class="modal" id="incModal">
+  <div class="modal-box">
+    <div class="modal-hdr"><h3><i data-lucide="alert-triangle"></i>Log Security Incident</h3><button class="modal-close" onclick="sln_hk_closeModal('incModal')"><i data-lucide="x"></i></button></div>
+    <input type="hidden" id="inc-id"/>
+    <div class="grid-2">
+      <div class="form-group"><label>Incident Type</label>
+        <select id="inc-type"><option>Unauthorized Access</option><option>Theft / Suspected Theft</option><option>Vandalism</option><option>Fire Alarm</option><option>Medical Emergency</option><option>Suspicious Person</option><option>Visitor Violation</option><option>Vehicle Incident</option><option>Trespassing</option><option>Other</option></select>
+      </div>
+      <div class="form-group"><label>Severity</label>
+        <select id="inc-severity"><option>Critical</option><option selected>Moderate</option><option>Low</option></select>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="form-group"><label>Location</label>
+        <select id="inc-location">
+          <optgroup label="Basement 1"><option>B1 — Gas Bank</option><option>B1 — HT Room</option><option>B1 — Transformer Room</option><option>B1 — DG Room</option><option>B1 — LT Room</option><option>B1 — UPS Room</option><option>B1 — Server Room</option><option>B1 — CCTV Room</option><option>B1 — Plant Room</option><option>B1 — Fire Fighting Room</option><option>B1 — Parking</option></optgroup>
+          <optgroup label="Basement 2–4"><option>B2 — Parking</option><option>B3 — Stack Parking</option><option>B4 — STP</option><option>B4 — Sump 1</option><option>B4 — Sump 2</option><option>B4 — Sump 3</option><option>B4 — Sump 4</option><option>B4 — Sump 5</option><option>B4 — Sump 6</option></optgroup>
+          <optgroup label="LG"><option>LG — Mall Entrance</option><option>LG — Podium Office Entry</option><option>LG — Lobby</option></optgroup>
+          <optgroup label="Mall Floors"><option>L1 — Mall</option><option>L2 — Mall</option><option>L3 — Mall</option></optgroup>
+          <optgroup label="Office Floors"><option>Floor 4</option><option>Floor 5</option><option>Floor 6</option><option>Floor 7</option><option>Floor 8</option></optgroup>
+          <optgroup label="Vertical Transport"><option>OE1 — Office Elevator</option><option>OE2 — Office Elevator</option><option>OE3 — Office Elevator</option><option>OS — Office Service Lift</option><option>MG1 — Mall Guest Lift</option><option>MG2 — Mall Guest Lift</option><option>MS1 — Mall Service Lift</option><option>MS2 — Mall Service Lift</option><option>Escalator L3–L2</option><option>Escalator L2–L1</option><option>Escalator L1–LG</option><option>Travelator LG–B1</option><option>Travelator B1–B2</option></optgroup>
+          <optgroup label="Other"><option>Staircase 1</option><option>Staircase 3</option><option>Staircase 4</option><option>Staircase 5</option><option>Staircase 6</option><option>Office Lift Lobby</option><option>Mall Lift Lobby</option><option>Terrace</option></optgroup>
+        </select>
+      </div>
+      <div class="form-group"><label>Date &amp; Time</label><input type="datetime-local" id="inc-datetime"/></div>
+    </div>
+    <div class="form-group"><label>Description</label><textarea id="inc-desc" placeholder="Describe the incident…"></textarea></div>
+    <div class="grid-2">
+      <div class="form-group"><label>Reported By</label><input type="text" id="inc-reported" placeholder="Guard / Staff name"/></div>
+      <div class="form-group"><label>Assigned Guard</label><input type="text" id="inc-assigned" placeholder="Responding officer"/></div>
+    </div>
+    <div class="form-group"><label>Action Taken</label><textarea id="inc-action" placeholder="Initial action…" style="min-height:55px;"></textarea></div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="sln_hk_closeModal('incModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="sln_hk_saveIncident()"><i data-lucide="save"></i>Save Incident</button>
+    </div>
+  </div>
+</div>
+
+<!-- GATE ENTRY -->
+<div class="modal" id="gateModal">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <h3><i data-lucide="door-open"></i>Log Entry / Exit — <span id="gate-modal-title">Main Gate</span></h3>
+      <button class="modal-close" onclick="sln_hk_closeModal('gateModal')"><i data-lucide="x"></i></button>
+    </div>
+    <input type="hidden" id="gate-modal-code"/>
+    <div class="grid-2">
+      <div class="form-group"><label>Person / Vehicle</label><input type="text" id="gate-name" placeholder="Full name or Vehicle No."/></div>
+      <div class="form-group"><label>Visitor Type</label>
+        <select id="gate-type"><option>Visitor</option><option>Staff</option><option>Vendor</option><option>Delivery</option><option>Vehicle</option><option>Contractor</option><option>Courier</option></select>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="form-group"><label>Direction</label>
+        <select id="gate-dir"><option value="IN">IN — Inward Entry</option><option value="OUT">OUT — Outward Exit</option></select>
+      </div>
+      <div class="form-group"><label>Time</label><input type="datetime-local" id="gate-time"/></div>
+    </div>
+    <div class="form-group"><label>Purpose / Destination</label><input type="text" id="gate-purpose" placeholder="Office / Shop / Floor / Department…"/></div>
+    <div class="grid-2">
+      <div class="form-group"><label>ID / Vehicle No.</label><input type="text" id="gate-id-no" placeholder="Aadhaar / Licence / Vehicle No."/></div>
+      <div class="form-group"><label>Guard on Duty</label><input type="text" id="gate-guard" placeholder="Guard name"/></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="sln_hk_closeModal('gateModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="sln_hk_saveGateEntry()"><i data-lucide="save"></i>Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<!-- GUARD -->
+<div class="modal" id="guardModal">
+  <div class="modal-box">
+    <div class="modal-hdr"><h3><i data-lucide="user-plus"></i>Add / Edit Guard</h3><button class="modal-close" onclick="sln_hk_closeModal('guardModal')"><i data-lucide="x"></i></button></div>
+    <input type="hidden" id="guard-id"/>
+    <div class="grid-2">
+      <div class="form-group"><label>Full Name</label><input type="text" id="guard-name" placeholder="Guard's full name"/></div>
+      <div class="form-group"><label>Badge No.</label><input type="text" id="guard-badge" placeholder="SLN-G-001"/></div>
+    </div>
+    <div class="grid-2">
+      <div class="form-group"><label>Shift</label>
+        <select id="guard-shift"><option>Morning (06:00–14:00)</option><option>Afternoon (14:00–22:00)</option><option>Night (22:00–06:00)</option></select>
+      </div>
+      <div class="form-group"><label>Status</label>
+        <select id="guard-status"><option>On Duty</option><option>Off Duty</option><option>Leave</option></select>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="form-group"><label>Post</label>
+        <select id="guard-post"><option>Main Gate</option><option>LG Mall Entrance</option><option>B1 Parking</option><option>B2 Parking</option><option>B3 Stack Parking</option><option>B4 Basement</option><option>L1 Floor</option><option>L2 Floor</option><option>L3 Floor</option><option>Office Floors 4–8 (Roving)</option><option>CCTV Control Room</option><option>Terrace</option></select>
+      </div>
+      <div class="form-group"><label>Contact</label><input type="tel" id="guard-contact" placeholder="+91 XXXXXXXXXX"/></div>
+    </div>
+    <div class="form-group"><label>Agency</label><input type="text" id="guard-agency" placeholder="Security agency name"/></div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="sln_hk_closeModal('guardModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="sln_hk_saveGuard()"><i data-lucide="save"></i>Save Guard</button>
+    </div>
+  </div>
+</div>
+
+<!-- VISITOR -->
+<div class="modal" id="visitorModal">
+  <div class="modal-box">
+    <div class="modal-hdr"><h3><i data-lucide="badge"></i>Issue Visitor Pass</h3><button class="modal-close" onclick="sln_hk_closeModal('visitorModal')"><i data-lucide="x"></i></button></div>
+    <input type="hidden" id="vis-id"/>
+    <div class="grid-2">
+      <div class="form-group"><label>Visitor Name</label><input type="text" id="vis-name" placeholder="Full name"/></div>
+      <div class="form-group"><label>Company / Purpose</label><input type="text" id="vis-company" placeholder="Company or purpose"/></div>
+    </div>
+    <div class="grid-2">
+      <div class="form-group"><label>Host / Meeting</label><input type="text" id="vis-host" placeholder="Tenant / staff name"/></div>
+      <div class="form-group"><label>Floor / Area</label>
+        <select id="vis-floor"><option>LG — Mall</option><option>LG — Office Podium</option><option>L1</option><option>L2</option><option>L3</option><option>Floor 4</option><option>Floor 5</option><option>Floor 6</option><option>Floor 7</option><option>Floor 8</option></select>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="form-group"><label>ID Type</label>
+        <select id="vis-id-type"><option>Aadhaar</option><option>Passport</option><option>Driving Licence</option><option>Voter ID</option><option>Other</option></select>
+      </div>
+      <div class="form-group"><label>ID Number</label><input type="text" id="vis-id-num" placeholder="ID number"/></div>
+    </div>
+    <div class="grid-2">
+      <div class="form-group"><label>Vehicle No.</label><input type="text" id="vis-vehicle" placeholder="Optional"/></div>
+      <div class="form-group"><label>In Time</label><input type="datetime-local" id="vis-in-time"/></div>
+    </div>
+    <div class="form-group"><label>Remarks</label><input type="text" id="vis-remarks" placeholder="Any remarks…"/></div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="sln_hk_closeModal('visitorModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="sln_hk_saveVisitor()"><i data-lucide="badge"></i>Issue Pass</button>
+    </div>
+  </div>
+</div>
+
+<!-- PATROL ROUTE -->
+<div class="modal" id="patrolModal">
+  <div class="modal-box">
+    <div class="modal-hdr"><h3><i data-lucide="navigation"></i>Add Patrol Route</h3><button class="modal-close" onclick="sln_hk_closeModal('patrolModal')"><i data-lucide="x"></i></button></div>
+    <input type="hidden" id="pat-id"/>
+    <div class="grid-2">
+      <div class="form-group"><label>Guard Name</label><input type="text" id="pat-guard" placeholder="Guard assigned"/></div>
+      <div class="form-group"><label>Shift</label><select id="pat-shift"><option>Morning</option><option>Afternoon</option><option>Night</option></select></div>
+    </div>
+    <div class="grid-2">
+      <div class="form-group"><label>Start Time</label><input type="time" id="pat-start"/></div>
+      <div class="form-group"><label>Frequency (mins)</label><input type="number" id="pat-freq" placeholder="e.g. 120" min="30"/></div>
+    </div>
+    <div class="form-group"><label>Route Checkpoints (comma separated)</label>
+      <textarea id="pat-route" placeholder="B1 Parking, LG Entrance, L1 Atrium, Staircase 1, Terrace…"></textarea>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="sln_hk_closeModal('patrolModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="sln_hk_savePatrol()"><i data-lucide="save"></i>Save Route</button>
+    </div>
+  </div>
+</div>
+
+<!-- LATE NIGHT VEHICLE -->
+<div class="modal" id="lnvModal">
+  <div class="modal-box wide">
+    <div class="modal-hdr">
+      <h3><i data-lucide="truck"></i>Log Late Night Vehicle</h3>
+      <button class="modal-close" onclick="sln_hk_closeModal('lnvModal')"><i data-lucide="x"></i></button>
+    </div>
+    <input type="hidden" id="lnv-id"/>
+    <div class="grid-2">
+      <div class="form-group"><label>Vehicle Number</label><input type="text" id="lnv-vehicle" placeholder="e.g. TS09AB1234"/></div>
+      <div class="form-group"><label>Vehicle Type</label>
+        <select id="lnv-type">
+          <option>Delivery Truck</option><option>Goods Vehicle</option><option>Tanker</option>
+          <option>Van / Tempo</option><option>Car / SUV</option><option>Two Wheeler</option>
+          <option>Towing Vehicle</option><option>Fuel / Chemical Tanker</option>
+          <option>Ambulance</option><option>Contractor Vehicle</option><option>Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="form-group"><label>Driver Name</label><input type="text" id="lnv-driver" placeholder="Driver's full name"/></div>
+      <div class="form-group"><label>Driver ID / Licence</label><input type="text" id="lnv-driver-id" placeholder="Licence / Aadhaar No."/></div>
+    </div>
+    <div class="grid-2">
+      <div class="form-group"><label>Entry Gate</label>
+        <select id="lnv-gate"><option value="MG">Main Gate (Podium / Office Entry)</option><option value="ME">Mall Entrance (LG)</option></select>
+      </div>
+      <div class="form-group"><label>Time In</label><input type="datetime-local" id="lnv-time-in"/></div>
+    </div>
+    <div class="grid-2">
+      <div class="form-group"><label>Purpose / Goods Description</label><input type="text" id="lnv-purpose" placeholder="Delivery to / Loading / Unloading…"/></div>
+      <div class="form-group"><label>Destination / Area</label>
+        <select id="lnv-dest">
+          <option>B1 — Loading Bay</option><option>B1 — Utility Area</option>
+          <option>B2 — Parking</option><option>B3 — Stack Parking</option><option>B4 — STP / Sump</option>
+          <option>LG — Mall Service Entry</option><option>LG — Office Podium</option>
+          <option>L1 — Mall</option><option>L2 — Mall</option><option>L3 — Mall</option>
+          <option>Office Floor (4–8)</option><option>Terrace / Rooftop</option><option>Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="form-group"><label>Host / Contact Person</label><input type="text" id="lnv-host" placeholder="Name of authorising person"/></div>
+      <div class="form-group"><label>Host Contact No.</label><input type="text" id="lnv-host-contact" placeholder="+91 XXXXXXXXXX"/></div>
+    </div>
+    <div class="grid-2">
+      <div class="form-group"><label>Guard on Duty</label><input type="text" id="lnv-guard" placeholder="Guard name"/></div>
+      <div class="form-group"><label>Entry Pass No.</label><input type="text" id="lnv-pass" placeholder="Auto-generated if blank"/></div>
+    </div>
+    <div class="form-group"><label>Remarks / Observations</label><input type="text" id="lnv-remarks" placeholder="Any notes, cargo condition, security observations…"/></div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="sln_hk_closeModal('lnvModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="sln_hk_saveLNV()"><i data-lucide="save"></i>Save Vehicle Log</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   SLN SECURITY MODULE v2 — prefix: sln_hk_
+═══════════════════════════════════════════════ */
+
+const S = {
+  incidents:[],guards:[],visitors:[],patrols:[],
+  gateLog:{MG:[],ME:[]},
+  checklist:{},
+  lnvLog:[]
+};
+const $ = id => document.getElementById(id);
+
+/* ── Clock ── */
+function sln_hk_clock(){
+  const n=new Date();
+  $('currentTime').textContent=[n.getHours(),n.getMinutes(),n.getSeconds()].map(v=>String(v).padStart(2,'0')).join(':');
+}
+setInterval(sln_hk_clock,1000); sln_hk_clock();
+
+/* ── Theme ── */
+function sln_hk_toggleTheme(){
+  const d=document.documentElement,cur=d.getAttribute('data-theme'),next=cur==='dark'?'light':'dark';
+  d.setAttribute('data-theme',next);localStorage.setItem('sln_sec_theme',next);
+}
+(()=>{document.documentElement.setAttribute('data-theme',localStorage.getItem('sln_sec_theme')||'dark');})();
+
+/* ── Sidebar ── */
+function sln_hk_openSidebar(){$('sidebar').classList.add('open');$('sbOverlay').classList.add('show');}
+function sln_hk_closeSidebar(){$('sidebar').classList.remove('open');$('sbOverlay').classList.remove('show');}
+$('burgerBtn').onclick=sln_hk_openSidebar;
+
+/* ── Tabs ── */
+function sln_hk_showTab(name,btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  $('tab-'+name).classList.add('active');
+  if(btn) btn.classList.add('active');
+  sln_hk_closeSidebar();
+  ({floormap:sln_hk_renderFloorMap,cctv:sln_hk_renderCCTV,guards:sln_hk_renderGuards,
+    visitors:sln_hk_renderVisitors,patrol:()=>{sln_hk_renderPatrol();sln_hk_renderChecklist();},
+    reports:sln_hk_renderReportStats,gates:sln_hk_renderGateLogs})[name]?.();
+}
+
+/* ── Modal ── */
+function sln_hk_closeModal(id){$(id).classList.remove('open');}
+document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+
+/* ── Toast ── */
+function sln_hk_toast(msg,type='success'){
+  const t=$('toast'); $('toastMsg').textContent=msg;
+  t.className='show '+(type==='error'?'error':'success');
+  const ic=t.querySelector('i'); if(ic) ic.setAttribute('data-lucide',type==='error'?'x-circle':'check-circle');
+  try{lucide.createIcons();}catch(e){}
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+/* ══════════════════════
+   CCTV — count only
+══════════════════════ */
+const CCTV_ZONES=[
+  {name:'Basement 1',sub:'Utilities & Parking',count:18,col:'var(--violet)',icon:'layers'},
+  {name:'Basement 2',sub:'Parking',count:12,col:'var(--cyan)',icon:'layers'},
+  {name:'Basement 3',sub:'Stack Parking',count:10,col:'var(--cyan)',icon:'layers'},
+  {name:'Basement 4',sub:'STP & Sumps',count:8,col:'var(--teal3)',icon:'layers'},
+  {name:'LG Mall Entrance',sub:'Entrance & Lobby',count:22,col:'var(--orange)',icon:'store'},
+  {name:'LG Podium Office Entry',sub:'Office Entry & Lobby',count:10,col:'var(--amber)',icon:'building'},
+  {name:'L1 Mall',sub:'Ground Mall Level',count:18,col:'var(--emerald)',icon:'shopping-bag'},
+  {name:'L2 Mall',sub:'Mall Level 2',count:18,col:'var(--emerald)',icon:'shopping-bag'},
+  {name:'L3 Mall',sub:'Mall Level 3',count:18,col:'var(--emerald)',icon:'shopping-bag'},
+  {name:'Floor 4 — Office',sub:'Office Common Area',count:10,col:'var(--sky)',icon:'briefcase'},
+  {name:'Floor 5 — Office',sub:'Office Common Area',count:10,col:'var(--sky)',icon:'briefcase'},
+  {name:'Floor 6 — Office',sub:'Office Common Area',count:10,col:'var(--sky)',icon:'briefcase'},
+  {name:'Floor 7 — Office',sub:'Office Common Area',count:10,col:'var(--sky)',icon:'briefcase'},
+  {name:'Floor 8 — Office',sub:'Office Common Area',count:10,col:'var(--sky)',icon:'briefcase'},
+  {name:'Staircases 1,3,4,5,6',sub:'All Stairwells',count:10,col:'var(--amber)',icon:'trending-up'},
+  {name:'Lifts & Lobbies',sub:'Office & Mall Lifts',count:16,col:'var(--pink)',icon:'arrow-up'},
+  {name:'Escalators & Travelators',sub:'Moving Walkways',count:8,col:'var(--teal)',icon:'git-branch'},
+  {name:'Terrace',sub:'Rooftop',count:7,col:'var(--lime)',icon:'sun'},
+];
+
+function sln_hk_renderCCTV(){
+  const grid=$('cctv-count-grid'); if(!grid) return;
+  grid.innerHTML=CCTV_ZONES.map(z=>`
+    <div class="cctv-zone-card">
+      <div class="cctv-zone-icon" style="background:${z.col}22"><i data-lucide="${z.icon}" style="color:${z.col}"></i></div>
+      <div style="flex:1;min-width:0">
+        <div class="cctv-zone-name">${z.name}</div>
+        <div class="cctv-zone-sub">${z.sub}</div>
+      </div>
+      <div class="cctv-zone-count" style="color:${z.col}">${z.count}</div>
+    </div>
+  `).join('');
+  try{lucide.createIcons();}catch(e){}
+}
+
+/* ══════════════════════
+   FLOOR MAP
+══════════════════════ */
+const FLOORS=[
+  {id:'terrace',lbl:'Terrace',zones:['Terrace North','Terrace South','Water Tanks','Cooling Towers','Solar Zone','Terrace Access']},
+  {id:'f8',lbl:'Floor 8',zones:['Common Area 8A','Common Area 8B','Lift Lobby F8','Service Core F8']},
+  {id:'f7',lbl:'Floor 7',zones:['Common Area 7A','Common Area 7B','Lift Lobby F7','Service Core F7']},
+  {id:'f6',lbl:'Floor 6',zones:['Common Area 6A','Common Area 6B','Lift Lobby F6','Service Core F6']},
+  {id:'f5',lbl:'Floor 5',zones:['Common Area 5A','Common Area 5B','Lift Lobby F5','Service Core F5']},
+  {id:'f4',lbl:'Floor 4',zones:['Common Area 4A','Common Area 4B','Lift Lobby F4','Service Core F4']},
+  {id:'stairs',lbl:'Staircases',zones:['Staircase 1','Staircase 3','Staircase 4','Staircase 5','Staircase 6']},
+  {id:'l3',lbl:'L3 Mall',zones:['L3 North Wing','L3 South Wing','L3 Atrium','Escalator L3↑↓L2']},
+  {id:'l2',lbl:'L2 Mall',zones:['L2 North Wing','L2 South Wing','L2 Atrium','Escalator L2↑↓L1']},
+  {id:'l1',lbl:'L1 Mall',zones:['L1 North Wing','L1 South Wing','L1 Atrium','Escalator L1↑↓LG']},
+  {id:'lg',lbl:'LG',zones:['Mall Entrance','Podium Office Entry','LG Lobby','Security Cabin','Food Court','Travelator LG→B1']},
+  {id:'b1',lbl:'B1',zones:['Gas Bank','HT Room','Transformer Room','DG Room','LT Room','UPS Room','Server Room','CCTV Room','Plant Room','Fire Fighting Room','B1 Parking','Travelator B1→B2']},
+  {id:'b2',lbl:'B2',zones:['B2 Parking A','B2 Parking B','B2 Ramps','B2 Lifts']},
+  {id:'b3',lbl:'B3',zones:['Stack Parking North','Stack Parking South','Stack Parking East','Stack Parking West']},
+  {id:'b4',lbl:'B4',zones:['STP','Sump 1','Sump 2','Sump 3','Sump 4','Sump 5','Sump 6','B4 Parking']},
+];
+const ZONE_STATUS={};
+function rndZone(){return ['secure','secure','secure','warning','offline'][Math.floor(Math.random()*5)];}
+
+function sln_hk_renderFloorMap(){
+  const fm=$('floor-map'); if(!fm) return;
+  fm.innerHTML='';
+  FLOORS.forEach(f=>{
+    const row=document.createElement('div'); row.className='floor-row';
+    const lbl=document.createElement('div'); lbl.className='floor-lbl'; lbl.textContent=f.lbl;
+    const zones=document.createElement('div'); zones.className='floor-zones';
+    f.zones.forEach(z=>{
+      if(!ZONE_STATUS[z]) ZONE_STATUS[z]=rndZone();
+      const hasAlert=S.incidents.some(i=>i.status!=='Resolved'&&i.location&&i.location.toLowerCase().includes(z.toLowerCase().split(' ')[0]));
+      const st=hasAlert?'alert':ZONE_STATUS[z];
+      const p=document.createElement('div'); p.className='zone-pill '+st;
+      p.innerHTML=`<span class="zdot"></span>${z}`;
+      p.title='Click to cycle status';
+      p.onclick=()=>sln_hk_cycleZone(z,p);
+      zones.appendChild(p);
+    });
+    row.appendChild(lbl); row.appendChild(zones); fm.appendChild(row);
+  });
+}
+
+function sln_hk_cycleZone(z,el){
+  if(ZONE_STATUS[z]==='alert') return sln_hk_toast('Zone has active alert — resolve incident first','error');
+  const cyc=['secure','warning','offline'];
+  ZONE_STATUS[z]=cyc[(cyc.indexOf(ZONE_STATUS[z])+1)%cyc.length];
+  el.className='zone-pill '+ZONE_STATUS[z];
+  sln_hk_toast(`${z} → ${ZONE_STATUS[z]}`);
+}
+
+/* ══════════════════════
+   GATE MONITOR
+══════════════════════ */
+function sln_hk_openGateModal(code){
+  $('gate-modal-code').value=code;
+  $('gate-modal-title').textContent=code==='MG'?'Main Gate':'Mall Entrance';
+  $('gate-time').value=new Date().toISOString().slice(0,16);
+  ['gate-name','gate-purpose','gate-id-no','gate-guard'].forEach(f=>$(f).value='');
+  $('gateModal').classList.add('open');
+}
+
+function sln_hk_saveGateEntry(){
+  const code=$('gate-modal-code').value;
+  const name=$('gate-name').value.trim(); if(!name){sln_hk_toast('Enter name or vehicle','error');return;}
+  const e={id:'GE'+Date.now(),gate:code,name,type:$('gate-type').value,dir:$('gate-dir').value,
+    time:$('gate-time').value,purpose:$('gate-purpose').value.trim(),
+    idno:$('gate-id-no').value.trim(),guard:$('gate-guard').value.trim()};
+  if(!S.gateLog[code]) S.gateLog[code]=[];
+  S.gateLog[code].unshift(e);
+  sln_hk_persist(); sln_hk_closeModal('gateModal');
+  sln_hk_renderGateLogs(); sln_hk_updateStats(); sln_hk_updateDashboard();
+  sln_hk_toast(`${code==='MG'?'Main Gate':'Mall'} — ${e.dir} saved for ${e.name}`);
+}
+
+function sln_hk_renderGateLogs(){
+  ['MG','ME'].forEach(code=>{
+    const todayStr=new Date().toDateString();
+    const log=(S.gateLog[code]||[]).filter(e=>new Date(e.time).toDateString()===todayStr);
+    const inC=log.filter(e=>e.dir==='IN').length, outC=log.filter(e=>e.dir==='OUT').length;
+    const pfx=code==='MG'?'mg':'me';
+    const setV=(id,v)=>{const el=$(id);if(el)el.textContent=v;};
+    setV(pfx+'-total',inC+outC); setV(pfx+'-in',inC); setV(pfx+'-out',outC);
+    const wrap=$(pfx+'-log'); if(!wrap) return;
+    if(!log.length){wrap.innerHTML='<div class="gate-empty">No entries today</div>';return;}
+    wrap.innerHTML=log.slice(0,30).map(e=>`
+      <div class="gate-log-item">
+        <span class="gate-log-time">${e.time?new Date(e.time).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}):'—'}</span>
+        <span class="dir-badge ${e.dir==='IN'?'dir-in':'dir-out'}">${e.dir}</span>
+        <span class="gate-log-name">${e.name}</span>
+        <span class="gate-log-type">${e.type}</span>
+        <button onclick="sln_hk_delGateEntry('${code}','${e.id}')" style="margin-left:auto;background:transparent;border:none;color:var(--tx3);cursor:pointer;padding:2px 4px;border-radius:4px;" title="Delete"><i data-lucide="x" style="width:11px;height:11px;"></i></button>
+      </div>
+    `).join('');
+    try{lucide.createIcons();}catch(err){}
+  });
+}
+
+function sln_hk_delGateEntry(code,id){
+  S.gateLog[code]=S.gateLog[code].filter(e=>e.id!==id);
+  sln_hk_persist(); sln_hk_renderGateLogs(); sln_hk_updateStats(); sln_hk_updateDashboard();
+  sln_hk_toast('Entry removed');
+}
+
+/* ══════════════════════
+   INCIDENTS
+══════════════════════ */
+function sln_hk_saveIncident(){
+  const id=$('inc-id').value||'INC'+Date.now();
+  const inc={id,type:$('inc-type').value,severity:$('inc-severity').value,
+    location:$('inc-location').value,datetime:$('inc-datetime').value,
+    desc:$('inc-desc').value.trim(),reported:$('inc-reported').value.trim(),
+    assigned:$('inc-assigned').value.trim(),action:$('inc-action').value.trim(),
+    status:'Open',created:new Date().toISOString()};
+  if(!inc.desc){sln_hk_toast('Enter a description','error');return;}
+  const idx=S.incidents.findIndex(x=>x.id===id);
+  if(idx>=0)S.incidents[idx]=inc; else S.incidents.unshift(inc);
+  sln_hk_persist(); sln_hk_closeModal('incModal');
+  sln_hk_renderIncidents(); sln_hk_updateStats(); sln_hk_updateDashboard();
+  sln_hk_toast('Incident logged — '+inc.id);
+}
+
+function sln_hk_renderIncidents(filter='',statusF=''){
+  const c=$('incidents-list'); if(!c) return;
+  let list=S.incidents;
+  if(filter) list=list.filter(i=>(i.type+i.location+i.desc).toLowerCase().includes(filter.toLowerCase()));
+  if(statusF) list=list.filter(i=>i.status===statusF);
+  if(!list.length){c.innerHTML='<div class="empty-state"><i data-lucide="shield-check"></i><p>No incidents found</p></div>';try{lucide.createIcons();}catch(e){} return;}
+  c.innerHTML=list.map(i=>`
+    <div class="inc-card ${i.severity==='Critical'?'crit':i.status==='Resolved'?'res':'mod'}">
+      <div class="inc-ic" style="background:${i.severity==='Critical'?'var(--red-g)':i.status==='Resolved'?'var(--em-g)':'var(--am-g)'}">
+        <i data-lucide="${i.severity==='Critical'?'alert-octagon':i.status==='Resolved'?'check-circle':'alert-triangle'}" style="color:${i.severity==='Critical'?'var(--red)':i.status==='Resolved'?'var(--emerald)':'var(--amber)'}"></i>
+      </div>
+      <div class="inc-body">
+        <div class="inc-title">${i.type}</div>
+        <div class="inc-meta">
+          <span><i data-lucide="map-pin"></i> ${i.location}</span>
+          <span><i data-lucide="clock"></i> ${i.datetime?new Date(i.datetime).toLocaleString('en-IN',{dateStyle:'short',timeStyle:'short'}):'—'}</span>
+          <span><i data-lucide="user"></i> ${i.reported||'—'}</span>
+          <span class="badge ${i.severity==='Critical'?'badge-red':i.severity==='Moderate'?'badge-amber':'badge-cyan'}">${i.severity}</span>
+          <span class="badge ${i.status==='Resolved'?'badge-green':i.status==='In Progress'?'badge-amber':'badge-red'}">${i.status}</span>
+        </div>
+        ${i.desc?`<div class="inc-desc">${i.desc.substring(0,130)}${i.desc.length>130?'…':''}</div>`:''}
+      </div>
+      <div class="inc-acts">
+        ${i.status!=='Resolved'?`<button class="btn btn-green btn-sm" onclick="sln_hk_setIncStatus('${i.id}','Resolved')"><i data-lucide="check"></i>Resolve</button>`:''}
+        ${i.status==='Open'?`<button class="btn btn-amber btn-sm" onclick="sln_hk_setIncStatus('${i.id}','In Progress')"><i data-lucide="loader"></i>WIP</button>`:''}
+        <button class="btn btn-outline btn-sm" style="border-color:var(--red);color:var(--red)" onclick="sln_hk_delInc('${i.id}')"><i data-lucide="trash-2"></i></button>
+      </div>
+    </div>
+  `).join('');
+  try{lucide.createIcons();}catch(e){}
+}
+
+function sln_hk_filterIncidents(){sln_hk_renderIncidents($('inc-search').value,$('inc-filter-status').value);}
+function sln_hk_setIncStatus(id,status){const i=S.incidents.find(x=>x.id===id);if(i){i.status=status;sln_hk_persist();sln_hk_renderIncidents();sln_hk_updateStats();sln_hk_updateDashboard();sln_hk_toast('Status → '+status);}}
+function sln_hk_delInc(id){if(!confirm('Delete this incident?'))return;S.incidents=S.incidents.filter(x=>x.id!==id);sln_hk_persist();sln_hk_renderIncidents();sln_hk_updateStats();sln_hk_updateDashboard();sln_hk_toast('Deleted');}
+
+/* ══════════════════════
+   GUARDS
+══════════════════════ */
+function sln_hk_saveGuard(){
+  const id=$('guard-id').value||'G'+Date.now();
+  const g={id,name:$('guard-name').value.trim(),badge:$('guard-badge').value.trim(),
+    shift:$('guard-shift').value,status:$('guard-status').value,
+    post:$('guard-post').value,contact:$('guard-contact').value.trim(),
+    agency:$('guard-agency').value.trim()};
+  if(!g.name){sln_hk_toast('Enter guard name','error');return;}
+  const idx=S.guards.findIndex(x=>x.id===id);
+  if(idx>=0)S.guards[idx]=g; else S.guards.push(g);
+  sln_hk_persist();sln_hk_closeModal('guardModal');sln_hk_renderGuards();sln_hk_updateStats();
+  sln_hk_toast(idx>=0?'Guard updated':'Guard added');
+}
+function sln_hk_renderGuards(){
+  const tb=$('guards-tbody'); if(!tb) return;
+  if(!S.guards.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--tx3);padding:24px;">No guards registered</td></tr>';return;}
+  tb.innerHTML=S.guards.map(g=>`
+    <tr>
+      <td><strong>${g.name}</strong><br><span style="font-size:10px;color:var(--tx3)">${g.agency||'—'}</span></td>
+      <td><span class="badge badge-cyan" style="font-family:'JetBrains Mono',monospace">${g.badge||'—'}</span></td>
+      <td>${g.shift}</td><td>${g.post}</td>
+      <td><span class="badge ${g.status==='On Duty'?'badge-green':g.status==='Leave'?'badge-amber':'badge-gray'}">${g.status}</span></td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px">${g.contact||'—'}</td>
+      <td style="display:flex;gap:5px">
+        <button class="btn btn-outline btn-sm" onclick="sln_hk_editGuard('${g.id}')"><i data-lucide="edit-3"></i></button>
+        <button class="btn btn-outline btn-sm" style="border-color:var(--red);color:var(--red)" onclick="sln_hk_delGuard('${g.id}')"><i data-lucide="trash-2"></i></button>
+      </td>
+    </tr>
+  `).join('');
+  try{lucide.createIcons();}catch(e){}
+}
+function sln_hk_editGuard(id){
+  const g=S.guards.find(x=>x.id===id);if(!g)return;
+  $('guard-id').value=g.id;$('guard-name').value=g.name;$('guard-badge').value=g.badge;
+  $('guard-contact').value=g.contact;$('guard-agency').value=g.agency;
+  $('guard-shift').value=g.shift;$('guard-status').value=g.status;$('guard-post').value=g.post;
+  $('guardModal').classList.add('open');
+}
+function sln_hk_delGuard(id){if(!confirm('Remove guard?'))return;S.guards=S.guards.filter(x=>x.id!==id);sln_hk_persist();sln_hk_renderGuards();sln_hk_updateStats();sln_hk_toast('Guard removed');}
+
+/* ══════════════════════
+   VISITORS
+══════════════════════ */
+function sln_hk_saveVisitor(){
+  const id=$('vis-id').value||'VP'+Date.now();
+  const v={id,name:$('vis-name').value.trim(),company:$('vis-company').value.trim(),
+    host:$('vis-host').value.trim(),floor:$('vis-floor').value,
+    idType:$('vis-id-type').value,idNum:$('vis-id-num').value.trim(),
+    vehicle:$('vis-vehicle').value.trim(),inTime:$('vis-in-time').value,
+    outTime:'',remarks:$('vis-remarks').value.trim(),status:'Active',
+    passNo:'SLN-'+Math.floor(100000+Math.random()*900000)};
+  if(!v.name){sln_hk_toast('Enter visitor name','error');return;}
+  const idx=S.visitors.findIndex(x=>x.id===id);
+  if(idx>=0)S.visitors[idx]=v; else S.visitors.push(v);
+  sln_hk_persist();sln_hk_closeModal('visitorModal');sln_hk_renderVisitors();sln_hk_updateStats();
+  sln_hk_toast('Pass issued — '+v.passNo);
+}
+function sln_hk_renderVisitors(filter=''){
+  const tb=$('visitors-tbody'); if(!tb) return;
+  let list=S.visitors;
+  if(filter)list=list.filter(v=>(v.name+v.company+v.host).toLowerCase().includes(filter.toLowerCase()));
+  if(!list.length){tb.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--tx3);padding:24px;">No visitors</td></tr>';return;}
+  const fmt=d=>d?new Date(d).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}):'—';
+  tb.innerHTML=list.map(v=>`
+    <tr>
+      <td><strong>${v.name}</strong></td><td>${v.company||'—'}</td><td>${v.host||'—'}</td><td>${v.floor}</td>
+      <td><span class="badge badge-cyan" style="font-family:'JetBrains Mono',monospace;font-size:10px">${v.passNo}</span></td>
+      <td>${fmt(v.inTime)}</td><td>${fmt(v.outTime)}</td>
+      <td><span class="badge ${v.status==='Active'?'badge-green':v.status==='Checked Out'?'badge-gray':'badge-amber'}">${v.status}</span></td>
+      <td style="display:flex;gap:5px;flex-wrap:wrap">
+        ${v.status==='Active'?`<button class="btn btn-outline btn-sm" onclick="sln_hk_checkoutVis('${v.id}')"><i data-lucide="log-out"></i>Out</button>`:''}
+        <button class="btn btn-outline btn-sm" style="border-color:var(--red);color:var(--red)" onclick="sln_hk_delVis('${v.id}')"><i data-lucide="trash-2"></i></button>
+      </td>
+    </tr>
+  `).join('');
+  try{lucide.createIcons();}catch(e){}
+}
+function sln_hk_filterVisitors(){sln_hk_renderVisitors($('vis-search').value);}
+function sln_hk_checkoutVis(id){const v=S.visitors.find(x=>x.id===id);if(v){v.outTime=new Date().toISOString();v.status='Checked Out';sln_hk_persist();sln_hk_renderVisitors();sln_hk_toast('Visitor checked out');}}
+function sln_hk_delVis(id){if(!confirm('Remove pass?'))return;S.visitors=S.visitors.filter(x=>x.id!==id);sln_hk_persist();sln_hk_renderVisitors();sln_hk_updateStats();sln_hk_toast('Pass removed');}
+
+/* ══════════════════════
+   PATROL SCHEDULE
+══════════════════════ */
+function sln_hk_savePatrol(){
+  const id=$('pat-id').value||'PAT'+Date.now();
+  const p={id,guard:$('pat-guard').value.trim(),shift:$('pat-shift').value,
+    route:$('pat-route').value.split(',').map(s=>s.trim()).filter(Boolean),
+    start:$('pat-start').value,freq:parseInt($('pat-freq').value)||120,log:[]};
+  if(!p.guard||!p.route.length){sln_hk_toast('Enter guard and route','error');return;}
+  const idx=S.patrols.findIndex(x=>x.id===id);
+  if(idx>=0)S.patrols[idx]=p; else S.patrols.push(p);
+  sln_hk_persist();sln_hk_closeModal('patrolModal');sln_hk_renderPatrol();sln_hk_toast('Route saved');
+}
+
+function sln_hk_renderPatrol(){
+  const pl=$('patrol-list'), tl=$('patrol-timeline'), badgeEl=$('patrol-badge'), dbadge=$('dash-patrol-badge');
+  if(!pl) return;
+  if(!S.patrols.length){
+    pl.innerHTML='<div class="empty-state"><i data-lucide="navigation"></i><p>No routes</p></div>';
+    if(tl)tl.innerHTML='<div class="empty-state"><i data-lucide="clock"></i><p>No data</p></div>';
+    try{lucide.createIcons();}catch(e){} return;
+  }
+  pl.innerHTML=S.patrols.map(p=>`
+    <div class="guard-row">
+      <div class="g-avatar">${p.guard.charAt(0).toUpperCase()}</div>
+      <div class="g-info">
+        <div class="g-name">${p.guard}</div>
+        <div class="g-meta">${p.shift} · Every ${p.freq} min · ${p.start||'—'} start</div>
+        <div style="font-size:11px;color:var(--tx3);margin-top:2px">${p.route.slice(0,4).join(' → ')}${p.route.length>4?'…':''}</div>
+      </div>
+      <div class="g-actions">
+        <button class="btn btn-cyan btn-sm" onclick="sln_hk_logPatrol('${p.id}')"><i data-lucide="check-circle"></i>Log</button>
+        <button class="btn btn-outline btn-sm" style="border-color:var(--red);color:var(--red)" onclick="sln_hk_delPatrol('${p.id}')"><i data-lucide="trash-2"></i></button>
+      </div>
+    </div>
+  `).join('');
+  const now=new Date(), allC=[];
+  S.patrols.forEach(p=>{
+    if(!p.start) return;
+    const [h,m]=p.start.split(':').map(Number);
+    const ds=new Date(); ds.setHours(h,m,0,0);
+    for(let i=0;i<24;i++){
+      const t=new Date(ds.getTime()+i*p.freq*60000);
+      if(t.toDateString()!==now.toDateString()) continue;
+      const done=p.log.some(l=>Math.abs(new Date(l)-t)<p.freq*30000);
+      allC.push({time:t,guard:p.guard,pts:p.route,done,future:t>now});
+    }
+  });
+  allC.sort((a,b)=>a.time-b.time);
+  const comp=allC.filter(c=>c.done).length, tot=allC.length;
+  if(badgeEl) badgeEl.textContent=`${comp}/${tot} Done`;
+  if(dbadge) dbadge.textContent=`${comp}/${tot} Done`;
+  if(tl) tl.innerHTML=allC.slice(-12).map(c=>`
+    <div class="tl-item ${c.done?'done':c.future?'upcoming':'missed'}">
+      <div class="tl-time">${c.time.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}</div>
+      <div class="tl-loc">${c.guard} — ${c.pts[0]||'—'}</div>
+      <div class="tl-note">${c.done?'✓ Completed':c.future?'Upcoming':'⚠ Missed'}</div>
+    </div>
+  `).join('');
+  try{lucide.createIcons();}catch(e){}
+}
+
+function sln_hk_logPatrol(id){const p=S.patrols.find(x=>x.id===id);if(!p)return;p.log.push(new Date().toISOString());sln_hk_persist();sln_hk_renderPatrol();sln_hk_updateDashboard();sln_hk_toast('Patrol checked — '+p.guard);}
+function sln_hk_delPatrol(id){if(!confirm('Remove route?'))return;S.patrols=S.patrols.filter(x=>x.id!==id);sln_hk_persist();sln_hk_renderPatrol();sln_hk_toast('Route removed');}
+
+/* ══════════════════════
+   PATROL CHECKLIST
+══════════════════════ */
+const CHECKLIST_DEF=[
+  {sec:'Terrace',icon:'sun',items:[
+    'Terrace North Area','Terrace South Area','Terrace Garden Zone',
+    'Water Tank Zone','Cooling Tower Area','Solar Panel Zone','Terrace Access Door Secured'
+  ]},
+  {sec:'Staircases',icon:'trending-up',items:[
+    'Staircase 1 — Ground to Terrace','Staircase 3 — Ground to Terrace',
+    'Staircase 4 — Ground to Terrace','Staircase 5 — Ground to Terrace',
+    'Staircase 6 — Ground to Terrace'
+  ]},
+  {sec:'Office Lifts — LOPs',icon:'arrow-up',items:[
+    'OE1 — Office Elevator LOP (L4 to L8)','OE2 — Office Elevator LOP (L4 to L8)',
+    'OE3 — Office Elevator LOP (L4 to L8)','OS — Office Service Lift LOP',
+    'Office Lift Lobby Check (L4)','Office Lift Lobby Check (L5)','Office Lift Lobby Check (L6)',
+    'Office Lift Lobby Check (L7)','Office Lift Lobby Check (L8)'
+  ]},
+  {sec:'Mall Lifts — LOPs',icon:'shopping-bag',items:[
+    'MG1 — Mall Guest Lift LOP (L3 to LG)','MG2 — Mall Guest Lift LOP (L3 to LG)',
+    'MS1 — Mall Service Lift LOP','MS2 — Mall Service Lift LOP',
+    'Mall Lift Lobby Check (LG)','Mall Lift Lobby Check (L1)',
+    'Mall Lift Lobby Check (L2)','Mall Lift Lobby Check (L3)'
+  ]},
+  {sec:'Escalators',icon:'git-branch',items:[
+    'Escalator L3 to L2 — UP Direction','Escalator L3 to L2 — DOWN Direction',
+    'Escalator L2 to L1 — UP Direction','Escalator L2 to L1 — DOWN Direction',
+    'Escalator L1 to LG — UP Direction','Escalator L1 to LG — DOWN Direction'
+  ]},
+  {sec:'Travelators',icon:'arrow-right',items:[
+    'Travelator LG to B1 — DOWN Only (Operational)','Travelator B1 to B2 — DOWN Only (Operational)'
+  ]},
+  {sec:'Glass & Façade Inspection',icon:'layers',items:[
+    'LG Mall Entrance Glass Doors','LG Podium Office Glass Entry',
+    'L1 Atrium Glass Panels','L2 Atrium Glass Panels','L3 Atrium Glass Panels',
+    'Office Lobby Glass — F4','Office Lobby Glass — F5 to F8'
+  ]},
+  {sec:'Mall Floor Patrol',icon:'store',items:[
+    'L1 North Wing','L1 South Wing','L1 Food Zone',
+    'L2 North Wing','L2 South Wing','L2 Food Zone',
+    'L3 North Wing','L3 South Wing','L3 Cinema Lobby'
+  ]},
+  {sec:'Office Common Areas',icon:'briefcase',items:[
+    'Floor 4 — Common Area & Toilets','Floor 5 — Common Area & Toilets',
+    'Floor 6 — Common Area & Toilets','Floor 7 — Common Area & Toilets',
+    'Floor 8 — Common Area & Toilets'
+  ]},
+  {sec:'Basement Patrol',icon:'layers',items:[
+    'B1 — Gas Bank & Utility Rooms Check','B1 — HT / Transformer / DG Rooms',
+    'B1 — UPS / Server / CCTV Room Check','B1 — Plant Room & Fire Fighting Room',
+    'B1 Parking — All Zones','B2 Parking — All Zones',
+    'B3 Stack Parking — All Bays','B4 STP & Sump Area Check'
+  ]},
+  {sec:'Late Night Vehicles',icon:'truck',items:[
+    'Main Gate — Night Shift Guard Posted',
+    'All Vehicle Entries Logged in Register',
+    'Vehicle Documents / ID Verified at Entry',
+    'Driver Identity Verified (Aadhaar / Licence)',
+    'B1 Parking — Night Vehicles Check',
+    'B2 Parking — Night Vehicles Check',
+    'B3 Stack Parking — Night Vehicles Check',
+    'Delivery Vehicles — Purpose & Destination Confirmed',
+    'Goods Vehicle — Loading / Unloading Area Monitored',
+    'Loading Bay Area — Supervised & Cleared',
+    'Late Night Visitor Vehicle — Host Confirmation Obtained',
+    'Towing / Breakdown Vehicle — Documented & Escorted',
+    'Suspicious Vehicle — Reported to Supervisor',
+    'All Night Vehicle Exits Logged with Time',
+    'Basement Barriers & Bollards Operational',
+    'Parking CCTV Coverage Verified (All Levels)',
+    'No Unauthorised Overnight Parking',
+    'Fuel / Chemical Vehicle — Safety Protocol Followed',
+    'Night Vehicle Log Sheet Completed & Signed Off'
+  ]},
+];
+
+function sln_hk_renderChecklist(){
+  const body=$('checklist-body'); if(!body) return;
+  const date=new Date().toDateString();
+  if(!S.checklist[date]) S.checklist[date]={};
+  let total=0, done=0, html='';
+  CHECKLIST_DEF.forEach(sec=>{
+    html+=`<div class="chk-section"><div class="chk-section-title"><i data-lucide="${sec.icon}"></i>${sec.sec}</div>`;
+    sec.items.forEach(item=>{
+      const key=sec.sec+'||'+item, isD=!!S.checklist[date][key];
+      total++; if(isD) done++;
+      const safeKey=key.replace(/'/g,"\\'");
+      html+=`<div class="chk-item${isD?' done':''}" onclick="sln_hk_toggleChk('${safeKey}')">
+        <input type="checkbox" ${isD?'checked':''} onclick="event.stopPropagation();sln_hk_toggleChk('${safeKey}')"/>
+        <span class="chk-item-label">${item}</span>
+        ${isD?'<span class="chk-item-done">✓ Done</span>':''}
+      </div>`;
+    });
+    html+='</div>';
+  });
+  body.innerHTML=html;
+  const pct=total?Math.round(done/total*100):0;
+  const bar=$('chk-bar'); if(bar) bar.style.width=pct+'%';
+  const pctEl=$('chk-pct'); if(pctEl) pctEl.textContent=`${pct}% (${done}/${total})`;
+  try{lucide.createIcons();}catch(e){}
+}
+
+function sln_hk_toggleChk(key){
+  const date=new Date().toDateString();
+  if(!S.checklist[date]) S.checklist[date]={};
+  S.checklist[date][key]=!S.checklist[date][key];
+  sln_hk_persist(); sln_hk_renderChecklist();
+}
+function sln_hk_resetChecklist(){
+  if(!confirm('Start new patrol round? Today\'s checkmarks will be cleared.'))return;
+  S.checklist[new Date().toDateString()]={};
+  sln_hk_persist(); sln_hk_renderChecklist(); sln_hk_toast('New patrol round started');
+}
+function sln_hk_saveChecklistExcel(){
+  const date=new Date().toDateString(), data=S.checklist[date]||{};
+  let rows=[];
+  CHECKLIST_DEF.forEach(sec=>{
+    sec.items.forEach(item=>{
+      const key=sec.sec+'||'+item, isDone=!!data[key];
+      rows.push({Section:sec.sec,Checkpoint:item,Status:isDone?'✓ Completed':'✗ Pending',Date:date});
+    });
+  });
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),'Patrol Checklist');
+  XLSX.writeFile(wb,`SLN_Patrol_${new Date().toISOString().slice(0,10)}.xlsx`);
+  sln_hk_toast('Checklist exported');
+}
+
+/* ══════════════════════
+   STATS & DASHBOARD
+══════════════════════ */
+function sln_hk_updateStats(){
+  const today=new Date().toDateString();
+  const openInc=S.incidents.filter(i=>i.status!=='Resolved').length;
+  const onDuty=S.guards.filter(g=>g.status==='On Duty').length;
+  const todayVis=S.visitors.filter(v=>new Date(v.inTime).toDateString()===today).length;
+  const mgLog=(S.gateLog.MG||[]).filter(e=>new Date(e.time).toDateString()===today);
+  const meLog=(S.gateLog.ME||[]).filter(e=>new Date(e.time).toDateString()===today);
+  const gTotal=mgLog.length+meLog.length;
+  const set=(id,v)=>{const el=$(id);if(el)el.textContent=v;};
+  set('stat-incidents',openInc); set('stat-guards',onDuty); set('stat-visitors',todayVis); set('stat-gate-total',gTotal);
+  set('stat-inc-trend',openInc>0?openInc+' active →':'All clear →');
+  set('stat-guards-sub',onDuty+' of '+S.guards.length+' guards');
+  set('stat-vis-sub',todayVis+' today →');
+  set('stat-gate-sub',mgLog.length+' MG · '+meLog.length+' ME');
+  $('incidentPip').style.display=openInc>0?'block':'none';
+  $('dash-guard-badge').textContent=onDuty+' On Duty';
+  // dashboard gate
+  set('dash-mg-in',mgLog.filter(e=>e.dir==='IN').length);
+  set('dash-mg-out',mgLog.filter(e=>e.dir==='OUT').length);
+  set('dash-me-in',meLog.filter(e=>e.dir==='IN').length);
+  set('dash-me-out',meLog.filter(e=>e.dir==='OUT').length);
+}
+
+function sln_hk_updateDashboard(){
+  const di=$('dash-incidents'), dg=$('dash-guards');
+  const open=S.incidents.filter(i=>i.status!=='Resolved').slice(0,5);
+  if(!di) return;
+  di.innerHTML=!open.length?'<div class="empty-state"><i data-lucide="check-circle"></i><p>No open incidents</p></div>':
+    open.map(i=>`
+      <div class="inc-card ${i.severity==='Critical'?'crit':'mod'}" style="margin-bottom:7px;cursor:default">
+        <div class="inc-ic" style="background:${i.severity==='Critical'?'var(--red-g)':'var(--am-g)'}">
+          <i data-lucide="${i.severity==='Critical'?'alert-octagon':'alert-triangle'}" style="color:${i.severity==='Critical'?'var(--red)':'var(--amber)'}"></i>
+        </div>
+        <div class="inc-body">
+          <div class="inc-title">${i.type}</div>
+          <div class="inc-meta"><span>${i.location}</span>
+          <span class="badge ${i.severity==='Critical'?'badge-red':'badge-amber'}">${i.severity}</span></div>
+        </div>
+      </div>
+    `).join('');
+  if(dg){
+    const od=S.guards.filter(g=>g.status==='On Duty').slice(0,5);
+    dg.innerHTML=!od.length?'<div class="empty-state"><i data-lucide="users"></i><p>No guards on duty</p></div>':
+      od.map(g=>`
+        <div class="guard-row" style="padding:8px 0">
+          <div class="g-avatar">${g.name.charAt(0).toUpperCase()}</div>
+          <div class="g-info"><div class="g-name">${g.name}</div><div class="g-meta">${g.post} · ${g.shift}</div></div>
+          <span class="badge badge-green">On Duty</span>
+        </div>
+      `).join('');
+  }
+  try{lucide.createIcons();}catch(e){}
+}
+
+/* ══════════════════════
+   REPORTS
+══════════════════════ */
+function sln_hk_renderReportStats(){
+  const el=$('rpt-stats'); if(!el) return;
+  const now=new Date(), ms=new Date(now.getFullYear(),now.getMonth(),1);
+  const from=$('rpt-from'), to=$('rpt-to');
+  if(from&&!from.value) from.value=ms.toISOString().slice(0,10);
+  if(to&&!to.value) to.value=now.toISOString().slice(0,10);
+  const today=now.toDateString();
+  const mInc=S.incidents.filter(i=>new Date(i.created)>=ms).length;
+  const mRes=S.incidents.filter(i=>i.status==='Resolved'&&new Date(i.created)>=ms).length;
+  const mVis=S.visitors.filter(v=>new Date(v.inTime)>=ms).length;
+  const mgT=(S.gateLog.MG||[]).filter(e=>new Date(e.time).toDateString()===today).length;
+  const meT=(S.gateLog.ME||[]).filter(e=>new Date(e.time).toDateString()===today).length;
+  const rows=[
+    {l:'Total Incidents (Month)',v:mInc,c:'var(--red)'},{l:'Resolved',v:mRes,c:'var(--emerald)'},
+    {l:'Open / In Progress',v:mInc-mRes,c:'var(--amber)'},{l:'Visitors This Month',v:mVis,c:'var(--cyan)'},
+    {l:'Gate Entries Today',v:mgT+meT,c:'var(--orange)'},{l:'Guards Registered',v:S.guards.length,c:'var(--violet)'},
+    {l:'Patrol Routes',v:S.patrols.length,c:'var(--teal3)'},{l:'CCTV Cameras',v:235,c:'var(--cyan)'},
+    {l:'Late Night Vehicles (Tonight)',v:S.lnvLog.filter(v=>new Date(v.timeIn).toDateString()===today).length,c:'var(--amber)'},
+  ];
+  el.innerHTML=rows.map(r=>`<div class="stat-row-rpt"><span class="stat-row-rpt-label">${r.l}</span><span class="stat-row-rpt-val" style="color:${r.c}">${r.v}</span></div>`).join('');
+}
+
+function sln_hk_generateReport(){
+  const from=new Date($('rpt-from').value||'2000-01-01');
+  const toD=new Date($('rpt-to').value||'2099-12-31'); toD.setHours(23,59,59);
+  const fmt=d=>d?new Date(d).toLocaleString('en-IN',{dateStyle:'short',timeStyle:'short'}):'—';
+  const wb=XLSX.utils.book_new();
+  if($('rpt-chk-incidents').checked){
+    const rows=S.incidents.filter(i=>{const d=new Date(i.created);return d>=from&&d<=toD;})
+      .map(i=>({'ID':i.id,'Type':i.type,'Severity':i.severity,'Location':i.location,'Date/Time':fmt(i.datetime),'Description':i.desc,'Reported By':i.reported,'Assigned':i.assigned,'Action':i.action,'Status':i.status}));
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows.length?rows:[{Note:'No incidents'}]),'Incidents');
+  }
+  if($('rpt-chk-gates').checked){
+    const all=[...(S.gateLog.MG||[]).map(e=>({...e,gateName:'Main Gate'})),...(S.gateLog.ME||[]).map(e=>({...e,gateName:'Mall Entrance'}))]
+      .filter(e=>{const d=new Date(e.time);return d>=from&&d<=toD;}).sort((a,b)=>new Date(a.time)-new Date(b.time));
+    const rows=all.map(e=>({'Gate':e.gateName,'Person/Vehicle':e.name,'Type':e.type,'Direction':e.dir,'Time':fmt(e.time),'Purpose':e.purpose,'ID/Vehicle':e.idno,'Guard':e.guard}));
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows.length?rows:[{Note:'No entries'}]),'Gate Log');
+  }
+  if($('rpt-chk-visitors').checked){
+    const rows=S.visitors.filter(v=>{const d=new Date(v.inTime);return d>=from&&d<=toD;})
+      .map(v=>({'Name':v.name,'Company':v.company,'Host':v.host,'Floor':v.floor,'Pass No.':v.passNo,'ID Type':v.idType,'ID No.':v.idNum,'Vehicle':v.vehicle||'—','In':fmt(v.inTime),'Out':v.outTime?fmt(v.outTime):'—','Status':v.status}));
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows.length?rows:[{Note:'No visitors'}]),'Visitors');
+  }
+  if($('rpt-chk-guards').checked){
+    const rows=S.guards.map(g=>({'Name':g.name,'Badge':g.badge,'Shift':g.shift,'Post':g.post,'Status':g.status,'Contact':g.contact,'Agency':g.agency}));
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows.length?rows:[{Note:'No guards'}]),'Guards');
+  }
+  if($('rpt-chk-patrol').checked){
+    const rows=S.patrols.map(p=>({'Guard':p.guard,'Shift':p.shift,'Route':p.route.join(' → '),'Start':p.start,'Freq(mins)':p.freq,'Checks':p.log.length}));
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows.length?rows:[{Note:'No routes'}]),'Patrol');
+  }
+  if($('rpt-chk-lnv')&&$('rpt-chk-lnv').checked){
+    const fmt=d=>d?new Date(d).toLocaleString('en-IN',{dateStyle:'short',timeStyle:'short'}):'—';
+    const rows=S.lnvLog.filter(v=>{const d=new Date(v.timeIn);return d>=from&&d<=toD;})
+      .map(v=>({'Pass No.':v.pass,'Vehicle No.':v.vehicle,'Vehicle Type':v.type,'Driver':v.driver,'Driver ID':v.driverId,'Gate':v.gate==='MG'?'Main Gate':'Mall Entrance','Time In':fmt(v.timeIn),'Time Out':v.timeOut?fmt(v.timeOut):'—','Status':v.status,'Purpose':v.purpose,'Destination':v.dest,'Host':v.host,'Host Contact':v.hostContact,'Guard':v.guard,'Remarks':v.remarks}));
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows.length?rows:[{Note:'No vehicles'}]),'Late Night Vehicles');
+  }
+  if(!wb.SheetNames.length){sln_hk_toast('Select at least one section','error');return;}
+  XLSX.writeFile(wb,`SLN_Security_${new Date().toISOString().slice(0,10)}.xlsx`);
+  sln_hk_toast('Report downloaded');
+}
+function sln_hk_exportExcel(){sln_hk_generateReport();}
+
+/* ══════════════════════
+   LATE NIGHT VEHICLES
+══════════════════════ */
+function sln_hk_openModal(id){
+  const now=new Date().toISOString().slice(0,16);
+  if(id==='incModal'){$('inc-datetime').value=now;$('inc-id').value='';['inc-desc','inc-reported','inc-assigned','inc-action'].forEach(f=>$(f).value='');}
+  if(id==='visitorModal'){$('vis-in-time').value=now;$('vis-id').value='';['vis-name','vis-company','vis-host','vis-id-num','vis-vehicle','vis-remarks'].forEach(f=>$(f).value='');}
+  if(id==='guardModal'){$('guard-id').value='';['guard-name','guard-badge','guard-contact','guard-agency'].forEach(f=>$(f).value='');}
+  if(id==='patrolModal'){$('pat-id').value='';['pat-guard','pat-route','pat-start','pat-freq'].forEach(f=>$(f).value='');}
+  if(id==='lnvModal'){
+    $('lnv-id').value='';
+    $('lnv-time-in').value=now;
+    ['lnv-vehicle','lnv-driver','lnv-driver-id','lnv-host','lnv-host-contact','lnv-guard','lnv-pass','lnv-purpose','lnv-remarks'].forEach(f=>$(f).value='');
+  }
+  $(id).classList.add('open');
+}
+
+function sln_hk_saveLNV(){
+  const id=$('lnv-id').value||'LNV'+Date.now();
+  const v={
+    id, vehicle:$('lnv-vehicle').value.trim().toUpperCase(),
+    type:$('lnv-type').value, driver:$('lnv-driver').value.trim(),
+    driverId:$('lnv-driver-id').value.trim(), gate:$('lnv-gate').value,
+    timeIn:$('lnv-time-in').value, purpose:$('lnv-purpose').value.trim(),
+    dest:$('lnv-dest').value, host:$('lnv-host').value.trim(),
+    hostContact:$('lnv-host-contact').value.trim(), guard:$('lnv-guard').value.trim(),
+    pass:$('lnv-pass').value.trim()||('LNV-'+Math.floor(10000+Math.random()*90000)),
+    remarks:$('lnv-remarks').value.trim(), timeOut:'', status:'Inside'
+  };
+  if(!v.vehicle){sln_hk_toast('Enter vehicle number','error');return;}
+  const idx=S.lnvLog.findIndex(x=>x.id===id);
+  if(idx>=0) S.lnvLog[idx]=v; else S.lnvLog.unshift(v);
+  sln_hk_persist(); sln_hk_closeModal('lnvModal');
+  sln_hk_renderLNV(); sln_hk_updateLNVBadge();
+  sln_hk_toast('Vehicle logged — '+v.vehicle+' ('+v.pass+')');
+}
+
+function sln_hk_renderLNV(){
+  const tb=$('lnv-tbody'); if(!tb) return;
+  const today=new Date().toDateString();
+  const tonight=S.lnvLog.filter(v=>new Date(v.timeIn).toDateString()===today);
+  sln_hk_updateLNVBadge();
+  if(!tonight.length){
+    tb.innerHTML='<tr><td colspan="10" style="text-align:center;color:var(--tx3);padding:28px;"><i data-lucide="truck" style="width:28px;height:28px;display:block;margin:0 auto 8px;opacity:.25;"></i>No vehicles tonight</td></tr>';
+    try{lucide.createIcons();}catch(e){} return;
+  }
+  const fmt=d=>d?new Date(d).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}):'—';
+  tb.innerHTML=tonight.map(v=>`
+    <tr>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;white-space:nowrap">${fmt(v.timeIn)}</td>
+      <td><strong style="font-family:'JetBrains Mono',monospace;color:var(--amber)">${v.vehicle||'—'}</strong><br><span style="font-size:10px;color:var(--tx3)">${v.pass}</span></td>
+      <td><span class="badge badge-orange" style="font-size:10px">${v.type}</span></td>
+      <td>${v.driver||'—'}<br><span style="font-size:10px;color:var(--tx3)">${v.driverId||''}</span></td>
+      <td style="max-width:130px;font-size:12px">${v.purpose||'—'}</td>
+      <td><span class="badge ${v.gate==='MG'?'badge-green':'badge-cyan'}">${v.gate==='MG'?'Main Gate':'Mall'}</span></td>
+      <td style="font-size:12px">${v.host||'—'}<br><span style="font-size:10px;color:var(--tx3);font-family:'JetBrains Mono',monospace">${v.hostContact||''}</span></td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px">${fmt(v.timeOut)}</td>
+      <td><span class="badge ${v.status==='Inside'?'badge-amber':v.status==='Exited'?'badge-green':'badge-gray'}">${v.status}</span></td>
+      <td style="display:flex;gap:4px;flex-wrap:wrap">
+        ${v.status==='Inside'?`<button class="btn btn-green btn-sm" onclick="sln_hk_lnvExit('${v.id}')"><i data-lucide="log-out"></i>Exit</button>`:''}
+        <button class="btn btn-outline btn-sm" onclick="sln_hk_editLNV('${v.id}')"><i data-lucide="edit-3"></i></button>
+        <button class="btn btn-outline btn-sm" style="border-color:var(--red);color:var(--red)" onclick="sln_hk_delLNV('${v.id}')"><i data-lucide="trash-2"></i></button>
+      </td>
+    </tr>
+  `).join('');
+  try{lucide.createIcons();}catch(e){}
+}
+
+function sln_hk_updateLNVBadge(){
+  const today=new Date().toDateString();
+  const cnt=S.lnvLog.filter(v=>new Date(v.timeIn).toDateString()===today).length;
+  const inside=S.lnvLog.filter(v=>new Date(v.timeIn).toDateString()===today&&v.status==='Inside').length;
+  const el=$('lnv-count-badge'); if(el) el.textContent=cnt+' tonight'+(inside>0?' · '+inside+' inside':'');
+}
+
+function sln_hk_lnvExit(id){
+  const v=S.lnvLog.find(x=>x.id===id); if(!v)return;
+  v.timeOut=new Date().toISOString(); v.status='Exited';
+  sln_hk_persist(); sln_hk_renderLNV();
+  sln_hk_toast('Vehicle exited — '+v.vehicle);
+}
+
+function sln_hk_editLNV(id){
+  const v=S.lnvLog.find(x=>x.id===id); if(!v)return;
+  $('lnv-id').value=v.id;
+  $('lnv-vehicle').value=v.vehicle;$('lnv-type').value=v.type;
+  $('lnv-driver').value=v.driver;$('lnv-driver-id').value=v.driverId;
+  $('lnv-gate').value=v.gate;$('lnv-time-in').value=v.timeIn;
+  $('lnv-purpose').value=v.purpose;$('lnv-dest').value=v.dest;
+  $('lnv-host').value=v.host;$('lnv-host-contact').value=v.hostContact;
+  $('lnv-guard').value=v.guard;$('lnv-pass').value=v.pass;$('lnv-remarks').value=v.remarks;
+  $('lnvModal').classList.add('open');
+}
+
+function sln_hk_delLNV(id){
+  if(!confirm('Remove vehicle log?'))return;
+  S.lnvLog=S.lnvLog.filter(x=>x.id!==id);
+  sln_hk_persist(); sln_hk_renderLNV(); sln_hk_toast('Entry removed');
+}
+
+function sln_hk_exportLNV(){
+  const today=new Date().toDateString();
+  const list=S.lnvLog.filter(v=>new Date(v.timeIn).toDateString()===today);
+  const fmt=d=>d?new Date(d).toLocaleString('en-IN',{dateStyle:'short',timeStyle:'short'}):'—';
+  const rows=list.map(v=>({
+    'Pass No.':v.pass,'Vehicle No.':v.vehicle,'Vehicle Type':v.type,
+    'Driver':v.driver,'Driver ID':v.driverId,'Gate':v.gate==='MG'?'Main Gate':'Mall Entrance',
+    'Time In':fmt(v.timeIn),'Time Out':v.timeOut?fmt(v.timeOut):'—','Status':v.status,
+    'Purpose':v.purpose,'Destination':v.dest,'Host':v.host,'Host Contact':v.hostContact,
+    'Guard on Duty':v.guard,'Remarks':v.remarks
+  }));
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows.length?rows:[{Note:'No vehicles tonight'}]),'Late Night Vehicles');
+  XLSX.writeFile(wb,`SLN_LateNight_Vehicles_${new Date().toISOString().slice(0,10)}.xlsx`);
+  sln_hk_toast('Vehicle log exported');
+}
+
+/* ══════════════════════
+   PERSISTENCE (updated)
+══════════════════════ */
+function sln_hk_persist(){
+  try{
+    localStorage.setItem('sln_sec_inc',JSON.stringify(S.incidents));
+    localStorage.setItem('sln_sec_grd',JSON.stringify(S.guards));
+    localStorage.setItem('sln_sec_vis',JSON.stringify(S.visitors));
+    localStorage.setItem('sln_sec_pat',JSON.stringify(S.patrols));
+    localStorage.setItem('sln_sec_gate',JSON.stringify(S.gateLog));
+    localStorage.setItem('sln_sec_chk',JSON.stringify(S.checklist));
+    localStorage.setItem('sln_sec_lnv',JSON.stringify(S.lnvLog));
+  }catch(e){console.warn(e);}
+}
+function sln_hk_load(){
+  const p=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}};
+  S.incidents=p('sln_sec_inc',[]);S.guards=p('sln_sec_grd',[]);
+  S.visitors=p('sln_sec_vis',[]);S.patrols=p('sln_sec_pat',[]);
+  S.gateLog=p('sln_sec_gate',{MG:[],ME:[]});S.checklist=p('sln_sec_chk',{});
+  S.lnvLog=p('sln_sec_lnv',[]);
+  if(!S.gateLog.MG)S.gateLog.MG=[];if(!S.gateLog.ME)S.gateLog.ME=[];
+}
+
+/* ── Server sync ── */
+async function sln_hk_fetchServer(){
+  try{const r=await fetch('/sln_hk_sec/api/data');if(!r.ok)return;const d=await r.json();
+    if(d.incidents)S.incidents=d.incidents;if(d.guards)S.guards=d.guards;
+    if(d.visitors)S.visitors=d.visitors;if(d.patrols)S.patrols=d.patrols;
+    if(d.gateLog){S.gateLog=d.gateLog;if(!S.gateLog.MG)S.gateLog.MG=[];if(!S.gateLog.ME)S.gateLog.ME=[];}
+    if(d.checklist)S.checklist=d.checklist;
+    if(d.lnvLog)S.lnvLog=d.lnvLog;
+  }catch(e){}
+}
+async function sln_hk_pushServer(){
+  try{await fetch('/sln_hk_sec/api/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(S)});}catch(e){}
+}
+async function sln_hk_initRole(){
+  try{const r=await fetch('/api/user_profile');if(!r.ok)return;const u=await r.json();$('sidebarRoleLabel').textContent=u.role||'—';}catch(e){}
+}
+
+/* ══ INIT ══ */
+document.addEventListener('DOMContentLoaded',async()=>{
+  sln_hk_load();
+  await sln_hk_fetchServer();
+  sln_hk_initRole();
+  sln_hk_updateStats();
+  sln_hk_updateDashboard();
+  sln_hk_renderIncidents();
+  sln_hk_renderGuards();
+  sln_hk_renderVisitors();
+  sln_hk_renderFloorMap();
+  sln_hk_renderCCTV();
+  sln_hk_renderPatrol();
+  sln_hk_renderChecklist();
+  sln_hk_renderGateLogs();
+  sln_hk_renderLNV();
+  sln_hk_renderReportStats();
+  try{lucide.createIcons();}catch(e){}
+  setInterval(()=>{sln_hk_persist();sln_hk_pushServer();},300000);
+});
+</script>
+</body>
+</html>

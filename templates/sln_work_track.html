@@ -1,0 +1,4215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLN TERMINUS — Works &amp; Cost Implication Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════
+   ROOT VARIABLES
+══════════════════════════════════════════════════════════ */
+:root {
+  --bg:        #060b0f;
+  --bg2:       #091018;
+  --bg3:       #000000;
+  --bg4:       #000000;
+  --bg5:       #000000;
+  --border:    #0d2030;
+  --border2:   #0e2c3e;
+  --border3:   #164060;
+  --gold:      #00c9b1;
+  --gold2:     #009e8e;
+  --gold3:     #5eebd8;
+  --goldglow:  rgba(0,201,177,.18);
+  --text:      #d2ecee;
+  --text2:     #ffffff;
+  --text3:     #ffffff;
+  --green:     #00e5b0;
+  --red:       #ff4d6a;
+  --blue:      #4d90ff;
+  --purple:    #a78bfa;
+  --orange:    #ff7c3a;
+  --cyan:      #00c9b1;
+  --r:         10px;
+  --r2:        6px;
+  --r3:        4px;
+  --shadow:    0 8px 32px rgba(0,0,0,.55);
+  --glow:      0 0 28px rgba(0,201,177,.12);
+}
+
+/* ══════════════════════════════════════════════════════════
+   RESET & BASE
+══════════════════════════════════════════════════════════ */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Libre Baskerville', serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,201,177,.06), transparent),
+    radial-gradient(ellipse 40% 30% at 90% 60%, rgba(77,144,255,.04), transparent);
+  pointer-events:none; z-index:0;
+}
+.app { position:relative; z-index:1; }
+
+/* ══════════════════════════════════════════════════════════
+   SCROLLBAR
+══════════════════════════════════════════════════════════ */
+::-webkit-scrollbar { width:4px; height:4px; }
+::-webkit-scrollbar-track { background:var(--bg2); }
+::-webkit-scrollbar-thumb { background:var(--border3); border-radius:2px; }
+
+/* ══════════════════════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════════════════════ */
+.header {
+  background:var(--bg3);
+  border-bottom:1px solid var(--border2);
+  padding:0 20px;
+  height:58px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:200;
+  box-shadow:0 2px 20px rgba(0,0,0,.5);
+}
+.h-left { display:flex; align-items:center; gap:14px; }
+.logo-pill {
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#000; font-family:''Libre Baskerville', serif; font-weight:800;
+  font-size:12px; padding:5px 11px; border-radius:20px; letter-spacing:.06em;
+  white-space:nowrap;
+}
+.h-titles { display:flex; flex-direction:column; }
+.h-title { font-family:'Libre Baskerville', serif; font-weight:700; font-size:15px; color:var(--gold); }
+.h-sub { font-size:10px; color:var(--gold2); letter-spacing:.04em; }
+.h-right { display:flex; align-items:center; gap:10px; }
+/* live IST clock */
+.live-clock {
+  display:flex; align-items:center; gap:5px;
+  font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600;
+  color:var(--gold); background:rgba(245,166,35,.08);
+  border:1px solid rgba(245,166,35,.2); border-radius:20px;
+  padding:4px 10px; letter-spacing:.04em; white-space:nowrap;
+}
+.live-clock .clk-dot {
+  width:5px; height:5px; border-radius:50%; background:var(--gold3);
+  animation:dot-pulse 1.6s ease-in-out infinite; flex-shrink:0;
+}
+
+/* blinking back-to-portal */
+.btn-portal {
+  display:flex; align-items:center; gap:5px;
+  font-size:11px; font-weight:700; color:var(--gold) !important;
+  text-decoration:none; padding:6px 12px;
+  border:1px solid var(--gold2); border-radius:20px;
+  animation:portal-blink 1.6s ease-in-out infinite;
+  transition:background .2s;
+}
+.btn-portal:hover { background:var(--goldglow); }
+@keyframes portal-blink {
+  0%,100% { border-color:var(--gold2); box-shadow:none; }
+  50%      { border-color:var(--gold3); box-shadow:0 0 14px rgba(0,201,177,.4); }
+}
+
+/* ══════════════════════════════════════════════════════════
+   LIVE BAR
+══════════════════════════════════════════════════════════ */
+.live-bar {
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  padding:5px 20px;
+  display:flex; align-items:center; justify-content:space-between;
+  font-size:10px; color:var(--text3);
+}
+.live-dot {
+  display:inline-block; width:6px; height:6px; border-radius:50%;
+  background:var(--green); margin-right:5px;
+  animation:live-pulse 2s infinite;
+}
+@keyframes live-pulse { 0%,100%{opacity:1;} 50%{opacity:.25;} }
+
+/* ══════════════════════════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════════════════════════ */
+.layout { display:flex; min-height:calc(100vh - 80px); }
+
+/* ══════════════════════════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════════════════════════ */
+.sidebar {
+  width:220px; flex-shrink:0;
+  background:var(--bg2); border-right:1px solid var(--border);
+  padding:16px 8px;
+  display:flex; flex-direction:column; gap:2px;
+}
+.sb-section { padding:4px 8px; margin-bottom:2px; }
+.sb-label {
+  font-size:9px; font-weight:700; color:var(--text3);
+  letter-spacing:.12em; text-transform:uppercase; padding:4px 4px 2px;
+}
+.nav-item {
+  display:flex; align-items:center; gap:9px;
+  width:100%; padding:8px 10px;
+  border:none; background:transparent; color:var(--text2);
+  font-size:12px; font-family:'Inter',sans-serif;
+  border-radius:var(--r2); cursor:pointer;
+  transition:all .15s; text-align:left;
+}
+.nav-item:hover { background:var(--bg4); color:var(--text); }
+.nav-item.active { background:rgba(0,201,177,.1); color:var(--gold); font-weight:600; }
+.nav-icon { font-size:14px; width:16px; text-align:center; flex-shrink:0; }
+.nav-badge {
+  margin-left:auto; background:var(--bg5); color:var(--text3);
+  font-family:'JetBrains Mono',monospace; font-size:9px;
+  padding:1px 5px; border-radius:8px; min-width:18px; text-align:center;
+}
+.nav-item.active .nav-badge { background:rgba(0,201,177,.2); color:var(--gold); }
+.sb-divider { border:none; border-top:1px solid var(--border); margin:6px 8px; }
+
+/* ══════════════════════════════════════════════════════════
+   MAIN CONTENT
+══════════════════════════════════════════════════════════ */
+.content { flex:1; padding:22px; overflow-y:auto; min-width:0; }
+
+/* ══════════════════════════════════════════════════════════
+   VIEW PANELS
+══════════════════════════════════════════════════════════ */
+.view { display:none; }
+.view.active { display:block; }
+
+/* ══════════════════════════════════════════════════════════
+   SECTION HEADER
+══════════════════════════════════════════════════════════ */
+.sec-hdr {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:18px; flex-wrap:wrap; gap:10px;
+}
+.sec-title { font-family:'Syne',sans-serif; font-size:18px; font-weight:800; }
+.sec-title em { color:var(--gold); font-style:normal; }
+
+/* ══════════════════════════════════════════════════════════
+   STATS STRIP
+══════════════════════════════════════════════════════════ */
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:22px; }
+.stat-card {
+  background:var(--bg3); border:1px solid var(--border);
+  border-radius:var(--r); padding:16px 18px; position:relative; overflow:hidden;
+  transition:border-color .2s;
+}
+.stat-card:hover { border-color:var(--border2); }
+.stat-card::after {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+}
+.sc-total::after  { background:var(--gold); }
+.sc-active::after { background:var(--blue); }
+.sc-done::after   { background:var(--green); }
+.sc-high::after   { background:var(--red); }
+.stat-num {
+  font-family:'JetBrains Mono',monospace; font-size:30px; font-weight:500;
+  line-height:1; margin-bottom:4px;
+}
+.sc-total  .stat-num { color:var(--gold); }
+.sc-active .stat-num { color:var(--blue); }
+.sc-done   .stat-num { color:var(--green); }
+.sc-high   .stat-num { color:var(--red); }
+.stat-lbl { font-size:11px; color:var(--text3); }
+.stat-ico { position:absolute; right:14px; top:14px; font-size:20px; opacity:.15; }
+
+/* ══════════════════════════════════════════════════════════
+   PIPELINE
+══════════════════════════════════════════════════════════ */
+.pipeline-wrap {
+  background:var(--bg3); border:1px solid var(--border);
+  border-radius:var(--r); padding:18px 20px;
+  margin-bottom:22px; overflow-x:auto;
+}
+.pipeline-head { font-size:9px; color:var(--text3); text-transform:uppercase; letter-spacing:.1em; margin-bottom:14px; }
+.pipeline { display:flex; align-items:flex-start; min-width:max-content; }
+.pip-step {
+  display:flex; flex-direction:column; align-items:center;
+  position:relative; width:104px;
+}
+.pip-step:not(:last-child)::after {
+  content:''; position:absolute;
+  top:14px; left:52px; width:52px; height:2px;
+  background:var(--border2); z-index:0;
+}
+.pip-step.done:not(:last-child)::after  { background:var(--green); }
+.pip-step.active:not(:last-child)::after { background:var(--gold); }
+.pip-dot {
+  width:28px; height:28px; border-radius:50%;
+  border:2px solid var(--border2); background:var(--bg2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:700; z-index:1; margin-bottom:7px;
+  transition:all .25s;
+}
+.pip-step.done   .pip-dot { border-color:var(--green); background:rgba(45,216,130,.12); color:var(--green); }
+.pip-step.active .pip-dot { border-color:var(--gold); background:rgba(0,201,177,.15); color:var(--gold); box-shadow:0 0 16px rgba(0,201,177,.35); }
+.pip-lbl {
+  font-size:9px; color:var(--text3); text-align:center;
+  line-height:1.3; max-width:88px; padding:0 4px;
+}
+.pip-step.done   .pip-lbl { color:var(--green); }
+.pip-step.active .pip-lbl { color:var(--gold); font-weight:600; }
+
+/* ══════════════════════════════════════════════════════════
+   FILTERS
+══════════════════════════════════════════════════════════ */
+.filter-row { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; align-items:center; }
+.finput, .fselect {
+  background:var(--bg3); border:1px solid var(--border2);
+  color:var(--text); border-radius:var(--r2); padding:7px 11px;
+  font-size:12px; font-family:'Inter',sans-serif; outline:none;
+  transition:border-color .15s;
+}
+.finput:focus, .fselect:focus { border-color:var(--gold2); }
+.finput { min-width:200px; }
+
+/* ══════════════════════════════════════════════════════════
+   WORK CARDS
+══════════════════════════════════════════════════════════ */
+.works-list { display:flex; flex-direction:column; gap:8px; }
+.work-card {
+  background:var(--bg3); border:1px solid var(--border);
+  border-radius:var(--r); padding:14px 18px;
+  display:flex; gap:14px; align-items:flex-start;
+  transition:border-color .15s, box-shadow .15s, transform .15s; cursor:pointer;
+  animation:card-in .25s ease forwards;
+}
+.work-card:hover { border-color:var(--border3); box-shadow:var(--shadow); transform:translateY(-1px); }
+.work-card.p-High   { border-left:3px solid var(--red); }
+.work-card.p-Medium { border-left:3px solid var(--gold); }
+.work-card.p-Low    { border-left:3px solid var(--green); }
+.wc-left { display:flex; flex-direction:column; gap:5px; flex-shrink:0; min-width:100px; }
+.wid-tag {
+  font-family:'JetBrains Mono',monospace; font-size:9px;
+  color:var(--gold); background:rgba(0,201,177,.1);
+  border:1px solid rgba(0,201,177,.2); padding:2px 7px; border-radius:3px;
+  white-space:nowrap;
+}
+.stage-pill {
+  display:inline-flex; align-items:center; gap:3px;
+  font-size:9px; font-weight:600; padding:3px 7px; border-radius:20px;
+  white-space:nowrap;
+}
+.s0 { background:rgba(0,201,177,.12); color:var(--gold); }
+.s1 { background:rgba(77,144,255,.12); color:var(--blue); }
+.s2 { background:rgba(167,139,250,.12); color:var(--purple); }
+.s3 { background:rgba(23,212,232,.12); color:var(--cyan); }
+.s4 { background:rgba(255,124,58,.12); color:var(--orange); }
+.s5 { background:rgba(45,216,130,.12); color:var(--green); }
+.s6 { background:rgba(45,216,130,.22); color:var(--green); }
+.wc-info { flex:1; min-width:0; }
+.wc-title { font-weight:600; font-size:13px; color:var(--text); margin-bottom:4px; }
+.wc-meta  { display:flex; gap:10px; flex-wrap:wrap; font-size:10px; color:var(--text3); }
+.wc-meta span { display:flex; align-items:center; gap:2px; }
+.prog-bar { height:3px; background:var(--bg); border-radius:2px; overflow:hidden; width:80px; margin-top:5px; }
+.prog-fill { height:100%; background:linear-gradient(90deg,var(--gold2),var(--gold3)); border-radius:2px; transition:width .4s; }
+.wc-actions { display:flex; gap:5px; flex-shrink:0; }
+
+/* ══════════════════════════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════════════════════════ */
+.btn {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:7px 14px; font-size:12px; font-weight:500;
+  border:none; border-radius:var(--r2); cursor:pointer;
+  transition:all .15s; white-space:nowrap; font-family:'Inter',sans-serif;
+}
+.btn-gold    { background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#000; font-weight:700; }
+.btn-gold:hover { filter:brightness(1.1); transform:translateY(-1px); }
+.btn-outline { background:transparent; color:var(--text2); border:1px solid var(--border2); }
+.btn-outline:hover { background:var(--bg4); color:var(--text); }
+.btn-red     { background:rgba(255,77,106,.12); color:var(--red); border:1px solid rgba(255,77,106,.25); }
+.btn-red:hover { background:rgba(255,77,106,.22); }
+.btn-blue    { background:rgba(77,144,255,.12); color:var(--blue); border:1px solid rgba(77,144,255,.25); }
+.btn-blue:hover { background:rgba(77,144,255,.22); }
+.btn-green   { background:rgba(45,216,130,.12); color:var(--green); border:1px solid rgba(45,216,130,.25); }
+.btn-green:hover { background:rgba(45,216,130,.22); }
+.btn-emergency {
+  background:linear-gradient(135deg,rgba(255,77,106,.2),rgba(255,77,106,.1));
+  color:var(--red); border:1px solid var(--red);
+  animation:emerg-pulse 2s ease-in-out infinite;
+}
+@keyframes emerg-pulse {
+  0%,100% { box-shadow:none; }
+  50%      { box-shadow:0 0 18px rgba(255,77,106,.35); }
+}
+.btn-emergency:hover { background:rgba(255,77,106,.3); }
+.btn-sm { padding:5px 10px; font-size:11px; }
+.btn-xs { padding:3px 7px; font-size:10px; border-radius:3px; }
+
+/* ══════════════════════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════════════════════ */
+.overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,.8);
+  z-index:500; display:none; align-items:center; justify-content:center;
+  padding:14px; backdrop-filter:blur(6px);
+}
+.overlay.open { display:flex; animation:fade-in .15s ease; }
+@keyframes fade-in { from{opacity:0} to{opacity:1} }
+.modal {
+  background:var(--bg2); border:1px solid var(--border2);
+  border-radius:14px; width:100%; max-width:680px; max-height:92vh;
+  overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,.7), var(--glow);
+  animation:slide-up .2s ease;
+}
+@keyframes slide-up { from{transform:translateY(18px);opacity:0} to{transform:translateY(0);opacity:1} }
+.modal.modal-lg { max-width:820px; }
+.modal.modal-xl { max-width:980px; }
+.modal-hdr {
+  padding:18px 22px 14px;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:flex-start; justify-content:space-between;
+  background:var(--bg3); border-radius:14px 14px 0 0;
+  position:sticky; top:0; z-index:10;
+}
+.modal-ttl  { font-family:'Syne',sans-serif; font-size:15px; font-weight:700; }
+.modal-sub  { font-size:10px; color:var(--text3); margin-top:2px; }
+.modal-body { padding:22px; }
+.modal-foot {
+  padding:14px 22px; border-top:1px solid var(--border);
+  display:flex; justify-content:flex-end; gap:8px;
+  background:var(--bg3); border-radius:0 0 14px 14px;
+  position:sticky; bottom:0;
+}
+.modal-close {
+  background:var(--bg); border:1px solid var(--border);
+  color:var(--text3); width:26px; height:26px;
+  border-radius:5px; cursor:pointer; font-size:13px;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:all .15s;
+}
+.modal-close:hover { background:var(--bg4); color:var(--text); }
+
+/* ══════════════════════════════════════════════════════════
+   FORM ELEMENTS
+══════════════════════════════════════════════════════════ */
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.fg { display:flex; flex-direction:column; gap:5px; }
+.fg.span2 { grid-column:1/-1; }
+.flabel { font-size:11px; font-weight:500; color:var(--text2); }
+.flabel .req { color:var(--gold); }
+.finp, .fsel, .ftxt {
+  background:var(--bg); border:1px solid var(--border2);
+  color:var(--text); border-radius:var(--r2);
+  padding:8px 11px; font-size:12px;
+  font-family:'Inter',sans-serif; outline:none; width:100%;
+  transition:border-color .15s, box-shadow .15s;
+}
+.finp:focus, .fsel:focus, .ftxt:focus {
+  border-color:var(--gold2);
+  box-shadow:0 0 0 3px rgba(0,201,177,.1);
+}
+.ftxt { resize:vertical; min-height:76px; }
+
+/* ══════════════════════════════════════════════════════════
+   DETAIL TABS
+══════════════════════════════════════════════════════════ */
+.dtabs {
+  display:flex; gap:0; border-bottom:1px solid var(--border);
+  margin-bottom:18px; overflow-x:auto;
+}
+.dtab {
+  padding:8px 15px; font-size:11px; font-weight:500;
+  border:none; background:transparent; color:var(--text3);
+  cursor:pointer; border-bottom:2px solid transparent;
+  margin-bottom:-1px; transition:all .15s; white-space:nowrap;
+  font-family:'Inter',sans-serif;
+}
+.dtab:hover { color:var(--text); }
+.dtab.active { color:var(--gold); border-bottom-color:var(--gold); }
+.dtab-pane { display:none; }
+.dtab-pane.active { display:block; }
+
+/* ══════════════════════════════════════════════════════════
+   DETAIL GRID
+══════════════════════════════════════════════════════════ */
+.detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.di { display:flex; flex-direction:column; gap:3px; }
+.di.span2 { grid-column:1/-1; }
+.di-lbl { font-size:9px; color:var(--text3); text-transform:uppercase; letter-spacing:.09em; }
+.di-val { font-size:12px; color:var(--text); font-weight:500; }
+.divider { border:none; border-top:1px solid var(--border); margin:14px 0; }
+
+/* ══════════════════════════════════════════════════════════
+   DEPARTMENT PANEL (key new feature)
+══════════════════════════════════════════════════════════ */
+.dept-panel {
+  background:var(--bg); border:1px solid var(--border2);
+  border-radius:var(--r); padding:14px; margin-bottom:14px;
+}
+.dept-panel-title {
+  font-size:10px; font-weight:700; color:var(--text3);
+  text-transform:uppercase; letter-spacing:.1em; margin-bottom:10px;
+}
+.dept-tabs { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:12px; }
+.dept-tab {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:5px 12px; border-radius:20px; font-size:11px; font-weight:500;
+  border:1px solid var(--border2); background:var(--bg3); color:var(--text2);
+  cursor:pointer; transition:all .15s; user-select:none;
+}
+.dept-tab:hover { border-color:var(--border3); color:var(--text); }
+.dept-tab.selected { background:rgba(0,201,177,.12); color:var(--gold); border-color:rgba(0,201,177,.35); }
+.dept-tab .dept-dot {
+  width:6px; height:6px; border-radius:50%; background:currentColor;
+}
+.dept-recipients {
+  font-size:10px; color:var(--text3); line-height:1.6;
+  background:var(--bg2); border-radius:var(--r2); padding:7px 10px;
+  min-height:28px;
+}
+.dept-recipients em { color:var(--gold); font-style:normal; }
+
+/* ══════════════════════════════════════════════════════════
+   MAIL COMPOSER
+══════════════════════════════════════════════════════════ */
+.mc-wrap { display:flex; flex-direction:column; gap:12px; }
+.mc-stage-selector {
+  display:flex; gap:4px; flex-wrap:wrap; padding:6px;
+  background:var(--bg); border:1px solid var(--border2);
+  border-radius:var(--r); margin-bottom:4px;
+}
+.mc-stage-btn {
+  padding:5px 10px; font-size:10px; font-weight:500;
+  border:1px solid transparent; border-radius:var(--r2);
+  background:transparent; color:var(--text3);
+  cursor:pointer; transition:all .15s; white-space:nowrap;
+  font-family:'Inter',sans-serif;
+}
+.mc-stage-btn:hover { background:var(--bg3); color:var(--text); }
+.mc-stage-btn.active { background:rgba(0,201,177,.12); color:var(--gold); border-color:rgba(0,201,177,.25); }
+
+.mc-subject-wrap { display:flex; gap:5px; align-items:stretch; }
+.mc-subject-wrap input { flex:1; }
+.mc-toolbar {
+  display:flex; gap:4px; flex-wrap:wrap; padding:6px 8px;
+  background:var(--bg2); border:1px solid var(--border2);
+  border-radius:var(--r2) var(--r2) 0 0; border-bottom:none;
+}
+.mc-body-border {
+  border:1px solid var(--border2); border-radius:0 0 var(--r2) var(--r2); overflow:hidden;
+}
+.mc-body {
+  background:var(--bg); border:none; color:var(--text);
+  width:100%; min-height:140px; padding:11px;
+  font-size:12px; font-family:'Inter',sans-serif; outline:none;
+  resize:vertical; line-height:1.6;
+}
+.mc-preview-wrap { background:var(--bg); border:1px solid var(--border); border-radius:var(--r2); }
+.mc-preview-hdr {
+  padding:7px 11px; border-bottom:1px solid var(--border);
+  font-size:9px; color:var(--text3); text-transform:uppercase;
+  letter-spacing:.1em; display:flex; justify-content:space-between; align-items:center;
+}
+.mc-preview-body {
+  padding:12px; font-size:11px; color:var(--text2); line-height:1.7;
+  max-height:180px; overflow-y:auto; white-space:pre-wrap; word-break:break-word;
+}
+.mc-preview-to { font-size:10px; color:var(--text3); padding:5px 11px 0; }
+.mc-preview-to em { color:var(--cyan); font-style:normal; }
+
+/* ══════════════════════════════════════════════════════════
+   DAILY UPDATE CARDS
+══════════════════════════════════════════════════════════ */
+.du-card {
+  background:var(--bg); border:1px solid var(--border);
+  border-radius:var(--r2); padding:11px 14px; margin-bottom:7px;
+}
+.du-date  { font-size:10px; color:var(--gold); font-weight:600; margin-bottom:3px; }
+.du-prog  { font-size:12px; color:var(--text); font-weight:500; }
+.du-notes { font-size:11px; color:var(--text2); }
+
+/* ══════════════════════════════════════════════════════════
+   HISTORY
+══════════════════════════════════════════════════════════ */
+.hist-list { display:flex; flex-direction:column; gap:9px; }
+.hist-item { display:flex; gap:10px; }
+.hist-dot {
+  width:9px; height:9px; border-radius:50%;
+  background:var(--gold2); flex-shrink:0; margin-top:3px;
+}
+.hist-info { flex:1; }
+.hist-action { font-size:12px; font-weight:600; color:var(--text); }
+.hist-meta   { font-size:10px; color:var(--text3); }
+.hist-notes  { font-size:11px; color:var(--text2); margin-top:2px; }
+
+/* ══════════════════════════════════════════════════════════
+   COMMUNICATION MATRIX
+══════════════════════════════════════════════════════════ */
+.matrix-wrap {
+  background:var(--bg3); border:1px solid var(--border);
+  border-radius:var(--r); overflow:hidden;
+}
+.mx-table { width:100%; border-collapse:collapse; font-size:11px; }
+.mx-table th,.mx-table td { padding:10px 14px; text-align:left; border-bottom:1px solid var(--border); }
+.mx-table th { background:var(--bg4); color:var(--text2); font-weight:600; font-size:10px; text-transform:uppercase; letter-spacing:.05em; }
+.mx-table tr:hover td { background:rgba(255,255,255,.015); }
+.badge-yes   { display:inline-block; background:rgba(45,216,130,.12); color:var(--green); font-size:9px; font-weight:700; padding:2px 7px; border-radius:3px; }
+.badge-daily { display:inline-block; background:rgba(0,201,177,.12); color:var(--gold);  font-size:9px; font-weight:700; padding:2px 7px; border-radius:3px; }
+
+/* ══════════════════════════════════════════════════════════
+   MAIL LOG
+══════════════════════════════════════════════════════════ */
+.ml-item {
+  background:var(--bg); border:1px solid var(--border);
+  border-radius:var(--r2); padding:9px 13px; margin-bottom:5px;
+  display:flex; justify-content:space-between; align-items:center; gap:10px;
+}
+.ml-item.ml-emerg { border-left:3px solid var(--red); }
+.ml-item.ml-auto  { border-left:3px solid var(--cyan); }
+.ml-stage  { font-size:11px; font-weight:600; color:var(--text); }
+.ml-detail { font-size:10px; color:var(--text3); }
+.ml-ok     { color:var(--green); font-size:9px; font-weight:700; white-space:nowrap; }
+.ml-fail   { color:var(--red);   font-size:9px; font-weight:700; white-space:nowrap; }
+
+/* ══════════════════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════════════════ */
+.toast-wrap {
+  position:fixed; bottom:20px; right:20px; z-index:9999;
+  display:flex; flex-direction:column; gap:7px; max-width:320px;
+}
+.toast {
+  background:var(--bg3); border:1px solid var(--border2);
+  border-radius:var(--r); padding:11px 15px;
+  font-size:12px; display:flex; align-items:center; gap:9px;
+  box-shadow:var(--shadow); animation:toast-in .25s ease;
+  border-left:3px solid var(--gold);
+}
+.toast.ok   { border-left-color:var(--green); }
+.toast.err  { border-left-color:var(--red); }
+.toast.info { border-left-color:var(--blue); }
+@keyframes toast-in { from{transform:translateX(16px);opacity:0} to{transform:translateX(0);opacity:1} }
+
+/* ══════════════════════════════════════════════════════════
+   EMPTY / LOADING
+══════════════════════════════════════════════════════════ */
+.empty { text-align:center; padding:50px 20px; color:var(--text3); }
+.empty-ico  { font-size:44px; opacity:.3; margin-bottom:10px; }
+.empty-txt  { font-size:13px; margin-bottom:14px; }
+.loading    { text-align:center; padding:34px; color:var(--text3); font-size:13px; }
+.spinner    {
+  display:inline-block; width:18px; height:18px; border:2px solid var(--border2);
+  border-top-color:var(--gold); border-radius:50%;
+  animation:spin .65s linear infinite; margin-right:7px;
+}
+@keyframes spin { to{transform:rotate(360deg)} }
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════════ */
+@media(max-width:900px) {
+  .sidebar { width:50px; }
+  .nav-item span:not(.nav-icon) { display:none; }
+  .nav-badge { display:none; }
+  .sb-label { display:none; }
+  .stats-row { grid-template-columns:1fr 1fr; }
+}
+@media(max-width:600px) {
+  .header { padding:0 10px; }
+  .h-title { font-size:13px; }
+  .h-sub { display:none; }
+  .content { padding:12px; }
+  .stats-row { grid-template-columns:1fr 1fr; gap:8px; }
+  .form-grid,.detail-grid { grid-template-columns:1fr; }
+  .fg.span2 { grid-column:1; }
+  .di.span2 { grid-column:1; }
+  .work-card { flex-direction:column; }
+  .modal { max-width:100%; border-radius:0; max-height:100%; }
+  .mc-stage-selector { overflow-x:auto; flex-wrap:nowrap; }
+}
+
+/* ─── OBSERVATIONS MODULE ──────────────────────────────── */
+.btn-purple {
+  background:linear-gradient(135deg,#5b6df5,#2d3a8c);
+  color:#fff; border:none; border-radius:var(--r2);
+  padding:7px 16px; font-size:12px; font-weight:700;
+  cursor:pointer; font-family:"Inter",sans-serif;
+  transition:opacity .2s; white-space:nowrap;
+}
+.btn-purple:hover { opacity:.85; }
+.obs-card {
+  background:var(--bg3); border:1px solid var(--border);
+  border-left:4px solid #6d5aed; border-radius:var(--r);
+  padding:13px 16px; margin-bottom:9px;
+  display:flex; align-items:flex-start; gap:14px; cursor:pointer;
+  transition:border-color .18s, box-shadow .15s, transform .15s;
+  animation:card-in .25s ease forwards;
+}
+.obs-card:hover { border-color:#818cf8; box-shadow:var(--shadow); transform:translateY(-1px); }
+.obs-card.p-High   { border-left-color:var(--red); }
+.obs-card.p-Medium { border-left-color:#00b89e; }
+.obs-card.p-Low    { border-left-color:var(--green); }
+.obs-left  { display:flex; flex-direction:column; gap:5px; min-width:110px; flex-shrink:0; }
+.obs-id    { font-family:"JetBrains Mono",monospace; font-size:9px; font-weight:700;
+             color:#a5b4fc; background:rgba(129,140,248,.1);
+             border:1px solid rgba(129,140,248,.2); padding:2px 7px; border-radius:3px; }
+.obs-stage { font-size:9px; font-weight:600; padding:3px 7px; border-radius:20px;
+             background:rgba(129,140,248,.12); color:#a5b4fc; white-space:nowrap; }
+.obs-info  { flex:1; min-width:0; }
+.obs-title { font-weight:600; font-size:13px; color:var(--text); margin-bottom:4px; }
+.obs-meta  { display:flex; gap:10px; flex-wrap:wrap; font-size:10px; color:var(--text3); }
+.obs-meta span { display:flex; align-items:center; gap:2px; }
+.obs-acts  { display:flex; gap:5px; flex-shrink:0; align-items:center; }
+
+
+/* ══════════════════════════════════════════════════════════
+   DASHBOARD — TWO-COLUMN LAYOUT (pipeline + chart)
+══════════════════════════════════════════════════════════ */
+.dash-two-col {
+  display:grid;
+  grid-template-columns:1fr 340px;
+  gap:14px;
+  margin-bottom:22px;
+  align-items:start;
+}
+.dash-chart-card {
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:16px 18px;
+}
+.dash-chart-title {
+  font-size:10px;
+  font-weight:700;
+  color:var(--text3);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  margin-bottom:12px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   OBS STAT CARD COLOURS (dashboard obs section)
+══════════════════════════════════════════════════════════ */
+.sc-obs-total::after  { background:#818cf8; }
+.sc-obs-active::after { background:var(--blue); }
+.sc-obs-done::after   { background:var(--green); }
+.sc-obs-high::after   { background:var(--red); }
+
+/* ══════════════════════════════════════════════════════════
+   DASHBOARD SECTION DIVIDER
+══════════════════════════════════════════════════════════ */
+.dash-divider {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:6px 0 18px;
+  padding:10px 16px;
+  background:linear-gradient(135deg,rgba(91,109,245,.08),rgba(129,140,248,.04));
+  border:1px solid rgba(124,58,237,.2);
+  border-radius:var(--r);
+  font-size:13px;
+  font-weight:700;
+  color:#a5b4fc;
+  letter-spacing:.02em;
+}
+
+/* ══════════════════════════════════════════════════════════
+   MINI BAR CHART (stage / priority distribution)
+══════════════════════════════════════════════════════════ */
+.bar-row {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:7px;
+}
+.bar-row:last-child { margin-bottom:0; }
+.bar-label {
+  font-size:9px;
+  color:var(--text3);
+  width:118px;
+  flex-shrink:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.bar-track {
+  flex:1;
+  height:7px;
+  background:var(--bg);
+  border-radius:4px;
+  overflow:hidden;
+  min-width:40px;
+}
+.bar-fill {
+  height:100%;
+  border-radius:4px;
+  transition:width .7s cubic-bezier(.4,0,.2,1);
+  min-width:2px;
+}
+.bar-count {
+  font-size:9px;
+  color:var(--text3);
+  font-family:"JetBrains Mono",monospace;
+  width:18px;
+  text-align:right;
+  flex-shrink:0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   PRIORITY PILL CHART
+══════════════════════════════════════════════════════════ */
+.priority-row {
+  display:flex;
+  gap:8px;
+  margin-top:4px;
+}
+.pri-pill {
+  flex:1;
+  text-align:center;
+  padding:8px 6px;
+  border-radius:var(--r2);
+  border:1px solid var(--border);
+}
+.pri-pill-num {
+  font-family:"JetBrains Mono",monospace;
+  font-size:18px;
+  font-weight:500;
+  line-height:1;
+  margin-bottom:3px;
+}
+.pri-pill-lbl { font-size:9px; color:var(--text3); }
+.pri-high  { background:rgba(255,77,106,.07); border-color:rgba(255,77,106,.2); }
+.pri-high  .pri-pill-num { color:var(--red); }
+.pri-med   { background:rgba(0,185,163,.07); border-color:rgba(0,185,163,.2); }
+.pri-med   .pri-pill-num { color:#00b89e; }
+.pri-low   { background:rgba(45,216,130,.07); border-color:rgba(45,216,130,.2); }
+.pri-low   .pri-pill-num { color:var(--green); }
+
+/* ══════════════════════════════════════════════════════════
+   WORKS VIEW — stat-card already styled globally
+   Make pipeline-wrap in works view fill more space
+══════════════════════════════════════════════════════════ */
+#view-works .pipeline-wrap,
+#view-observations .pipeline-wrap {
+  margin-bottom:18px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   OBS STAGE BADGE COLOURS
+══════════════════════════════════════════════════════════ */
+.obs-s0 { background:rgba(129,140,248,.14);  color:#a5b4fc; }
+.obs-s1 { background:rgba(99,102,241,.14);  color:#a5b4fc; }
+.obs-s2 { background:rgba(14,165,233,.14);  color:#7dd3fc; }
+.obs-s3 { background:rgba(0,185,163,.14);  color:#fcd34d; }
+.obs-s4 { background:rgba(239,68,68,.14);   color:#fca5a5; }
+.obs-s5 { background:rgba(34,197,94,.14);   color:#86efac; }
+.obs-s6 { background:rgba(45,216,130,.22);  color:#00e5b0; }
+
+/* ══════════════════════════════════════════════════════════
+   OBS MAIL COMPOSER
+══════════════════════════════════════════════════════════ */
+.obs-mc-wrap { display:flex; flex-direction:column; gap:12px; }
+.obs-stage-selector {
+  display:flex; gap:4px; flex-wrap:wrap; padding:6px;
+  background:rgba(124,58,237,.06); border:1px solid rgba(124,58,237,.2);
+  border-radius:var(--r); margin-bottom:4px;
+}
+.obs-stage-btn {
+  padding:5px 10px; font-size:10px; font-weight:500;
+  border:1px solid transparent; border-radius:var(--r2);
+  background:transparent; color:var(--text3);
+  cursor:pointer; transition:all .15s; white-space:nowrap;
+  font-family:"Inter",sans-serif;
+}
+.obs-stage-btn:hover { background:var(--bg3); color:var(--text); }
+.obs-stage-btn.active { background:rgba(124,58,237,.15); color:#a5b4fc; border-color:rgba(124,58,237,.3); }
+.obs-dept-panel {
+  background:var(--bg); border:1px solid rgba(124,58,237,.2);
+  border-radius:var(--r); padding:14px;
+}
+.obs-preview-wrap { background:var(--bg); border:1px solid rgba(124,58,237,.2); border-radius:var(--r2); }
+.obs-preview-hdr {
+  padding:7px 11px; border-bottom:1px solid rgba(124,58,237,.2);
+  font-size:9px; color:#818cf8; text-transform:uppercase; letter-spacing:.1em;
+  display:flex; justify-content:space-between; align-items:center;
+}
+
+/* ══════════════════════════════════════════════════════════
+   CARD ENTRANCE ANIMATION
+══════════════════════════════════════════════════════════ */
+@keyframes card-in {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE — dashboard two-col collapses on small screens
+══════════════════════════════════════════════════════════ */
+@media(max-width:1100px) {
+  .dash-two-col { grid-template-columns:1fr; }
+  .dash-chart-card { display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:start; }
+  .dash-chart-title { margin-bottom:8px; }
+}
+@media(max-width:700px) {
+  .dash-two-col { grid-template-columns:1fr; }
+  .dash-chart-card { grid-template-columns:1fr; }
+  .priority-row { gap:5px; }
+  .bar-label { width:80px; }
+}
+
+
+/* ══════ LIST TABLE VIEW ══════════════════════════════════ */
+.list-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:var(--r); margin-bottom:20px; }
+.ltbl { width:100%; border-collapse:collapse; font-size:12px; }
+.ltbl thead th {
+  background:#0a0d14; padding:9px 11px; text-align:left;
+  font-size:9px; font-weight:700; color:#8899aa; text-transform:uppercase;
+  letter-spacing:.1em; border-bottom:1px solid var(--border2);
+  white-space:nowrap; position:sticky; top:0; z-index:2;
+}
+.ltbl thead th:first-child { width:42px; text-align:center; border-radius:var(--r) 0 0 0; }
+.ltbl thead th.col-act { width:160px; text-align:center; }
+.ltbl tbody tr { border-bottom:1px solid rgba(30,38,54,.7); transition:background .1s; }
+.ltbl tbody tr:last-child { border-bottom:none; }
+.ltbl tbody tr:hover { background:rgba(0,201,177,.03); }
+.ltbl tbody tr.row-High   { border-left:3px solid var(--red); }
+.ltbl tbody tr.row-Medium { border-left:3px solid var(--gold); }
+.ltbl tbody tr.row-Low    { border-left:3px solid var(--green); }
+.ltbl tbody tr.row-done   { opacity:.5; }
+.ltbl td { padding:9px 11px; vertical-align:middle; }
+
+/* S.No cell */
+.td-sno { text-align:center; font-family:'JetBrains Mono',monospace; font-size:10px; color:#7788aa; }
+
+/* ID cell */
+.td-id {
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700;
+  color:var(--gold); cursor:pointer; white-space:nowrap;
+}
+.td-id:hover { color:var(--gold3); text-decoration:underline; }
+.td-obs-id { color:#a5b4fc !important; }
+
+/* Date cell */
+.td-date { font-size:10px; color:#aabbcc; white-space:nowrap; }
+
+/* Description cell */
+.td-desc { cursor:pointer; }
+.td-desc-main { font-weight:600; font-size:12px; color:var(--text); line-height:1.35; }
+.td-desc-main:hover { color:var(--gold3); }
+.td-obs-main:hover  { color:#a5b4fc; }
+.td-desc-sub { font-size:9px; color:#aabbcc; margin-top:2px; }
+
+/* Priority badge */
+.td-pri { white-space:nowrap; }
+.pbadge { display:inline-block; padding:2px 8px; border-radius:20px; font-size:9px; font-weight:700; }
+.pbadge.pH { background:rgba(255,77,106,.1);  color:var(--red);   border:1px solid rgba(255,77,106,.2); }
+.pbadge.pM { background:rgba(0,185,163,.1);  color:#00b89e;      border:1px solid rgba(0,185,163,.2); }
+.pbadge.pL { background:rgba(45,216,130,.1);  color:var(--green); border:1px solid rgba(45,216,130,.2); }
+
+/* Stage inline dropdown */
+.stage-sel {
+  background:transparent; border:1px solid var(--border2);
+  border-radius:var(--r2); color:var(--text); font-size:10px;
+  padding:4px 8px; cursor:pointer; width:100%; max-width:168px;
+  transition:border-color .15s;
+  font-family:'Inter',sans-serif;
+}
+.stage-sel:focus { outline:none; border-color:var(--gold); }
+.stage-sel.obs-sel:focus { border-color:#818cf8; }
+.stage-sel.si0 { border-color:rgba(0,201,177,.4);  color:#00c9b1; }
+.stage-sel.si1 { border-color:rgba(77,144,255,.4);  color:#4d90ff; }
+.stage-sel.si2 { border-color:rgba(167,139,250,.4); color:#a78bfa; }
+.stage-sel.si3 { border-color:rgba(23,212,232,.4);  color:#00c9b1; }
+.stage-sel.si4 { border-color:rgba(255,124,58,.4);  color:#ff7c3a; }
+.stage-sel.si5 { border-color:rgba(45,216,130,.4);  color:#00e5b0; }
+.stage-sel.si6 { border-color:rgba(45,216,130,.6);  color:#00e5b0; font-style:italic; }
+
+/* Progress inline */
+.prog-cell { display:flex; align-items:center; gap:5px; min-width:70px; }
+.prog-bar-xs { flex:1; height:4px; background:var(--bg); border-radius:2px; overflow:hidden; }
+.prog-fill-xs { height:100%; background:var(--gold); border-radius:2px; }
+.prog-pct { font-size:9px; color:#aabbcc; font-family:'JetBrains Mono',monospace; }
+
+/* Action dropdown + GO button */
+.act-cell { display:flex; gap:5px; align-items:center; justify-content:center; }
+.act-sel {
+  background:rgba(0,201,177,.06); border:1px solid rgba(0,201,177,.25);
+  border-radius:var(--r2); color:var(--gold); font-size:10px; font-weight:600;
+  padding:4px 10px; cursor:pointer;
+  font-family:'Inter',sans-serif; min-width:88px;
+}
+.act-sel.obs-act-sel {
+  background:rgba(124,58,237,.06); border-color:rgba(124,58,237,.3);
+  color:#a5b4fc;
+}
+.act-sel:focus { outline:none; border-color:var(--gold); }
+.act-sel.obs-act-sel:focus { border-color:#818cf8; }
+.act-go {
+  background:var(--gold); color:#000; border:none; border-radius:var(--r2);
+  padding:4px 11px; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;
+  transition:opacity .15s; font-family:'Inter',sans-serif;
+}
+.act-go:hover { opacity:.82; }
+.act-go.obs-go { background:#6d5aed; color:#fff; }
+
+/* Toolbar above table */
+.tbl-toolbar {
+  display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:12px;
+}
+.t-search {
+  flex:1; min-width:150px; background:var(--bg3); border:1px solid var(--border);
+  border-radius:var(--r2); padding:7px 11px; color:var(--text);
+  font-size:11px; font-family:'Inter',sans-serif;
+}
+.t-search:focus { outline:none; border-color:var(--border2); }
+.t-fsel {
+  background:var(--bg3); border:1px solid var(--border); border-radius:var(--r2);
+  padding:6px 10px; color:var(--text); font-size:11px; cursor:pointer; font-family:'Inter',sans-serif;
+}
+.t-fsel:focus { outline:none; }
+.t-count { font-size:10px; color:#8899aa; white-space:nowrap; padding:0 4px; }
+
+/* ══════ SIDEBAR MINI QUICK-LIST ════════════════════════════ */
+.sb-ql-section { padding:4px 0 6px; }
+.sb-ql-hdr {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:7px 12px 5px; cursor:pointer; user-select:none;
+  font-size:9px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.1em; color:#9aaac8;
+}
+.sb-ql-hdr:hover { color:var(--text); }
+.sb-ql-arrow { font-size:9px; transition:transform .2s; }
+.sb-ql-hdr.open .sb-ql-arrow { transform:rotate(90deg); }
+.sb-ql-body { max-height:0; overflow:hidden; transition:max-height .3s ease; }
+.sb-ql-body.open { max-height:360px; overflow-y:auto; }
+.sb-ql-item {
+  display:flex; align-items:center; gap:7px; padding:5px 10px 5px 14px;
+  cursor:pointer; border-left:2px solid transparent; transition:all .12s;
+}
+.sb-ql-item:hover { background:rgba(255,255,255,.04); }
+.sb-ql-item.ql-active { border-left-color:var(--gold); background:rgba(0,201,177,.05); }
+.sb-ql-item.ql-obs.ql-active { border-left-color:#818cf8; background:rgba(124,58,237,.05); }
+.ql-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.ql-info { flex:1; min-width:0; }
+.ql-id    { font-size:8px; font-family:'JetBrains Mono',monospace; color:#8899bb; }
+.ql-title { font-size:10px; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:128px; }
+.ql-stage { font-size:8px; color:#8899b87aa; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* ══ SKELETON LOADING ROWS ══════════════════════════════ */
+@keyframes skel-shine {
+  0%   { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+.skel {
+  height: 12px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #040c14 25%, #0a2030 50%, #040c14 75%);
+  background-size: 200px 100%;
+  animation: skel-shine 1.4s infinite linear;
+  width: 100%;
+}
+.skel-row td { padding: 10px 11px; }
+
+/* ══ THEME TOGGLE ══ */
+.theme-toggle {
+  display:flex; align-items:center; gap:5px;
+  padding:5px 9px; border-radius:20px;
+  background:transparent; border:1px solid var(--border2);
+  cursor:pointer; user-select:none; flex-shrink:0;
+  transition:border-color .2s;
+}
+.theme-toggle:hover { border-color:var(--gold); }
+.theme-toggle .tt-icon { font-size:12px; line-height:1; }
+.tt-track {
+  width:30px; height:16px; border-radius:8px;
+  background:var(--border2); position:relative;
+  flex-shrink:0; transition:background .25s;
+}
+body.light-mode .tt-track { background:var(--gold); }
+.tt-thumb {
+  position:absolute; top:2px; left:2px;
+  width:12px; height:12px; border-radius:50%;
+  background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.4);
+  transition:transform .25s;
+}
+body.light-mode .tt-thumb { transform:translateX(14px); }
+
+/* ══ LIGHT MODE OVERRIDES ══ */
+body.light-mode {
+  --bg:      #f0f4f8;
+  --bg2:     #e4ecf4;
+  --bg3:     #ffffff;
+  --bg4:     #f5f8fc;
+  --bg5:     #eaf0f8;
+  --border:  #c8d8e8;
+  --border2: #b0c4d8;
+  --border3: #7aaac8;
+  --text:    #0d1e2e;
+  --text2:   #1a2e42;
+  --text3:   #4a6070;
+  --shadow:  0 8px 32px rgba(0,0,0,.12);
+  --glow:    0 0 28px rgba(0,201,177,.08);
+}
+body.light-mode { background:var(--bg); color:var(--text); }
+body.light-mode::before {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,201,177,.04), transparent),
+    radial-gradient(ellipse 40% 30% at 90% 60%, rgba(77,144,255,.03), transparent);
+}
+body.light-mode .finp,
+body.light-mode .fsel,
+body.light-mode .ftxt,
+body.light-mode .finput,
+body.light-mode .fselect,
+body.light-mode .t-search,
+body.light-mode .t-fsel,
+body.light-mode .stage-sel,
+body.light-mode .act-sel,
+body.light-mode .mc-body { background:var(--bg3); color:var(--text); }
+body.light-mode .ltbl thead th { background:#eaf0f8; color:#2a4060; }
+body.light-mode .ltbl tbody tr:hover { background:rgba(0,201,177,.04); }
+body.light-mode .modal { background:var(--bg2); }
+body.light-mode .modal-hdr,
+body.light-mode .modal-foot { background:var(--bg3); }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ══ HEADER ══ -->
+<header class="header">
+  <div class="h-left">
+    <span class="logo-pill">SLN TERMINUS</span>
+    <div class="h-titles">
+      <div class="h-title">Daily Works Tracker</div>
+      <div class="h-sub">Property Manager · Daily Workflow System</div>
+    </div>
+  </div>
+  <div class="h-right">
+    <div class="live-clock"><span class="clk-dot"></span><span id="liveClock">--:--:-- IST</span></div>
+    <div class="theme-toggle" onclick="toggleTheme()" title="Toggle dark / light mode">
+      <span class="tt-icon">☀️</span>
+      <div class="tt-track"><div class="tt-thumb"></div></div>
+      <span class="tt-icon">🌙</span>
+    </div>
+    <a href="/sln_terminus" class="btn-portal">&#8592; Back to Portal</a>
+  </div>
+</header>
+
+<!-- ══ LIVE BAR ══ -->
+<div class="live-bar">
+  <div><span class="live-dot"></span>Live · Auto-refresh every 60s &nbsp;|&nbsp; Auto mail trigger: <strong>08:00 AM IST daily</strong></div>
+  <div id="lastRefresh">—</div>
+  <span id="apiStatus" style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(85,85,85,.3);color:#8899aa;margin-left:8px;">⬤ Connecting…</span>
+</div>
+
+<!-- ══ LAYOUT ══ -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sb-section">
+      <div class="sb-label">Workspace</div>
+      <button class="nav-item active" onclick="showView('dashboard')" id="nav-dashboard">
+        <span class="nav-icon">&#128202;</span><span>Dashboard</span>
+      </button>
+      <button class="nav-item" onclick="showView('works')" id="nav-works">
+        <span class="nav-icon">&#128295;</span><span>All Works</span>
+        <span class="nav-badge" id="cnt-works">0</span>
+      </button>
+      <button class="nav-item" onclick="showView('observations')" id="nav-observations">
+        <span class="nav-icon">&#128065;</span><span>Observations</span>
+        <span class="nav-badge" id="cnt-obs">0</span>
+      </button>
+    </div>
+    <hr class="sb-divider">
+
+    <!-- WORKS QUICK LIST -->
+    <div class="sb-ql-section">
+      <div class="sb-ql-hdr open" id="qlw-hdr" onclick="toggleQL('works')">
+        <span>&#128295; Works List</span>
+        <span class="sb-ql-arrow open">&#9654;</span>
+      </div>
+      <div class="sb-ql-body open" id="qlw-body">
+        <div id="qlw-list" style="padding:4px 0;">
+          <div style="padding:6px 14px;font-size:10px;color:#7788aa;">Loading…</div>
+        </div>
+      </div>
+    </div>
+    <hr class="sb-divider">
+
+    <!-- OBSERVATIONS QUICK LIST -->
+    <div class="sb-ql-section">
+      <div class="sb-ql-hdr open" id="qlo-hdr" onclick="toggleQL('obs')">
+        <span>&#128065; Obs List</span>
+        <span class="sb-ql-arrow open">&#9654;</span>
+      </div>
+      <div class="sb-ql-body open" id="qlo-body">
+        <div id="qlo-list" style="padding:4px 0;">
+          <div style="padding:6px 14px;font-size:10px;color:#7788aa;">Loading…</div>
+        </div>
+      </div>
+    </div>
+    <hr class="sb-divider">
+
+    <div class="sb-section">
+      <div class="sb-label">Reference</div>
+      <button class="nav-item" onclick="showView('matrix')" id="nav-matrix">
+        <span class="nav-icon">&#128203;</span><span>Comm. Matrix</span>
+      </button>
+      <button class="nav-item" onclick="showView('maillog')" id="nav-maillog">
+        <span class="nav-icon">&#128140;</span><span>Mail Log</span>
+      </button>
+      <button class="nav-item" onclick="openCreate()">
+        <span class="nav-icon">&#10133;</span><span>New Work</span>
+      </button>
+      <button class="nav-item" onclick="openObsCreate()">
+        <span class="nav-icon">&#10133;</span><span>New Obs</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- ──────────────────── DASHBOARD ──────────────────── -->
+    <div class="view active" id="view-dashboard">
+      <div class="sec-hdr">
+        <div class="sec-title">Works <em>Overview</em></div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-gold" onclick="openCreate()">&#43; New Work</button>
+          <button class="btn btn-purple" onclick="openObsCreate()">&#43; New Observation</button>
+        </div>
+      </div>
+
+      <!-- ═══ WORKS STATS ═══ -->
+      <div class="stats-row">
+        <div class="stat-card sc-total" onclick="showView('works')" style="cursor:pointer;" title="Click to view all works">
+          <div class="stat-ico">&#128295;</div>
+          <div class="stat-num" id="st-total">0</div>
+          <div class="stat-lbl">Total Works ↗</div>
+        </div>
+        <div class="stat-card sc-active" onclick="showView('works')" style="cursor:pointer;" title="Click to view active works">
+          <div class="stat-ico">&#9881;</div>
+          <div class="stat-num" id="st-active">0</div>
+          <div class="stat-lbl">Active</div>
+        </div>
+        <div class="stat-card sc-done" onclick="showView('works')" style="cursor:pointer;" title="Click to view completed works">
+          <div class="stat-ico">&#10003;</div>
+          <div class="stat-num" id="st-done">0</div>
+          <div class="stat-lbl">Completed</div>
+        </div>
+        <div class="stat-card sc-high" onclick="showView('works')" style="cursor:pointer;" title="Click to view">
+          <div class="stat-ico">&#128308;</div>
+          <div class="stat-num" id="st-high">0</div>
+          <div class="stat-lbl">High Priority ↗</div>
+        </div>
+      </div>
+
+      <!-- ═══ WORKS PIPELINE + CHART ROW ═══ -->
+      <div class="dash-two-col">
+        <div class="pipeline-wrap" style="margin-bottom:0;">
+          <div class="pipeline-head">&#128295; Works Workflow Pipeline</div>
+          <div class="pipeline" id="legendPipeline"></div>
+        </div>
+        <div class="dash-chart-card">
+          <div class="dash-chart-title">&#128295; Works by Stage</div>
+          <div id="workStageChart"></div>
+          <div class="dash-chart-title" style="margin-top:14px;">&#127922; Works by Priority</div>
+          <div id="workPriorityChart"></div>
+        </div>
+      </div>
+
+      <!-- ═══ DIVIDER ═══ -->
+      <div class="dash-divider">
+        <span>&#128065; Observations Overview</span>
+        <button class="btn btn-outline btn-sm" onclick="showView('observations')">View All &#8594;</button>
+      </div>
+
+      <!-- ═══ OBS STATS ═══ -->
+      <div class="stats-row">
+        <div class="stat-card sc-obs-total">
+          <div class="stat-ico">&#128065;</div>
+          <div class="stat-num" id="dash-obs-total" style="color:#a5b4fc;">0</div>
+          <div class="stat-lbl">Total</div>
+        </div>
+        <div class="stat-card sc-obs-active">
+          <div class="stat-ico">&#9881;</div>
+          <div class="stat-num" id="dash-obs-active" style="color:var(--blue);">0</div>
+          <div class="stat-lbl">Active</div>
+        </div>
+        <div class="stat-card sc-obs-done">
+          <div class="stat-ico">&#10003;</div>
+          <div class="stat-num" id="dash-obs-done" style="color:var(--green);">0</div>
+          <div class="stat-lbl">Completed</div>
+        </div>
+        <div class="stat-card sc-obs-high">
+          <div class="stat-ico">&#128308;</div>
+          <div class="stat-num" id="dash-obs-high" style="color:var(--red);">0</div>
+          <div class="stat-lbl">High Priority</div>
+        </div>
+      </div>
+
+      <!-- ═══ OBS PIPELINE + CHART ROW ═══ -->
+      <div class="dash-two-col">
+        <div class="pipeline-wrap" style="margin-bottom:0;">
+          <div class="pipeline-head">&#128065; Observations Workflow Pipeline</div>
+          <div class="pipeline" id="dashObsPipeline"></div>
+        </div>
+        <div class="dash-chart-card">
+          <div class="dash-chart-title">&#128065; Observations by Stage</div>
+          <div id="obsStageChart"></div>
+          <div class="dash-chart-title" style="margin-top:14px;">&#127922; Obs by Priority</div>
+          <div id="obsPriorityChart"></div>
+        </div>
+      </div>
+
+      <!-- ═══ STATUS SUMMARY ═══ -->
+      <div class="sec-hdr" style="margin-top:22px;">
+        <div class="sec-title">Status <em>Summary</em></div>
+      </div>
+      <div class="dash-two-col" style="margin-top:0;">
+        <!-- Works Status Donut -->
+        <div class="dash-chart-card" style="padding:20px 24px;">
+          <div class="dash-chart-title" style="margin-bottom:14px;">&#128295; Works — Status Breakdown</div>
+          <div id="workStatusDonut" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+            <canvas id="workDonutCanvas" width="120" height="120" style="flex-shrink:0;"></canvas>
+            <div id="workDonutLegend" style="flex:1;min-width:120px;"></div>
+          </div>
+          <div style="margin-top:16px;">
+            <div class="dash-chart-title" style="margin-bottom:8px;">Stage Distribution</div>
+            <div id="workStageChart2"></div>
+          </div>
+        </div>
+        <!-- Obs Status Donut -->
+        <div class="dash-chart-card" style="padding:20px 24px;">
+          <div class="dash-chart-title" style="margin-bottom:14px;">&#128065; Observations — Status Breakdown</div>
+          <div id="obsStatusDonut" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+            <canvas id="obsDonutCanvas" width="120" height="120" style="flex-shrink:0;"></canvas>
+            <div id="obsDonutLegend" style="flex:1;min-width:120px;"></div>
+          </div>
+          <div style="margin-top:16px;">
+            <div class="dash-chart-title" style="margin-bottom:8px;">Stage Distribution</div>
+            <div id="obsStageChart2"></div>
+          </div>
+        </div>
+      </div>
+    
+    <!-- ── Dashboard Footer ──────────────────────────────────── -->
+    <div style="margin-top:32px;padding:20px 0 8px;border-top:1px solid var(--border);text-align:center;">
+      <div style="font-size:11px;color:#6677aa;margin-bottom:6px;">
+        Log in to the EPMS dashboard for full details and actions.
+      </div>
+      <a href="/login" style="font-size:11px;color:var(--gold);text-decoration:none;font-weight:600;letter-spacing:.5px;">
+        SLN TERMINUS &nbsp;·&nbsp; emerZhent Property Management Services ↗
+      </a>
+    </div>
+  </div>
+
+    <!-- ──────────────────── ALL WORKS TABLE ──────────────────── -->
+    <div class="view" id="view-works">
+      <div class="sec-hdr">
+        <div class="sec-title">&#128295; Works <em>Tracker</em></div>
+        <button class="btn btn-gold" onclick="openCreate()">&#43; New Work</button>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="tbl-toolbar">
+        <input class="t-search" id="wTblSrch" placeholder="&#128269;  Search ID, title, location…" oninput="renderWorksTable()">
+        <select class="t-fsel" id="wTblStatus" onchange="renderWorksTable()">
+          <option value="">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Completed">Completed</option>
+          <option value="On Hold">On Hold</option>
+        </select>
+        <select class="t-fsel" id="wTblPri" onchange="renderWorksTable()">
+          <option value="">All Priority</option>
+          <option value="High">&#128308; High</option>
+          <option value="Medium">&#128992; Medium</option>
+          <option value="Low">&#128994; Low</option>
+        </select>
+        <select class="t-fsel" id="wTblStage" onchange="renderWorksTable()">
+          <option value="">All Stages</option>
+          <option>Issue Identification</option>
+          <option>GM Approval</option>
+          <option>Procurement / Finance Action</option>
+          <option>Management Approval</option>
+          <option>Contract Awarded</option>
+          <option>Execution &amp; Daily Monitoring</option>
+          <option>Completion &amp; Closure</option>
+        </select>
+        <span class="t-count" id="wTblCount">0 items</span>
+      </div>
+
+      <!-- Table -->
+      <div class="list-wrap">
+        <table class="ltbl">
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Work ID</th>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Priority</th>
+              <th>Stage / Workflow</th>
+              <th>Progress</th>
+              <th class="col-act">Action</th>
+            </tr>
+          </thead>
+          <tbody id="wTblBody">
+            <tr id="wTblLoader"><td colspan="8" style="text-align:center;padding:24px;color:#6677aa;"><span class="spinner"></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ──────────────────── COMM MATRIX ──────────────────── -->
+    <div class="view" id="view-matrix">
+      <div class="sec-hdr"><div class="sec-title">Communication <em>Matrix</em></div></div>
+      <div class="matrix-wrap">
+        <table class="mx-table">
+          <thead>
+            <tr><th>Stage</th><th>Email Trigger</th><th>Recipients</th><th>Frequency</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Issue Identified</td><td><span class="badge-yes">YES</span></td><td>GM / Management</td><td>Once on creation</td></tr>
+            <tr><td>GM Approval</td><td><span class="badge-yes">YES</span></td><td>Procurement / Finance</td><td>Once on approval</td></tr>
+            <tr><td>Quotation Stage</td><td><span class="badge-yes">YES</span></td><td>Management / PM</td><td>Once on completion</td></tr>
+            <tr><td>Final Approval</td><td><span class="badge-yes">YES</span></td><td>All Concerned</td><td>Once on approval</td></tr>
+            <tr><td>Contract Awarded</td><td><span class="badge-yes">YES</span></td><td>All Concerned</td><td>Once on award</td></tr>
+            <tr><td>Daily Execution</td><td><span class="badge-daily">DAILY 8:00 AM</span></td><td>PM / Management</td><td>Every day until completion</td></tr>
+            <tr><td>Completion</td><td><span class="badge-yes">YES</span></td><td>All Concerned</td><td>Once on closure</td></tr>
+            <tr><td style="color:var(--red);font-weight:600;">&#9888; EMERGENCY</td><td><span style="display:inline-block;background:rgba(255,77,106,.12);color:var(--red);font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;">IMMEDIATE</span></td><td>ALL Departments</td><td>On-demand, any stage</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ──────────────────── MAIL LOG ──────────────────── -->
+    <div class="view" id="view-maillog">
+      <div class="sec-hdr">
+        <div class="sec-title">Mail <em>Log</em></div>
+        <button class="btn btn-outline btn-sm" onclick="loadMailLog()">&#8635; Refresh</button>
+      </div>
+      <div id="mailLogWrap"><div class="loading"><span class="spinner"></span>Loading…</div></div>
+    </div>
+
+
+    <!-- ──────────────────── OBSERVATIONS TABLE ──────────────────── -->
+    <div class="view" id="view-observations">
+      <div class="sec-hdr">
+        <div class="sec-title">&#128065; Observations <em>Tracker</em></div>
+        <button class="btn btn-purple" onclick="openObsCreate()">&#10133; New Observation</button>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="tbl-toolbar">
+        <input class="t-search" id="oTblSrch" placeholder="&#128269;  Search ID, title…" oninput="renderObsTable()">
+        <select class="t-fsel" id="oTblStatus" onchange="renderObsTable()">
+          <option value="">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Completed">Completed</option>
+        </select>
+        <select class="t-fsel" id="oTblPri" onchange="renderObsTable()">
+          <option value="">All Priority</option>
+          <option value="High">&#128308; High</option>
+          <option value="Medium">&#128992; Medium</option>
+          <option value="Low">&#128994; Low</option>
+        </select>
+        <select class="t-fsel" id="oTblStage" onchange="renderObsTable()">
+          <option value="">All Stages</option>
+          <option>Observation Raised by GM/Management</option>
+          <option>PM Review &amp; Response</option>
+          <option>GM Verification</option>
+          <option>Management Approval</option>
+          <option>Procurement/Finance Action</option>
+          <option>Work In Progress</option>
+          <option>Completed</option>
+        </select>
+        <span class="t-count" id="oTblCount">0 items</span>
+      </div>
+
+      <!-- Table -->
+      <div class="list-wrap">
+        <table class="ltbl">
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Obs ID</th>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Priority</th>
+              <th>Stage / Workflow</th>
+              <th>Identified By</th>
+              <th class="col-act">Action</th>
+            </tr>
+          </thead>
+          <tbody id="oTblBody">
+            <tr id="oTblLoader"><td colspan="8" style="text-align:center;padding:24px;color:#6677aa;"><span class="spinner"></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div><!-- /layout -->
+</div><!-- /app -->
+
+<!-- ══════════════════════════════════════════════════════
+     TOAST
+══════════════════════════════════════════════════════════ -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     MODAL: CREATE / EDIT WORK
+══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="createOverlay">
+  <div class="modal modal-lg">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-ttl" id="createTitle">&#43; New Cost Implication Work</div>
+        <div class="modal-sub">All cost implication works require GM approval and procurement cycle</div>
+      </div>
+      <button class="modal-close" onclick="closeOverlay('createOverlay')">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="fg span2">
+          <label class="flabel">Work Title <span class="req">*</span></label>
+          <input type="text" class="finp" id="cf-title" placeholder="Work Description">
+        </div>
+        <div class="fg">
+          <label class="flabel">Location / Area</label>
+          <input type="text" class="finp" id="cf-location" placeholder="Site Location">
+        </div>
+        <div class="fg">
+          <label class="flabel">Priority</label>
+          <select class="fsel" id="cf-priority">
+            <option value="High">High</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="flabel">Estimated Cost (&#8377;)</label>
+          <input type="text" class="finp" id="cf-cost" placeholder="If to Known Approx">
+        </div>
+        <div class="fg">
+          <label class="flabel">Identified By (PM Name)</label>
+          <input type="text" class="finp" id="cf-identifiedBy" placeholder="Property Manager Name">
+        </div>
+        <div class="fg">
+          <label class="flabel">Vendor / Contractor</label>
+          <input type="text" class="finp" id="cf-vendor" placeholder="Vendor Name">
+        </div>
+        <div class="fg">
+          <label class="flabel">Expected Start Date</label>
+          <input type="date" class="finp" id="cf-startDate">
+        </div>
+        <div class="fg">
+          <label class="flabel">Expected Completion Date</label>
+          <input type="date" class="finp" id="cf-endDate">
+        </div>
+        <div class="fg span2">
+          <label class="flabel">Description / Scope of Work</label>
+          <textarea class="ftxt" id="cf-desc" rows="4" placeholder="Detailed description, scope, and reason for cost implication… and Required Approval"></textarea>
+        </div>
+        <div class="fg">
+          <label class="flabel">Remarks</label>
+          <input type="text" class="finp" id="cf-remarks" placeholder="Initial remarks">
+        </div>
+        <div class="fg">
+          <label class="flabel">Inspection Required</label>
+          <select class="fsel" id="cf-inspection">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="Pending" selected>Pending</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <input type="hidden" id="cf-editId">
+      <button class="btn btn-outline" onclick="closeOverlay('createOverlay')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveWork()">&#128190; Save Work</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     MODAL: WORK DETAIL
+══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="detailOverlay">
+  <div class="modal modal-xl">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-ttl" id="detailTitle">Work Detail</div>
+        <div class="modal-sub" id="detailSub"></div>
+      </div>
+      <div style="display:flex;gap:7px;align-items:center;">
+        <button class="btn btn-outline btn-sm" onclick="editCurrentWork()">&#9998; Edit</button>
+        <button class="modal-close" onclick="closeOverlay('detailOverlay')">&#10005;</button>
+      </div>
+    </div>
+    <div class="modal-body">
+
+      <!-- DETAIL TABS -->
+      <div class="dtabs">
+        <button class="dtab active" onclick="switchDtab('overview')">Overview</button>
+        <button class="dtab" onclick="switchDtab('workflow')">Workflow</button>
+        <button class="dtab" onclick="switchDtab('daily')">Daily Update</button>
+        <button class="dtab" onclick="switchDtab('mail')">Trigger Mail</button>
+        <button class="dtab" onclick="switchDtab('history')">History</button>
+      </div>
+
+      <!-- TAB: OVERVIEW -->
+      <div class="dtab-pane active" id="dp-overview">
+        <div class="detail-grid" id="detailGrid"></div>
+      </div>
+
+      <!-- TAB: WORKFLOW -->
+      <div class="dtab-pane" id="dp-workflow">
+        <div class="pipeline-wrap" style="margin-bottom:0;">
+          <div class="pipeline-head">Current Stage Pipeline</div>
+          <div class="pipeline" id="detailPipeline"></div>
+        </div>
+        <hr class="divider">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-gold" onclick="advanceStage()">&#9193; Advance to Next Stage</button>
+          <button class="btn btn-outline" onclick="openStageModal()">&#9881; Set Stage Manually</button>
+          <button class="btn" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;border-radius:6px;padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer;" onclick="openCloseWork()">&#9989; Close &amp; Complete Work</button>
+          <button class="btn btn-red" onclick="closeOverlay('detailOverlay');promptDelete(currentWorkId);" style="margin-left:auto;">&#128465; Delete</button>
+        </div>
+      </div>
+
+      <!-- TAB: DAILY UPDATE -->
+      <div class="dtab-pane" id="dp-daily">
+        <div class="form-grid" style="margin-bottom:14px;">
+          <div class="fg">
+            <label class="flabel">Date</label>
+            <input type="date" class="finp" id="du-date">
+          </div>
+          <div class="fg">
+            <label class="flabel">Progress (%)</label>
+            <input type="number" class="finp" id="du-progress" min="0" max="100" placeholder="0–100">
+          </div>
+          <div class="fg span2">
+            <label class="flabel">Today's Remarks</label>
+            <input type="text" class="finp" id="du-remarks" placeholder="Work progress remarks for today">
+          </div>
+          <div class="fg">
+            <label class="flabel">Delays (if any)</label>
+            <input type="text" class="finp" id="du-delays" placeholder="Reason for delay if applicable">
+          </div>
+          <div class="fg">
+            <label class="flabel">Revised Timeline</label>
+            <input type="text" class="finp" id="du-revised" placeholder="Revised completion estimate">
+          </div>
+        </div>
+        <button class="btn btn-gold" onclick="submitDailyUpdate()">&#128221; Save Daily Update</button>
+        <hr class="divider">
+        <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">Previous Updates</div>
+        <div id="duList"></div>
+      </div>
+
+      <!-- TAB: TRIGGER MAIL — FULL FEATURED -->
+      <div class="dtab-pane" id="dp-mail">
+        <div class="mc-wrap">
+
+          <!-- Stage selector buttons -->
+          <div>
+            <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">Select Mail Type / Stage</div>
+            <div class="mc-stage-selector" id="mcStageBtns"></div>
+          </div>
+
+          <!-- Department Panel — ALL DEPARTMENTS WITH INPUTS -->
+          <div class="dept-panel">
+            <div class="dept-panel-title">&#128101; Concerned Departments — Select Recipients</div>
+            <div class="dept-tabs" id="deptTabs">
+              <span class="dept-tab" data-dept="GM"          onclick="toggleDept(this)"><span class="dept-dot"></span>GM</span>
+              <span class="dept-tab" data-dept="Procurement" onclick="toggleDept(this)"><span class="dept-dot"></span>Procurement</span>
+              <span class="dept-tab" data-dept="Finance"     onclick="toggleDept(this)"><span class="dept-dot"></span>Finance</span>
+              <span class="dept-tab" data-dept="Management"  onclick="toggleDept(this)"><span class="dept-dot"></span>Management</span>
+              <span class="dept-tab" data-dept="PM"          onclick="toggleDept(this)"><span class="dept-dot"></span>PM</span>
+              <span class="dept-tab" data-dept="Accounts"    onclick="toggleDept(this)"><span class="dept-dot"></span>Accounts</span>
+              <span class="dept-tab" data-dept="All"         onclick="toggleDept(this)"><span class="dept-dot"></span>All</span>
+            </div>
+            <div class="dept-recipients" id="deptRecipients">Select departments above to view recipient emails</div>
+            <!-- Custom email input for dept -->
+            <div style="display:flex;gap:6px;margin-top:8px;">
+              <input type="email" class="finp" id="extraEmail" placeholder="Add extra email address (optional)" style="flex:1;font-size:11px;padding:5px 9px;">
+              <button class="btn btn-outline btn-xs" onclick="addExtraEmail()">&#43; Add</button>
+            </div>
+            <div id="extraEmailList" style="margin-top:5px;display:flex;gap:4px;flex-wrap:wrap;"></div>
+          </div>
+
+          <!-- Subject row with edit tools -->
+          <div class="fg">
+            <label class="flabel">Mail Subject</label>
+            <div class="mc-subject-wrap">
+              <input type="text" class="finp" id="mcSubject" placeholder="Mail subject…" oninput="updatePreview()">
+              <button class="btn btn-outline btn-xs" title="Copy subject" onclick="copyField('mcSubject')">&#128203;</button>
+              <button class="btn btn-outline btn-xs" title="Undo subject" onclick="undoField('mcSubject')">&#10554;</button>
+              <button class="btn btn-red    btn-xs" title="Clear subject" onclick="clearField('mcSubject')">&#128465;</button>
+            </div>
+          </div>
+
+          <!-- Body with full toolbar -->
+          <div class="fg">
+            <label class="flabel">Mail Body</label>
+            <div class="mc-toolbar">
+              <span style="font-size:9px;color:var(--text3);margin-right:3px;align-self:center;">INSERT:</span>
+              <button class="btn btn-outline btn-xs" onclick="insertSnippet('{title}')">Title</button>
+              <button class="btn btn-outline btn-xs" onclick="insertSnippet('{location}')">Location</button>
+              <button class="btn btn-outline btn-xs" onclick="insertSnippet('{cost}')">Cost</button>
+              <button class="btn btn-outline btn-xs" onclick="insertSnippet('{vendor}')">Vendor</button>
+              <button class="btn btn-outline btn-xs" onclick="insertSnippet('{date}')">Date</button>
+              <button class="btn btn-outline btn-xs" onclick="insertSnippet('{progress}%')">Progress</button>
+              <button class="btn btn-outline btn-xs" onclick="insertSnippet('{remarks}')">Remarks</button>
+              <button class="btn btn-outline btn-xs" onclick="insertSnippet('{end_date}')">End Date</button>
+              <span style="width:1px;background:var(--border2);margin:0 2px;align-self:stretch;"></span>
+              <button class="btn btn-outline btn-xs" title="Copy body"  onclick="copyField('mcBody')">&#128203; Copy</button>
+              <button class="btn btn-outline btn-xs" title="Paste"      onclick="pasteBody()">&#128206; Paste</button>
+              <button class="btn btn-outline btn-xs" title="Undo body"  onclick="undoField('mcBody')">&#10554; Undo</button>
+              <button class="btn btn-red     btn-xs" title="Clear body" onclick="clearField('mcBody')">&#128465; Clear</button>
+            </div>
+            <div class="mc-body-border">
+              <textarea class="mc-body" id="mcBody" rows="9" oninput="updatePreview()"></textarea>
+            </div>
+          </div>
+
+          <!-- Preview panel -->
+          <div class="mc-preview-wrap">
+            <div class="mc-preview-hdr">
+              <span>&#128247; Live Mail Preview</span>
+              <button class="btn btn-outline btn-xs" onclick="openFullPreview()">Full Preview</button>
+            </div>
+            <div class="mc-preview-to" id="mcPreviewTo"></div>
+            <div class="mc-preview-body" id="mcPreviewBody">—</div>
+          </div>
+
+          <!-- Action row -->
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <button class="btn btn-gold" onclick="triggerMail()">&#128228; Send Trigger Mail</button>
+            <button class="btn btn-emergency" onclick="sendEmergencyMail()">&#9888; Emergency Mail — All Depts</button>
+            <button class="btn btn-outline" onclick="saveTemplate()">&#128190; Save as Template</button>
+            <span id="mcStatus" style="font-size:11px;color:var(--text3);"></span>
+          </div>
+
+        </div>
+      </div><!-- /dp-mail -->
+
+      <!-- TAB: HISTORY -->
+      <div class="dtab-pane" id="dp-history">
+        <div class="hist-list" id="histList"></div>
+      </div>
+
+    </div><!-- /modal-body -->
+  </div><!-- /modal -->
+</div><!-- /detailOverlay -->
+
+<!-- ══════════════════════════════════════════════════════
+     MODAL: MANUAL STAGE
+══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="stageOverlay">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-hdr">
+      <div class="modal-ttl">&#9881; Set Stage Manually</div>
+      <button class="modal-close" onclick="closeOverlay('stageOverlay')">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg" style="margin-bottom:12px;">
+        <label class="flabel">Select Stage</label>
+        <select class="fsel" id="manualStage">
+          <option value="Issue Identification">Issue Identification</option>
+          <option value="GM Approval">GM Approval</option>
+          <option value="Procurement / Finance Action">Procurement / Finance Action</option>
+          <option value="Management Approval">Management Approval</option>
+          <option value="Contract Awarded">Contract Awarded</option>
+          <option value="Execution &amp; Daily Monitoring">Execution &amp; Daily Monitoring</option>
+          <option value="Completion &amp; Closure">Completion &amp; Closure</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label class="flabel">Notes</label>
+        <input type="text" class="finp" id="manualNotes" placeholder="Optional note for history">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeOverlay('stageOverlay')">Cancel</button>
+      <button class="btn btn-gold" onclick="setManualStage()">Set Stage</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     MODAL: FULL MAIL PREVIEW
+══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="previewOverlay">
+  <div class="modal modal-lg">
+    <div class="modal-hdr">
+      <div class="modal-ttl">&#128247; Full Mail Preview</div>
+      <button class="modal-close" onclick="closeOverlay('previewOverlay')">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom:8px;font-size:11px;color:var(--text3);"><strong>To:</strong> <span id="prvTo" style="color:var(--cyan);">—</span></div>
+      <div style="margin-bottom:12px;font-size:12px;color:var(--text2);"><strong>Subject:</strong> <span id="prvSubject">—</span></div>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--r2);padding:14px;font-size:12px;color:var(--text2);line-height:1.8;max-height:380px;overflow-y:auto;white-space:pre-wrap;font-family:monospace;" id="prvBody">—</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeOverlay('previewOverlay')">Close</button>
+      <button class="btn btn-gold" onclick="triggerMail()">&#128228; Send Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     MODAL: OBS FULL MAIL PREVIEW
+══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="obsPreviewOverlay">
+  <div class="modal modal-lg">
+    <div class="modal-hdr" style="background:linear-gradient(135deg,rgba(91,109,245,.15),var(--bg3));">
+      <div>
+        <div class="modal-ttl" style="color:#a5b4fc;">&#128247; Observation Mail Preview</div>
+        <div class="modal-sub" id="obsPreviewSub">—</div>
+      </div>
+      <button class="modal-close" onclick="closeOverlay('obsPreviewOverlay')">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom:8px;font-size:11px;color:var(--text3);"><strong>To:</strong> <span id="obsPrvTo" style="color:var(--cyan);">—</span></div>
+      <div style="margin-bottom:12px;font-size:12px;color:var(--text2);"><strong>Subject:</strong> <span id="obsPrvSubject">—</span></div>
+      <div style="background:var(--bg);border:1px solid rgba(124,58,237,.2);border-radius:var(--r2);padding:14px;font-size:12px;color:var(--text2);line-height:1.8;max-height:380px;overflow-y:auto;white-space:pre-wrap;font-family:monospace;" id="obsPrvBody">—</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeOverlay('obsPreviewOverlay')">Close</button>
+      <button class="btn-purple" onclick="sendObsMail()">&#128228; Send Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     MODAL: DELETE CONFIRM
+══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="deleteOverlay">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-hdr"><div class="modal-ttl">&#128465; Delete Work</div><button class="modal-close" onclick="closeOverlay('deleteOverlay')">&#10005;</button></div>
+    <div class="modal-body">
+      <p style="color:var(--text2);font-size:13px;line-height:1.6;">This will permanently delete the work record and all its history.</p>
+      <p style="color:var(--red);font-size:11px;margin-top:8px;font-weight:600;">&#9888; This cannot be undone.</p>
+      <div id="deleteWorkLabel" style="margin-top:10px;padding:8px 12px;background:rgba(255,77,106,.07);border:1px solid rgba(255,77,106,.2);border-radius:6px;font-size:11px;color:#fca5a5;"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeOverlay('deleteOverlay')">Cancel</button>
+      <button class="btn btn-red" onclick="confirmDelete()">&#128465; Delete Work</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE OBS MODAL -->
+<div class="overlay" id="deleteObsOverlay">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-hdr"><div class="modal-ttl">&#128465; Delete Observation</div><button class="modal-close" onclick="closeOverlay('deleteObsOverlay')">&#10005;</button></div>
+    <div class="modal-body">
+      <p style="color:var(--text2);font-size:13px;line-height:1.6;">This will permanently delete the observation and all its history.</p>
+      <p style="color:var(--red);font-size:11px;margin-top:8px;font-weight:600;">&#9888; This cannot be undone.</p>
+      <div id="deleteObsLabel" style="margin-top:10px;padding:8px 12px;background:rgba(255,77,106,.07);border:1px solid rgba(255,77,106,.2);border-radius:6px;font-size:11px;color:#fca5a5;"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeOverlay('deleteObsOverlay')">Cancel</button>
+      <button class="btn btn-red" onclick="confirmDeleteObs()">&#128465; Delete Observation</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+// ══════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════
+const STAGES = [
+  "Issue Identification","GM Approval","Procurement / Finance Action",
+  "Management Approval","Contract Awarded","Execution & Daily Monitoring","Completion & Closure"
+];
+const STAGE_CLS = ["s0","s1","s2","s3","s4","s5","s6"];
+
+const STAGE_DEPTS_DEFAULT = {
+  "Issue Identification":         ["GM","Management"],
+  "GM Approval":                  ["Procurement","Finance"],
+  "Procurement / Finance Action": ["Management","PM"],
+  "Management Approval":          ["All"],
+  "Contract Awarded":             ["All"],
+  "Execution & Daily Monitoring": ["PM","Management"],
+  "Completion & Closure":         ["All"]
+};
+
+const DEPT_EMAILS = {
+  "GM":          ["maintenance.slnterminus@gmail.com","yasven7545@gmail.com"],
+  "Procurement": ["maintenance.slnterminus@gmail.com","engineering@terminus-global.com"],
+  "Finance":     ["maintenance.slnterminus@gmail.com"],
+  "Management":  ["maintenance.slnterminus@gmail.com","yasven7545@gmail.com","engineering@terminus-global.com"],
+  "PM":          ["maintenance.slnterminus@gmail.com"],
+  "Accounts":    ["maintenance.slnterminus@gmail.com"],
+  "All":         ["maintenance.slnterminus@gmail.com","yasven7545@gmail.com","engineering@terminus-global.com"]
+};
+
+let allWorks      = [];
+let _lastWorkStats = null;
+let _lastObsStats  = null;
+let currentWorkId = null;
+let deleteTarget  = null;
+let undoBuf       = {};
+let extraEmails   = [];
+const API         = "/sln_work_track";
+
+// ══════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════
+document.addEventListener("DOMContentLoaded", () => {
+  // Live IST Clock
+  function updateClock() {
+    const el = document.getElementById("liveClock");
+    if (!el) return;
+    const now = new Date();
+    const ist = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+    const h = String(ist.getHours()).padStart(2,"0");
+    const m = String(ist.getMinutes()).padStart(2,"0");
+    const s = String(ist.getSeconds()).padStart(2,"0");
+    el.textContent = `${h}:${m}:${s} IST`;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+  buildLegendPipeline();
+  buildObsPipeline();
+  buildLegendPipeline("worksViewPipeline");
+  buildObsPipeline("dashObsPipeline");
+  buildMcStageBtns();
+  // Load both in parallel — much faster startup
+  Promise.all([loadAll(), loadObservations()]);
+  setInterval(() => { Promise.all([loadAll(), loadObservations()]); }, 60000);
+  document.getElementById("du-date").value = new Date().toISOString().split("T")[0];
+  // close overlays on backdrop click
+  document.querySelectorAll(".overlay").forEach(o =>
+    o.addEventListener("click", e => { if(e.target===o) o.classList.remove("open"); })
+  );
+});
+
+// ══════════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════════
+async function loadAll() {
+  try {
+    const [wr, sr] = await Promise.all([apiFetch(`${API}/works`), apiFetch(`${API}/stats`)]);
+    if(wr.success) {
+      allWorks = wr.works || [];
+    } else {
+      console.error("GET /works failed:", wr.error);
+      toast("⚠️ Works load failed: " + (wr.error||"unknown"), "err");
+      allWorks = allWorks.length ? allWorks : [];
+    }
+    renderAllLists();
+    renderWorksTable();
+    updateSidebarQL();
+    if(sr.success) {
+      _lastWorkStats = sr;
+      updateStats(sr);
+      updateWorkCharts(sr);
+      updateWorkStats_w(sr);
+      if(document.getElementById("worksViewPipeline")) buildLegendPipeline("worksViewPipeline");
+      updateDashStatusCharts(_lastWorkStats, _lastObsStats);
+    }
+    document.getElementById("lastRefresh").textContent = "Refreshed: " + new Date().toLocaleTimeString("en-IN");
+    const _st = document.getElementById("apiStatus");
+    if(_st){ _st.textContent="⬤ "+allWorks.length+" works · "+allObs.length+" obs"; _st.style.cssText="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(45,216,130,.15);color:#00e5b0;margin-left:8px;"; }
+  } catch(e) {
+    console.error("loadAll error:", e);
+    toast("⚠️ Could not load works: " + e.message, "err");
+    if(!allWorks.length) { renderWorksTable(); updateSidebarQL(); }
+  }
+}
+
+function updateStats(s) {
+  setTxt("st-total",  s.total    || 0);
+  setTxt("st-active", s.active   || 0);
+  setTxt("st-done",   s.completed|| 0);
+  setTxt("st-high",   (s.by_priority && s.by_priority.High) || 0);
+  setTxt("cnt-works",    s.total    || 0);
+  setTxt("cnt-active",   s.active   || 0);
+  setTxt("cnt-completed",s.completed|| 0);
+}
+
+// ══════════════════════════════════════════════════════════
+// RENDER LISTS
+// ══════════════════════════════════════════════════════════
+function renderAllLists() {
+  doFilter();
+}
+
+function renderRecentTable() {
+  const el = document.getElementById("recentList");
+  if (!el) return;
+  const works = allWorks.slice(0, 7);
+  if (!works.length) {
+    el.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:#6677aa;">No works yet — create your first work.</td></tr>`;
+    return;
+  }
+  const SCMAP = {"Issue Identification":"si0","GM Approval":"si1","Procurement / Finance Action":"si2","Management Approval":"si3","Contract Awarded":"si4","Execution & Daily Monitoring":"si5","Completion & Closure":"si6"};
+  el.innerHTML = works.map((w,i) => {
+    const pri = w.priority||"Medium";
+    const stage = w.current_stage||"Issue Identification";
+    const pr = parseInt(w.progress)||0;
+    const date = w.created_at ? w.created_at.split("T")[0] : (w.start_date||"—");
+    return `<tr class="row-${pri}" onclick="openDetail('${w.id}')" style="cursor:pointer;">
+      <td class="td-sno">${i+1}</td>
+      <td class="td-id">${x(w.id)}</td>
+      <td class="td-date">${date}</td>
+      <td class="td-desc"><div class="td-desc-main">${x(w.title||"—")}</div><div class="td-desc-sub">&#128205; ${x(w.location||"—")}</div></td>
+      <td class="td-pri"><span class="pbadge p${pri[0]}">${pri}</span></td>
+      <td><span class="stage-pill ${SCMAP[stage]||"si0"}" style="font-size:9px;padding:3px 8px;border-radius:20px;white-space:nowrap;">${x(stage)}</span></td>
+      <td><div class="prog-cell"><div class="prog-bar-xs"><div class="prog-fill-xs" style="width:${pr}%"></div></div><span class="prog-pct">${pr}%</span></div></td>
+    </tr>`;
+  }).join("");
+}
+
+function doFilter() {
+  const q = (document.getElementById("srch")?.value||"").toLowerCase();
+  const s = document.getElementById("fStatus")?.value || "all";
+  const g = document.getElementById("fStage")?.value  || "all";
+  const p = document.getElementById("fPriority")?.value|| "all";
+  const f = allWorks.filter(w => {
+    const hay = ((w.title||"")+(w.location||"")+(w.id||"")).toLowerCase();
+    return (!q||hay.includes(q))
+      && (s==="all"||w.status===s)
+      && (g==="all"||w.current_stage===g)
+      && (p==="all"||w.priority===p);
+  });
+  render("allList", f);
+}
+
+function render(id, works) {
+  const el = document.getElementById(id);
+  if (!el) return;  // element removed from DOM — skip silently
+  if(!works||!works.length) {
+    el.innerHTML = `<div class="empty"><div class="empty-ico">&#128193;</div><div class="empty-txt">No works found</div><button class="btn btn-gold" onclick="openCreate()">&#43; Add Work</button></dibtn-gold" onclick="openCreate()">&#43; Add Work</button></div>`;
+    return;
+  }
+  el.innerHTML = works.map(renderCard).join("");
+}
+
+function renderCard(w) {
+  const si  = STAGES.indexOf(w.current_stage);
+  const sc  = si>=0 ? STAGE_CLS[si] : "s0";
+  const pr  = parseInt(w.progress)||0;
+  const pcl = `p-${w.priority||"Medium"}`;
+  return `
+  <div class="work-card ${pcl}" onclick="openDetail('${w.id}')">
+    <div class="wc-left">
+      <span class="wid-tag">${x(w.id)}</span>
+      <span class="stage-pill ${sc}">${x(w.current_stage||"—")}</span>
+      <span style="font-size:9px;color:var(--text3);">${w.status}</span>
+    </div>
+    <div class="wc-info">
+      <div class="wc-title">${x(w.title)}</div>
+      <div class="wc-meta">
+        <span>&#128205; ${x(w.location||"—")}</span>
+        <span>&#8377; ${x(w.estimated_cost||"—")}</span>
+        <span>&#9888; ${w.priority||"Medium"}</span>
+        ${w.end_date?`<span>&#128197; ${w.end_date}</span>`:""}
+        ${w.vendor?`<span>&#127981; ${x(w.vendor)}</span>`:""}
+      </div>
+      <div style="display:flex;align-items:center;gap:7px;margin-top:5px;">
+        <div class="prog-bar"><div class="prog-fill" style="width:${pr}%"></div></div>
+        <span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">${pr}%</span>
+      </div>
+    </div>
+    <div class="wc-actions" onclick="event.stopPropagation()">
+      <button class="btn btn-blue  btn-sm" onclick="openDetail('${w.id}')">View</button>
+      <button class="btn btn-outline btn-sm" onclick="editWork('${w.id}')">&#9998;</button>
+      <button class="btn btn-red   btn-sm" onclick="promptDelete('${w.id}')">&#128465;</button>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════════
+// PIPELINE
+// ══════════════════════════════════════════════════════════
+function buildLegendPipeline() {
+  document.getElementById("legendPipeline").innerHTML =
+    STAGES.map((s,i) =>
+      `<div class="pip-step" style="margin-right:${i<STAGES.length-1?'0':''}">
+        <div class="pip-dot">${i+1}</div>
+        <div class="pip-lbl">${s}</div>
+      </div>`
+    ).join("");
+}
+
+function buildDetailPipeline(stage) {
+  const ci = STAGES.indexOf(stage);
+  document.getElementById("detailPipeline").innerHTML =
+    STAGES.map((s,i) => {
+      const cls = i<ci?"done":(i===ci?"active":"");
+      return `<div class="pip-step ${cls}">
+        <div class="pip-dot">${i<ci?"&#10003;":i+1}</div>
+        <div class="pip-lbl">${s}</div>
+      </div>`;
+    }).join("");
+}
+
+// ══════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════
+function showView(name) {
+  document.querySelectorAll(".view").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(b=>b.classList.remove("active"));
+  const v = document.getElementById(`view-${name}`);
+  const n = document.getElementById(`nav-${name}`);
+  if(v) v.classList.add("active");
+  if(n) n.classList.add("active");
+  if(name==="maillog")      { loadMailLog(); return; }
+  if(name==="observations") {
+    if(allObs.length) { renderObsTable(); updateSidebarQL(); }
+    else              { loadObservations(); }
+    return;
+  }
+  if(name==="works") {
+    if(allWorks.length) { renderWorksTable(); updateSidebarQL(); }
+    else                { loadAll(); }
+    return;
+  }
+  updateSidebarQL();
+}
+
+// ══════════════════════════════════════════════════════════
+// OVERLAYS
+// ══════════════════════════════════════════════════════════
+function openOverlay(id)  { document.getElementById(id).classList.add("open"); }
+function closeOverlay(id) { document.getElementById(id).classList.remove("open"); }
+
+// ══════════════════════════════════════════════════════════
+// CREATE / EDIT
+// ══════════════════════════════════════════════════════════
+function openCreate() {
+  document.getElementById("cf-editId").value = "";
+  document.getElementById("createTitle").textContent = "✚ New Cost Implication Work";
+  ["cf-title","cf-location","cf-cost","cf-identifiedBy","cf-vendor","cf-remarks"].forEach(id=>setVal(id,""));
+  setVal("cf-desc",""); setVal("cf-priority","Medium");
+  setVal("cf-inspection","Pending"); setVal("cf-startDate",""); setVal("cf-endDate","");
+  openOverlay("createOverlay");
+}
+
+function editWork(id) {
+  const w = allWorks.find(x=>x.id===id);
+  if(!w) return;
+  document.getElementById("cf-editId").value = id;
+  document.getElementById("createTitle").textContent = `✏ Edit Work — ${id}`;
+  setVal("cf-title",          w.title||"");
+  setVal("cf-location",       w.location||"");
+  setVal("cf-cost",           w.estimated_cost||"");
+  setVal("cf-identifiedBy",   w.identified_by||"");
+  setVal("cf-vendor",         w.vendor||"");
+  setVal("cf-remarks",        w.remarks||"");
+  setVal("cf-desc",           w.description||"");
+  setVal("cf-priority",       w.priority||"Medium");
+  setVal("cf-inspection",     w.inspection||"Pending");
+  setVal("cf-startDate",      w.start_date||"");
+  setVal("cf-endDate",        w.end_date||"");
+  closeOverlay("detailOverlay");
+  openOverlay("createOverlay");
+}
+
+function editCurrentWork() { editWork(currentWorkId); }
+
+async function saveWork() {
+  const editId = getVal("cf-editId");
+  const title  = getVal("cf-title").trim();
+  if(!title) { toast("Work title is required","err"); return; }
+  const payload = {
+    title, location:getVal("cf-location"), estimated_cost:getVal("cf-cost"),
+    identified_by:getVal("cf-identifiedBy"), vendor:getVal("cf-vendor"),
+    remarks:getVal("cf-remarks"), description:getVal("cf-desc"),
+    priority:getVal("cf-priority"), inspection:getVal("cf-inspection"),
+    start_date:getVal("cf-startDate"), end_date:getVal("cf-endDate")
+  };
+  const res = editId
+    ? await apiFetch(`${API}/works/${editId}`, "PUT", payload)
+    : await apiFetch(`${API}/works`, "POST", payload);
+  if(res.success) {
+    toast(editId?"Work updated":"Work created: "+res.id,"ok");
+    closeOverlay("createOverlay");
+    await loadAll();
+    updateSidebarQL();
+    showView("works");
+  } else {
+    toast(res.error||"Save failed","err");
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// DETAIL
+// ══════════════════════════════════════════════════════════
+async function openDetail(id) {
+  highlightSidebarItem('work', id);
+  currentWorkId = id;
+  const res = await apiFetch(`${API}/works/${id}`);
+  if(!res.success) { toast("Failed to load details","err"); return; }
+  const w = res.work;
+
+  document.getElementById("detailTitle").textContent = `${w.id} — ${w.title}`;
+  document.getElementById("detailSub").textContent   = `${w.current_stage}  ·  ${w.status}  ·  ${w.priority} Priority`;
+
+  // Overview
+  document.getElementById("detailGrid").innerHTML = `
+    <div class="di"><div class="di-lbl">Work ID</div><div class="di-val" style="font-family:'JetBrains Mono',monospace;color:var(--gold)">${w.id}</div></div>
+    <div class="di"><div class="di-lbl">Status</div><div class="di-val">${w.status}</div></div>
+    <div class="di"><div class="di-lbl">Location</div><div class="di-val">${x(w.location||"—")}</div></div>
+    <div class="di"><div class="di-lbl">Priority</div><div class="di-val">${w.priority}</div></div>
+    <div class="di"><div class="di-lbl">Estimated Cost</div><div class="di-val">&#8377; ${x(w.estimated_cost||"—")}</div></div>
+    <div class="di"><div class="di-lbl">Vendor / Contractor</div><div class="di-val">${x(w.vendor||"—")}</div></div>
+    <div class="di"><div class="di-lbl">Start Date</div><div class="di-val">${w.start_date||"—"}</div></div>
+    <div class="di"><div class="di-lbl">End Date</div><div class="di-val">${w.end_date||"—"}</div></div>
+    <div class="di"><div class="di-lbl">Progress</div><div class="di-val">${w.progress||0}%</div></div>
+    <div class="di"><div class="di-lbl">Inspection</div><div class="di-val">${w.inspection||"—"}</div></div>
+    <div class="di span2"><div class="di-lbl">Description</div><div class="di-val" style="white-space:pre-wrap;font-weight:400;color:var(--text2);">${x(w.description||"—")}</div></div>
+    <div class="di"><div class="di-lbl">Identified By</div><div class="di-val">${x(w.identified_by||"—")}</div></div>
+    <div class="di"><div class="di-lbl">Remarks</div><div class="di-val">${x(w.remarks||"—")}</div></div>
+    <div class="di"><div class="di-lbl">Created</div><div class="di-val">${fmtDt(w.created_at)}</div></div>
+    <div class="di"><div class="di-lbl">Updated</div><div class="di-val">${fmtDt(w.updated_at)}</div></div>
+  `;
+
+  // Pipeline
+  buildDetailPipeline(w.current_stage);
+
+  // Daily updates
+  setVal("du-progress", w.progress||0);
+  const ups = (w.daily_updates||[]).slice().reverse();
+  document.getElementById("duList").innerHTML = ups.length===0
+    ? '<div style="color:var(--text3);font-size:12px;">No daily updates yet.</div>'
+    : ups.map(u=>`
+        <div class="du-card">
+          <div class="du-date">${u.date}  ·  by ${u.by||"PM"}</div>
+          <div class="du-prog">Progress: <strong>${u.progress}%</strong>${u.delays?`  ·  Delay: ${x(u.delays)}`:""}</div>
+          <div class="du-notes">${x(u.remarks||"")}${u.revised_timeline?`  |  Revised: ${x(u.revised_timeline)}`:""}</div>
+        </div>`).join("");
+
+  // History
+  const hist = (w.history||[]).slice().reverse();
+  document.getElementById("histList").innerHTML = hist.length===0
+    ? '<div style="color:var(--text3);font-size:12px;">No history yet.</div>'
+    : hist.map(h=>`
+        <div class="hist-item">
+          <div class="hist-dot"></div>
+          <div class="hist-info">
+            <div class="hist-action">${x(h.action)}</div>
+            <div class="hist-meta">${x(h.stage)}  ·  ${h.by||"PM"}  ·  ${fmtDt(h.timestamp)}</div>
+            ${h.notes?`<div class="hist-notes">${x(h.notes)}</div>`:""}
+          </div>
+        </div>`).join("");
+
+  // Set mail stage to current, load template
+  activateMcStage(w.current_stage);
+  switchDtab("overview");
+  openOverlay("detailOverlay");
+}
+
+function switchDtab(name) {
+  const modal = document.getElementById("detailOverlay");
+  if (!modal) return;
+  modal.querySelectorAll(".dtab").forEach(t=>t.classList.remove("active"));
+  modal.querySelectorAll(".dtab-pane").forEach(p=>p.classList.remove("active"));
+  const pane = document.getElementById(`dp-${name}`);
+  if(pane) pane.classList.add("active");
+  modal.querySelectorAll(".dtab").forEach(t=>{
+    if((t.getAttribute("onclick")||"").includes(`'${name}'`)) t.classList.add("active");
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+// WORKFLOW STAGE
+// ══════════════════════════════════════════════════════════
+async function advanceStage() {
+  const res = await apiFetch(`${API}/works/${currentWorkId}/stage`, "POST", {});
+  if(res.success) {
+    toast(`Stage: ${res.new_stage}`, "ok");
+    await openDetail(currentWorkId);
+    await loadAll();
+    updateSidebarQL();
+  } else toast(res.error||"Failed","err");
+}
+
+function openStageModal() {
+  const w = allWorks.find(x=>x.id===currentWorkId);
+  if(w) setVal("manualStage", w.current_stage);
+  setVal("manualNotes","");
+  openOverlay("stageOverlay");
+}
+
+async function setManualStage() {
+  const stage = getVal("manualStage");
+  const notes = getVal("manualNotes");
+  const res   = await apiFetch(`${API}/works/${currentWorkId}/stage`, "POST", {stage, notes});
+  if(res.success) {
+    toast(`Stage → ${res.new_stage}`, "ok");
+    closeOverlay("stageOverlay");
+    await openDetail(currentWorkId);
+    await loadAll();
+    updateSidebarQL();
+  } else toast(res.error||"Failed","err");
+}
+
+// ══════════════════════════════════════════════════════════
+// DAILY UPDATE
+// ══════════════════════════════════════════════════════════
+async function submitDailyUpdate() {
+  const payload = {
+    date:             getVal("du-date"),
+    progress:         parseInt(getVal("du-progress"))||0,
+    remarks:          getVal("du-remarks"),
+    delays:           getVal("du-delays"),
+    revised_timeline: getVal("du-revised")
+  };
+  const res = await apiFetch(`${API}/works/${currentWorkId}/daily-update`, "POST", payload);
+  if(res.success) {
+    toast("Daily update saved","ok");
+    ["du-remarks","du-delays","du-revised"].forEach(i=>setVal(i,""));
+    await openDetail(currentWorkId);
+    await loadAll();
+    updateSidebarQL();
+  } else toast(res.error||"Failed","err");
+}
+
+// ══════════════════════════════════════════════════════════
+// MAIL COMPOSER — STAGE BUTTONS
+// ══════════════════════════════════════════════════════════
+function buildMcStageBtns() {
+  document.getElementById("mcStageBtns").innerHTML =
+    STAGES.map(s=>`<button class="mc-stage-btn" data-stage="${x(s)}" onclick="activateMcStage('${s.replace(/'/g,"\\'")}')">${s}</button>`).join("");
+}
+
+function activateMcStage(stage) {
+  document.querySelectorAll(".mc-stage-btn").forEach(b=>{
+    b.classList.toggle("active", b.dataset.stage===stage);
+  });
+  // Set default departments for stage
+  const depts = STAGE_DEPTS_DEFAULT[stage] || ["All"];
+  document.querySelectorAll(".dept-tab").forEach(t=>{
+    t.classList.toggle("selected", depts.includes(t.dataset.dept));
+  });
+  updateDeptRecipients();
+  // Load template from API
+  loadMailTemplateForStage(stage);
+}
+
+async function loadMailTemplateForStage(stage) {
+  const res = await apiFetch(`${API}/preview-mail`, "POST", {stage, work_id:currentWorkId});
+  if(res.success) {
+    undoBuf["mcSubject"] = res.subject||"";
+    undoBuf["mcBody"]    = res.body   ||"";
+    setVal("mcSubject", res.subject||"");
+    setVal("mcBody",    res.body   ||"");
+    updatePreview();
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// DEPARTMENT PANEL
+// ══════════════════════════════════════════════════════════
+function toggleDept(el) {
+  el.classList.toggle("selected");
+  updateDeptRecipients();
+  updatePreview();
+}
+
+function getSelectedDepts() {
+  return Array.from(document.querySelectorAll(".dept-tab.selected")).map(t=>t.dataset.dept);
+}
+
+function updateDeptRecipients() {
+  const depts = getSelectedDepts();
+  if(!depts.length) {
+    document.getElementById("deptRecipients").textContent = "No departments selected";
+    return;
+  }
+  const seen = new Set();
+  const emails = [];
+  for(const d of depts) {
+    for(const e of DEPT_EMAILS[d]||[]) {
+      if(!seen.has(e)) { seen.add(e); emails.push(e); }
+    }
+  }
+  for(const e of extraEmails) {
+    if(!seen.has(e)) { seen.add(e); emails.push(e); }
+  }
+  document.getElementById("deptRecipients").innerHTML =
+    `<em>${depts.join(", ")}</em> &rarr; ${emails.join("  ·  ")}`;
+}
+
+function addExtraEmail() {
+  const inp = document.getElementById("extraEmail");
+  const val = inp.value.trim();
+  if(!val||!val.includes("@")) { toast("Enter a valid email","err"); return; }
+  if(!extraEmails.includes(val)) {
+    extraEmails.push(val);
+    renderExtraEmails();
+    updateDeptRecipients();
+    updatePreview();
+  }
+  inp.value = "";
+}
+
+function removeExtraEmail(email) {
+  extraEmails = extraEmails.filter(e=>e!==email);
+  renderExtraEmails();
+  updateDeptRecipients();
+  updatePreview();
+}
+
+function renderExtraEmails() {
+  document.getElementById("extraEmailList").innerHTML =
+    extraEmails.map(e=>
+      `<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(77,144,255,.1);color:var(--blue);font-size:10px;padding:2px 7px;border-radius:3px;border:1px solid rgba(77,144,255,.25);">
+        ${x(e)}<span onclick="removeExtraEmail('${x(e)}')" style="cursor:pointer;margin-left:2px;color:var(--text3);">&#10005;</span>
+      </span>`
+    ).join("");
+}
+
+function resolveAllRecipients() {
+  const depts = getSelectedDepts();
+  const seen  = new Set();
+  const list  = [];
+  for(const d of depts) {
+    for(const e of DEPT_EMAILS[d]||[]) { if(!seen.has(e)){seen.add(e);list.push(e);} }
+  }
+  for(const e of extraEmails) { if(!seen.has(e)){seen.add(e);list.push(e);} }
+  return list;
+}
+
+// ══════════════════════════════════════════════════════════
+// MAIL BODY TOOLBAR
+// ══════════════════════════════════════════════════════════
+function insertSnippet(text) {
+  const ta = document.getElementById("mcBody");
+  const s  = ta.selectionStart, e = ta.selectionEnd;
+  ta.value = ta.value.substring(0,s) + text + ta.value.substring(e);
+  ta.selectionStart = ta.selectionEnd = s + text.length;
+  ta.focus();
+  updatePreview();
+}
+
+function copyField(id) {
+  const el = document.getElementById(id);
+  navigator.clipboard.writeText(el.value||el.textContent||"")
+    .then(()=>toast("Copied","info")).catch(()=>toast("Copy failed","err"));
+}
+
+function undoField(id) {
+  if(undoBuf[id]!==undefined) {
+    setVal(id, undoBuf[id]);
+    updatePreview();
+    toast("Undone","info");
+  } else toast("Nothing to undo","info");
+}
+
+function clearField(id) {
+  undoBuf[id] = getVal(id);
+  setVal(id,"");
+  updatePreview();
+}
+
+async function pasteBody() {
+  try {
+    const t = await navigator.clipboard.readText();
+    const ta = document.getElementById("mcBody");
+    const s  = ta.selectionStart;
+    ta.value = ta.value.substring(0,s)+t+ta.value.substring(ta.selectionEnd);
+    updatePreview();
+    toast("Pasted","info");
+  } catch(e) { toast("Paste: use Ctrl+V in the body","info"); }
+}
+
+function updatePreview() {
+  const subj = getVal("mcSubject");
+  const body = getVal("mcBody");
+  const rcpt = resolveAllRecipients();
+  const el   = document.getElementById("mcPreviewTo");
+  const pb   = document.getElementById("mcPreviewBody");
+  if(el) el.innerHTML = rcpt.length
+    ? `To: <em>${rcpt.join("  ·  ")}</em>`
+    : `<span style="color:var(--text3)">No recipients selected</span>`;
+  if(pb) { pb.style.fontFamily = "monospace"; pb.textContent = (subj ? "Subject: "+subj+"\n\n" : "") + (body || "—"); }
+}
+
+function openFullPreview() {
+  const subj = getVal("mcSubject");
+  const body = getVal("mcBody");
+  const rcpt = resolveAllRecipients();
+  setTxt("prvTo",      rcpt.join(", ")||"—");
+  setTxt("prvSubject", subj||"—");
+  document.getElementById("prvBody").textContent = body||"—";
+  openOverlay("previewOverlay");
+}
+
+// ══════════════════════════════════════════════════════════
+// SEND MAIL
+// ══════════════════════════════════════════════════════════
+function getActiveMcStage() {
+  const btn = document.querySelector(".mc-stage-btn.active");
+  return btn ? btn.dataset.stage : STAGES[0];
+}
+
+async function triggerMail() {
+  const stage   = getActiveMcStage();
+  const subject = getVal("mcSubject");
+  const body    = getVal("mcBody");
+  const depts   = getSelectedDepts();
+  if(!currentWorkId) { toast("No work selected","err"); return; }
+  if(!depts.length && !extraEmails.length) { toast("Select at least one department","err"); return; }
+  setTxt("mcStatus","Sending…");
+  const res = await apiFetch(`${API}/trigger-mail`, "POST", {
+    work_id:currentWorkId, stage, subject, body, departments:depts
+  });
+  if(res.success) {
+    toast(`Mail sent to ${res.count} recipient(s)`,"ok");
+    setTxt("mcStatus",`&#10003; Sent to ${res.count} at ${new Date().toLocaleTimeString("en-IN")}`);
+    closeOverlay("previewOverlay");
+  } else {
+    toast(res.error||"Mail failed","err");
+    setTxt("mcStatus","&#10007; Failed: "+(res.error||""));
+  }
+}
+
+async function sendEmergencyMail() {
+  if(!currentWorkId) { toast("No work selected","err"); return; }
+  const subject = getVal("mcSubject") || "";
+  const body    = getVal("mcBody")    || "";
+  setTxt("mcStatus","Sending EMERGENCY mail…");
+  const res = await apiFetch(`${API}/emergency-mail`, "POST", {
+    work_id:currentWorkId,
+    subject: subject ? "[EMERGENCY] "+subject : "",
+    body
+  });
+  if(res.success) {
+    toast(`EMERGENCY mail sent to ${res.count} recipients`,"ok");
+    setTxt("mcStatus",`&#9888; Emergency sent to ${res.count} at ${new Date().toLocaleTimeString("en-IN")}`);
+  } else {
+    toast(res.error||"Emergency mail failed","err");
+    setTxt("mcStatus","&#10007; Emergency failed: "+(res.error||""));
+  }
+}
+
+async function saveTemplate() {
+  const stage   = getActiveMcStage();
+  const subject = getVal("mcSubject");
+  const body    = getVal("mcBody");
+  const depts   = getSelectedDepts();
+  const res = await apiFetch(`${API}/templates`, "POST", {stage, subject, body, departments:depts});
+  if(res.success) toast("Template saved","ok");
+  else toast("Save failed","err");
+}
+
+// ══════════════════════════════════════════════════════════
+// DELETE
+// ══════════════════════════════════════════════════════════
+function promptDelete(id) {
+  deleteTarget = id;
+  const w = allWorks.find(v => v.id === id);
+  const lbl = document.getElementById("deleteWorkLabel");
+  if (lbl) lbl.innerHTML = w ? `<strong>${x(w.id)}</strong> — ${x(w.title||"")}` : id;
+  openOverlay("deleteOverlay");
+}
+
+async function confirmDelete() {
+  if(!deleteTarget) return;
+  const res = await apiFetch(`${API}/works/${deleteTarget}`, "DELETE");
+  if(res.success) {
+    toast("Work deleted","ok");
+    closeOverlay("deleteOverlay");
+    closeOverlay("detailOverlay");
+    allWorks = allWorks.filter(w => w.id !== deleteTarget);
+    deleteTarget = null;
+    renderWorksTable();
+    renderAllLists();
+    updateSidebarQL();
+    loadAll();
+  } else toast(res.error||"Delete failed","err");
+}
+
+// ══════════════════════════════════════════════════════════
+// MAIL LOG
+// ══════════════════════════════════════════════════════════
+async function loadMailLog() {
+  const res = await apiFetch(`${API}/mail-log`);
+  const el  = document.getElementById("mailLogWrap");
+  if(!res.success || !res.log || !res.log.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-ico">&#128363;</div><div class="empty-txt">No mail log entries yet</div></div>';
+    return;
+  }
+  el.innerHTML = res.log.map(l=>{
+    const isEmerg = (l.stage||"").includes("EMERGENCY");
+    const isAuto  = (l.status||"").startsWith("auto");
+    return `
+    <div class="ml-item ${isEmerg?"ml-emerg":""}${isAuto?"ml-auto":""}">
+      <div>
+        <div class="ml-stage">${x(l.stage)} ${isEmerg?"&#9888;":""}${isAuto?"&#8635;":""}</div>
+        <div class="ml-detail">${x(l.work_id||"—")}  ·  ${(l.recipients||[]).join(", ")}</div>
+        <div class="ml-detail" style="margin-top:2px;">${fmtDt(l.timestamp)}</div>
+      </div>
+      <span class="${(l.status||"").includes("sent")?"ml-ok":"ml-fail"}">${(l.status||"unknown").toUpperCase()}</span>
+    </div>`;
+  }).join("");
+}
+
+// ══════════════════════════════════════════════════════════
+// UTILITIES
+// ══════════════════════════════════════════════════════════
+async function apiFetch(url, method="GET", body=null) {
+  const opts = { method, credentials:"include", headers:{"Content-Type":"application/json"} };
+  if(body && method!=="GET") opts.body = JSON.stringify(body);
+  try {
+    const r = await fetch(url, opts);
+    if(r.status===401) { toast("Session expired — please log in again","err"); return {success:false,error:"Not authenticated"}; }
+    if(r.status===403) { toast("Access denied","err"); return {success:false,error:"Access denied"}; }
+    // Guard against HTML redirect responses (e.g. login page) before parsing JSON
+    const ct = r.headers.get("content-type") || "";
+    if(!ct.includes("application/json")) {
+      if(r.status===302 || r.redirected || !r.ok) {
+        toast("Session expired — please log in again","err");
+        setTimeout(()=>{ window.location.href="/login"; }, 1500);
+        return {success:false, error:"Not authenticated"};
+      }
+      const text = await r.text();
+      return {success:false, error:`Unexpected response (${r.status}): ${text.slice(0,80)}`};
+    }
+    return await r.json();
+  } catch(e) { return {success:false, error:e.message}; }
+}
+
+function x(s) {
+  return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function getVal(id) { const e = document.getElementById(id); return e?(e.value||""):""; }
+function setVal(id, v) { const e = document.getElementById(id); if(e) e.value=v; }
+function setTxt(id, v) { const e = document.getElementById(id); if(e) e.textContent=v; }
+
+function fmtDt(iso) {
+  if(!iso) return "—";
+  try { return new Date(iso).toLocaleString("en-IN",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}); }
+  catch(e) { return iso; }
+}
+
+function toast(msg, type="ok") {
+  const tw = document.getElementById("toastWrap");
+  const el = document.createElement("div");
+  el.className = `toast ${type}`;
+  const icons = {ok:"✅", err:"❌", info:"ℹ️"};
+  el.innerHTML = `<span>${icons[type]||"🔔"}</span><span>${x(msg)}</span>`;
+  tw.appendChild(el);
+  setTimeout(()=>{
+    el.style.opacity="0"; el.style.transform="translateX(14px)";
+    el.style.transition="all .3s"; setTimeout(()=>el.remove(), 300);
+  }, 3200);
+}
+
+
+
+// ══════════════════════════════════════════════════════════
+// OBSERVATIONS MODULE
+// ══════════════════════════════════════════════════════════
+
+const OBS_STAGES = [
+  "Observation Raised by GM/Management",
+  "PM Review & Response",
+  "GM Verification",
+  "Management Approval",
+  "Procurement/Finance Action",
+  "Work In Progress",
+  "Completed"
+];
+
+let allObs = [], currentObsId = null;
+
+// ── Pipeline legend ─────────────────────────────────────
+function buildObsPipeline(targetId) {
+  const elId = targetId || "obsPipelineLegend";
+  const el   = document.getElementById(elId);
+  if(!el) return;
+  el.innerHTML = OBS_STAGES.map((s,i) =>
+    `<div class="pip-step">
+      <div class="pip-dot">${i+1}</div>
+      <div class="pip-lbl">${s}</div>
+    </div>`
+  ).join("");
+}
+
+// ── Load all observations ───────────────────────────────
+async function loadObservations() {
+  try {
+    const [lr, sr] = await Promise.all([
+      apiFetch(`${API}/observations`),
+      apiFetch(`${API}/observations/stats`)
+    ]);
+    if(lr.success) {
+      allObs = lr.observations || [];
+    } else {
+      console.error("GET /observations failed:", lr.error);
+      toast("⚠️ Observations load failed: " + (lr.error||"unknown"), "err");
+      allObs = allObs.length ? allObs : [];
+    }
+    renderObsList();
+    renderObsTable();
+    updateSidebarQL();
+    if(sr.success) {
+      _lastObsStats = sr;
+      setTxt("dash-obs-total", sr.total     || 0);
+      setTxt("dash-obs-active",sr.active    || 0);
+      setTxt("dash-obs-done",  sr.completed || 0);
+      setTxt("dash-obs-high",  (sr.by_priority && sr.by_priority.High) || 0);
+      setTxt("cnt-obs",      sr.total     || 0);
+      updateDashObsStats(sr);
+      updateObsCharts(sr);
+      if(document.getElementById("dashObsPipeline")) buildObsPipeline("dashObsPipeline");
+      updateDashStatusCharts(_lastWorkStats, _lastObsStats);
+    }
+  } catch(e) {
+    console.error("loadObservations error:", e);
+    toast("⚠️ Could not load observations: " + e.message, "err");
+    if(!allObs.length) { renderObsTable(); updateSidebarQL(); }
+  }
+}
+
+// ── Render observation card list ─────────────────────────
+function renderObsList() {
+  const el = document.getElementById("obsList");
+  if (!el) return;
+  if(!allObs.length) {
+    el.innerHTML = `<div class="empty">
+      <div class="empty-ico">&#128065;</div>
+      <div class="empty-txt">No observations yet</div>
+      <button class="btn-purple" onclick="openObsCreate()">&#10133; New Observation</button>
+    </div>`;
+    return;
+  }
+  el.innerHTML = allObs.map(o => {
+    const costClr = o.is_cost_implication==="Yes" ? "var(--red)"
+                  : o.is_cost_implication==="No"  ? "var(--green)" : "var(--text3)";
+    return `<div class="obs-card p-${o.priority||"Medium"}" onclick="openObsDetail('${o.id}')">
+      <div class="obs-left">
+        <span class="obs-id">${x(o.id)}</span>
+        <span class="obs-stage ${OBS_STAGES.indexOf(o.current_stage)>=0 ? 'obs-s'+OBS_STAGES.indexOf(o.current_stage) : 'obs-s0'}">${x(o.current_stage||"—")}</span>
+        <span style="font-size:9px;color:var(--text3);">${o.status||""}</span>
+      </div>
+      <div class="obs-info">
+        <div class="obs-title">${x(o.title)}</div>
+        <div class="obs-meta">
+          <span>&#128205; ${x(o.location||"—")}</span>
+          <span>&#9888; ${o.priority||"Medium"}</span>
+          ${o.obs_date ? `<span>&#128197; ${o.obs_date}</span>` : ""}
+          ${o.expected_date ? `<span>&#9201; Due: ${o.expected_date}</span>` : ""}
+          ${o.is_cost_implication && o.is_cost_implication!=="Pending"
+            ? `<span style="color:${costClr};">Cost Impl: ${o.is_cost_implication}</span>` : ""}
+        </div>
+        ${o.pm_response
+          ? `<div style="font-size:11px;color:var(--text2);margin-top:4px;font-style:italic;">PM: ${x((o.pm_response||"").substring(0,90))}${(o.pm_response||"").length>90?"…":""}</div>`
+          : ""}
+      </div>
+      <div class="obs-acts" onclick="event.stopPropagation()">
+        <button class="btn btn-blue btn-sm" onclick="openObsDetail('${o.id}')">View</button>
+        <button class="btn btn-red  btn-sm" onclick="promptDeleteObs('${o.id}')">&#128465;</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+// ── Open create modal ────────────────────────────────────
+function openObsCreate() {
+  ["ocf-title","ocf-location","ocf-remarks","ocf-description","ocf-raised-by-name"].forEach(id => setVal(id,""));
+  setVal("ocf-priority","Medium");
+  setVal("ocf-inspection","Yes");
+  setVal("ocf-expected-date","");
+  setVal("ocf-date", new Date().toISOString().split("T")[0]);
+  const img = document.getElementById("ocf-image");
+  if(img) img.value = "";
+  openOverlay("obsCreateOverlay");
+}
+
+// ── Save new observation ─────────────────────────────────
+async function saveObservation() {
+  const title = getVal("ocf-title").trim();
+  if(!title) { toast("Observation title is required","err"); return; }
+
+  const raisedByName = getVal("ocf-raised-by-name").trim();
+  if(!raisedByName) { toast("Please enter your name (Raised By)","err"); return; }
+
+  const fd = new FormData();
+  fd.append("title",           title);
+  fd.append("obs_date",        getVal("ocf-date"));
+  fd.append("raised_by_name",  raisedByName);
+  fd.append("location",        getVal("ocf-location"));
+  fd.append("priority",        getVal("ocf-priority"));
+  fd.append("expected_date",   getVal("ocf-expected-date"));
+  fd.append("description",     getVal("ocf-description"));
+  fd.append("remarks",         getVal("ocf-remarks"));
+  fd.append("inspection",      getVal("ocf-inspection"));
+
+  const imgInput = document.getElementById("ocf-image");
+  if(imgInput && imgInput.files[0]) fd.append("image", imgInput.files[0]);
+
+  try {
+    const r    = await fetch(`${API}/observations`, { method:"POST", credentials:"include", body:fd });
+    const data = await r.json();
+    if(data.success) {
+      toast(`${data.id} created — Mail sent to PM`, "ok");
+      closeOverlay("obsCreateOverlay");
+      await loadObservations();
+      updateSidebarQL();
+      showView("observations");
+    } else {
+      toast(data.error || "Save failed", "err");
+    }
+  } catch(e) { toast("Error: " + e.message, "err"); }
+}
+
+// ── Open observation detail ──────────────────────────────
+async function openObsDetail(id) {
+  highlightSidebarItem('obs', id);
+  currentObsId = id;
+  const res = await apiFetch(`${API}/observations/${id}`);
+  if(!res.success) { toast("Failed to load observation","err"); return; }
+  const o = res.observation;
+
+  document.getElementById("obsDetailTitle").textContent = `${o.id} — ${o.title}`;
+  document.getElementById("obsDetailSub").textContent   =
+    `${o.current_stage}  ·  ${o.status}  ·  ${o.priority} Priority`;
+
+  const costClr = o.is_cost_implication==="Yes" ? "var(--red)"
+                : o.is_cost_implication==="No"  ? "var(--green)" : "var(--text3)";
+
+  document.getElementById("obsDetailGrid").innerHTML = `
+    <div class="di"><div class="di-lbl">ID</div>
+      <div class="di-val" style="font-family:'JetBrains Mono',monospace;color:#a5b4fc;">${o.id}</div></div>
+    <div class="di"><div class="di-lbl">Stage</div><div class="di-val">${x(o.current_stage||"—")}</div></div>
+    <div class="di"><div class="di-lbl">Date</div><div class="di-val">${o.obs_date||"—"}</div></div>
+    <div class="di"><div class="di-lbl">Location</div><div class="di-val">${x(o.location||"—")}</div></div>
+    <div class="di"><div class="di-lbl">Priority</div><div class="di-val">${o.priority||"—"}</div></div>
+    <div class="di"><div class="di-lbl">Expected Completion</div><div class="di-val">${o.expected_date||"—"}</div></div>
+    <div class="di"><div class="di-lbl">Inspection Required</div><div class="di-val">${o.inspection||"—"}</div></div>
+    <div class="di"><div class="di-lbl">Cost Implication</div>
+      <div class="di-val" style="color:${costClr};">${o.is_cost_implication||"Pending"}</div></div>
+    <div class="di span2"><div class="di-lbl">Description</div>
+      <div class="di-val" style="white-space:pre-wrap;font-weight:400;color:var(--text2);">${x(o.description||"—")}</div></div>
+    <div class="di"><div class="di-lbl">Remarks</div><div class="di-val">${x(o.remarks||"—")}</div></div>
+    <div class="di"><div class="di-lbl">PM Response</div>
+      <div class="di-val" style="color:var(--text2);">${x(o.pm_response||"Awaiting PM response…")}</div></div>
+    <div class="di"><div class="di-lbl">Raised By</div><div class="di-val">${x(o.raised_by_name||o.raised_by||"—")}</div></div>
+    <div class="di"><div class="di-lbl">Status</div><div class="di-val">${o.status||"—"}</div></div>
+    <div class="di"><div class="di-lbl">Created</div><div class="di-val">${fmtDt(o.created_at)}</div></div>
+  `;
+
+  // Image
+  const imgWrap = document.getElementById("obsImgWrap");
+  if(o.image_path) {
+    imgWrap.innerHTML = `
+      <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;">Attached Image</div>
+      <img src="${o.image_path}" style="max-width:100%;max-height:300px;border-radius:8px;border:1px solid var(--border);"
+           onerror="this.parentElement.innerHTML='<span style=color:var(--text3);font-size:12px;>Image not available</span>'">`;
+  } else {
+    imgWrap.innerHTML = "";
+  }
+
+  // Pre-fill PM tab
+  setVal("pm-resp-text", o.pm_response||"");
+  const costVal = (o.is_cost_implication && o.is_cost_implication!=="Pending")
+    ? o.is_cost_implication : "No";
+  setVal("pm-cost-flag", costVal);
+
+  // History
+  const hist = (o.history||[]).slice().reverse();
+  document.getElementById("obsHistList").innerHTML = hist.length === 0
+    ? '<div style="color:var(--text3);font-size:12px;">No history yet.</div>'
+    : hist.map(h => `
+      <div class="hist-item">
+        <div class="hist-dot"></div>
+        <div class="hist-info">
+          <div class="hist-action">${x(h.action||"")}</div>
+          <div class="hist-meta">${x(h.stage||"")} &nbsp;·&nbsp; ${h.by||"System"} &nbsp;·&nbsp; ${fmtDt(h.timestamp)}</div>
+          ${h.notes ? `<div class="hist-notes">${x(h.notes)}</div>` : ""}
+        </div>
+      </div>`).join("");
+
+  switchObsTab("overview");
+  openOverlay("obsDetailOverlay");
+}
+
+// ── Switch observation detail tab ───────────────────────
+function switchObsTab(name) {
+  document.querySelectorAll("#obsDetailOverlay .dtab").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll("#obsDetailOverlay .dtab-pane").forEach(p => p.classList.remove("active"));
+  const pane = document.getElementById(`odp-${name}`);
+  if(pane) pane.classList.add("active");
+  document.querySelectorAll("#obsDetailOverlay .dtab").forEach(t => {
+    if((t.getAttribute("onclick")||"").includes(`'${name}'`)) t.classList.add("active");
+  });
+}
+
+// ── PM submits response ──────────────────────────────────
+async function submitPmResponse() {
+  const pm_response         = getVal("pm-resp-text").trim();
+  const is_cost_implication = getVal("pm-cost-flag");
+  if(!pm_response) { toast("Please enter your response","err"); return; }
+  const res = await apiFetch(`${API}/observations/${currentObsId}/pm-response`,
+    "POST", { pm_response, is_cost_implication });
+  if(res.success) {
+    toast("PM response submitted — GM & Management notified","ok");
+    await openObsDetail(currentObsId);
+    await loadObservations();
+    updateSidebarQL();
+  } else toast(res.error||"Failed","err");
+}
+
+// ── GM/Mgmt approves + routes ────────────────────────────
+async function submitObsApproval() {
+  const decision = getVal("obs-decision");
+  const notes    = getVal("obs-approve-notes");
+  const res = await apiFetch(`${API}/observations/${currentObsId}/approve`,
+    "POST", { decision, notes });
+  if(res.success) {
+    toast(`Approved — Next: ${res.next_stage} — Mail sent`,"ok");
+    await openObsDetail(currentObsId);
+    await loadObservations();
+    updateSidebarQL();
+  } else toast(res.error||"Failed","err");
+}
+
+// ── Advance to next stage ────────────────────────────────
+async function advanceObsStage() {
+  const o = allObs.find(v => v.id === currentObsId);
+  if(o && o.status === "Completed") { toast("Observation already completed","info"); return; }
+  const res = await apiFetch(`${API}/observations/${currentObsId}/stage`, "POST", {});
+  if(res.success) {
+    toast(`Stage &#8594; ${res.new_stage} — Mail sent`,"ok");
+    await openObsDetail(currentObsId);
+    await loadObservations();
+    updateSidebarQL();
+  } else toast(res.error||"Failed","err");
+}
+
+// ── Re-send current stage mail ───────────────────────────
+async function obsTriggerMail() {
+  const o   = allObs.find(v => v.id === currentObsId);
+  const res = await apiFetch(`${API}/observations/${currentObsId}/trigger-mail`,
+    "POST", { stage: o ? o.current_stage : "" });
+  if(res.success) toast(`Mail sent to ${res.count} recipient(s)`,"ok");
+  else toast(res.error||"Mail failed","err");
+}
+
+// ── Emergency mail ───────────────────────────────────────
+async function obsEmergencyMail() {
+  const o = allObs.find(v => v.id === currentObsId);
+  if(!o) { toast("Observation not found","err"); return; }
+  const res = await apiFetch(`${API}/observations/${currentObsId}/emergency-mail`, "POST", {
+    subject: `[SLN TERMINUS][EMERGENCY][OBS] ${o.title}`
+  });
+  if(res.success) toast(`Emergency mail sent to all ${res.count} recipient(s)`,"ok");
+  else toast(res.error||"Emergency mail failed — check mail log","err");
+}
+
+// ── Delete observation ───────────────────────────────────
+let deleteObsTarget = null;
+
+function promptDeleteObs(id) {
+  const o = allObs.find(v => v.id === id);
+  deleteObsTarget = id;
+  const lbl = document.getElementById("deleteObsLabel");
+  if (lbl) lbl.innerHTML = o ? `<strong>${x(o.id)}</strong> — ${x(o.title||"")}` : id;
+  openOverlay("deleteObsOverlay");
+}
+
+async function confirmDeleteObs() {
+  if (!deleteObsTarget) return;
+  closeOverlay("deleteObsOverlay");
+  const res = await apiFetch(`${API}/observations/${deleteObsTarget}`, "DELETE");
+  if (res.success) {
+    toast("Observation deleted", "ok");
+    allObs = allObs.filter(o => o.id !== deleteObsTarget);
+    deleteObsTarget = null;
+    renderObsTable();
+    updateSidebarQL();
+    loadObservations();
+  } else {
+    toast(res.error || "Delete failed", "err");
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// CLOSE / COMPLETE WORK
+// ══════════════════════════════════════════════════════════
+
+function openCloseWork() {
+  const w = allWorks.find(x=>x.id===currentWorkId);
+  if(!w){ toast("Work not found","err"); return; }
+  if(w.status==="Completed"){ toast("Work is already completed","info"); return; }
+  document.getElementById("closeWorkSub").textContent = `${w.id} — ${w.title}`;
+  setVal("cw-remarks","");
+  setVal("cw-date", new Date().toISOString().split("T")[0]);
+  setVal("cw-inspection","Completed");
+  openOverlay("closeWorkOverlay");
+}
+
+async function confirmCloseWork() {
+  const remarks    = getVal("cw-remarks").trim();
+  const date       = getVal("cw-date");
+  const inspection = getVal("cw-inspection");
+  if(!remarks){ toast("Please enter completion remarks","err"); return; }
+
+  // 1. Set stage to Completion & Closure
+  const stageRes = await apiFetch(`${API}/works/${currentWorkId}/stage`,
+    "POST", { stage:"Completion & Closure", notes: remarks });
+  if(!stageRes.success){ toast(stageRes.error||"Stage update failed","err"); return; }
+
+  // 2. Update work fields
+  await apiFetch(`${API}/works/${currentWorkId}`, "PUT",
+    { status:"Completed", inspection, remarks });
+
+  // 3. Trigger closure mail (structured format)
+  const cw = allWorks.find(v=>v.id===currentWorkId) || {};
+  const mailRes = await apiFetch(`${API}/trigger-mail`, "POST",
+    { work_id:currentWorkId, stage:"Completion & Closure",
+      departments:["All"],
+      body:`Dear Sir / Madam,\n\n🏆 We are pleased to inform that the following work has been COMPLETED and CLOSED.\n\n`
+          +`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`
+          +`✅ CLOSURE SUMMARY\n`
+          +`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`
+          +`  📝  Work ID          : ${currentWorkId}\n`
+          +`  📝  Work Title       : ${cw.title||''}\n`
+          +`  📍  Location         : ${cw.location||'—'}\n`
+          +`  📅  Completion Date  : ${date}\n`
+          +`  🔍  Inspection       : ${inspection}\n`
+          +`  🗒️   Remarks          : ${remarks}\n`
+          +`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`
+          +`Regards,\nemerZhent Property Management Services` });
+
+  closeOverlay("closeWorkOverlay");
+  closeOverlay("detailOverlay");
+  toast(`Work ${currentWorkId} closed — Closure mail sent to all departments`,"ok");
+  await loadAll();
+  updateSidebarQL();
+}
+
+// ══════════════════════════════════════════════════════════
+// CLOSE / COMPLETE OBSERVATION
+// ══════════════════════════════════════════════════════════
+
+function openCloseObs() {
+  const o = allObs.find(x=>x.id===currentObsId);
+  if(!o){ toast("Observation not found","err"); return; }
+  if(o.status==="Completed"){ toast("Observation already completed","info"); return; }
+  document.getElementById("closeObsSub").textContent = `${o.id} — ${o.title}`;
+  setVal("co-remarks","");
+  setVal("co-date", new Date().toISOString().split("T")[0]);
+  setVal("co-inspection","Completed");
+  openOverlay("closeObsOverlay");
+}
+
+async function confirmCloseObs() {
+  const remarks    = getVal("co-remarks").trim();
+  const date       = getVal("co-date");
+  const inspection = getVal("co-inspection");
+  if(!remarks){ toast("Please enter closure remarks","err"); return; }
+
+  // 1. Set stage to Completed
+  const stageRes = await apiFetch(`${API}/observations/${currentObsId}/stage`,
+    "POST", { stage:"Completed", notes: remarks });
+  if(!stageRes.success){ toast(stageRes.error||"Stage update failed","err"); return; }
+
+  // 2. Update observation fields
+  await apiFetch(`${API}/observations/${currentObsId}`, "PUT",
+    { status:"Completed", inspection, remarks });
+
+  // 3. Trigger closure mail (structured format)
+  const co = allObs.find(v=>v.id===currentObsId) || {};
+  await apiFetch(`${API}/observations/${currentObsId}/trigger-mail`, "POST",
+    { stage:"Completed",
+      body:`Dear All,\n\n🏆 The following observation has been actioned and closed successfully.\n\n`
+          +`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`
+          +`✅ CLOSURE SUMMARY\n`
+          +`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`
+          +`  🔢  Observation ID   : ${currentObsId}\n`
+          +`  📝  Title            : ${co.title||''}\n`
+          +`  📍  Location         : ${co.location||'—'}\n`
+          +`  👤  Raised By        : ${co.raised_by_name||co.raised_by||'—'}\n`
+          +`  📅  Completion Date  : ${date}\n`
+          +`  🔍  Inspection       : ${inspection}\n`
+          +`  🗒️   Remarks          : ${remarks}\n`
+          +`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`
+          +`Regards,\nemerZhent Property Management Services` });
+
+  closeOverlay("closeObsOverlay");
+  closeOverlay("obsDetailOverlay");
+  toast(`Observation ${currentObsId} closed — Closure mail sent to all departments`,"ok");
+  await loadObservations();
+  updateSidebarQL();
+}
+
+
+// ══════════════════════════════════════════════════════════
+// WORKS TABLE RENDERING
+// ══════════════════════════════════════════════════════════
+const WORK_ACTIONS = {
+  "Issue Identification":         ["View Details","Edit","Send Mail","Delete"],
+  "GM Approval":                  ["View Details","Advance to Procurement","Send Mail","Edit","Delete"],
+  "Procurement / Finance Action": ["View Details","Advance to Mgmt Approval","Send Mail","Edit","Delete"],
+  "Management Approval":          ["View Details","Advance to Contract","Send Mail","Edit","Delete"],
+  "Contract Awarded":             ["View Details","Advance to Execution","Send Mail","Edit","Delete"],
+  "Execution & Daily Monitoring": ["View Details","Mark Complete","Daily Update","Send Mail","Edit","Delete"],
+  "Completion & Closure":         ["View Details","Close Work","Send Mail","Edit","Delete"],
+};
+
+function renderWorksTable() {
+  const srch   = (document.getElementById("wTblSrch")?.value||"").toLowerCase();
+  const fStat  = document.getElementById("wTblStatus")?.value||"";
+  const fPri   = document.getElementById("wTblPri")?.value||"";
+  const fStage = document.getElementById("wTblStage")?.value||"";
+
+  let rows = allWorks.filter(w => {
+    if (fStat  && w.status        !== fStat)  return false;
+    if (fPri   && w.priority      !== fPri)   return false;
+    if (fStage && w.current_stage !== fStage) return false;
+    if (srch) {
+      const hay = ((w.id||"")+(w.title||"")+(w.location||"")).toLowerCase();
+      if (!hay.includes(srch)) return false;
+    }
+    return true;
+  });
+
+  const el = document.getElementById("wTblBody");
+  if (!el) return;
+  document.getElementById("wTblCount").textContent = rows.length + " items";
+
+  if (!rows.length) {
+    const emptyMsg = allWorks.length === 0
+      ? `<tr><td colspan="8" style="text-align:center;padding:36px;color:#6677aa;">
+           <div style="font-size:32px;margin-bottom:8px;">📋</div>
+           <div style="color:#8899aa;font-size:13px;font-weight:600;">No works yet</div>
+           <div style="color:#8899aa;font-size:11px;margin-top:4px;">Create your first work using the + New Work button</div>
+           <div style="margin-top:12px;"><button class="btn btn-gold btn-sm" onclick="openCreate()">+ New Work</button></div>
+         </td></tr>`
+      : `<tr><td colspan="8" style="text-align:center;padding:32px;color:#6677aa;">No works match your filters</td></tr>`;
+    el.innerHTML = emptyMsg;
+    return;
+  }
+
+  const STAGE_CLS_MAP = {
+    "Issue Identification":"si0",
+    "GM Approval":"si1",
+    "Procurement / Finance Action":"si2",
+    "Management Approval":"si3",
+    "Contract Awarded":"si4",
+    "Execution & Daily Monitoring":"si5",
+    "Completion & Closure":"si6"
+  };
+
+  el.innerHTML = rows.map((w,i) => {
+    const pri   = w.priority||"Medium";
+    const priLet= pri[0];
+    const stage = w.current_stage||"Issue Identification";
+    const sCls  = STAGE_CLS_MAP[stage]||"si0";
+    const pr    = parseInt(w.progress)||0;
+    const isDone= w.status==="Completed";
+    const actions = WORK_ACTIONS[stage] || ["View Details","Edit","Delete"];
+    const stageOpts = STAGES.map(s =>
+      `<option value="${x(s)}" ${s===stage?"selected":""}>${x(s)}</option>`
+    ).join("");
+    const actOpts = actions.map(a =>
+      `<option value="${x(a)}">${x(a)}</option>`
+    ).join("");
+    const date = w.created_at ? w.created_at.split("T")[0] : (w.start_date||"—");
+
+    return `<tr class="row-${pri} ${isDone?"row-done":""}" id="wrow-${w.id}">
+      <td class="td-sno">${i+1}</td>
+      <td class="td-id" onclick="openDetail('${w.id}')">${x(w.id)}</td>
+      <td class="td-date">${date}</td>
+      <td class="td-desc" onclick="openDetail('${w.id}')">
+        <div class="td-desc-main">${x(w.title||"—")}</div>
+        <div class="td-desc-sub">&#128205; ${x(w.location||"—")} &nbsp;·&nbsp; &#8377; ${x(w.estimated_cost||"—")}</div>
+      </td>
+      <td class="td-pri"><span class="pbadge p${priLet}">${pri}</span></td>
+      <td style="min-width:160px;">
+        <select class="stage-sel ${sCls}" onchange="onWorkStageChange('${w.id}',this)"
+                onclick="event.stopPropagation()" title="Change stage">
+          ${stageOpts}
+        </select>
+      </td>
+      <td class="td-prog">
+        <div class="prog-cell">
+          <div class="prog-bar-xs"><div class="prog-fill-xs" style="width:${pr}%"></div></div>
+          <span class="prog-pct">${pr}%</span>
+        </div>
+      </td>
+      <td>
+        <div class="act-cell" onclick="event.stopPropagation()">
+          <select class="act-sel" id="wact-${w.id}">
+            <option value="">Action…</option>
+            ${actOpts}
+          </select>
+          <button class="act-go" onclick="doWorkAction('${w.id}')">Go</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join("");
+
+  updateSidebarQL();
+}
+
+async function onWorkStageChange(id, sel) {
+  const newStage = sel.value;
+  const w = allWorks.find(v=>v.id===id);
+  if (!w || w.current_stage === newStage) return;
+  const res = await apiFetch(`${API}/works/${id}/stage`, "POST", {stage: newStage});
+  if (res.success) {
+    w.current_stage = newStage;
+    toast("Stage updated → " + newStage, "ok");
+    // Update colour class on the select
+    const map = {"Issue Identification":"si0","GM Approval":"si1","Procurement / Finance Action":"si2","Management Approval":"si3","Contract Awarded":"si4","Execution & Daily Monitoring":"si5","Completion & Closure":"si6"};
+    sel.className = "stage-sel " + (map[newStage]||"si0");
+    updateSidebarQL();
+  } else {
+    toast(res.error||"Stage update failed","err");
+    sel.value = w.current_stage; // revert
+  }
+}
+
+async function doWorkAction(id) {
+  const sel = document.getElementById("wact-"+id);
+  if (!sel) return;
+  const action = sel.value;
+  if (!action) { toast("Select an action first","info"); return; }
+  sel.value = "";
+  const w = allWorks.find(v=>v.id===id);
+  if (!w) return;
+
+  switch(action) {
+    case "View Details":        openDetail(id); break;
+    case "Edit":                editWork(id); break;
+    case "Delete":              promptDelete(id); break;
+    case "Send Mail":           openDetail(id); break;  // opens detail with mail tab
+    case "Close Work":          openCloseWork && openCloseWork(id); break;
+    case "Daily Update":        openDetail(id); break;
+    case "Advance to Procurement":
+    case "Advance to Mgmt Approval":
+    case "Advance to Contract":
+    case "Advance to Execution": {
+      const stageMap = {
+        "Advance to Procurement":   "Procurement / Finance Action",
+        "Advance to Mgmt Approval": "Management Approval",
+        "Advance to Contract":      "Contract Awarded",
+        "Advance to Execution":     "Execution & Daily Monitoring",
+      };
+      const ns = stageMap[action];
+      const res = await apiFetch(`${API}/works/${id}/stage`,"POST",{stage:ns});
+      if (res.success) { w.current_stage = ns; toast("Advanced → "+ns,"ok"); renderWorksTable(); }
+      else toast(res.error||"Failed","err");
+      break;
+    }
+    case "Mark Complete": {
+      const res = await apiFetch(`${API}/works/${id}/stage`,"POST",{stage:"Completion & Closure"});
+      if (res.success) { w.current_stage = "Completion & Closure"; toast("Marked for closure","ok"); renderWorksTable(); }
+      else toast(res.error||"Failed","err");
+      break;
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// OBSERVATIONS TABLE RENDERING
+// ══════════════════════════════════════════════════════════
+const OBS_ACTIONS_MAP = {
+  "Observation Raised by GM/Management": ["View Details","PM Response","Send Mail","Edit","Delete"],
+  "PM Review & Response":                ["View Details","GM Verify","Send Mail","Edit","Delete"],
+  "GM Verification":                     ["View Details","Mgmt Approve","Send Mail","Edit","Delete"],
+  "Management Approval":                 ["View Details","Procurement Done","Send Mail","Edit","Delete"],
+  "Procurement/Finance Action":          ["View Details","Mark WIP","Send Mail","Edit","Delete"],
+  "Work In Progress":                    ["View Details","Mark Complete","Send Mail","Edit","Delete"],
+  "Completed":                           ["View Details","Send Mail","Delete"],
+};
+
+function renderObsTable() {
+  const srch   = (document.getElementById("oTblSrch")?.value||"").toLowerCase();
+  const fStat  = document.getElementById("oTblStatus")?.value||"";
+  const fPri   = document.getElementById("oTblPri")?.value||"";
+  const fStage = document.getElementById("oTblStage")?.value||"";
+
+  let rows = allObs.filter(o => {
+    if (fStat  && o.status        !== fStat)  return false;
+    if (fPri   && o.priority      !== fPri)   return false;
+    if (fStage && o.current_stage !== fStage) return false;
+    if (srch) {
+      const hay = ((o.id||"")+(o.title||"")).toLowerCase();
+      if (!hay.includes(srch)) return false;
+    }
+    return true;
+  });
+
+  const el = document.getElementById("oTblBody");
+  if (!el) return;
+  document.getElementById("oTblCount").textContent = rows.length + " items";
+
+  if (!rows.length) {
+    const emptyMsg = allObs.length === 0
+      ? `<tr><td colspan="8" style="text-align:center;padding:36px;color:#6677aa;">
+           <div style="font-size:32px;margin-bottom:8px;">👁</div>
+           <div style="color:#8899aa;font-size:13px;font-weight:600;">No observations yet</div>
+           <div style="color:#8899aa;font-size:11px;margin-top:4px;">Create your first observation using the + New Observation button</div>
+         </td></tr>`
+      : `<tr><td colspan="8" style="text-align:center;padding:32px;color:#6677aa;">No observations match your filters</td></tr>`;
+    el.innerHTML = emptyMsg;
+    return;
+  }
+
+  const OBS_STAGE_CLS = {
+    "Observation Raised by GM/Management":"si0",
+    "PM Review & Response":"si1",
+    "GM Verification":"si2",
+    "Management Approval":"si3",
+    "Procurement/Finance Action":"si4",
+    "Work In Progress":"si5",
+    "Completed":"si6"
+  };
+
+  el.innerHTML = rows.map((o,i) => {
+    const pri   = o.priority||"Medium";
+    const priLet= pri[0];
+    const stage = o.current_stage||OBS_STAGES[0];
+    const sCls  = OBS_STAGE_CLS[stage]||"si0";
+    const isDone= o.status==="Completed";
+    const actions = OBS_ACTIONS_MAP[stage] || ["View Details","Send Mail"];
+    const stageOpts = OBS_STAGES.map(s =>
+      `<option value="${x(s)}" ${s===stage?"selected":""}>${x(s)}</option>`
+    ).join("");
+    const actOpts = actions.map(a =>
+      `<option value="${x(a)}">${x(a)}</option>`
+    ).join("");
+    const date = o.created_at ? o.created_at.split("T")[0] : "—";
+
+    return `<tr class="row-${pri} ${isDone?"row-done":""}" id="orow-${o.id}">
+      <td class="td-sno">${i+1}</td>
+      <td class="td-id td-obs-id" onclick="openObsDetail('${o.id}')">${x(o.id)}</td>
+      <td class="td-date">${date}</td>
+      <td class="td-desc" onclick="openObsDetail('${o.id}')">
+        <div class="td-desc-main td-obs-main">${x(o.title||"—")}</div>
+        <div class="td-desc-sub">${o.location?"&#128205;&nbsp;":""}${x(o.location||"")}${o.location&&o.category?" · ":""}${x(o.category||"")}</div>
+      </td>
+      <td class="td-pri"><span class="pbadge p${priLet}">${pri}</span></td>
+      <td style="min-width:168px;">
+        <select class="stage-sel obs-sel ${sCls}" onchange="onObsStageChange('${o.id}',this)"
+                onclick="event.stopPropagation()" title="Change stage">
+          ${stageOpts}
+        </select>
+      </td>
+      <td style="font-size:10px;color:#8899aa;">${x(o.raised_by||"—")}</td>
+      <td>
+        <div class="act-cell" onclick="event.stopPropagation()">
+          <select class="act-sel obs-act-sel" id="oact-${o.id}">
+            <option value="">Action…</option>
+            ${actOpts}
+          </select>
+          <button class="act-go obs-go" onclick="doObsAction('${o.id}')">Go</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join("");
+
+  updateSidebarQL();
+}
+
+async function onObsStageChange(id, sel) {
+  const newStage = sel.value;
+  const o = allObs.find(v=>v.id===id);
+  if (!o || o.current_stage === newStage) return;
+  // Map stage to endpoint
+  const EP_MAP = {
+    "PM Review & Response":       `${API}/observations/${id}/pm-response`,
+    "GM Verification":            `${API}/observations/${id}/gm-verify`,
+    "Management Approval":        `${API}/observations/${id}/management-approve`,
+    "Procurement/Finance Action": `${API}/observations/${id}/procurement-complete`,
+    "Work In Progress":           `${API}/observations/${id}/work-progress`,
+    "Completed":                  `${API}/observations/${id}/complete`,
+  };
+  const ep = EP_MAP[newStage];
+  if (!ep) { toast("Use action button to move to this stage","info"); sel.value = o.current_stage; return; }
+  const res = await apiFetch(ep, "POST", {notes:"Stage updated from list"});
+  if (res.success) {
+    o.current_stage = newStage;
+    toast("Stage → " + newStage, "ok");
+    const map = {"Observation Raised by GM/Management":"si0","PM Review & Response":"si1","GM Verification":"si2","Management Approval":"si3","Procurement/Finance Action":"si4","Work In Progress":"si5","Completed":"si6"};
+    sel.className = "stage-sel obs-sel " + (map[newStage]||"si0");
+    updateSidebarQL();
+  } else {
+    toast(res.error||"Stage update failed","err");
+    sel.value = o.current_stage;
+  }
+}
+
+async function doObsAction(id) {
+  const sel = document.getElementById("oact-"+id);
+  if (!sel) return;
+  const action = sel.value;
+  if (!action) { toast("Select an action first","info"); return; }
+  sel.value = "";
+
+  switch(action) {
+    case "View Details":      openObsDetail(id); break;
+    case "Edit":              openObsDetail(id); break;
+    case "Send Mail":         openObsDetail(id); break;
+    case "PM Response": {
+      const res = await apiFetch(`${API}/observations/${id}/pm-response`,"POST",{notes:"Acknowledged"});
+      if(res.success){ const o=allObs.find(v=>v.id===id); if(o){o.current_stage="PM Review & Response";} toast("Moved to PM Response","ok"); renderObsTable(); }
+      else toast(res.error||"Failed","err");
+      break;
+    }
+    case "GM Verify": {
+      const res = await apiFetch(`${API}/observations/${id}/gm-verify`,"POST",{notes:"Verified"});
+      if(res.success){ const o=allObs.find(v=>v.id===id); if(o){o.current_stage="GM Verification";} toast("GM Verification done","ok"); renderObsTable(); }
+      else toast(res.error||"Failed","err");
+      break;
+    }
+    case "Mgmt Approve": {
+      const res = await apiFetch(`${API}/observations/${id}/management-approve`,"POST",{notes:"Approved"});
+      if(res.success){ const o=allObs.find(v=>v.id===id); if(o){o.current_stage="Management Approval";} toast("Management Approved","ok"); renderObsTable(); }
+      else toast(res.error||"Failed","err");
+      break;
+    }
+    case "Procurement Done": {
+      const res = await apiFetch(`${API}/observations/${id}/procurement-complete`,"POST",{notes:"Done"});
+      if(res.success){ const o=allObs.find(v=>v.id===id); if(o){o.current_stage="Procurement/Finance Action";} toast("Procurement complete","ok"); renderObsTable(); }
+      else toast(res.error||"Failed","err");
+      break;
+    }
+    case "Mark WIP": {
+      const res = await apiFetch(`${API}/observations/${id}/work-progress`,"POST",{notes:"WIP"});
+      if(res.success){ const o=allObs.find(v=>v.id===id); if(o){o.current_stage="Work In Progress";} toast("Work In Progress","ok"); renderObsTable(); }
+      else toast(res.error||"Failed","err");
+      break;
+    }
+    case "Mark Complete": {
+      const res = await apiFetch(`${API}/observations/${id}/complete`,"POST",{notes:"Completed"});
+      if(res.success){ const o=allObs.find(v=>v.id===id); if(o){o.current_stage="Completed"; o.status="Completed";} toast("Observation Completed","ok"); renderObsTable(); }
+      else toast(res.error||"Failed","err");
+      break;
+    }
+    case "Delete":        promptDeleteObs(id); break;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// SIDEBAR QUICK LIST
+// ══════════════════════════════════════════════════════════
+const PRIORITY_DOTS = { High:"#ff4d6a", Medium:"#00b89e", Low:"#00e5b0" };
+
+function updateSidebarQL() {
+  // Works list
+  const wEl = document.getElementById("qlw-list");
+  if (wEl) {
+    if (!allWorks.length) {
+      wEl.innerHTML = `<div style="padding:6px 14px;font-size:10px;color:#7788aa;">No works yet</div>`;
+    } else {
+      wEl.innerHTML = allWorks.map(w => {
+        const dot = PRIORITY_DOTS[w.priority]||"#556";
+        return `<div class="sb-ql-item" onclick="openDetail('${w.id}')" id="qlw-${w.id}">
+          <span class="ql-dot" style="background:${dot}"></span>
+          <div class="ql-info">
+            <div class="ql-id">${x(w.id)}</div>
+            <div class="ql-title">${x(w.title||"—")}</div>
+            <div class="ql-stage">${x(w.current_stage||"—")}</div>
+          </div>
+        </div>`;
+      }).join("");
+    }
+  }
+
+  // Obs list
+  const oEl = document.getElementById("qlo-list");
+  if (oEl) {
+    if (!allObs.length) {
+      oEl.innerHTML = `<div style="padding:6px 14px;font-size:10px;color:#7788aa;">No observations yet</div>`;
+    } else {
+      oEl.innerHTML = allObs.map(o => {
+        const dot = PRIORITY_DOTS[o.priority]||"#818cf8";
+        return `<div class="sb-ql-item ql-obs" onclick="openObsDetail('${o.id}')" id="qlo-${o.id}">
+          <span class="ql-dot" style="background:${dot}"></span>
+          <div class="ql-info">
+            <div class="ql-id">${x(o.id)}</div>
+            <div class="ql-title">${x(o.title||"—")}</div>
+            <div class="ql-stage">${x(o.current_stage||"—")}</div>
+          </div>
+        </div>`;
+      }).join("");
+    }
+  }
+}
+
+function toggleQL(which) {
+  const hdr  = document.getElementById("ql"+which[0]+"-hdr");
+  const body = document.getElementById("ql"+which[0]+"-body");
+  if (!hdr||!body) return;
+  const isOpen = body.classList.contains("open");
+  body.classList.toggle("open", !isOpen);
+  hdr.classList.toggle("open",  !isOpen);
+  hdr.querySelector(".sb-ql-arrow")?.classList.toggle("open", !isOpen);
+}
+
+function highlightSidebarItem(type, id) {
+  document.querySelectorAll(".sb-ql-item").forEach(el => el.classList.remove("ql-active"));
+  const el = document.getElementById((type==="obs"?"qlo-":"qlw-")+id);
+  if (el) { el.classList.add("ql-active"); el.scrollIntoView({block:"nearest"}); }
+}
+
+// ══════════════════════════════════════════════════════════
+// IDENTIFIED-BY DROPDOWN (OBSERVATIONS)
+// ══════════════════════════════════════════════════════════
+function obsRaisedSelect(sel) {
+  const v = sel.value;
+  const inp = document.getElementById("ocf-raised-by-name");
+  if (!v) return;
+  if (v === "__other__") { inp.value = ""; inp.focus(); }
+  else { inp.value = v; }
+}
+
+// ══════════════════════════════════════════════════════════
+// DASHBOARD CHARTS + STATS
+// ══════════════════════════════════════════════════════════
+
+const WORK_STAGE_COLORS  = ["#00c9b1","#4d90ff","#a78bfa","#00c9b1","#ff7c3a","#00e5b0","#00e5b0"];
+const OBS_STAGE_COLORS   = ["#818cf8","#818cf8","#38bdf8","#fbbf24","#f87171","#4ade80","#00e5b0"];
+
+const OBS_STAGES_JS = [
+  "Observation Raised by GM/Management",
+  "PM Review & Response",
+  "GM Verification",
+  "Management Approval",
+  "Procurement/Finance Action",
+  "Work In Progress",
+  "Completed"
+];
+
+// Short labels for bar charts
+const WORK_STAGE_SHORT = [
+  "Issue ID","GM Approval","Procurement","Mgmt Approval","Contract","Execution","Closure"
+];
+const OBS_STAGE_SHORT = [
+  "Obs Raised","PM Response","GM Verify","Mgmt Approval","Procurement","Work WIP","Completed"
+];
+
+function renderBarChart(containerId, labels, counts, colors) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const max = Math.max(...counts, 1);
+  el.innerHTML = labels.map((lbl, i) => {
+    const pct = Math.max(Math.round((counts[i] / max) * 100), counts[i] > 0 ? 4 : 0);
+    const clr = colors[i % colors.length];
+    return `<div class="bar-row">
+      <div class="bar-label" title="${x(lbl)}">${x(lbl)}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${clr};"></div></div>
+      <div class="bar-count">${counts[i]}</div>
+    </div>`;
+  }).join("");
+}
+
+function renderPriorityPills(containerId, stats) {
+  const el = document.getElementById(containerId);
+  if (!el || !stats) return;
+  const bp = stats.by_priority || {};
+  el.innerHTML = `<div class="priority-row">
+    <div class="pri-pill pri-high">
+      <div class="pri-pill-num">${bp.High||0}</div>
+      <div class="pri-pill-lbl">High</div>
+    </div>
+    <div class="pri-pill pri-med">
+      <div class="pri-pill-num">${bp.Medium||0}</div>
+      <div class="pri-pill-lbl">Medium</div>
+    </div>
+    <div class="pri-pill pri-low">
+      <div class="pri-pill-num">${bp.Low||0}</div>
+      <div class="pri-pill-lbl">Low</div>
+    </div>
+  </div>`;
+}
+
+
+// ══════════════════════════════════════════════════════════
+// DONUT CHART (canvas-based, no dependencies)
+// ══════════════════════════════════════════════════════════
+function drawDonut(canvasId, legendId, segments, centerOverride) {
+  // segments = [{label, value, color}]
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  const cx = W / 2, cy = H / 2;
+  const outerR = Math.min(W, H) / 2 - 4;
+  const innerR = outerR * 0.58;
+  const total = segments.reduce((s, x) => s + (x.value || 0), 0);
+
+  ctx.clearRect(0, 0, W, H);
+
+  if (total === 0) {
+    // Empty ring
+    ctx.beginPath();
+    ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
+    ctx.arc(cx, cy, innerR, Math.PI * 2, 0, true);
+    ctx.fillStyle = "#0d2030";
+    ctx.fill();
+    ctx.fillStyle = "#556";
+    ctx.font = "bold 11px Inter, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("0", cx, cy);
+  } else {
+    let start = -Math.PI / 2;
+    segments.forEach(seg => {
+      if (!seg.value) return;
+      const sweep = (seg.value / total) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, outerR, start, start + sweep);
+      ctx.arc(cx, cy, innerR, start + sweep, start, true);
+      ctx.closePath();
+      ctx.fillStyle = seg.color;
+      ctx.fill();
+      start += sweep;
+    });
+    // Centre total label
+    ctx.fillStyle = "#d2ecee";
+    ctx.font = "bold 18px Inter, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(centerOverride !== undefined ? centerOverride : total, cx, cy);
+  }
+
+  // Legend
+  const legEl = document.getElementById(legendId);
+  if (!legEl) return;
+  legEl.innerHTML = segments.map(s =>
+    `<div style="display:flex;align-items:center;gap:7px;margin-bottom:6px;">
+       <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${s.color};flex-shrink:0;"></span>
+       <span style="font-size:11px;color:#8899aa;flex:1;">${s.label}</span>
+       <span style="font-size:12px;font-weight:700;color:${s.color};">${s.value}</span>
+     </div>`
+  ).join("");
+}
+
+function updateDashStatusCharts(workStats, obsStats) {
+  // Works donut — Active vs Completed vs High Priority
+  const wActive    = (workStats && workStats.active)    || 0;
+  const wCompleted = (workStats && workStats.completed) || 0;
+  const wHigh      = (workStats && workStats.by_priority && workStats.by_priority.High) || 0;
+  const wMed       = (workStats && workStats.by_priority && workStats.by_priority.Medium) || 0;
+  const wLow       = (workStats && workStats.by_priority && workStats.by_priority.Low) || 0;
+
+  drawDonut("workDonutCanvas", "workDonutLegend", [
+    { label: "Active",    value: wActive,    color: "#4d90ff" },
+    { label: "Completed", value: wCompleted, color: "#00e5b0" },
+    { label: "On Hold",   value: (workStats && workStats.on_hold) || 0, color: "#00b89e" },
+  ].filter(s => s.value > 0 || (wActive + wCompleted === 0)), (workStats && workStats.total) || 0);
+
+  // Works stage bar (duplicate in summary)
+  if (workStats) {
+    const stageCounts = STAGES.map(s => (workStats.by_stage && workStats.by_stage[s]) || 0);
+    renderBarChart("workStageChart2", WORK_STAGE_SHORT, stageCounts, WORK_STAGE_COLORS);
+  }
+
+  // Obs donut
+  const oActive    = (obsStats && obsStats.active)    || 0;
+  const oCompleted = (obsStats && obsStats.completed) || 0;
+  const oHigh      = (obsStats && obsStats.by_priority && obsStats.by_priority.High) || 0;
+  const oMed       = (obsStats && obsStats.by_priority && obsStats.by_priority.Medium) || 0;
+  const oLow       = (obsStats && obsStats.by_priority && obsStats.by_priority.Low) || 0;
+
+  drawDonut("obsDonutCanvas", "obsDonutLegend", [
+    { label: "Active",    value: oActive,    color: "#818cf8" },
+    { label: "Completed", value: oCompleted, color: "#00e5b0" },
+  ].filter(s => s.value > 0 || (oActive + oCompleted === 0)), (obsStats && obsStats.total) || 0);
+
+  // Obs stage bar
+  if (obsStats) {
+    const stageCounts = OBS_STAGES_JS.map(s => (obsStats.by_stage && obsStats.by_stage[s]) || 0);
+    renderBarChart("obsStageChart2", OBS_STAGE_SHORT, stageCounts, OBS_STAGE_COLORS);
+  }
+}
+
+function updateWorkCharts(sr) {
+  if (!sr) return;
+  // Stage bar chart
+  const stageCounts = STAGES.map(s => (sr.by_stage && sr.by_stage[s]) || 0);
+  renderBarChart("workStageChart", WORK_STAGE_SHORT, stageCounts, WORK_STAGE_COLORS);
+  // Priority pills
+  renderPriorityPills("workPriorityChart", sr);
+}
+
+function updateObsCharts(sr) {
+  if (!sr) return;
+  // Stage bar chart
+  const stageCounts = OBS_STAGES_JS.map(s => (sr.by_stage && sr.by_stage[s]) || 0);
+  renderBarChart("obsStageChart", OBS_STAGE_SHORT, stageCounts, OBS_STAGE_COLORS);
+  // Priority pills
+  renderPriorityPills("obsPriorityChart", sr);
+}
+
+function updateDashObsStats(sr) {
+  if (!sr) return;
+  setTxt("dash-obs-total",  sr.total     || 0);
+  setTxt("dash-obs-active", sr.active    || 0);
+  setTxt("dash-obs-done",   sr.completed || 0);
+  setTxt("dash-obs-high",   (sr.by_priority && sr.by_priority.High) || 0);
+}
+
+function updateWorkStats_w(sr) {
+  if (!sr) return;
+  setTxt("w-st-total",  sr.total       || 0);
+  setTxt("w-st-active", sr.active      || 0);
+  setTxt("w-st-done",   sr.completed   || 0);
+  setTxt("w-st-high",   (sr.by_priority && sr.by_priority.High) || 0);
+}
+
+// ══════════════════════════════════════════════════════════
+// OBSERVATIONS MAIL COMPOSER
+// ══════════════════════════════════════════════════════════
+const OBS_STAGE_DEPTS_JS = {
+  "Observation Raised by GM/Management": ["PM"],
+  "PM Review & Response":  ["GM", "Management"],
+  "GM Verification":       ["Management"],
+  "Management Approval":   ["Procurement", "Finance"],
+  "Procurement/Finance Action": ["PM"],
+  "Work In Progress":      ["GM", "Management"],
+  "Completed":             ["All"]
+};
+
+let obsUndoBuf = {};
+
+function buildObsMcStageBtns() {
+  const el = document.getElementById("obsMcStageBtns");
+  if (!el) return;
+  const SHORT = {
+    "Observation Raised by GM/Management":"Obs Raised",
+    "PM Review & Response":"PM Response",
+    "GM Verification":"GM Verify",
+    "Management Approval":"Mgmt Approval",
+    "Procurement/Finance Action":"Procurement",
+    "Work In Progress":"Work WIP",
+    "Completed":"Completed"
+  };
+  el.innerHTML = OBS_STAGES_JS.map(s =>
+    `<button class="obs-stage-btn" data-stage="${x(s)}" onclick="activateObsMcStage('${s.replace(/'/g,"\'")}')">${SHORT[s]||s}</button>`
+  ).join("");
+}
+
+function activateObsMcStage(stage) {
+  document.querySelectorAll(".obs-stage-btn").forEach(b =>
+    b.classList.toggle("active", b.dataset.stage === stage)
+  );
+  const depts = OBS_STAGE_DEPTS_JS[stage] || ["All"];
+  document.querySelectorAll("#obsDeptTabs .dept-tab").forEach(t =>
+    t.classList.toggle("selected", depts.includes(t.dataset.dept))
+  );
+  updateObsDeptRecipients();
+  loadObsMailTemplate(stage);
+}
+
+function toggleObsDept(el) {
+  el.classList.toggle("selected");
+  updateObsDeptRecipients();
+  updateObsPreview();
+}
+
+function getObsSelectedDepts() {
+  return Array.from(document.querySelectorAll("#obsDeptTabs .dept-tab.selected")).map(t => t.dataset.dept);
+}
+
+function updateObsDeptRecipients() {
+  const depts = getObsSelectedDepts();
+  const el = document.getElementById("obsDeptRecipients");
+  if (!el) return;
+  if (!depts.length) { el.textContent = "No departments selected"; return; }
+  const seen = new Set(), emails = [];
+  for (const d of depts) for (const e of DEPT_EMAILS[d] || []) { if (!seen.has(e)) { seen.add(e); emails.push(e); } }
+  el.innerHTML = `<em style="color:var(--gold)">${depts.join(", ")}</em> &rarr; ${emails.join("  ·  ")}`;
+}
+
+let obsExtraEmails = [];
+
+function addObsExtraEmail() {
+  const inp = document.getElementById("obsExtraEmail");
+  if (!inp) return;
+  const val = inp.value.trim();
+  if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) { toast("Invalid email", "err"); return; }
+  if (!obsExtraEmails.includes(val)) {
+    obsExtraEmails.push(val);
+    renderObsExtraEmails();
+    updateObsPreview();
+  }
+  inp.value = "";
+}
+
+function removeObsExtraEmail(email) {
+  obsExtraEmails = obsExtraEmails.filter(e => e !== email);
+  renderObsExtraEmails();
+  updateObsPreview();
+}
+
+function renderObsExtraEmails() {
+  const el = document.getElementById("obsExtraEmailList");
+  if (!el) return;
+  el.innerHTML = obsExtraEmails.map(e =>
+    `<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.25);border-radius:12px;padding:2px 8px;font-size:10px;color:#a855f7;">
+      ${e} <span onclick="removeObsExtraEmail('${e}')" style="cursor:pointer;color:#a855f7;font-weight:700;line-height:1;">×</span>
+    </span>`
+  ).join("");
+}
+
+function resolveObsRecipients() {
+  const depts = getObsSelectedDepts();
+  const seen = new Set(), list = [];
+  for (const d of depts) for (const e of DEPT_EMAILS[d] || []) { if (!seen.has(e)) { seen.add(e); list.push(e); } }
+  for (const e of obsExtraEmails) { if (!seen.has(e)) { seen.add(e); list.push(e); } }
+  return list;
+}
+
+async function loadObsMailTemplate(stage) {
+  if (!currentObsId) return;
+  const res = await apiFetch(`${API}/observations/${currentObsId}/preview-mail`, "POST", { stage });
+  if (res.success) {
+    setVal("obsMcSubject", res.subject || "");
+    setVal("obsMcBody",    res.body    || "");
+    obsUndoBuf["obsMcSubject"] = res.subject || "";
+    obsUndoBuf["obsMcBody"]    = res.body    || "";
+    updateObsPreview();
+  }
+}
+
+function updateObsPreview() {
+  const subj = getVal("obsMcSubject");
+  const body = getVal("obsMcBody");
+  const rcpt = resolveObsRecipients();
+  const to   = document.getElementById("obsMcPreviewTo");
+  const pb   = document.getElementById("obsMcPreviewBody");
+  if (to) to.innerHTML = rcpt.length
+    ? `To: <em style="color:var(--cyan)">${rcpt.join("  ·  ")}</em>`
+    : `<span style="color:var(--text3)">No recipients</span>`;
+  if (pb) { pb.style.fontFamily = "monospace"; pb.textContent = (subj ? "Subject: "+subj+"\n\n" : "") + (body || "—"); }
+}
+
+function openObsFullPreview() {
+  const subj = getVal("obsMcSubject");
+  const body = getVal("obsMcBody");
+  const rcpt = resolveObsRecipients();
+  const o    = allObs.find(v => v.id === currentObsId) || {};
+  setTxt("obsPrvTo",      rcpt.join(", ") || "—");
+  setTxt("obsPrvSubject", subj || "—");
+  setTxt("obsPreviewSub", `${o.id || ""} — ${o.title || ""}`);
+  document.getElementById("obsPrvBody").textContent = body || "—";
+  openOverlay("obsPreviewOverlay");
+}
+
+async function sendObsMail() {
+  if (!currentObsId) { toast("No observation selected", "err"); return; }
+  const stage = document.querySelector(".obs-stage-btn.active")?.dataset?.stage || OBS_STAGES_JS[0];
+  const body  = getVal("obsMcBody");
+  const rcpt  = resolveObsRecipients();
+  if (!rcpt.length) { toast("Select at least one department or add an email", "err"); return; }
+  setTxt("obsMcStatus", "Sending…");
+  const res = await apiFetch(`${API}/observations/${currentObsId}/trigger-mail`, "POST", { stage, body, extra_recipients: obsExtraEmails });
+  if (res.success) {
+    toast(`Mail sent to ${res.count} recipient(s)`, "ok");
+    setTxt("obsMcStatus", `✓ Sent to ${res.count} · ${new Date().toLocaleTimeString("en-IN")}`);
+    closeOverlay("obsPreviewOverlay");
+  } else {
+    toast(res.error || "Mail failed", "err");
+    setTxt("obsMcStatus", "✗ Failed");
+  }
+}
+
+function insertObsSnippet(text) {
+  const ta = document.getElementById("obsMcBody");
+  const s = ta.selectionStart, e = ta.selectionEnd;
+  ta.value = ta.value.substring(0, s) + text + ta.value.substring(e);
+  ta.selectionStart = ta.selectionEnd = s + text.length;
+  ta.focus();
+  updateObsPreview();
+}
+
+function copyObsField(id) {
+  const el = document.getElementById(id);
+  navigator.clipboard.writeText(el.value || "")
+    .then(() => toast("Copied","info")).catch(() => toast("Copy failed","err"));
+}
+
+function clearObsField(id) {
+  obsUndoBuf[id] = getVal(id);
+  setVal(id, "");
+  updateObsPreview();
+}
+
+// ── Patch openObsDetail to init mail tab ──────────────────────────────────
+const _origOpenObsDetail = openObsDetail;
+openObsDetail = async function(id) {
+  await _origOpenObsDetail(id);
+  buildObsMcStageBtns();
+  const o = allObs.find(v => v.id === id);
+  if (o) activateObsMcStage(o.current_stage || OBS_STAGES_JS[0]);
+};
+
+// ── Patch openObsCreate to reset dropdown ────────────────────────────────
+const _origOpenObsCreate = openObsCreate;
+openObsCreate = function() {
+  _origOpenObsCreate();
+  setVal("ocf-raised-by-select", "");
+};
+
+// ══ THEME TOGGLE ══
+function toggleTheme() {
+  document.body.classList.toggle('light-mode');
+  try { localStorage.setItem('sln_wt_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark'); } catch(e) {}
+}
+(function() {
+  try { if (localStorage.getItem('sln_wt_theme') === 'light') document.body.classList.add('light-mode'); } catch(e) {}
+})();</script>
+
+<!-- ══ MODAL: CLOSE WORK ══ -->
+<div class="overlay" id="closeWorkOverlay">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-ttl" style="color:var(--green);">&#9989; Close &amp; Complete Work</div>
+        <div class="modal-sub" id="closeWorkSub">Moves work to Completion &amp; Closure stage</div>
+      </div>
+      <button class="modal-close" onclick="closeOverlay('closeWorkOverlay')">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:8px;padding:14px;margin-bottom:14px;font-size:12px;color:var(--text2);line-height:1.7;">
+        &#9432; This will immediately set the work status to <strong>Completed</strong>, move it to the <strong>Completion &amp; Closure</strong> stage, and send a closure notification mail to all departments.
+      </div>
+      <div class="form-grid">
+        <div class="fg span2">
+          <label class="flabel">Completion Remarks <span class="req">*</span></label>
+          <textarea class="ftxt" id="cw-remarks" rows="3" placeholder="Describe what was done, outcome, and any notes…"></textarea>
+        </div>
+        <div class="fg">
+          <label class="flabel">Actual Completion Date</label>
+          <input type="date" class="finp" id="cw-date">
+        </div>
+        <div class="fg">
+          <label class="flabel">Inspection Status</label>
+          <select class="fsel" id="cw-inspection">
+            <option value="Completed">Completed</option>
+            <option value="Pending">Pending</option>
+            <option value="Not Required">Not Required</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeOverlay('closeWorkOverlay')">Cancel</button>
+      <button class="btn" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;border-radius:6px;padding:8px 20px;font-size:12px;font-weight:700;cursor:pointer;" onclick="confirmCloseWork()">&#9989; Confirm Close Work</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: CLOSE OBSERVATION ══ -->
+<div class="overlay" id="closeObsOverlay">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-ttl" style="color:var(--green);">&#9989; Close Observation</div>
+        <div class="modal-sub" id="closeObsSub">Mark observation as completed</div>
+      </div>
+      <button class="modal-close" onclick="closeOverlay('closeObsOverlay')">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:8px;padding:14px;margin-bottom:14px;font-size:12px;color:var(--text2);line-height:1.7;">
+        &#9432; This will mark the observation as <strong>Completed</strong> and send a closure notification to all departments.
+      </div>
+      <div class="form-grid">
+        <div class="fg span2">
+          <label class="flabel">Closure Remarks <span class="req">*</span></label>
+          <textarea class="ftxt" id="co-remarks" rows="3" placeholder="Describe corrective action taken, outcome, findings…"></textarea>
+        </div>
+        <div class="fg">
+          <label class="flabel">Actual Completion Date</label>
+          <input type="date" class="finp" id="co-date">
+        </div>
+        <div class="fg">
+          <label class="flabel">Inspection Status</label>
+          <select class="fsel" id="co-inspection">
+            <option value="Completed">Completed</option>
+            <option value="Pending">Pending</option>
+            <option value="Not Required">Not Required</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeOverlay('closeObsOverlay')">Cancel</button>
+      <button class="btn" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;border-radius:6px;padding:8px 20px;font-size:12px;font-weight:700;cursor:pointer;" onclick="confirmCloseObs()">&#9989; Confirm Close Observation</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     MODAL: NEW OBSERVATION
+══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="obsCreateOverlay">
+  <div class="modal modal-lg">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-ttl">&#128065; New Observation</div>
+        <div class="modal-sub">Raised by GM / Management &#8212; PM will be notified immediately</div>
+      </div>
+      <button class="modal-close" onclick="closeOverlay('obsCreateOverlay')">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="fg">
+          <label class="flabel">Date <span class="req">*</span></label>
+          <input type="date" class="finp" id="ocf-date">
+        </div>
+        <div class="fg">
+          <label class="flabel">Priority <span class="req">*</span></label>
+          <select class="fsel" id="ocf-priority">
+            <option value="High">High</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+        <div class="fg span2">
+          <label class="flabel">&#128100; Identified / Raised By <span class="req">*</span></label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <select class="fsel" id="ocf-raised-by-select" onchange="obsRaisedSelect(this)" style="flex:0 0 200px;">
+              <option value="">&#8212; Select Person &#8212;</option>
+              
+              <option value="(GM)"> (GM)</option>
+              <option value="(Management)"> (Management)</option>
+              <option value="Board Member">Board Member</option>
+              <option value="Management">Management</option>
+              <option value="Director">Director</option>
+            
+            </select>
+            <input type="text" class="finp" id="ocf-raised-by-name" placeholder="Name will appear here, or type directly" style="flex:1;min-width:160px;">
+          </div>
+        </div>
+        <div class="fg span2">
+          <label class="flabel">Observation Title <span class="req">*</span></label>
+          <input type="text" class="finp" id="ocf-title" placeholder="Brief description of what was observed">
+        </div>
+        <div class="fg">
+          <label class="flabel">Location / Area</label>
+          <input type="text" class="finp" id="ocf-location" placeholder="Floor / Zone / Area">
+        </div>
+        <div class="fg">
+          <label class="flabel">Expected Completion Date <span style="font-size:10px;color:var(--text3);">(GM/Management to fill)</span></label>
+          <input type="date" class="finp" id="ocf-expected-date">
+        </div>
+        <div class="fg span2">
+          <label class="flabel">Description / Scope of Work</label>
+          <textarea class="ftxt" id="ocf-description" rows="4" placeholder="Detailed observation, findings and expected corrective action&#8230;"></textarea>
+        </div>
+        <div class="fg span2">
+          <label class="flabel">Remarks</label>
+          <input type="text" class="finp" id="ocf-remarks" placeholder="Any additional remarks">
+        </div>
+        <div class="fg">
+          <label class="flabel">Upload Image / Document</label>
+          <input type="file" class="finp" id="ocf-image" accept="image/*,.pdf" style="padding:6px 8px;cursor:pointer;">
+        </div>
+        <div class="fg">
+          <label class="flabel">After Completion &#8212; Inspection Required</label>
+          <select class="fsel" id="ocf-inspection">
+            <option value="Yes" selected>Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeOverlay('obsCreateOverlay')">Cancel</button>
+      <button class="btn-purple" onclick="saveObservation()">&#128190; Save &amp; Notify PM</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     MODAL: OBSERVATION DETAIL
+══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="obsDetailOverlay">
+  <div class="modal modal-xl">
+    <div class="modal-hdr">
+      <div>
+        <div class="modal-ttl" id="obsDetailTitle">Observation</div>
+        <div class="modal-sub"  id="obsDetailSub"></div>
+      </div>
+      <button class="modal-close" onclick="closeOverlay('obsDetailOverlay')">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <!-- tabs -->
+      <div class="dtabs">
+        <button class="dtab active" onclick="switchObsTab('overview')">&#128065; Overview</button>
+        <button class="dtab"        onclick="switchObsTab('pm')">&#128221; PM Response</button>
+        <button class="dtab"        onclick="switchObsTab('approve')">&#9989; Approval</button>
+        <button class="dtab"        onclick="switchObsTab('mail')">&#9993; Trigger Mail</button>
+        <button class="dtab"        onclick="switchObsTab('history')">&#128203; History</button>
+      </div>
+
+      <!-- TAB: OVERVIEW -->
+      <div class="dtab-pane active" id="odp-overview">
+        <div class="detail-grid" id="obsDetailGrid"></div>
+        <div id="obsImgWrap" style="margin-top:12px;"></div>
+        <hr class="divider">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <button class="btn-purple" onclick="advanceObsStage()">&#9193; Advance Stage &amp; Send Mail</button>
+          <button class="btn" style="background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;border-radius:6px;padding:7px 16px;font-size:12px;font-weight:700;cursor:pointer;" onclick="openCloseObs()">&#9989; Close Observation</button>
+          <button class="btn btn-gold" onclick="obsTriggerMail()">&#9993; Re-send Mail</button>
+          <button class="btn btn-emergency" onclick="obsEmergencyMail()">&#9888; Emergency</button>
+          <button class="btn btn-red" onclick="closeOverlay('obsDetailOverlay');promptDeleteObs(currentObsId);" style="margin-left:auto;">&#128465; Delete</button>
+        </div>
+      </div>
+
+      <!-- TAB: PM RESPONSE -->
+      <div class="dtab-pane" id="odp-pm">
+        <div style="background:rgba(129,140,248,.06);border:1px solid rgba(129,140,248,.2);border-radius:8px;padding:16px;margin-bottom:14px;">
+          <div style="font-size:11px;color:#a5b4fc;font-weight:700;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em;">&#128221; PM Response &#8212; Reply to GM &amp; Management</div>
+          <div class="form-grid">
+            <div class="fg span2">
+              <label class="flabel">PM Response / Status Update <span class="req">*</span></label>
+              <textarea class="ftxt" id="pm-resp-text" rows="4" placeholder="Describe current status, findings and proposed corrective action&#8230;"></textarea>
+            </div>
+            <div class="fg">
+              <label class="flabel">Is this a Cost Implication Work?</label>
+              <select class="fsel" id="pm-cost-flag">
+                <option value="No">No &#8212; can be handled in-house</option>
+                <option value="Yes">Yes &#8212; requires procurement</option>
+                <option value="TBD">TBD &#8212; under assessment</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn-purple" style="margin-top:12px;" onclick="submitPmResponse()">&#10003; Submit &amp; Notify GM / Management</button>
+        </div>
+      </div>
+
+      <!-- TAB: APPROVAL -->
+      <div class="dtab-pane" id="odp-approve">
+        <div style="background:rgba(0,185,163,.06);border:1px solid rgba(0,185,163,.2);border-radius:8px;padding:16px;margin-bottom:14px;">
+          <div style="font-size:11px;color:#00b89e;font-weight:700;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em;">&#9989; GM / Management Approval &amp; Cost Decision</div>
+          <div class="form-grid">
+            <div class="fg">
+              <label class="flabel">Cost Implication Decision <span class="req">*</span></label>
+              <select class="fsel" id="obs-decision">
+                <option value="Yes">Yes &#8212; Cost Implication (route to Procurement/Finance)</option>
+                <option value="No">No &#8212; Direct work (move to Work In Progress)</option>
+              </select>
+            </div>
+            <div class="fg span2">
+              <label class="flabel">Approval Notes</label>
+              <textarea class="ftxt" id="obs-approve-notes" rows="3" placeholder="Approval notes, budget directives, instructions&#8230;"></textarea>
+            </div>
+          </div>
+          <button class="btn btn-gold" style="margin-top:12px;" onclick="submitObsApproval()">&#10003; Confirm Approval &amp; Trigger Mail</button>
+        </div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.8;padding:8px 0;">
+          <strong style="color:var(--red);">Yes</strong> &#8594; Mail sent to Procurement/Finance team to initiate quotation process<br>
+          <strong style="color:var(--green);">No</strong> &#8594; Work moves directly to Work In Progress stage
+        </div>
+      </div>
+
+      <!-- TAB: TRIGGER MAIL (Observations) -->
+      <div class="dtab-pane" id="odp-mail">
+        <div class="obs-mc-wrap">
+
+          <!-- Stage Selector -->
+          <div>
+            <div style="font-size:10px;color:#818cf8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;">&#128065; Select Stage / Mail Type</div>
+            <div class="obs-stage-selector" id="obsMcStageBtns"></div>
+          </div>
+
+          <!-- Department Panel -->
+          <div class="obs-dept-panel">
+            <div style="font-size:10px;font-weight:700;color:#818cf8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;">&#128101; Recipients</div>
+            <div class="dept-tabs" id="obsDeptTabs">
+              <span class="dept-tab" data-dept="GM"          onclick="toggleObsDept(this)"><span class="dept-dot"></span>GM</span>
+              <span class="dept-tab" data-dept="Management"  onclick="toggleObsDept(this)"><span class="dept-dot"></span>Management</span>
+              <span class="dept-tab" data-dept="PM"          onclick="toggleObsDept(this)"><span class="dept-dot"></span>PM</span>
+              <span class="dept-tab" data-dept="Procurement" onclick="toggleObsDept(this)"><span class="dept-dot"></span>Procurement</span>
+              <span class="dept-tab" data-dept="Finance"     onclick="toggleObsDept(this)"><span class="dept-dot"></span>Finance</span>
+              <span class="dept-tab" data-dept="All"         onclick="toggleObsDept(this)"><span class="dept-dot"></span>All</span>
+            </div>
+            <div class="dept-recipients" id="obsDeptRecipients" style="margin-top:8px;">Select departments above</div>
+            <!-- Extra email input for obs -->
+            <div style="display:flex;gap:6px;margin-top:8px;">
+              <input type="email" class="finp" id="obsExtraEmail" placeholder="Add extra email address (optional)" style="flex:1;font-size:11px;padding:5px 9px;border-color:rgba(124,58,237,.3);" onkeydown="if(event.key==='Enter'){event.preventDefault();addObsExtraEmail();}">
+              <button class="btn btn-outline btn-xs" onclick="addObsExtraEmail()">&#43; Add</button>
+            </div>
+            <div id="obsExtraEmailList" style="margin-top:5px;display:flex;gap:4px;flex-wrap:wrap;"></div>
+          </div>
+
+          <!-- Subject -->
+          <div class="fg">
+            <label class="flabel">Mail Subject</label>
+            <div class="mc-subject-wrap">
+              <input type="text" class="finp" id="obsMcSubject" placeholder="Subject…" oninput="updateObsPreview()" style="border-color:rgba(124,58,237,.3);">
+              <button class="btn btn-outline btn-xs" onclick="copyObsField('obsMcSubject')">&#128203;</button>
+              <button class="btn btn-red btn-xs" onclick="clearObsField('obsMcSubject')">&#128465;</button>
+            </div>
+          </div>
+
+          <!-- Body Toolbar -->
+          <div class="fg">
+            <label class="flabel">Mail Body</label>
+            <div class="mc-toolbar" style="background:rgba(124,58,237,.06);border-color:rgba(124,58,237,.2);border-bottom:none;">
+              <span style="font-size:9px;color:#818cf8;margin-right:4px;align-self:center;">INSERT:</span>
+              <button class="btn btn-outline btn-xs" onclick="insertObsSnippet('{obs_id}')">ID</button>
+              <button class="btn btn-outline btn-xs" onclick="insertObsSnippet('{title}')">Title</button>
+              <button class="btn btn-outline btn-xs" onclick="insertObsSnippet('{location}')">Location</button>
+              <button class="btn btn-outline btn-xs" onclick="insertObsSnippet('{priority}')">Priority</button>
+              <button class="btn btn-outline btn-xs" onclick="insertObsSnippet('{raised_by_name}')">Raised By</button>
+              <button class="btn btn-outline btn-xs" onclick="insertObsSnippet('{pm_response}')">PM Resp</button>
+              <span style="width:1px;background:var(--border2);margin:0 2px;align-self:stretch;"></span>
+              <button class="btn btn-outline btn-xs" onclick="copyObsField('obsMcBody')">&#128203; Copy</button>
+              <button class="btn btn-red btn-xs" onclick="clearObsField('obsMcBody')">&#128465; Clear</button>
+            </div>
+            <div style="border:1px solid rgba(124,58,237,.2);border-radius:0 0 var(--r2) var(--r2);overflow:hidden;">
+              <textarea class="mc-body" id="obsMcBody" rows="8" oninput="updateObsPreview()"></textarea>
+            </div>
+          </div>
+
+          <!-- Live Preview -->
+          <div class="obs-preview-wrap">
+            <div class="obs-preview-hdr">
+              <span>&#128247; Live Mail Preview</span>
+              <button class="btn btn-outline btn-xs" onclick="openObsFullPreview()">Full Preview</button>
+            </div>
+            <div class="mc-preview-to" id="obsMcPreviewTo" style="padding:5px 11px 0;font-size:10px;color:var(--text3);"></div>
+            <div class="mc-preview-body" id="obsMcPreviewBody" style="padding:12px;font-size:11px;color:var(--text2);line-height:1.7;max-height:160px;overflow-y:auto;white-space:pre-wrap;">—</div>
+          </div>
+
+          <!-- Action Row -->
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <button class="btn-purple" onclick="sendObsMail()">&#128228; Send Mail</button>
+            <button class="btn btn-emergency" onclick="obsEmergencyMail()">&#9888; Emergency — All Depts</button>
+            <span id="obsMcStatus" style="font-size:11px;color:var(--text3);"></span>
+          </div>
+
+        </div>
+      </div><!-- /odp-mail -->
+
+      <!-- TAB: HISTORY -->
+      <div class="dtab-pane" id="odp-history">
+        <div id="obsHistList"></div>
+      </div>
+
+    </div><!-- /modal-body -->
+  </div><!-- /modal -->
+</div><!-- /obsDetailOverlay -->
+
+</body>
+</html>
