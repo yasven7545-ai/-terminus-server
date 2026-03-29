@@ -325,5 +325,41 @@
     "status": "digest-sent",
     "error": "",
     "timestamp": "2026-03-28T08:00:06.118108"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-29T08:00:04.173574"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-29T08:00:04.434154"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "Kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-29T08:00:08.702762"
   }
 ]

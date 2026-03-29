@@ -1900,5 +1900,41 @@
     "status": "digest-sent",
     "error": "",
     "timestamp": "2026-03-28T08:00:06.351356"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-29T08:00:04.609471"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-29T08:00:05.670037"
+  },
+  {
+    "work_id": "DIGEST",
+    "stage": "daily-digest",
+    "recipients": [
+      "maintenance.slnterminus@gmail.com",
+      "yasven7545@gmail.com",
+      "kiran@terminus-global.com"
+    ],
+    "status": "digest-sent",
+    "error": "",
+    "timestamp": "2026-03-29T08:00:05.913389"
   }
 ]
