@@ -6469,3 +6469,127 @@ if __name__ == "__main__":
 {'='*70}
 """)
     app.run(host="0.0.0.0", port=5000, debug=False)
+
+# =====================================================
+# MOBILE API ENDPOINTS - EXTENDED
+# =====================================================
+
+@app.route("/api/mobile/breakdown", methods=["GET"])
+@jwt_required
+def mobile_breakdown():
+    prop = request.jwt_user.get("active_property", "")
+    try:
+        from models import db
+        import sqlite3
+        db_path = BASE_DIR / "maintenance.db"
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM breakdown_engineering WHERE property=? ORDER BY created_at DESC LIMIT 50", (prop,))
+        rows = [dict(r) for r in cur.fetchall()]
+        conn.close()
+        return jsonify({"success": True, "data": rows})
+    except Exception as e:
+        return jsonify({"success": True, "data": [], "note": str(e)})
+
+@app.route("/api/mobile/inventory", methods=["GET"])
+@jwt_required
+def mobile_inventory():
+    prop = request.jwt_user.get("active_property", "")
+    try:
+        import sqlite3
+        db_path = BASE_DIR / "maintenance.db"
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM inventory WHERE property=? ORDER BY item_name LIMIT 100", (prop,))
+        rows = [dict(r) for r in cur.fetchall()]
+        conn.close()
+        return jsonify({"success": True, "data": rows})
+    except Exception as e:
+        return jsonify({"success": True, "data": [], "note": str(e)})
+
+@app.route("/api/mobile/amc", methods=["GET"])
+@jwt_required
+def mobile_amc():
+    prop = request.jwt_user.get("active_property", "")
+    try:
+        import sqlite3
+        db_path = BASE_DIR / "maintenance.db"
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM amc_contracts WHERE property=? ORDER BY expiry_date LIMIT 100", (prop,))
+        rows = [dict(r) for r in cur.fetchall()]
+        conn.close()
+        return jsonify({"success": True, "data": rows})
+    except Exception as e:
+        return jsonify({"success": True, "data": [], "note": str(e)})
+
+@app.route("/api/mobile/vendor_visits", methods=["GET"])
+@jwt_required
+def mobile_vendor_visits():
+    prop = request.jwt_user.get("active_property", "")
+    try:
+        import sqlite3
+        db_path = BASE_DIR / "vendor_visits.db"
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM vendor_visits WHERE property=? ORDER BY visit_date DESC LIMIT 50", (prop,))
+        rows = [dict(r) for r in cur.fetchall()]
+        conn.close()
+        return jsonify({"success": True, "data": rows})
+    except Exception as e:
+        return jsonify({"success": True, "data": [], "note": str(e)})
+
+@app.route("/api/mobile/housekeeping", methods=["GET"])
+@jwt_required
+def mobile_housekeeping():
+    prop = request.jwt_user.get("active_property", "")
+    try:
+        import sqlite3
+        db_path = BASE_DIR / "maintenance.db"
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM housekeeping WHERE property=? ORDER BY created_at DESC LIMIT 50", (prop,))
+        rows = [dict(r) for r in cur.fetchall()]
+        conn.close()
+        return jsonify({"success": True, "data": rows})
+    except Exception as e:
+        return jsonify({"success": True, "data": [], "note": str(e)})
+
+@app.route("/api/mobile/security", methods=["GET"])
+@jwt_required
+def mobile_security():
+    prop = request.jwt_user.get("active_property", "")
+    try:
+        import sqlite3
+        db_path = BASE_DIR / "maintenance.db"
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM security_logs WHERE property=? ORDER BY created_at DESC LIMIT 50", (prop,))
+        rows = [dict(r) for r in cur.fetchall()]
+        conn.close()
+        return jsonify({"success": True, "data": rows})
+    except Exception as e:
+        return jsonify({"success": True, "data": [], "note": str(e)})
+
+@app.route("/api/mobile/fire", methods=["GET"])
+@jwt_required
+def mobile_fire():
+    prop = request.jwt_user.get("active_property", "")
+    try:
+        import sqlite3
+        db_path = BASE_DIR / "maintenance.db"
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM fire_safety WHERE property=? ORDER BY created_at DESC LIMIT 50", (prop,))
+        rows = [dict(r) for r in cur.fetchall()]
+        conn.close()
+        return jsonify({"success": True, "data": rows})
+    except Exception as e:
+        return jsonify({"success": True, "data": [], "note": str(e)})
