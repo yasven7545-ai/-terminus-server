@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <!-- TD MMS v1.0 -->
+    <title>THE DISTRICT | MMS MAINTENANCE MANAGEMENT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+        /* ── CSS VARIABLES ── */
+        :root {
+            --primary: #06b6d4;
+            --primary-glow: rgba(6,182,212,0.18);
+            --accent: #8b5cf6;
+            --accent-glow: rgba(139,92,246,0.18);
+            --green: #10b981;
+            --rose: #f43f5e;
+            --amber: #f59e0b;
+            --gold: #d4a017;
+            --bg: #030712;
+            --surface: rgba(15,20,40,0.95);
+            --glass: rgba(15,23,42,0.9);
+            --border: rgba(6,182,212,0.14);
+            --sidebar-w: 282px;
+        }
+        /* ── LIGHT MODE ── */
+        body.light {
+            --bg: #f0f9ff; --surface: rgba(255,255,255,0.97);
+            --glass: rgba(255,255,255,0.95); --border: rgba(6,182,212,0.22);
+            color: #0f172a; background: var(--bg);
+        }
+        body.light .topbar          { background: rgba(240,249,255,0.97) !important; border-color: rgba(6,182,212,0.2) !important; }
+        body.light .sidebar         { background: rgba(255,255,255,0.98) !important; border-color: rgba(6,182,212,0.15) !important; }
+        body.light .ultra-glass     { background: rgba(255,255,255,0.95) !important; border-color: rgba(6,182,212,0.2) !important; }
+        body.light .sidebar-item    { color: #334155; }
+        body.light .sidebar-item:hover,
+        body.light .sidebar-item.active { color: var(--primary); background: rgba(6,182,212,.1); }
+        body.light h2,body.light h3,body.light p { color: #0f172a; }
+        body.light .stat-card h2 { color: #0f172a !important; }
+        body.light .stat-card p  { color: #475569 !important; }
+        body.light table th { color: #475569 !important; }
+        body.light table td { color: #334155 !important; }
+        body.light #asset-table-body td[style*="color:white"]   { color: #0f172a !important; }
+        body.light #asset-table-body td[style*="color:#64748b"] { color: #475569 !important; }
+        body.light #wo-stream-container,
+        body.light #amc-stream-container,
+        body.light #closed-wo-container { background: transparent; }
+        body.light .wo-row { background: rgba(255,255,255,0.95) !important; border-color: rgba(6,182,212,0.2) !important; }
+        body.light #wo-stream-container > div,
+        body.light #closed-wo-container > div,
+        body.light #amc-stream-container > div,
+        body.light #day-schedule-container > div {
+            background: rgba(255,255,255,0.95) !important;
+            border-color: rgba(6,182,212,0.18) !important;
+            box-shadow: 0 1px 6px rgba(0,0,0,.07);
+        }
+        body.light #wo-stream-container p[style*="color:white"],
+        body.light #closed-wo-container p[style*="color:white"],
+        body.light #amc-stream-container p[style*="color:white"],
+        body.light #day-schedule-container h4[style*="color:white"] { color: #0f172a !important; }
+        body.light #wo-stream-container  p[style*="color:#64748b"],
+        body.light #wo-stream-container  p[style*="color:#475569"],
+        body.light #closed-wo-container  span[style*="color:#64748b"],
+        body.light #amc-stream-container span[style*="color:#64748b"],
+        body.light #amc-stream-container p[style*="color:#94a3b8"],
+        body.light #amc-stream-container p[style*="color:#64748b"],
+        body.light #day-schedule-container p[style*="color:#64748b"] { color: #475569 !important; }
+        body.light #wo-stream-container  span[style*="color:#94a3b8"],
+        body.light #closed-wo-container  span[style*="color:#94a3b8"],
+        body.light #amc-stream-container span[style*="color:#94a3b8"] { color: #64748b !important; }
+        body.light .create-wo-btn { color: black !important; }
+
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; height: 100%; }
+        body { background: var(--bg); color: #94a3b8; font-family: 'Rajdhani', sans-serif; overflow: hidden; }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            position: fixed; top: 0; left: 0; right: 0; height: 46px;
+            background: rgba(3,7,18,0.97); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 18px; z-index: 500; gap: 10px;
+            padding-left: max(18px, env(safe-area-inset-left));
+            padding-right: max(18px, env(safe-area-inset-right));
+        }
+        .topbar-left  { display: flex; align-items: center; gap: 10px; min-width:0; flex-shrink:1; overflow:hidden; }
+        .topbar-right { display: flex; align-items: center; gap: 8px; flex-shrink:0; }
+        .portal-label { display: inline; }
+
+        /* Gold portal button with blink */
+        @keyframes goldBlink {
+            0%,100%{ box-shadow:0 0 0 0 rgba(212,160,23,0); border-color:rgba(212,160,23,.35); color:#d4a017; }
+            50%{ box-shadow:0 0 0 5px rgba(212,160,23,.15); border-color:rgba(212,160,23,.9); color:#f5c842; }
+        }
+        .portal-btn {
+            display: flex; align-items: center; gap: 6px;
+            padding: 5px 13px; border-radius: 8px;
+            background: rgba(212,160,23,.08); border: 1px solid rgba(212,160,23,.35);
+            color: var(--gold); font-size: 10px; font-weight: 800;
+            letter-spacing: .07em; text-transform: uppercase; cursor: pointer;
+            text-decoration: none; animation: goldBlink 2s ease-in-out infinite;
+            transition: background .2s, color .2s;
+        }
+        .portal-btn:hover { background: var(--gold); color: #000; animation: none; }
+
+        /* Dark/Light toggle */
+        .theme-toggle {
+            display: flex; align-items: center; gap: 6px;
+            padding: 4px 10px; border-radius: 20px;
+            background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+            cursor: pointer; transition: all .2s;
+        }
+        .theme-toggle .toggle-track {
+            width: 32px; height: 17px; background: rgba(6,182,212,.3);
+            border-radius: 10px; position: relative; transition: background .2s;
+        }
+        .theme-toggle .toggle-thumb {
+            width: 13px; height: 13px; background: var(--primary); border-radius: 50%;
+            position: absolute; top: 2px; left: 2px; transition: transform .25s;
+        }
+        body.light .theme-toggle .toggle-track { background: rgba(6,182,212,.5); }
+        body.light .theme-toggle .toggle-thumb { transform: translateX(15px); background: #0891b2; }
+        .theme-toggle span { font-size: 10px; font-weight: 700; color: #94a3b8; letter-spacing: .06em; }
+
+        /* Blinking live dot */
+        @keyframes blink { 0%,100%{ opacity:1 } 50%{ opacity:.3 } }
+        .blinking { animation: blink 1.4s ease-in-out infinite; }
+        @keyframes pulse-glow { 0%,100%{ box-shadow:0 0 0 0 rgba(6,182,212,.3) } 50%{ box-shadow:0 0 14px 4px rgba(6,182,212,.2) } }
+        .online-pulse { animation: pulse-glow 2s infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .animate-spin { animation: spin 1s linear infinite; }
+
+        /* ── APP SHELL ── */
+        .app-shell { display: flex; height: 100vh; overflow: hidden; padding-top: 46px; }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: var(--sidebar-w); min-width: var(--sidebar-w);
+            background: rgba(3,7,18,0.98); backdrop-filter: blur(24px);
+            border-right: 1px solid var(--border);
+            display: flex; flex-direction: column;
+            padding: 20px 14px; z-index: 200; overflow-y: auto;
+            transition: transform .3s ease;
+        }
+        .sidebar-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,.65); z-index: 150;
+        }
+        .sidebar-item {
+            width: 100%; display: flex; align-items: center; gap: 11px;
+            padding: 11px 14px; border-radius: 0 8px 8px 0;
+            font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+            color: #475569; background: transparent; border: none; cursor: pointer;
+            transition: all .2s; text-align: left; border-left: 3px solid transparent;
+        }
+        .sidebar-item:hover { color: #e2e8f0; background: rgba(6,182,212,.05); }
+        .sidebar-item.active {
+            background: linear-gradient(90deg, rgba(6,182,212,.18), transparent);
+            border-left-color: var(--primary); color: white;
+        }
+        .sidebar-item.amc-style { border-left-color: var(--accent); }
+        .sidebar-item.amc-style.active { background: linear-gradient(90deg, rgba(139,92,246,.18), transparent); }
+
+        /* Sidebar counter badge */
+        .sidebar-counter {
+            margin-left: auto; min-width: 20px; height: 18px;
+            padding: 0 5px; border-radius: 9px;
+            font-size: 9px; font-weight: 800; text-align: center; line-height: 18px;
+            background: rgba(6,182,212,.15); color: var(--primary); border: 1px solid rgba(6,182,212,.3);
+            cursor: pointer; transition: all .2s; flex-shrink: 0;
+        }
+        .sidebar-counter.amber { background: rgba(245,158,11,.15); color: var(--amber); border-color: rgba(245,158,11,.3); }
+        .sidebar-counter.rose  { background: rgba(244,63,94,.15);  color: var(--rose);  border-color: rgba(244,63,94,.3); }
+        .sidebar-counter.green { background: rgba(16,185,129,.15); color: var(--green); border-color: rgba(16,185,129,.3); }
+
+        /* ── MAIN ── */
+        .main-content { flex: 1; min-width: 0; overflow-y: auto; overflow-x: hidden; padding: 20px 24px; }
+        .section { display: none; }
+        .section.active { display: flex; flex-direction: column; }
+        .section.active.full-h { height: calc(100vh - 86px); }
+
+        /* ── GLASS CARD ── */
+        .ultra-glass {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+        }
+
+        /* ── STAT CARDS ── */
+        .stat-card { padding: 16px 20px; border-radius: 16px; cursor: pointer; transition: transform .15s, box-shadow .15s; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+
+        /* ── CALENDAR ── */
+        #calendar-grid { display: grid; grid-template-columns: repeat(7,1fr); grid-auto-rows: minmax(44px,1fr); gap: 3px; width: 100%; }
+        .calendar-day {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 44px; border: 1px solid rgba(255,255,255,.05);
+            cursor: pointer; font-size: 13px; font-weight: 500; color: #475569;
+            transition: all .2s; border-radius: 6px; padding: 4px 2px; user-select: none;
+        }
+        .calendar-day:hover { background: rgba(6,182,212,.1); color: white; border-color: rgba(6,182,212,.3); }
+        .calendar-day.has-task { color: var(--primary); font-weight: 700; background: rgba(6,182,212,.07); border-color: rgba(6,182,212,.2); }
+        .calendar-day.today { border: 2px solid var(--primary); background: rgba(6,182,212,.1); color: white; font-weight: 700; }
+        .calendar-blank { min-height: 44px; border-radius: 6px; }
+        .task-dot { width: 5px; height: 5px; background: var(--primary); border-radius: 50%; margin-top: 3px; box-shadow: 0 0 6px var(--primary); flex-shrink: 0; }
+
+        /* ── BADGE ── */
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 800; letter-spacing: .08em; }
+
+        /* ── FORM FIELDS ── */
+        .field-label { display: block; font-size: 10px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+        .amc-field { width: 100%; padding: 10px 12px; background: rgba(15,23,42,.8); border: 1px solid rgba(255,255,255,.1); border-radius: 8px; color: white; font-family: 'Rajdhani',sans-serif; font-size: 13px; outline: none; }
+        .amc-field:focus { border-color: var(--primary); }
+        .assign-field { width: 100%; padding: 10px 12px; background: rgba(15,23,42,.8); border: 1px solid rgba(255,255,255,.1); border-radius: 8px; color: white; font-family: 'Rajdhani',sans-serif; font-size: 13px; outline: none; margin-bottom: 8px; }
+        .assign-field:focus { border-color: var(--primary); }
+
+        /* ── SCROLLBAR ── */
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(6,182,212,.35); border-radius: 10px; }
+
+        /* ── MOBILE TOGGLE ── */
+        .mobile-toggle {
+            display: none; align-items: center; gap: 5px;
+            background: rgba(6,182,212,.15); border: 1px solid rgba(6,182,212,.3);
+            color: var(--primary); padding: 6px 9px; border-radius: 8px; cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        /* ── ASSET TYPE TABS ── */
+        .asset-tab-btn {
+            padding: 5px 13px; border-radius: 7px; font-size: 10px; font-weight: 800;
+            letter-spacing: .05em; text-transform: uppercase; cursor: pointer;
+            border: 1px solid rgba(255,255,255,.1); background: transparent; color: #64748b; transition: all .2s;
+        }
+        .asset-tab-btn.active { border-color: rgba(6,182,212,.5); background: rgba(6,182,212,.15); color: var(--primary); }
+
+        /* ── CATEGORY PILLS ── */
+        .cat-pill {
+            padding: 4px 11px; border-radius: 6px; font-size: 10px; font-weight: 800;
+            letter-spacing: .05em; text-transform: uppercase; cursor: pointer;
+            border: 1px solid rgba(255,255,255,.08); background: transparent; color: #475569; transition: all .2s;
+        }
+
+        /* ── SPLIT CARDS ── */
+        .split-card { border-radius: 14px; padding: 14px 18px; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width:900px) { .cal-grid { grid-template-columns: 1fr !important; } }
+        @media (max-width:768px) {
+            body { overflow: hidden; }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100vh; transform: translateX(-100%); z-index: 400; }
+            .sidebar.open { transform: translateX(0); box-shadow: 0 0 40px rgba(0,0,0,.8); }
+            .sidebar-overlay.open { display: block; }
+            .mobile-toggle { display: flex; }
+            #tb-clock { display: none; }
+            .portal-label { display: none; }
+            .portal-btn { padding: 5px 9px; }
+            .theme-toggle { padding: 4px 7px; }
+            .theme-toggle span { display: none; }
+            .main-content { padding: 14px 10px 10px 10px; }
+            .stats-grid { grid-template-columns: repeat(2,1fr) !important; gap: 10px !important; }
+            #wo-summary-strip { grid-template-columns: repeat(2,1fr) !important; gap: 10px !important; }
+            .split-cards-row { grid-template-columns: 1fr !important; }
+            .charts-grid { grid-template-columns: 1fr !important; }
+            .cal-grid { grid-template-columns: 1fr !important; }
+            #calendar-grid { grid-auto-rows: minmax(36px,1fr) !important; }
+            .calendar-day { min-height: 36px !important; font-size: 11px !important; }
+            .calendar-blank { min-height: 36px !important; }
+            .modal-inner { width: 100% !important; max-width: 100% !important; border-radius: 12px 12px 0 0 !important; max-height: 92vh !important; }
+            .modal-wrap  { align-items: flex-end !important; padding: 0 !important; }
+            .modal-grid-4 { grid-template-columns: repeat(2,1fr) !important; }
+        }
+        @media (max-width:480px) {
+            .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+            .stat-card { padding: 12px 14px !important; }
+            .stat-card h2 { font-size: 26px !important; }
+            #wo-summary-strip { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+            #calendar-grid { grid-auto-rows: minmax(32px,1fr) !important; }
+            .calendar-day { min-height: 32px !important; font-size: 10px !important; }
+            .calendar-blank { min-height: 32px !important; }
+            .main-content { padding: 10px 8px 8px 8px; }
+            .topbar-left { gap: 7px; }
+        }
+        .chart-wrap { position: relative; min-height: 200px; }
+        canvas { max-height: 100% !important; max-width: 100% !important; }
+    </style>
+
+
+
+
+</head>
+<body>
+
+<!-- ═══════════════ TOPBAR ═══════════════ -->
+<div class="topbar">
+    <div class="topbar-left">
+        <button class="mobile-toggle" id="mobile-toggle">
+            <i data-lucide="menu" style="width:16px;height:16px;"></i>
+        </button>
+        <div style="font-family:'Orbitron',monospace;font-size:13px;font-weight:900;color:white;letter-spacing:-.01em;white-space:nowrap;">THE<span style="color:var(--gold);">D</span> <span style="color:#475569;font-size:8px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.15em;">MMS</span></div>
+        <div style="width:1px;height:22px;background:rgba(255,255,255,.07);flex-shrink:0;"></div>
+        <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;">
+            <span class="blinking" style="width:6px;height:6px;border-radius:50%;background:#10b981;display:inline-block;"></span>
+            <span style="font-size:9px;font-weight:800;color:#10b981;letter-spacing:.1em;">LIVE</span>
+        </div>
+        <div id="tb-clock" style="font-family:monospace;font-size:10px;color:#334155;"></div>
+    </div>
+    <div class="topbar-right">
+        <!-- Dark/Light toggle -->
+        <div class="theme-toggle" onclick="tdToggleTheme()" title="Toggle dark/light mode">
+            <span id="theme-icon">🌙</span>
+            <div class="toggle-track"><div class="toggle-thumb"></div></div>
+            <span id="theme-label">Dark</span>
+        </div>
+        <!-- Back to The District portal — gold blink -->
+        <a href="/the_district" class="portal-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            <span class="portal-label">The District</span>
+        </a>
+    </div>
+</div>
+
+<div class="app-shell">
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- ═══════════════ SIDEBAR ═══════════════ -->
+    <aside class="sidebar custom-scroll" id="sidebar">
+        <div style="text-align:center;margin-bottom:22px;">
+            <h1 style="font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:white;letter-spacing:-.02em;margin:0;">THE <span style="color:var(--gold)">DISTRICT</span></h1>
+            <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.18em;text-transform:uppercase;margin:3px 0 0;">MMS MANAGEMENT</p>
+            <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;" class="online-pulse">
+                <span style="width:7px;height:7px;border-radius:50%;background:#10b981;display:inline-block;" class="blinking"></span>
+                <span style="font-size:9px;font-weight:800;color:#10b981;letter-spacing:.12em;text-transform:uppercase;">System Online</span>
+            </div>
+        </div>
+
+        <nav style="flex:1;display:flex;flex-direction:column;gap:3px;">
+            <button data-section="overview" class="sidebar-item active">
+                <i data-lucide="layout-dashboard" style="width:16px;height:16px;flex-shrink:0;"></i> Overview
+                <span class="sidebar-counter" id="sc-assets" title="Total Assets" onclick="event.stopPropagation();showSection('assets')">0</span>
+            </button>
+            <button data-section="assets" class="sidebar-item">
+                <i data-lucide="database" style="width:16px;height:16px;flex-shrink:0;"></i> Assets
+                <span class="sidebar-counter" id="sc-assets2" title="Total Assets">0</span>
+            </button>
+            <button data-section="calendar" class="sidebar-item">
+                <i data-lucide="calendar-range" style="width:16px;height:16px;flex-shrink:0;"></i> Calendar
+            </button>
+            <button data-section="workflow" class="sidebar-item">
+                <i data-lucide="trello" style="width:16px;height:16px;flex-shrink:0;"></i> Work Orders
+                <span class="sidebar-counter amber" id="sc-open" title="Open WOs" onclick="event.stopPropagation();tdGoWOs('open')">0</span>
+                <span class="sidebar-counter rose"  id="sc-overdue" title="Overdue WOs" onclick="event.stopPropagation();tdGoWOs('overdue')">0</span>
+            </button>
+            <button data-section="closed-wos" class="sidebar-item" style="border-left-color:#64748b;">
+                <i data-lucide="archive" style="width:16px;height:16px;flex-shrink:0;"></i> Closed WOs
+                <span class="sidebar-counter green" id="sc-closed" title="Closed WOs">0</span>
+            </button>
+            <button data-section="amc-tracker" class="sidebar-item amc-style">
+                <i data-lucide="clipboard-check" style="width:16px;height:16px;flex-shrink:0;"></i> AMC Tracker
+                <span class="sidebar-counter" id="sc-amc" title="Active AMC Contracts">0</span>
+            </button>
+        </nav>
+
+        <div style="margin-top:auto;padding-top:16px;border-top:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:10px;">
+            <div style="padding:12px 14px;border-radius:12px;background:rgba(212,160,23,.04);border:1px solid rgba(212,160,23,.12);">
+                <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;margin:0 0 4px;">Asset Source</p>
+                <p style="font-size:9px;font-family:monospace;color:var(--gold);word-break:break-all;margin:0 0 10px;">TD/td_asset.xlsx</p>
+                <label style="display:block;cursor:pointer;background:rgba(212,160,23,.08);color:var(--gold);text-align:center;padding:8px;border-radius:8px;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:all .2s;"
+                    onmouseover="this.style.background='var(--gold)';this.style.color='black';"
+                    onmouseout="this.style.background='rgba(212,160,23,.08)';this.style.color='var(--gold)';">
+                    Upload td_asset.xlsx
+                    <input type="file" id="file-upload" style="display:none;" accept=".xlsx,.xls" onchange="tdHandleFileUpload(this)">
+                </label>
+            </div>
+            <button id="triggerDailyEmail" onclick="tdTriggerDailyMail()" style="width:100%;padding:10px;background:linear-gradient(90deg,#7c3aed,#0891b2);color:white;border:none;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity .2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+                <i data-lucide="mail" style="width:14px;height:14px;"></i> Trigger Daily Mail
+            </button>
+            <button id="autoGenWOBtn" onclick="tdAutoGenerateWOs()" style="width:100%;padding:10px;background:rgba(16,185,129,.1);color:#10b981;border:1px solid rgba(16,185,129,.3);border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s;" onmouseover="this.style.background='var(--green)';this.style.color='black'" onmouseout="this.style.background='rgba(16,185,129,.1)';this.style.color='#10b981'">
+                <i data-lucide="zap" style="width:14px;height:14px;"></i> Auto-Generate WOs
+            </button>
+            <button id="exportPdfBtn" onclick="tdExportPdf()" style="width:100%;padding:10px;background:rgba(244,63,94,.08);color:#f43f5e;border:1px solid rgba(244,63,94,.25);border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s;" onmouseover="this.style.background='#f43f5e';this.style.color='white'" onmouseout="this.style.background='rgba(244,63,94,.08)';this.style.color='#f43f5e'">
+                <i data-lucide="file-text" style="width:14px;height:14px;"></i> Export PDF Report
+            </button>
+            <button id="refresh-btn" style="width:100%;padding:10px;background:rgba(255,255,255,.05);color:#94a3b8;border:none;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .2s;" onmouseover="this.style.background='rgba(255,255,255,.1)'" onmouseout="this.style.background='rgba(255,255,255,.05)'" onclick="tdInitDashboard()">
+                <i data-lucide="refresh-cw" style="width:12px;height:12px;"></i> Refresh Data
+            </button>
+            <div id="live-clock" style="text-align:center;font-family:monospace;font-size:10px;color:#334155;padding:4px 0;"></div>
+        </div>
+    </aside>
+
+    <!-- ═══════════════ MAIN CONTENT ═══════════════ -->
+    <main class="main-content custom-scroll">
+
+        <!-- ════ OVERVIEW ════ -->
+        <div id="section-overview" class="section active" style="gap:16px;padding-bottom:8px;">
+            <!-- KPI Row -->
+            <div class="stats-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;">
+                <div class="ultra-glass stat-card" style="border-radius:14px;border-bottom:3px solid var(--primary);" onclick="showSection('assets');tdAutoFocus('asset-search')">
+                    <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;margin:0 0 6px;">Total Assets</p>
+                    <h2 id="ov-total" style="font-size:34px;font-weight:800;color:white;margin:0;">0</h2>
+                </div>
+                <div class="ultra-glass stat-card" style="border-radius:14px;border-bottom:3px solid var(--accent);" onclick="tdGoWOs('open')">
+                    <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;margin:0 0 6px;">Pending PPM</p>
+                    <h2 id="ov-pending" style="font-size:34px;font-weight:800;color:var(--accent);margin:0;">0</h2>
+                </div>
+                <div class="ultra-glass stat-card" style="border-radius:14px;border-bottom:3px solid var(--rose);" onclick="tdGoWOs('overdue')">
+                    <p style="font-size:9px;font-weight:700;color:var(--rose);letter-spacing:.1em;text-transform:uppercase;margin:0 0 6px;">Overdue</p>
+                    <h2 id="ov-overdue" style="font-size:34px;font-weight:800;color:var(--rose);margin:0;">0</h2>
+                </div>
+                <div class="ultra-glass stat-card" style="border-radius:14px;border-bottom:3px solid var(--green);" onclick="tdGoWOs('completed')">
+                    <p style="font-size:9px;font-weight:700;color:var(--green);letter-spacing:.1em;text-transform:uppercase;margin:0 0 6px;">Compliance</p>
+                    <h2 id="ov-compliance" style="font-size:34px;font-weight:800;color:var(--green);margin:0;">0%</h2>
+                </div>
+            </div>
+
+            <!-- WO Summary Strip -->
+            <div id="wo-summary-strip" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+                <div class="ultra-glass" style="border-radius:12px;padding:12px 16px;cursor:pointer;" onclick="tdGoWOs('open')">
+                    <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;margin:0 0 4px;">Open</p>
+                    <p id="wo-count-open" style="font-size:20px;font-weight:800;color:var(--amber);margin:0;">0</p>
+                </div>
+                <div class="ultra-glass" style="border-radius:12px;padding:12px 16px;cursor:pointer;" onclick="tdGoWOs('overdue')">
+                    <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;margin:0 0 4px;">Overdue</p>
+                    <p id="wo-count-overdue" style="font-size:20px;font-weight:800;color:var(--rose);margin:0;">0</p>
+                </div>
+                <div class="ultra-glass" style="border-radius:12px;padding:12px 16px;cursor:pointer;" onclick="tdGoWOs('in-progress')">
+                    <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;margin:0 0 4px;">In Progress</p>
+                    <p id="wo-count-inprogress" style="font-size:20px;font-weight:800;color:var(--primary);margin:0;">0</p>
+                </div>
+                <div class="ultra-glass" style="border-radius:12px;padding:12px 16px;cursor:pointer;" onclick="tdGoWOs('completed')">
+                    <p style="font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;margin:0 0 4px;">Completed</p>
+                    <p id="wo-count-completed" style="font-size:20px;font-weight:800;color:var(--green);margin:0;">0</p>
+                </div>
+            </div>
+
+            <!-- Split cards -->
+            <div class="split-cards-row" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                <div class="ultra-glass split-card" style="border-left:4px solid var(--primary);">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                        <i data-lucide="wrench" style="width:16px;height:16px;color:var(--primary);"></i>
+                        <span style="font-size:11px;font-weight:700;color:white;letter-spacing:.08em;text-transform:uppercase;">In-House PPM</span>
+                    </div>
+                    <div style="display:flex;gap:18px;flex-wrap:wrap;">
+                        <div><p style="font-size:9px;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin:0 0 3px;">Assets</p><p id="ih-assets" style="font-size:18px;font-weight:800;color:white;margin:0;">0</p></div>
+                        <div><p style="font-size:9px;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin:0 0 3px;">Open WOs</p><p id="ih-open" style="font-size:18px;font-weight:800;color:var(--amber);margin:0;">0</p></div>
+                        <div><p style="font-size:9px;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin:0 0 3px;">Overdue</p><p id="ih-overdue" style="font-size:18px;font-weight:800;color:var(--rose);margin:0;">0</p></div>
+                    </div>
+                </div>
+                <div class="ultra-glass split-card" style="border-left:4px solid var(--accent);">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                        <i data-lucide="building-2" style="width:16px;height:16px;color:var(--accent);"></i>
+                        <span style="font-size:11px;font-weight:700;color:white;letter-spacing:.08em;text-transform:uppercase;">Vendor PPM</span>
+                    </div>
+                    <div style="display:flex;gap:18px;flex-wrap:wrap;">
+                        <div><p style="font-size:9px;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin:0 0 3px;">Assets</p><p id="vd-assets" style="font-size:18px;font-weight:800;color:white;margin:0;">0</p></div>
+                        <div><p style="font-size:9px;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin:0 0 3px;">Open WOs</p><p id="vd-open" style="font-size:18px;font-weight:800;color:var(--amber);margin:0;">0</p></div>
+                        <div><p style="font-size:9px;color:#475569;text-transform:uppercase;letter-spacing:.08em;margin:0 0 3px;">Overdue</p><p id="vd-overdue" style="font-size:18px;font-weight:800;color:var(--rose);margin:0;">0</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+                <div class="ultra-glass" style="border-radius:14px;padding:14px 16px;">
+                    <h3 style="color:white;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin:0 0 10px;">WO Status</h3>
+                    <div class="chart-wrap" style="height:160px;"><canvas id="statusChart"></canvas></div>
+                </div>
+                <div class="ultra-glass" style="border-radius:14px;padding:14px 16px;">
+                    <h3 style="color:white;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin:0 0 10px;">By Frequency</h3>
+                    <div class="chart-wrap" style="height:160px;"><canvas id="freqChart"></canvas></div>
+                </div>
+                <div class="ultra-glass" style="border-radius:14px;padding:14px 16px;">
+                    <h3 style="color:white;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin:0 0 10px;">Asset Categories</h3>
+                    <div class="chart-wrap" style="height:160px;"><canvas id="catChart"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════ ASSETS ════ -->
+        <div id="section-assets" class="section" style="gap:16px;">
+            <div class="ultra-glass" style="border-radius:20px;overflow:hidden;">
+                <div style="padding:14px 20px;background:rgba(255,255,255,.02);border-bottom:1px solid rgba(255,255,255,.06);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+                        <h2 style="color:white;font-weight:700;font-size:14px;letter-spacing:.05em;text-transform:uppercase;margin:0;">
+                            <i data-lucide="database" style="width:15px;height:15px;display:inline;vertical-align:middle;margin-right:6px;color:var(--gold);"></i>
+                            The District Asset Register
+                            <span id="asset-count-badge" style="font-size:10px;font-weight:700;color:#475569;margin-left:6px;"></span>
+                        </h2>
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <input id="asset-search" type="text" placeholder="Search assets..." style="background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;width:180px;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'" oninput="tdApplyAssetFilters(this.value.toLowerCase(),document.getElementById('asset-freq-filter')?.value||'all')">
+                            <select id="asset-freq-filter" style="background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;cursor:pointer;" onchange="tdApplyAssetFilters(document.getElementById('asset-search')?.value.toLowerCase()||'',this.value)">
+                                <option value="all">All Frequencies</option>
+                                <option value="MONTHLY">Monthly</option>
+                                <option value="QUARTERLY">Quarterly</option>
+                                <option value="HALF-YEARLY">Half-Yearly</option>
+                                <option value="YEARLY">Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
+                        <button id="atab-all"     onclick="tdSetAssetTab('all')"     class="asset-tab-btn active">All</button>
+                        <button id="atab-inhouse" onclick="tdSetAssetTab('inhouse')" class="asset-tab-btn">🔧 In-House</button>
+                        <button id="atab-vendor"  onclick="tdSetAssetTab('vendor')"  class="asset-tab-btn">🏢 Vendor</button>
+                    </div>
+                    <div style="display:flex;gap:5px;flex-wrap:wrap;padding-top:8px;border-top:1px solid rgba(255,255,255,.05);">
+                        <span style="font-size:9px;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:.08em;padding-top:5px;">Category:</span>
+                        <button id="catpill-all"         onclick="tdSetAssetCategory('all')"         class="cat-pill">⚡ All</button>
+                        <button id="catpill-chiller"     onclick="tdSetAssetCategory('chiller')"     class="cat-pill">❄️ Chiller</button>
+                        <button id="catpill-dg"          onclick="tdSetAssetCategory('dg')"          class="cat-pill">⚡ DG/Generator</button>
+                        <button id="catpill-transformer" onclick="tdSetAssetCategory('transformer')" class="cat-pill">🔌 Transformer</button>
+                        <button id="catpill-ahu_fcu"     onclick="tdSetAssetCategory('ahu_fcu')"     class="cat-pill">💨 AHU/FCU</button>
+                        <button id="catpill-lift"        onclick="tdSetAssetCategory('lift')"        class="cat-pill">🛗 Lift</button>
+                        <button id="catpill-pump"        onclick="tdSetAssetCategory('pump')"        class="cat-pill">💧 Pump</button>
+                        <button id="catpill-fire"        onclick="tdSetAssetCategory('fire')"        class="cat-pill">🔥 Fire/FA</button>
+                        <button id="catpill-bms_cctv"    onclick="tdSetAssetCategory('bms_cctv')"    class="cat-pill">🖥 BMS/CCTV</button>
+                        <button id="catpill-ups"         onclick="tdSetAssetCategory('ups')"         class="cat-pill">🔋 UPS</button>
+                        <button id="catpill-panels"      onclick="tdSetAssetCategory('panels')"      class="cat-pill">⚙️ Panels/MDB</button>
+                        <button id="catpill-jet_fan"     onclick="tdSetAssetCategory('jet_fan')"     class="cat-pill">🌀 Jet Fan</button>
+                        <button id="catpill-general"     onclick="tdSetAssetCategory('general')"     class="cat-pill">🔩 General</button>
+                    </div>
+                </div>
+                <div class="custom-scroll" style="overflow-x:auto;">
+                    <table style="width:100%;border-collapse:collapse;min-width:600px;">
+                        <thead style="background:rgba(6,182,212,.05);border-bottom:1px solid rgba(255,255,255,.06);">
+                            <tr>
+                                <th style="padding:10px 16px;text-align:left;font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;width:22%;">Asset ID</th>
+                                <th style="padding:10px 16px;text-align:left;font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;width:32%;">Name</th>
+                                <th style="padding:10px 16px;text-align:left;font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;width:18%;">Location</th>
+                                <th style="padding:10px 16px;text-align:left;font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;width:12%;">Category</th>
+                                <th style="padding:10px 16px;text-align:left;font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;width:10%;">Frequency</th>
+                                <th style="padding:10px 16px;text-align:left;font-size:9px;font-weight:700;color:#475569;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;width:6%;">Next Due</th>
+                            </tr>
+                        </thead>
+                        <tbody id="asset-table-body">
+                            <tr><td colspan="6" style="padding:40px;text-align:center;color:#475569;">Loading assets...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════ CALENDAR ════ -->
+        <div id="section-calendar" class="section" style="height:calc(100vh - 86px);">
+            <div class="cal-grid" style="display:grid;grid-template-columns:300px 1fr;gap:16px;height:100%;">
+                <div class="ultra-glass" style="border-radius:20px;padding:18px;display:flex;flex-direction:column;overflow:hidden;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-shrink:0;">
+                        <button id="prev-month" style="background:rgba(255,255,255,.05);border:none;color:#64748b;cursor:pointer;padding:8px;border-radius:8px;transition:all .2s;display:flex;align-items:center;" onmouseover="this.style.color='var(--primary)';this.style.background='rgba(6,182,212,.1)'" onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,.05)'">
+                            <i data-lucide="chevron-left" style="width:18px;height:18px;"></i>
+                        </button>
+                        <h2 id="calendar-month-year" style="color:white;font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;margin:0;font-family:'Orbitron',monospace;"></h2>
+                        <button id="next-month" style="background:rgba(255,255,255,.05);border:none;color:#64748b;cursor:pointer;padding:8px;border-radius:8px;transition:all .2s;display:flex;align-items:center;" onmouseover="this.style.color='var(--primary)';this.style.background='rgba(6,182,212,.1)'" onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,.05)'">
+                            <i data-lucide="chevron-right" style="width:18px;height:18px;"></i>
+                        </button>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center;margin-bottom:6px;flex-shrink:0;">
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">SUN</span>
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">MON</span>
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">TUE</span>
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">WED</span>
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">THU</span>
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">FRI</span>
+                        <span style="font-size:9px;font-weight:800;color:#334155;padding:4px 0;letter-spacing:.06em;">SAT</span>
+                    </div>
+                    <div id="calendar-grid"></div>
+                </div>
+                <div class="ultra-glass" style="border-radius:20px;padding:20px 24px;display:flex;flex-direction:column;min-width:0;overflow:hidden;">
+                    <h3 id="selected-day-label" style="color:#475569;font-weight:700;font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.06);">Select a date to view schedule</h3>
+                    <div id="day-schedule-container" class="custom-scroll" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;">
+                        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#334155;text-align:center;">
+                            <i data-lucide="calendar" style="width:48px;height:48px;margin-bottom:12px;color:#1e293b;"></i>
+                            <p style="font-size:16px;font-weight:700;color:#475569;margin:0 0 8px;">No Date Selected</p>
+                            <p style="font-size:13px;margin:0;">Click any date to view scheduled maintenance tasks</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════ WORK ORDERS ════ -->
+        <div id="section-workflow" class="section" style="height:calc(100vh - 86px);">
+            <div class="ultra-glass" style="border-radius:20px;overflow:hidden;display:flex;flex-direction:column;height:100%;">
+                <div style="padding:16px 20px;background:rgba(255,255,255,.02);border-bottom:1px solid rgba(255,255,255,.07);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                        <h2 style="color:white;font-weight:700;font-size:14px;letter-spacing:.05em;text-transform:uppercase;margin:0;">The District Work Orders</h2>
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <select id="wo-filter" style="background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;cursor:pointer;" onchange="tdRenderWorkOrders()">
+                                <option value="all">All Active</option>
+                                <option value="open">Open</option>
+                                <option value="overdue">Overdue</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="completed">Completed</option>
+                                <option value="pending-approval">Pending Approval</option>
+                                <option value="closed">🔒 Closed / Archived</option>
+                            </select>
+                            <div id="filter-counts" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+                            <button id="exportWOBtn" onclick="window.location.href=TD_API.WO_EXPORT" style="background:rgba(6,182,212,.08);color:var(--primary);border:1px solid rgba(6,182,212,.2);border-radius:8px;padding:7px 12px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;letter-spacing:.06em;transition:all .2s;" onmouseover="this.style.background='var(--primary)';this.style.color='black'" onmouseout="this.style.background='rgba(6,182,212,.08)';this.style.color='var(--primary)'">
+                                <i data-lucide="file-down" style="width:12px;height:12px;"></i> Export
+                            </button>
+                            <button onclick="tdInitDashboard()" style="background:rgba(255,255,255,.05);color:#94a3b8;border:none;border-radius:8px;padding:7px 12px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;transition:background .2s;" onmouseover="this.style.background='rgba(255,255,255,.1)'" onmouseout="this.style.background='rgba(255,255,255,.05)'">
+                                <i data-lucide="refresh-cw" style="width:12px;height:12px;"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="wo-stream-container" class="custom-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;"></div>
+            </div>
+        </div>
+
+        <!-- ════ CLOSED WOs ════ -->
+        <div id="section-closed-wos" class="section" style="height:calc(100vh - 86px);">
+            <div class="ultra-glass" style="border-radius:20px;overflow:hidden;display:flex;flex-direction:column;height:100%;">
+                <div style="padding:16px 20px;background:rgba(255,255,255,.02);border-bottom:1px solid rgba(255,255,255,.07);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                        <h2 style="color:white;font-weight:700;font-size:14px;letter-spacing:.05em;text-transform:uppercase;margin:0;display:flex;align-items:center;gap:8px;">
+                            <i data-lucide="archive" style="width:15px;height:15px;color:#64748b;"></i>
+                            Closed / Completed Work Orders
+                            <span id="closed-wo-count-badge" style="padding:2px 8px;border-radius:4px;background:rgba(100,116,139,.15);color:#64748b;font-size:10px;font-weight:800;border:1px solid rgba(100,116,139,.25);">0</span>
+                        </h2>
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <select id="closed-wo-filter" onchange="tdRenderClosedWOs()" style="background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;cursor:pointer;">
+                                <option value="all">All Closed</option>
+                                <option value="completed">✅ Completed</option>
+                                <option value="closed">🔒 Archived</option>
+                            </select>
+                            <select id="closed-wo-ppm-filter" onchange="tdRenderClosedWOs()" style="background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;cursor:pointer;">
+                                <option value="all">All Types</option>
+                                <option value="inhouse">🔧 In-House</option>
+                                <option value="vendor">🏢 Vendor</option>
+                            </select>
+                            <input id="closed-wo-search" type="text" placeholder="Search WO / Asset..." onkeyup="tdRenderClosedWOs()" style="background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;width:170px;">
+                        </div>
+                    </div>
+                </div>
+                <div id="closed-wo-container" class="custom-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;"></div>
+            </div>
+        </div>
+
+        <!-- ════ AMC TRACKER ════ -->
+        <div id="section-amc-tracker" class="section" style="height:calc(100vh - 86px);">
+            <div class="ultra-glass" style="border-radius:20px;overflow:hidden;display:flex;flex-direction:column;height:100%;">
+                <div style="padding:16px 20px;background:rgba(255,255,255,.02);border-bottom:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                    <h2 style="color:white;font-weight:700;font-size:14px;letter-spacing:.05em;text-transform:uppercase;margin:0;">The District AMC Tracker</h2>
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                        <select id="amc-filter" onchange="tdRenderAmcTracker()" style="background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;font-size:11px;color:white;outline:none;font-family:'Rajdhani',sans-serif;cursor:pointer;">
+                            <option value="all">All Contracts</option>
+                            <option value="active">Active</option>
+                            <option value="expiring">Expiring Soon</option>
+                            <option value="expired">Expired</option>
+                        </select>
+                        <label style="display:flex;align-items:center;gap:4px;padding:7px 12px;background:rgba(6,182,212,.08);color:var(--primary);border:1px solid rgba(6,182,212,.25);border-radius:8px;font-size:10px;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='rgba(6,182,212,.22)'" onmouseout="this.style.background='rgba(6,182,212,.08)'">
+                            <i data-lucide="upload" style="width:12px;height:12px;"></i> Upload Source
+                            <input type="file" id="amc-file-upload" style="display:none;" accept=".xlsx,.xls,.csv" onchange="tdHandleAmcFileUpload(this)">
+                        </label>
+                        <button onclick="tdOpenAmcEditModal({contract_id:'',asset_id:'',asset_name:'',vendor:'',start_date:'',end_date:'',value:'',status:'active',scope:'',notes:''})" style="background:rgba(16,185,129,.08);color:var(--green);border:1px solid rgba(16,185,129,.25);border-radius:8px;padding:7px 12px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;letter-spacing:.06em;transition:all .2s;" onmouseover="this.style.background='var(--green)';this.style.color='#000'" onmouseout="this.style.background='rgba(16,185,129,.08)';this.style.color='var(--green)'">
+                            <i data-lucide="plus" style="width:12px;height:12px;"></i> Add Contract
+                        </button>
+                        <button id="amc-exportBtn" onclick="window.location.href=TD_API.AMC_EXPORT" style="background:rgba(139,92,246,.08);color:var(--accent);border:1px solid rgba(139,92,246,.2);border-radius:8px;padding:7px 12px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;letter-spacing:.06em;transition:all .2s;" onmouseover="this.style.background='var(--accent)';this.style.color='white'" onmouseout="this.style.background='rgba(139,92,246,.08)';this.style.color='var(--accent)'">
+                            <i data-lucide="file-down" style="width:12px;height:12px;"></i> Export
+                        </button>
+                    </div>
+                </div>
+                <div id="amc-stream-container" class="custom-scroll" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;"></div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- ═══════════ WO DETAILS MODAL ═══════════ -->
+<div id="wo-details-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:600;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto;">
+    <div class="ultra-glass modal-inner" style="width:700px;max-width:96vw;border-radius:20px;overflow:hidden;border:1px solid rgba(6,182,212,.2);margin:auto;position:relative;">
+        <div style="padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.07);background:linear-gradient(90deg,rgba(6,182,212,.08),rgba(139,92,246,.05));display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+            <div>
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;">
+                    <span id="modal-wo-id" style="font-family:monospace;font-size:14px;font-weight:800;color:var(--primary);"></span>
+                    <span id="modal-status-badge" class="badge"></span>
+                    <span id="modal-freq-badge" style="padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;background:rgba(16,185,129,.12);color:#10b981;border:1px solid rgba(16,185,129,.25);"></span>
+                </div>
+                <h3 id="modal-asset-name" style="color:white;font-size:18px;font-weight:800;margin:0 0 4px;"></h3>
+                <p id="modal-location" style="color:#64748b;font-size:13px;margin:0;display:flex;align-items:center;gap:5px;">
+                    <i data-lucide="map-pin" style="width:12px;height:12px;color:#475569;"></i>
+                </p>
+            </div>
+            <button id="close-wo-modal-btn" style="background:none;border:none;color:#64748b;cursor:pointer;flex-shrink:0;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#64748b'">
+                <i data-lucide="x" style="width:22px;height:22px;"></i>
+            </button>
+        </div>
+        <div class="custom-scroll" style="padding:22px;display:flex;flex-direction:column;gap:16px;max-height:78vh;overflow-y:auto;">
+            <!-- Info grid -->
+            <div class="modal-grid-4" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+                <div style="background:rgba(255,255,255,.03);border-radius:10px;padding:12px;">
+                    <p style="font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.1em;margin:0 0 5px;">PPM Type</p>
+                    <p id="modal-ppm-type" style="color:white;font-weight:700;font-size:13px;margin:0;"></p>
+                </div>
+                <div style="background:rgba(255,255,255,.03);border-radius:10px;padding:12px;">
+                    <p style="font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.1em;margin:0 0 5px;">Due Date</p>
+                    <p id="modal-due-date" style="color:var(--amber);font-weight:700;font-size:13px;margin:0;"></p>
+                </div>
+                <div style="background:rgba(255,255,255,.03);border-radius:10px;padding:12px;">
+                    <p style="font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.1em;margin:0 0 5px;">Checklist</p>
+                    <p id="modal-checklist-status" style="color:var(--primary);font-weight:700;font-size:13px;margin:0;">0/0</p>
+                </div>
+                <div style="background:rgba(255,255,255,.03);border-radius:10px;padding:12px;">
+                    <p style="font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.1em;margin:0 0 5px;">Category</p>
+                    <p id="modal-category" style="color:white;font-weight:700;font-size:13px;margin:0;"></p>
+                </div>
+            </div>
+            <!-- Assignment -->
+            <div style="background:rgba(255,255,255,.02);border-radius:12px;padding:16px;">
+                <h4 style="color:white;font-size:13px;font-weight:700;margin:0 0 12px;display:flex;align-items:center;gap:8px;"><i data-lucide="users" style="width:16px;height:16px;color:var(--primary);"></i> Assignment</h4>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <div>
+                        <label class="field-label">Technician</label>
+                        <select id="modal-technician" class="assign-field">
+                            <option value="">Select Technician</option>
+                            <option value="TD Technician 1">TD Technician 1</option>
+                            <option value="TD Technician 2">TD Technician 2</option>
+                            <option value="Electrician">Electrician</option>
+                            <option value="Plumber">Plumber</option>
+                            <option value="HVAC Tech">HVAC Tech</option>
+                            <option value="Mechanical Tech">Mechanical Tech</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="field-label">Supervisor</label>
+                        <select id="modal-supervisor" class="assign-field">
+                            <option value="">Select Supervisor</option>
+                            <option value="TD Supervisor">TD Supervisor</option>
+                            <option value="Property Manager">Property Manager</option>
+                            <option value="Maintenance Head">Maintenance Head</option>
+                            <option value="Engineering Manager">Engineering Manager</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="assign-btn" style="margin-top:8px;padding:10px 20px;background:rgba(6,182,212,.12);color:var(--primary);border:1px solid rgba(6,182,212,.25);border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s;" onmouseover="this.style.background='var(--primary)';this.style.color='black'" onmouseout="this.style.background='rgba(6,182,212,.12)';this.style.color='var(--primary)'">
+                    <i data-lucide="user-plus" style="width:14px;height:14px;"></i> Assign & Notify
+                </button>
+            </div>
+            <!-- Checklist -->
+            <div class="ultra-glass" style="border-radius:14px;padding:20px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.06);">
+                    <h4 style="color:white;font-weight:700;font-size:15px;margin:0;display:flex;align-items:center;gap:8px;"><i data-lucide="list-check" style="width:18px;height:18px;color:var(--primary);"></i> Maintenance Checklist</h4>
+                    <span id="checklist-progress" style="padding:4px 12px;background:rgba(6,182,212,.12);color:var(--primary);border-radius:20px;font-size:12px;font-weight:700;">0%</span>
+                </div>
+                <div style="background:rgba(255,255,255,.06);border-radius:4px;height:4px;margin-bottom:16px;">
+                    <div id="checklist-progress-bar" style="height:4px;border-radius:4px;background:var(--primary);width:0%;transition:width .4s;"></div>
+                </div>
+                <div id="checklist-container" class="custom-scroll" style="display:flex;flex-direction:column;gap:10px;max-height:280px;overflow-y:auto;padding-right:4px;"></div>
+                <div style="margin-top:16px;">
+                    <label style="display:block;font-size:11px;color:#475569;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Technician Notes</label>
+                    <textarea id="technician-notes" placeholder="Document observations, issues encountered..." style="width:100%;padding:12px;background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.08);border-radius:10px;color:white;font-family:'Rajdhani',sans-serif;font-size:13px;resize:none;outline:none;" rows="3" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='rgba(255,255,255,.08)'"></textarea>
+                </div>
+                <button id="save-checklist-btn" style="margin-top:12px;width:100%;padding:12px;background:rgba(6,182,212,.12);color:var(--primary);border:1px solid rgba(6,182,212,.25);border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;" onmouseover="this.style.background='var(--primary)';this.style.color='black'" onmouseout="this.style.background='rgba(6,182,212,.12)';this.style.color='var(--primary)'">
+                    <i data-lucide="save" style="width:15px;height:15px;"></i> Save Checklist Progress
+                </button>
+            </div>
+            <!-- Photo upload -->
+            <div class="ultra-glass" style="border-radius:14px;padding:20px;">
+                <h4 style="color:white;font-weight:700;font-size:15px;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;"><i data-lucide="camera" style="width:18px;height:18px;color:var(--primary);"></i> Photo Evidence</h4>
+                <div id="drop-zone" style="border:2px dashed rgba(6,182,212,.2);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:border-color .2s;" onmouseover="this.style.borderColor='rgba(6,182,212,.5)'" onmouseout="this.style.borderColor='rgba(6,182,212,.2)'">
+                    <i data-lucide="upload-cloud" style="width:28px;height:28px;color:#475569;margin:0 auto 8px;display:block;"></i>
+                    <p style="color:#475569;font-size:12px;margin:0;">Click or drag to upload photos</p>
+                    <input type="file" id="image-upload" style="display:none;" accept="image/*" multiple>
+                </div>
+                <div id="image-preview-container" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;"></div>
+            </div>
+            <!-- Read-only banner -->
+            <div id="wo-readonly-banner" style="display:none;padding:12px 16px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.2);border-radius:12px;align-items:center;gap:10px;flex-wrap:wrap;"></div>
+            <!-- Supervisor approval -->
+            <div class="ultra-glass" id="wo-action-section" style="border-radius:14px;padding:20px;">
+                <h4 style="color:white;font-weight:700;font-size:15px;margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;"><i data-lucide="shield-check" style="width:18px;height:18px;color:var(--green);"></i> Supervisor Sign-off</h4>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                    <div>
+                        <label style="display:block;font-size:11px;color:#475569;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Approval Notes</label>
+                        <textarea id="approval-notes" placeholder="Add sign-off notes or observations..." style="width:100%;padding:12px;background:rgba(15,23,42,.8);border:1px solid rgba(255,255,255,.08);border-radius:10px;color:white;font-family:'Rajdhani',sans-serif;font-size:13px;resize:none;outline:none;" rows="2" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='rgba(255,255,255,.08)'"></textarea>
+                    </div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <button id="close-work-order-btn" style="flex:1;padding:12px;background:rgba(16,185,129,.12);color:var(--green);border:1px solid rgba(16,185,129,.25);border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;" onmouseover="this.style.background='var(--green)';this.style.color='black'" onmouseout="this.style.background='rgba(16,185,129,.12)';this.style.color='var(--green)'">
+                            <i data-lucide="check-circle" style="width:15px;height:15px;"></i> Approve & Close WO
+                        </button>
+                        <button id="reject-wo-btn" style="padding:12px 18px;background:rgba(244,63,94,.08);color:var(--rose);border:1px solid rgba(244,63,94,.2);border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s;" onmouseover="this.style.background='rgba(244,63,94,.2)'" onmouseout="this.style.background='rgba(244,63,94,.08)'">
+                            <i data-lucide="x-circle" style="width:14px;height:14px;"></i> Return for Revision
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════ AMC EDIT MODAL ═══════════ -->
+<div id="amc-edit-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:600;align-items:center;justify-content:center;padding:16px;">
+    <div class="ultra-glass" style="width:100%;max-width:640px;border-radius:20px;overflow:hidden;border:1px solid rgba(139,92,246,.3);">
+        <div style="padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.07);background:linear-gradient(90deg,rgba(139,92,246,.08),rgba(6,182,212,.05));display:flex;justify-content:space-between;align-items:center;">
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div style="width:8px;height:8px;border-radius:50%;background:#8b5cf6;box-shadow:0 0 8px #8b5cf6;"></div>
+                <h3 id="amc-modal-title" style="color:white;font-size:15px;font-weight:800;margin:0;letter-spacing:.04em;">AMC Contract Details</h3>
+            </div>
+            <button id="close-amc-edit-modal-btn" style="background:none;border:none;color:#64748b;cursor:pointer;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#64748b'">
+                <i data-lucide="x" style="width:22px;height:22px;"></i>
+            </button>
+        </div>
+        <div class="custom-scroll" style="padding:22px;display:flex;flex-direction:column;gap:13px;max-height:82vh;overflow-y:auto;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div><label class="field-label">Contract ID *</label><input type="text" id="amc-contract-id" class="amc-field" placeholder="TD-AMC-2026-001"></div>
+                <div><label class="field-label">Asset ID</label><input type="text" id="amc-asset-id" class="amc-field" placeholder="Asset Code"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div><label class="field-label">Asset Name *</label><input type="text" id="amc-asset-name" class="amc-field" placeholder="Equipment name"></div>
+                <div><label class="field-label">Vendor / Contractor *</label><input type="text" id="amc-vendor" class="amc-field" placeholder="Vendor company name"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div><label class="field-label">Start Date</label><input type="date" id="amc-start-date" class="amc-field"></div>
+                <div><label class="field-label">End Date</label><input type="date" id="amc-end-date" class="amc-field"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+                <div>
+                    <label class="field-label">Frequency</label>
+                    <select id="amc-frequency" class="amc-field">
+                        <option value="Monthly">Monthly</option><option value="Quarterly">Quarterly</option>
+                        <option value="Half-Yearly">Half-Yearly</option><option value="Yearly">Yearly</option>
+                        <option value="One-Time">One-Time</option>
+                    </select>
+                </div>
+                <div><label class="field-label">Next Service Date</label><input type="date" id="amc-next-service" class="amc-field"></div>
+                <div><label class="field-label">Contract Value (₹)</label><input type="number" id="amc-value" class="amc-field" placeholder="0"></div>
+            </div>
+            <div>
+                <label class="field-label">Status</label>
+                <select id="amc-status" class="amc-field">
+                    <option value="active">Active</option><option value="expiring">Expiring Soon</option><option value="expired">Expired</option>
+                </select>
+            </div>
+            <div>
+                <label class="field-label">Scope of Work</label>
+                <textarea id="amc-scope" class="amc-field" rows="2" style="resize:vertical;" placeholder="Describe what is covered under this contract..."></textarea>
+            </div>
+            <div>
+                <label class="field-label">Notes / Remarks</label>
+                <textarea id="amc-notes" class="amc-field" rows="2" style="resize:vertical;" placeholder="Additional notes, renewal reminders, contact details..."></textarea>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;">
+                <button id="amc-cancel-edit-btn" style="padding:12px;background:rgba(244,63,94,.1);color:#f43f5e;border:1px solid rgba(244,63,94,.3);border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s;" onmouseover="this.style.background='#e11d48';this.style.color='white';this.style.borderColor='#e11d48'" onmouseout="this.style.background='rgba(244,63,94,.1)';this.style.color='#f43f5e';this.style.borderColor='rgba(244,63,94,.3)'">
+                    <i data-lucide="x" style="width:14px;height:14px;"></i> Cancel
+                </button>
+                <button id="amc-save-edit-btn" style="padding:12px;background:linear-gradient(90deg,#16a34a,#059669);color:white;border:none;border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity .2s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+                    <i data-lucide="check" style="width:14px;height:14px;"></i> Save Contract
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════ JAVASCRIPT ════════════ -->
+<script>
+// ── API ENDPOINTS ──
+const TD_API = {
+    ASSETS:       '/td_api/mms/assets',
+    STATS:        '/td_api/mms/stats',
+    WORKORDERS:   '/td_api/mms/workorders',
+    WO_BY_DATE:   '/td_api/mms/workorders/by-date',
+    WO_CREATE:    '/td_api/mms/workflow/create',
+    WO_UPDATE:    '/td_api/mms/workflow/update',
+    WO_CLOSE:     '/td_api/mms/workflow/close',
+    WO_REOPEN:    '/td_api/mms/workflow/reopen',
+    WO_EXPORT:    '/td_api/mms/workorders/export',
+    WO_PDF:       '/td_api/mms/workorders/export-pdf',
+    AMC:          '/td_api/mms/amc/contracts',
+    AMC_UPDATE:   '/td_api/mms/amc/update',
+    AMC_EXPORT:   '/td_api/mms/amc/contracts/export',
+    DAILY_MAIL:   '/td_api/mms/trigger-daily-mail',
+    IMPORT_EXCEL: '/td_api/mms/assets/import',
+    TECHNICIANS:  '/td_api/mms/technicians',
+    SUPERVISORS:  '/td_api/mms/supervisors',
+    AUTO_GEN:     '/td_api/mms/workorders/auto-generate',
+};
+
+// ── STATE ──
+let tdAssetsData = [];
+let tdViewDate   = new Date();
+let tdCharts     = {};
+let _tdWorkOrders = [];
+let _tdAmcContracts = [];
+let _tdTechnicians  = [];
+let _tdSupervisors  = [];
+let tdCurrentWO     = null;
+let tdCurrentAmcContract = null;
+let _tdAssetTab     = 'all';
+let _tdAssetCat     = 'all';
+
+// ── UTILITIES ──
+function tdParseDate(str) {
+    if (!str || !str.toString().trim()) return null;
+    const s = str.toString().trim();
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) { const d = new Date(s); return isNaN(d) ? null : d; }
+    const dmy = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})$/);
+    if (dmy) {
+        const day = parseInt(dmy[1]), mon = parseInt(dmy[2]), yr = dmy[3].length===2?2000+parseInt(dmy[3]):parseInt(dmy[3]);
+        const d = new Date(yr,mon-1,day); return isNaN(d)?null:d;
+    }
+    const d = new Date(s); return isNaN(d)?null:d;
+}
+function tdToDateStr(d) { if(!d)return''; return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function tdFmtDate(s) { if(!s)return'N/A'; const d=tdParseDate(s); return d?d.toLocaleDateString('en-US',{day:'2-digit',month:'short',year:'numeric'}):s; }
+function tdIsOverdue(wo) {
+    const today=new Date(); today.setHours(0,0,0,0);
+    const ds=typeof wo==='string'?wo:(wo['Due Date']||wo.due_date||'');
+    const dd=tdParseDate(ds); if(!dd)return false; dd.setHours(0,0,0,0); return dd<today;
+}
+function tdGetWOStatus(wo) {
+    const raw=(wo.Status||wo.status||'open').toString().toLowerCase().trim();
+    if(raw==='completed'||raw==='closed') return raw==='closed'?'closed':'completed';
+    if(raw==='in-progress'||raw==='in progress') return 'in-progress';
+    if(raw==='pending-approval'||raw==='pending approval') return 'pending-approval';
+    if((raw==='open'||raw==='overdue')&&tdIsOverdue(wo)) return 'overdue';
+    return 'open';
+}
+function tdCalcFreq(lastSvc,nextDue,freqHint) {
+    const FC={'MONTHLY':'#10b981','QUARTERLY':'#f59e0b','HALF-YEARLY':'#8b5cf6','YEARLY':'#f43f5e'};
+    if(freqHint){const fh=freqHint.toString().toUpperCase().trim();return{label:fh,color:FC[fh]||'#10b981'};}
+    const l=tdParseDate(lastSvc),n=tdParseDate(nextDue);
+    if(!l||!n)return{label:'MONTHLY',color:'#10b981'};
+    const diff=Math.ceil(Math.abs(n-l)/86400000);
+    if(diff<=45)return{label:'MONTHLY',color:'#10b981'};
+    if(diff<=120)return{label:'QUARTERLY',color:'#f59e0b'};
+    if(diff<=210)return{label:'HALF-YEARLY',color:'#8b5cf6'};
+    return{label:'YEARLY',color:'#f43f5e'};
+}
+function tdSetEl(id,html){const e=document.getElementById(id);if(e)e.innerHTML=html;}
+function tdSetTxt(id,val){const e=document.getElementById(id);if(e)e.textContent=val;}
+function tdLoadingHTML(msg){return`<div style="display:flex;align-items:center;justify-content:center;height:100%;"><div style="text-align:center;"><div style="width:34px;height:34px;border:3px solid rgba(6,182,212,.25);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 14px;"></div><p style="font-size:15px;font-weight:700;color:#475569;margin:0;">${msg}</p></div></div>`;}
+function tdEmptyHTML(t,s){return`<div style="display:flex;align-items:center;justify-content:center;height:100%;"><div style="text-align:center;"><p style="font-size:16px;font-weight:700;color:#475569;margin:0 0 8px;">${t}</p><p style="font-size:13px;color:#334155;margin:0;">${s}</p></div></div>`;}
+
+// ── CATEGORY CONFIG ──
+const TD_CAT_CFG = {
+    chiller:{label:'❄️ Chiller',color:'#06b6d4'},dg:{label:'⚡ DG/Generator',color:'#f43f5e'},
+    transformer:{label:'🔌 Transformer',color:'#f59e0b'},ahu_fcu:{label:'💨 AHU/FCU',color:'#8b5cf6'},
+    lift:{label:'🛗 Lift/Elevator',color:'#a78bfa'},pump:{label:'💧 Pump',color:'#38bdf8'},
+    fire:{label:'🔥 Fire/FA',color:'#fb923c'},bms_cctv:{label:'🖥 BMS/CCTV',color:'#e879f9'},
+    ups:{label:'🔋 UPS',color:'#4ade80'},panels:{label:'⚙️ Panels/MDB',color:'#fbbf24'},
+    jet_fan:{label:'🌀 Jet Fan',color:'#67e8f9'},general:{label:'🔩 General',color:'#94a3b8'},
+};
+const TD_ALL_CATS=['all','chiller','dg','transformer','ahu_fcu','lift','pump','fire','bms_cctv','ups','panels','jet_fan','general'];
+
+// ── CHECKLISTS ──
+const TD_CHECKLISTS = {
+    dg:[{id:'dg_1',text:'Check fuel level and quality',required:true,completed:false,comments:''},{id:'dg_2',text:'Inspect battery terminals and voltage',required:true,completed:false,comments:''},{id:'dg_3',text:'Verify coolant level and condition',required:true,completed:false,comments:''},{id:'dg_4',text:'Check oil level and quality',required:true,completed:false,comments:''},{id:'dg_5',text:'Test automatic transfer switch',required:true,completed:false,comments:''},{id:'dg_6',text:'Inspect exhaust system',required:false,completed:false,comments:''},{id:'dg_7',text:'Verify control panel alarms',required:false,completed:false,comments:''}],
+    transformer:[{id:'tr_1',text:'Inspect oil level and leaks',required:true,completed:false,comments:''},{id:'tr_2',text:'Check bushing condition',required:true,completed:false,comments:''},{id:'tr_3',text:'Verify earthing connections',required:true,completed:false,comments:''},{id:'tr_4',text:'Check cooling fans and radiators',required:true,completed:false,comments:''},{id:'tr_5',text:'Measure insulation resistance',required:true,completed:false,comments:''},{id:'tr_6',text:'Inspect protection relay settings',required:false,completed:false,comments:''}],
+    chiller:[{id:'ch_1',text:'Check refrigerant pressure levels',required:true,completed:false,comments:''},{id:'ch_2',text:'Inspect condenser water flow',required:true,completed:false,comments:''},{id:'ch_3',text:'Verify compressor oil level',required:true,completed:false,comments:''},{id:'ch_4',text:'Check electrical connections and terminals',required:true,completed:false,comments:''},{id:'ch_5',text:'Inspect for refrigerant leaks',required:true,completed:false,comments:''}],
+    fire:[{id:'fi_1',text:'Test fire alarm panel functionality',required:true,completed:false,comments:''},{id:'fi_2',text:'Check sprinkler heads and pipes',required:true,completed:false,comments:''},{id:'fi_3',text:'Verify extinguisher pressure and seals',required:true,completed:false,comments:''},{id:'fi_4',text:'Test smoke detectors in all zones',required:true,completed:false,comments:''}],
+    default:[{id:'gen_1',text:'Visual inspection of equipment condition',required:true,completed:false,comments:''},{id:'gen_2',text:'Check for unusual noises or vibrations',required:true,completed:false,comments:''},{id:'gen_3',text:'Verify safety guards and covers',required:true,completed:false,comments:''},{id:'gen_4',text:'Inspect for leaks or damage',required:true,completed:false,comments:''},{id:'gen_5',text:'Test emergency stop functionality',required:false,completed:false,comments:''}]
+};
+function tdGetChecklist(name) {
+    const n=(name||'').toLowerCase();
+    if(n.includes('transformer'))return TD_CHECKLISTS.transformer.map(c=>({...c}));
+    if(n.includes('dg')||n.includes('generator'))return TD_CHECKLISTS.dg.map(c=>({...c}));
+    if(n.includes('chiller')||n.includes('hvac')||n.includes('ahu'))return TD_CHECKLISTS.chiller.map(c=>({...c}));
+    if(n.includes('fire')||n.includes('sprinkler'))return TD_CHECKLISTS.fire.map(c=>({...c}));
+    return TD_CHECKLISTS.default.map(c=>({...c}));
+}
+
+// ── THEME ──
+function tdToggleTheme() {
+    const isLight=document.body.classList.toggle('light');
+    document.getElementById('theme-icon').textContent=isLight?'☀️':'🌙';
+    document.getElementById('theme-label').textContent=isLight?'Light':'Dark';
+    try{localStorage.setItem('tdMmsTheme',isLight?'light':'dark');}catch(e){}
+}
+(function(){try{if(localStorage.getItem('tdMmsTheme')==='light'){document.body.classList.add('light');const i=document.getElementById('theme-icon');const l=document.getElementById('theme-label');if(i)i.textContent='☀️';if(l)l.textContent='Light';}}catch(e){}})();
+
+// ── CLOCK ──
+function tdUpdateTime() {
+    const t=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
+    const c1=document.getElementById('live-clock');if(c1)c1.textContent=t;
+    const c2=document.getElementById('tb-clock');if(c2)c2.textContent=t;
+}
+
+// ── AUTO FOCUS ──
+function tdAutoFocus(id){setTimeout(()=>{const e=document.getElementById(id);if(e){e.focus();e.select();}},120);}
+
+// ── SECTION SWITCHER ──
+function showSection(id) {
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    const sec=document.getElementById(`section-${id}`); if(sec)sec.classList.add('active');
+    document.querySelectorAll('.sidebar-item').forEach(b=>b.classList.remove('active'));
+    const btn=document.querySelector(`[data-section="${id}"]`); if(btn)btn.classList.add('active');
+    if(id==='calendar')    tdRenderCalendar();
+    if(id==='workflow')    tdRenderWorkOrders();
+    if(id==='closed-wos')  tdRenderClosedWOs();
+    if(id==='amc-tracker') tdRenderAmcTracker();
+}
+function tdGoWOs(filter) {
+    const sel=document.getElementById('wo-filter'); if(sel)sel.value=filter;
+    showSection('workflow'); tdRenderWorkOrders();
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded',async()=>{
+    lucide.createIcons();
+    tdSetupEventListeners();
+    await tdInitDashboard();
+    tdUpdateTime();
+    setInterval(tdUpdateTime,1000);
+});
+
+function tdSetupEventListeners() {
+    document.querySelectorAll('[data-section]').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+            showSection(btn.getAttribute('data-section'));
+            if(window.innerWidth<=768){
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('sidebar-overlay').classList.remove('open');
+            }
+        });
+    });
+    const toggleMobileNav = () => {
+        document.getElementById('sidebar')?.classList.toggle('open');
+        document.getElementById('sidebar-overlay')?.classList.toggle('open');
+    };
+    window.openMobileNav = toggleMobileNav;
+
+    document.getElementById('mobile-toggle')?.addEventListener('click', toggleMobileNav);
+    document.getElementById('sidebar-overlay')?.addEventListener('click', () => {
+        document.getElementById('sidebar')?.classList.remove('open');
+        document.getElementById('sidebar-overlay')?.classList.remove('open');
+    });
+    document.getElementById('prev-month')?.addEventListener('click',()=>tdNavMonth(-1));
+    document.getElementById('next-month')?.addEventListener('click',()=>tdNavMonth(1));
+    document.getElementById('drop-zone')?.addEventListener('click',()=>document.getElementById('image-upload').click());
+    document.getElementById('image-upload')?.addEventListener('change',tdHandleImageUpload);
+    document.getElementById('close-wo-modal-btn')?.addEventListener('click',tdCloseModal);
+    document.getElementById('close-amc-edit-modal-btn')?.addEventListener('click',tdCloseAmcModal);
+    document.getElementById('amc-cancel-edit-btn')?.addEventListener('click',tdCloseAmcModal);
+    document.getElementById('amc-save-edit-btn')?.addEventListener('click',tdSaveAmcContract);
+    document.getElementById('save-checklist-btn')?.addEventListener('click',tdSaveChecklistProgress);
+    document.getElementById('close-work-order-btn')?.addEventListener('click',tdCloseWorkOrderWithApproval);
+    document.getElementById('reject-wo-btn')?.addEventListener('click',()=>tdShowToast('Work order returned for revision.','info'));
+    document.getElementById('assign-btn')?.addEventListener('click',tdAssignWO);
+    document.getElementById('wo-details-modal')?.addEventListener('click',e=>{if(e.target===e.currentTarget)tdCloseModal();});
+    document.getElementById('amc-edit-modal')?.addEventListener('click',e=>{if(e.target===e.currentTarget)tdCloseAmcModal();});
+}
+
+async function tdInitDashboard() {
+    try {
+        tdSetEl('asset-table-body',`<tr><td colspan="6" style="padding:40px;text-align:center;color:#475569;">Loading TD assets...</td></tr>`);
+        tdSetEl('wo-stream-container',tdLoadingHTML('Loading work orders...'));
+        tdSetEl('amc-stream-container',tdLoadingHTML('Loading AMC contracts...'));
+
+        const [assetRes,statsRes,woRes,amcRes] = await Promise.all([
+            fetch(TD_API.ASSETS).catch(()=>({ok:false})),
+            fetch(TD_API.STATS).catch(()=>({ok:false})),
+            fetch(TD_API.WORKORDERS).catch(()=>({ok:false})),
+            fetch(TD_API.AMC).catch(()=>({ok:false})),
+        ]);
+        if(assetRes.ok){const d=await assetRes.json();tdAssetsData=d.assets||[];}
+        if(woRes.ok){const d=await woRes.json();_tdWorkOrders=d.work_orders||[];}
+        if(amcRes.ok){const d=await amcRes.json();_tdAmcContracts=d.contracts||[];}
+
+        let stats={total_assets:tdAssetsData.length,pending_ppm:0,ppm_overdue:0,compliance_rate:0};
+        if(statsRes.ok){const s=await statsRes.json();stats={...stats,...s};}
+
+        tdRenderAssetTable();
+        tdRenderStats(stats);
+        tdRenderWorkOrders();
+        tdRenderAmcTracker();
+        tdRenderCharts();
+        tdRenderCalendar();
+        tdUpdateSidebarCounters();
+        lucide.createIcons();
+    } catch(err) {
+        console.error('TD MMS init error:',err);
+        tdSetEl('asset-table-body',`<tr><td colspan="6" style="padding:40px;text-align:center;color:#475569;">Error loading data. Check server connection.</td></tr>`);
+    }
+}
+
+// ── SIDEBAR COUNTERS ──
+function tdUpdateSidebarCounters() {
+    const total=tdAssetsData.length;
+    const open=_tdWorkOrders.filter(w=>tdGetWOStatus(w)==='open').length;
+    const overdue=_tdWorkOrders.filter(w=>tdGetWOStatus(w)==='overdue').length;
+    const closed=_tdWorkOrders.filter(w=>tdGetWOStatus(w) in {completed:1,closed:1}).length;
+    const amc=_tdAmcContracts.filter(c=>(c.status||'active')==='active').length;
+    tdSetTxt('sc-assets',total); tdSetTxt('sc-assets2',total);
+    tdSetTxt('sc-open',open); tdSetTxt('sc-overdue',overdue);
+    tdSetTxt('sc-closed',closed); tdSetTxt('sc-amc',amc);
+}
+
+// ── STATS ──
+function tdRenderStats(api) {
+    let open=0,overdue=0,completed=0,inProg=0;
+    _tdWorkOrders.forEach(wo=>{
+        const st=tdGetWOStatus(wo);
+        if(st==='completed'||st==='closed')completed++;
+        else if(st==='overdue')overdue++;
+        else if(st==='in-progress')inProg++;
+        else open++;
+    });
+    const total=tdAssetsData.length||api.total_assets||0;
+    const pending=api.pending_ppm||open+overdue;
+    const ovrd=api.ppm_overdue||overdue;
+    const compliance=api.compliance_rate!=null?api.compliance_rate:(_tdWorkOrders.length>0?(completed/_tdWorkOrders.length*100):0);
+    tdSetTxt('ov-total',total.toLocaleString());
+    tdSetTxt('ov-pending',pending.toLocaleString());
+    tdSetTxt('ov-overdue',ovrd.toLocaleString());
+    tdSetTxt('ov-compliance',`${compliance.toFixed(1)}%`);
+    tdSetTxt('wo-count-open',open.toLocaleString());
+    tdSetTxt('wo-count-overdue',overdue.toLocaleString());
+    tdSetTxt('wo-count-inprogress',inProg.toLocaleString());
+    tdSetTxt('wo-count-completed',completed.toLocaleString());
+    const ihA=tdAssetsData.filter(a=>(a.ppm_type||'inhouse')!=='vendor').length;
+    const vdA=tdAssetsData.filter(a=>a.ppm_type==='vendor').length;
+    let ihO=0,ihOv=0,vdO=0,vdOv=0;
+    _tdWorkOrders.forEach(wo=>{
+        const pt=wo.ppm_type||'inhouse',st=tdGetWOStatus(wo);
+        if(st==='completed'||st==='closed')return;
+        if(pt==='vendor'){vdO++;if(st==='overdue')vdOv++;}else{ihO++;if(st==='overdue')ihOv++;}
+    });
+    tdSetTxt('ih-assets',ihA);tdSetTxt('ih-open',ihO);tdSetTxt('ih-overdue',ihOv);
+    tdSetTxt('vd-assets',vdA);tdSetTxt('vd-open',vdO);tdSetTxt('vd-overdue',vdOv);
+    const bar=document.getElementById('filter-counts');
+    if(bar){
+        const badges=[{label:'Open',count:open,color:'#f59e0b'},{label:'Overdue',count:overdue,color:'#f43f5e'},{label:'In Progress',count:inProg,color:'#06b6d4'},{label:'Completed',count:completed,color:'#10b981'}].filter(b=>b.count>0);
+        bar.innerHTML=badges.map(b=>`<span style="padding:3px 8px;border-radius:4px;font-size:10px;font-weight:800;background:${b.color}22;color:${b.color};border:1px solid ${b.color}55;">${b.label}: ${b.count}</span>`).join('');
+    }
+}
+
+// ── CHARTS ──
+function tdRenderCharts() {
+    const chartCfg={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#64748b',font:{family:'Rajdhani',size:10},boxWidth:12}},tooltip:{backgroundColor:'rgba(15,23,42,.95)',titleFont:{family:'Rajdhani',size:11},bodyFont:{family:'Rajdhani',size:11}}}};
+    const open=_tdWorkOrders.filter(w=>tdGetWOStatus(w)==='open').length;
+    const ovrd=_tdWorkOrders.filter(w=>tdGetWOStatus(w)==='overdue').length;
+    const inP =_tdWorkOrders.filter(w=>tdGetWOStatus(w)==='in-progress').length;
+    const done=_tdWorkOrders.filter(w=>tdGetWOStatus(w)==='completed').length;
+    if(tdCharts.status)tdCharts.status.destroy();
+    const sc=document.getElementById('statusChart');
+    if(sc)tdCharts.status=new Chart(sc,{type:'doughnut',data:{labels:['Open','Overdue','In Progress','Completed'],datasets:[{data:[open,ovrd,inP,done],backgroundColor:['rgba(245,158,11,.75)','rgba(244,63,94,.75)','rgba(6,182,212,.75)','rgba(16,185,129,.75)'],borderWidth:0,hoverOffset:6}]},options:{...chartCfg,cutout:'72%'}});
+    let mo=0,qt=0,hy=0,yr=0;
+    tdAssetsData.forEach(a=>{const f=tdCalcFreq(a.lastService,a.nextDueDate,a.frequency);if(f.label==='MONTHLY')mo++;else if(f.label==='QUARTERLY')qt++;else if(f.label==='HALF-YEARLY')hy++;else yr++;});
+    if(tdCharts.freq)tdCharts.freq.destroy();
+    const fc=document.getElementById('freqChart');
+    if(fc)tdCharts.freq=new Chart(fc,{type:'bar',data:{labels:['Monthly','Quarterly','Half-Yearly','Yearly'],datasets:[{data:[mo,qt,hy,yr],backgroundColor:['rgba(16,185,129,.75)','rgba(245,158,11,.75)','rgba(139,92,246,.75)','rgba(244,63,94,.75)'],borderWidth:0,borderRadius:4}]},options:{...chartCfg,plugins:{...chartCfg.plugins,legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#475569',font:{family:'Rajdhani',size:10}}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#475569',font:{family:'Rajdhani',size:10}}}}}});
+    const catCounts={};Object.keys(TD_CAT_CFG).forEach(k=>{catCounts[k]=0;});
+    tdAssetsData.forEach(a=>{const k=a.category||'general';if(catCounts[k]!==undefined)catCounts[k]++;else catCounts['general']++;});
+    const activeCats=Object.entries(catCounts).filter(([,v])=>v>0);
+    if(tdCharts.cat)tdCharts.cat.destroy();
+    const cc=document.getElementById('catChart');
+    if(cc)tdCharts.cat=new Chart(cc,{type:'polarArea',data:{labels:activeCats.map(([k])=>TD_CAT_CFG[k]?.label||k),datasets:[{data:activeCats.map(([,v])=>v),backgroundColor:activeCats.map(([k])=>(TD_CAT_CFG[k]?.color||'#94a3b8')+'BB'),borderWidth:0}]},options:{...chartCfg,scales:{r:{grid:{color:'rgba(255,255,255,.06)'},ticks:{display:false}}}}});
+}
+
+// ── ASSET TABLE ──
+function tdSetAssetTab(tab) {
+    _tdAssetTab=tab;
+    ['all','inhouse','vendor'].forEach(t=>{const b=document.getElementById('atab-'+t);if(!b)return;b.classList.toggle('active',t===tab);});
+    tdApplyAssetFilters(document.getElementById('asset-search')?.value||'',document.getElementById('asset-freq-filter')?.value||'all');
+}
+function tdSetAssetCategory(cat) {
+    _tdAssetCat=cat;
+    TD_ALL_CATS.forEach(c=>{const b=document.getElementById('catpill-'+c);if(!b)return;b.style.borderColor='rgba(255,255,255,.08)';b.style.background='transparent';b.style.color='#475569';
+        if(c===cat){const col=c==='all'?'var(--primary)':(TD_CAT_CFG[c]?.color||'#94a3b8');b.style.borderColor=col+'88';b.style.background=col+'18';b.style.color=col;}});
+    tdApplyAssetFilters(document.getElementById('asset-search')?.value||'',document.getElementById('asset-freq-filter')?.value||'all');
+}
+function tdApplyAssetFilters(query,freq) {
+    let filtered=tdAssetsData.filter(a=>{
+        if(_tdAssetTab==='inhouse'&&(a.ppm_type||'inhouse')==='vendor')return false;
+        if(_tdAssetTab==='vendor'&&(a.ppm_type||'inhouse')!=='vendor')return false;
+        if(_tdAssetCat!=='all'&&a.category!==_tdAssetCat)return false;
+        const q=(query||'').toLowerCase();
+        const matchQ=!q||(a.id||'').toLowerCase().includes(q)||(a.name||'').toLowerCase().includes(q)||(a.location||'').toLowerCase().includes(q)||(a.equip_type||'').toLowerCase().includes(q);
+        if(!matchQ)return false;
+        if(freq==='all')return true;
+        return tdCalcFreq(a.lastService,a.nextDueDate,a.frequency).label===freq;
+    });
+    const badge=document.getElementById('asset-count-badge'); if(badge)badge.textContent=`(${filtered.length} assets)`;
+    tdRenderFilteredAssets(filtered);
+}
+function tdRenderAssetTable(){tdApplyAssetFilters('','all');}
+function tdRenderFilteredAssets(assets) {
+    const tbody=document.getElementById('asset-table-body'); if(!tbody)return;
+    if(!assets.length){tbody.innerHTML=`<tr><td colspan="6" style="padding:40px;text-align:center;color:#475569;">No assets found for the selected filters.</td></tr>`;return;}
+    tbody.innerHTML=assets.map((a,i)=>{
+        const freq=tdCalcFreq(a.lastService,a.nextDueDate,a.frequency);
+        const cfg=TD_CAT_CFG[a.category]||TD_CAT_CFG.general;
+        const catC=cfg.color,catL=cfg.label;
+        const rowBg=i%2===0?'rgba(255,255,255,.01)':'transparent';
+        const today=new Date(); today.setHours(0,0,0,0);
+        const nd=tdParseDate(a.nextDueDate); let dueTxt=a.nextDueDate||'—'; let dueColor='#475569';
+        if(nd){nd.setHours(0,0,0,0);const diff=Math.ceil((nd-today)/86400000);dueColor=diff<0?'#f43f5e':diff<=7?'#f59e0b':'#10b981';dueTxt=tdFmtDate(a.nextDueDate);}
+        return`<tr style="border-bottom:1px solid rgba(255,255,255,.03);background:${rowBg};transition:background .15s;" onmouseover="this.style.background='rgba(6,182,212,.04)'" onmouseout="this.style.background='${rowBg}'">
+            <td style="padding:12px 16px;font-family:monospace;font-size:11px;color:var(--primary);font-weight:700;">${a.id}</td>
+            <td style="padding:12px 16px;font-size:13px;color:white;font-weight:600;">${a.name}</td>
+            <td style="padding:12px 16px;font-size:12px;color:#64748b;">${a.location}</td>
+            <td style="padding:12px 16px;"><span style="padding:2px 8px;border-radius:5px;font-size:9px;font-weight:800;color:${catC};border:1px solid ${catC}44;background:${catC}14;">${catL}</span></td>
+            <td style="padding:12px 16px;"><span style="padding:2px 8px;border-radius:5px;font-size:9px;font-weight:800;color:${freq.color};border:1px solid ${freq.color}44;background:${freq.color}14;">${freq.label}</span></td>
+            <td style="padding:12px 16px;font-size:11px;color:${dueColor};font-weight:700;white-space:nowrap;">${dueTxt}</td>
+        </tr>`;
+    }).join('');
+}
+
+// ── WORK ORDERS RENDER ──
+const WO_STATUS_CFG = {
+    open:{color:'#f59e0b',bg:'rgba(245,158,11,.08)',border:'rgba(245,158,11,.2)',label:'OPEN'},
+    overdue:{color:'#f43f5e',bg:'rgba(244,63,94,.08)',border:'rgba(244,63,94,.2)',label:'OVERDUE'},
+    'in-progress':{color:'#06b6d4',bg:'rgba(6,182,212,.08)',border:'rgba(6,182,212,.2)',label:'IN PROGRESS'},
+    'pending-approval':{color:'#8b5cf6',bg:'rgba(139,92,246,.08)',border:'rgba(139,92,246,.2)',label:'PENDING APPROVAL'},
+    completed:{color:'#10b981',bg:'rgba(16,185,129,.08)',border:'rgba(16,185,129,.2)',label:'COMPLETED'},
+    closed:{color:'#64748b',bg:'rgba(100,116,139,.08)',border:'rgba(100,116,139,.2)',label:'CLOSED'},
+};
+function tdRenderWorkOrders() {
+    const cont=document.getElementById('wo-stream-container'); if(!cont)return;
+    const filter=document.getElementById('wo-filter')?.value||'all';
+    let wos=_tdWorkOrders.filter(w=>{
+        const st=tdGetWOStatus(w);
+        if(filter==='all')return!['completed','closed'].includes(st);
+        return st===filter;
+    });
+    if(!wos.length){cont.innerHTML=tdEmptyHTML('No Work Orders','No work orders match the current filter');return;}
+    cont.innerHTML=wos.map(wo=>{
+        const st=tdGetWOStatus(wo),cfg=WO_STATUS_CFG[st]||WO_STATUS_CFG.open;
+        const woId=wo['WO ID']||wo.work_order_id||'';
+        const aname=wo['Asset Name']||wo.asset_name||'';
+        const loc=wo['Location']||wo.location||'';
+        const dd=wo['Due Date']||wo.due_date||'';
+        const pt=wo.ppm_type||'inhouse';
+        const freq=wo.frequency||'';
+        const ptColor=pt==='vendor'?'#8b5cf6':'#06b6d4';
+        const dataStr=JSON.stringify(wo).replace(/"/g,'&quot;');
+        return`<div style="background:rgba(15,23,42,.75);border:1px solid ${cfg.border};border-left:4px solid ${cfg.color};border-radius:12px;padding:16px 18px;transition:transform .15s,box-shadow .15s;cursor:pointer;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 20px rgba(0,0,0,.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+                <div style="flex:1;min-width:200px;">
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
+                        <span style="font-family:monospace;font-size:11px;color:var(--primary);font-weight:700;">${woId}</span>
+                        <span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:800;background:${cfg.bg};color:${cfg.color};border:1px solid ${cfg.border};">${cfg.label}</span>
+                        <span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;background:${ptColor}18;color:${ptColor};border:1px solid ${ptColor}44;">${pt.toUpperCase()}</span>
+                        ${freq?`<span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;background:rgba(255,255,255,.04);color:#64748b;border:1px solid rgba(255,255,255,.08);">${freq}</span>`:''}
+                    </div>
+                    <p style="color:white;font-weight:700;font-size:14px;margin:0 0 4px;">${aname}</p>
+                    <p style="color:#64748b;font-size:12px;margin:0 0 3px;">📍 ${loc}</p>
+                    <p style="color:#475569;font-size:11px;margin:0;">📅 Due: <span style="color:${st==='overdue'?'#f43f5e':'#94a3b8'};font-weight:600;">${tdFmtDate(dd)}</span>
+                        ${wo.assigned_to?`&nbsp;·&nbsp; 👤 <span style="color:#94a3b8;">${wo.assigned_to}</span>`:''}
+                    </p>
+                </div>
+                <button onclick='tdOpenWOModal(${dataStr})' style="background:rgba(6,182,212,.1);color:var(--primary);border:1px solid rgba(6,182,212,.2);border-radius:8px;padding:8px 14px;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:.06em;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .2s;flex-shrink:0;" onmouseover="this.style.background='var(--primary)';this.style.color='black'" onmouseout="this.style.background='rgba(6,182,212,.1)';this.style.color='var(--primary)'">
+                    <i data-lucide="external-link" style="width:12px;height:12px;"></i> View
+                </button>
+            </div>
+        </div>`;
+    }).join('');
+    lucide.createIcons();
+}
+
+function tdRenderClosedWOs() {
+    const cont=document.getElementById('closed-wo-container'); if(!cont)return;
+    const filter=document.getElementById('closed-wo-filter')?.value||'all';
+    const ppmFilter=document.getElementById('closed-wo-ppm-filter')?.value||'all';
+    const q=(document.getElementById('closed-wo-search')?.value||'').toLowerCase();
+    let wos=_tdWorkOrders.filter(w=>{
+        const st=tdGetWOStatus(w);
+        if(filter==='all'&&!['completed','closed'].includes(st))return false;
+        if(filter!=='all'&&st!==filter)return false;
+        if(ppmFilter!=='all'&&(w.ppm_type||'inhouse')!==ppmFilter)return false;
+        if(q){const aname=(w['Asset Name']||w.asset_name||'').toLowerCase();const wid=(w['WO ID']||w.work_order_id||'').toLowerCase();if(!aname.includes(q)&&!wid.includes(q))return false;}
+        return true;
+    });
+    tdSetTxt('closed-wo-count-badge',wos.length);
+    if(!wos.length){cont.innerHTML=tdEmptyHTML('No Closed Work Orders','No completed or closed WOs match the filter');return;}
+    cont.innerHTML=wos.map(wo=>{
+        const st=tdGetWOStatus(wo);const cfg=WO_STATUS_CFG[st]||WO_STATUS_CFG.completed;
+        const woId=wo['WO ID']||wo.work_order_id||'';
+        const aname=wo['Asset Name']||wo.asset_name||'';
+        const closedDate=wo.closed_date||wo.updated_at||'';
+        const dataStr=JSON.stringify(wo).replace(/"/g,'&quot;');
+        return`<div style="background:rgba(15,23,42,.6);border:1px solid rgba(255,255,255,.05);border-left:4px solid ${cfg.color};border-radius:12px;padding:14px 18px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                <div>
+                    <span style="font-family:monospace;font-size:11px;color:#475569;font-weight:700;">${woId}</span>
+                    <span style="margin-left:8px;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:800;background:${cfg.bg};color:${cfg.color};border:1px solid ${cfg.border};">${cfg.label}</span>
+                    <p style="color:#94a3b8;font-weight:600;font-size:13px;margin:4px 0 2px;">${aname}</p>
+                    ${closedDate?`<span style="color:#334155;font-size:11px;">Closed: ${tdFmtDate(closedDate)}</span>`:''}
+                    ${wo.closed_by?`<span style="color:#334155;font-size:11px;"> · By: ${wo.closed_by}</span>`:''}
+                </div>
+                <div style="display:flex;gap:6px;">
+                    <button onclick='tdOpenWOModal(${dataStr})' style="background:rgba(100,116,139,.1);color:#64748b;border:1px solid rgba(100,116,139,.2);border-radius:8px;padding:7px 12px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#64748b'">
+                        <i data-lucide="eye" style="width:12px;height:12px;"></i> View
+                    </button>
+                    <button onclick='tdReopenWO(${dataStr})' style="background:rgba(6,182,212,.06);color:var(--primary);border:1px solid rgba(6,182,212,.15);border-radius:8px;padding:7px 12px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .2s;" onmouseover="this.style.background='rgba(6,182,212,.18)'" onmouseout="this.style.background='rgba(6,182,212,.06)'">
+                        <i data-lucide="rotate-ccw" style="width:12px;height:12px;"></i> Reopen
+                    </button>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+    lucide.createIcons();
+}
+
+// ── WO MODAL ──
+function tdOpenWOModal(wo) {
+    tdCurrentWO=wo;
+    const st=tdGetWOStatus(wo);
+    const cfg=WO_STATUS_CFG[st]||WO_STATUS_CFG.open;
+    const woId=wo['WO ID']||wo.work_order_id||'';
+    const aname=wo['Asset Name']||wo.asset_name||'';
+    const loc=wo['Location']||wo.location||'';
+    const dd=wo['Due Date']||wo.due_date||'';
+    const freq=tdCalcFreq(wo.lastService,wo.nextDueDate,wo.frequency);
+    tdSetTxt('modal-wo-id',woId);
+    tdSetEl('modal-status-badge',`<span style="padding:3px 10px;border-radius:5px;font-size:10px;font-weight:800;background:${cfg.bg};color:${cfg.color};border:1px solid ${cfg.border};">${cfg.label}</span>`);
+    tdSetEl('modal-freq-badge',freq.label);
+    document.getElementById('modal-freq-badge').style.color=freq.color;
+    tdSetTxt('modal-asset-name',aname);
+    tdSetEl('modal-location',`<i data-lucide="map-pin" style="width:12px;height:12px;color:#475569;"></i>&nbsp;${loc}`);
+    tdSetTxt('modal-ppm-type',(wo.ppm_type||'inhouse').toUpperCase());
+    tdSetTxt('modal-due-date',tdFmtDate(dd));
+    tdSetTxt('modal-category',(TD_CAT_CFG[wo.category]||TD_CAT_CFG.general).label);
+    const techSel=document.getElementById('modal-technician'); if(techSel)techSel.value=wo.assigned_to||'';
+    const supSel=document.getElementById('modal-supervisor'); if(supSel)supSel.value=wo.supervisor||'';
+    document.getElementById('technician-notes').value=wo.notes||'';
+    // Readonly for closed WOs
+    const isClosed=['completed','closed'].includes(st);
+    const actionSection=document.getElementById('wo-action-section');
+    const readonlyBanner=document.getElementById('wo-readonly-banner');
+    if(isClosed){
+        if(actionSection)actionSection.style.display='none';
+        if(readonlyBanner){
+            readonlyBanner.style.display='flex';
+            readonlyBanner.innerHTML=`<i data-lucide="check-circle" style="width:16px;height:16px;color:var(--green);flex-shrink:0;"></i><span style="font-size:12px;font-weight:700;color:#10b981;">This WO is <strong>${st.toUpperCase()}</strong>. Closed by: ${wo.closed_by||'Supervisor'} on ${tdFmtDate(wo.closed_date||'')}.</span>`;
+        }
+    } else {
+        if(actionSection)actionSection.style.display='';
+        if(readonlyBanner)readonlyBanner.style.display='none';
+    }
+    if(!wo.checklist||!wo.checklist.length)wo.checklist=tdGetChecklist(aname);
+    tdRenderChecklist();
+    tdRenderImagePreviews();
+    const modal=document.getElementById('wo-details-modal');
+    modal.style.display='flex';
+    lucide.createIcons({element:modal});
+}
+function tdCloseModal(){document.getElementById('wo-details-modal').style.display='none';tdCurrentWO=null;}
+
+function tdRenderChecklist() {
+    if(!tdCurrentWO)return;
+    const total=tdCurrentWO.checklist.length;
+    // Normalize: count items where EITHER completed OR done is truthy
+    const done=tdCurrentWO.checklist.filter(i=>!!(i.completed||i.done)).length;
+    const pct=total?Math.round(done/total*100):0;
+    tdSetTxt('modal-checklist-status',`${done}/${total}`);
+    tdSetTxt('checklist-progress',`${pct}%`);
+    const bar=document.getElementById('checklist-progress-bar');if(bar)bar.style.width=`${pct}%`;
+    const cont=document.getElementById('checklist-container'); if(!cont)return;
+    const isChecked = item => !!(item.completed || item.done);
+    cont.innerHTML=tdCurrentWO.checklist.map((item,idx)=>{
+        const checked = isChecked(item);
+        return `
+        <div data-cl-idx="${idx}" style="display:flex;align-items:flex-start;gap:12px;padding:12px;background:rgba(15,23,42,.6);border-radius:10px;border:1px solid ${checked?'rgba(16,185,129,.2)':'rgba(255,255,255,.06)'};transition:border-color .2s;">
+            <input type="checkbox" id="chk-${idx}" ${checked?'checked':''} style="margin-top:2px;width:16px;height:16px;accent-color:var(--primary);cursor:pointer;flex-shrink:0;" onchange="tdToggleChecklist(${idx})">
+            <div style="flex:1;min-width:0;">
+                <label for="chk-${idx}" style="color:${checked?'#10b981':'white'};font-weight:600;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;">
+                    ${item.text}
+                    ${item.required?'<span style="color:#f43f5e;font-size:9px;font-weight:800;letter-spacing:.08em;">REQUIRED</span>':''}
+                </label>
+                <input type="text" value="${item.comments||''}" placeholder="Add comment..." style="margin-top:6px;width:100%;padding:6px 10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:6px;color:#94a3b8;font-family:'Rajdhani',sans-serif;font-size:12px;outline:none;" onchange="tdUpdateChecklistComment(${idx},this.value)" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='rgba(255,255,255,.06)'">
+            </div>
+        </div>`;
+    }).join('');
+}
+function tdToggleChecklist(idx) {
+    if(!tdCurrentWO||!tdCurrentWO.checklist)return;
+    const item=tdCurrentWO.checklist[idx];
+    if(!item)return;
+    // Sync both field names for cross-modal consistency
+    item.completed = !!(item.completed||item.done) ? false : true;
+    item.done      = item.completed;
+    // Direct DOM update for the progress bar (no full re-render)
+    const total=tdCurrentWO.checklist.length;
+    const done=tdCurrentWO.checklist.filter(i=>!!(i.completed||i.done)).length;
+    const pct=total?Math.round(done/total*100):0;
+    const lbl=document.getElementById('checklist-progress');if(lbl)lbl.textContent=pct+'%';
+    const bar=document.getElementById('checklist-progress-bar');if(bar)bar.style.width=pct+'%';
+    const stat=document.getElementById('modal-checklist-status');if(stat)stat.textContent=done+'/'+total;
+    // Update only the toggled row visuals
+    const chk=document.getElementById('chk-'+idx);if(chk)chk.checked=item.completed;
+    const wrap=chk&&chk.closest('[data-cl-idx]');if(wrap)wrap.style.borderColor=item.completed?'rgba(16,185,129,.2)':'rgba(255,255,255,.06)';
+    const lbl2=chk&&chk.closest('div')&&chk.closest('div').querySelector('label');if(lbl2)lbl2.style.color=item.completed?'#10b981':'white';
+}
+function tdUpdateChecklistComment(idx,val){if(!tdCurrentWO)return;tdCurrentWO.checklist[idx].comments=val;}
+
+async function tdSaveChecklistProgress() {
+    if(!tdCurrentWO)return;
+    const notes=document.getElementById('technician-notes')?.value||'';
+    tdCurrentWO.notes=notes;
+    try {
+        const res=await fetch(TD_API.WO_UPDATE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({work_order_id:tdCurrentWO['WO ID']||tdCurrentWO.work_order_id,checklist:tdCurrentWO.checklist,notes,status:'in-progress'})});
+        const d=await res.json();
+        if(d.success)tdShowToast('Checklist saved successfully','success');
+        else tdShowToast('Save failed: '+(d.error||''),'error');
+    } catch(e){tdShowToast('Network error','error');}
+}
+
+async function tdCloseWorkOrderWithApproval() {
+    if(!tdCurrentWO)return;
+    const notes=document.getElementById('approval-notes')?.value||'';
+    const woId=tdCurrentWO['WO ID']||tdCurrentWO.work_order_id;
+    try {
+        const res=await fetch(TD_API.WO_CLOSE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({work_order_id:woId,status:'completed',closed_by:'Supervisor',approval_notes:notes,checklist:tdCurrentWO.checklist})});
+        const d=await res.json();
+        if(d.success){tdShowToast(`WO ${woId} closed successfully`,'success');tdCloseModal();await tdInitDashboard();}
+        else tdShowToast('Close failed: '+(d.error||''),'error');
+    } catch(e){tdShowToast('Network error','error');}
+}
+
+async function tdReopenWO(wo) {
+    const woId=wo['WO ID']||wo.work_order_id;
+    const reason=prompt('Reason for reopening (optional):')??'';
+    if(reason===null)return;
+    try {
+        const res=await fetch(TD_API.WO_REOPEN,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({work_order_id:woId,reason:reason||'Reopened by supervisor'})});
+        const d=await res.json();
+        if(d.success){tdShowToast(`WO ${woId} reopened`,'success');await tdInitDashboard();}
+        else tdShowToast('Reopen failed: '+(d.error||''),'error');
+    } catch(e){tdShowToast('Network error','error');}
+}
+
+async function tdAssignWO() {
+    if(!tdCurrentWO)return;
+    const tech=document.getElementById('modal-technician')?.value||'';
+    const sup=document.getElementById('modal-supervisor')?.value||'';
+    const woId=tdCurrentWO['WO ID']||tdCurrentWO.work_order_id;
+    try {
+        const res=await fetch(TD_API.WO_UPDATE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({work_order_id:woId,assigned_to:tech,supervisor:sup,status:'in-progress'})});
+        const d=await res.json();
+        if(d.success){tdShowToast(`Assigned to ${tech||'Technician'}`,'success');tdCurrentWO.assigned_to=tech;tdCurrentWO.supervisor=sup;}
+        else tdShowToast('Assignment failed: '+(d.error||''),'error');
+    } catch(e){tdShowToast('Network error','error');}
+}
+
+function tdRenderImagePreviews() {
+    if(!tdCurrentWO)return;
+    const cont=document.getElementById('image-preview-container'); if(!cont)return;
+    if(!tdCurrentWO.images||!tdCurrentWO.images.length){cont.innerHTML='';return;}
+    cont.innerHTML=tdCurrentWO.images.slice(0,9).map(img=>`<img src="${img.path||'/uploads/td/ppm/'+img.filename}" style="width:70px;height:60px;object-fit:cover;border-radius:8px;border:1px solid rgba(6,182,212,.2);cursor:pointer;" onclick="window.open(this.src,'_blank')">`).join('');
+}
+
+async function tdHandleImageUpload(e) {
+    if(!tdCurrentWO||!e.target.files)return;
+    const woId=tdCurrentWO['WO ID']||tdCurrentWO.work_order_id;
+    for(const file of Array.from(e.target.files)){
+        const fd=new FormData();fd.append('image',file);fd.append('wo_id',woId);
+        try{
+            const res=await fetch('/td_api/mms/workorders/upload-image',{method:'POST',body:fd});
+            const d=await res.json();
+            if(d.success){tdShowToast('Photo uploaded','success');tdCurrentWO.images.push({filename:d.filename,path:`/uploads/td/ppm/${woId}/${d.filename}`});tdRenderImagePreviews();}
+        }catch(err){tdShowToast('Upload failed: '+err.message,'error');}
+    }
+}
+
+// ── AMC TRACKER ──
+function tdDaysToExpiry(c) {
+    if(!c.end_date)return null;
+    try{const d=new Date(c.end_date);d.setHours(0,0,0,0);const t=new Date();t.setHours(0,0,0,0);return Math.floor((d-t)/86400000);}catch(e){return null;}
+}
+function tdRenderAmcTracker() {
+    const cont=document.getElementById('amc-stream-container'); if(!cont)return;
+    const filter=document.getElementById('amc-filter')?.value||'all';
+    let cs=_tdAmcContracts.filter(c=>{
+        const d=tdDaysToExpiry(c);
+        if(filter==='active')return(c.status||'active')==='active';
+        if(filter==='expiring')return(c.status==='expiring')||((c.status==='active')&&d!==null&&d<=90&&d>0);
+        if(filter==='expired')return(c.status==='expired')||(d!==null&&d<=0);
+        return true;
+    });
+    if(!cs.length){cont.innerHTML=tdEmptyHTML('No AMC Contracts',filter==='all'?'Use "Add Contract" to create one':`No ${filter} contracts found`);return;}
+    const STATUS_CFG={active:{color:'#22c55e',bg:'rgba(34,197,94,.12)',label:'ACTIVE'},expiring:{color:'#f59e0b',bg:'rgba(245,158,11,.12)',label:'EXPIRING SOON'},expired:{color:'#f43f5e',bg:'rgba(244,63,94,.12)',label:'EXPIRED'}};
+    const FREQ_COLOR={'Monthly':'#06b6d4','Quarterly':'#8b5cf6','Half-Yearly':'#f59e0b','Yearly':'#f43f5e'};
+    cont.innerHTML=cs.map(c=>{
+        const d=tdDaysToExpiry(c);
+        const sc=STATUS_CFG[(c.status||'active').toLowerCase()]||STATUS_CFG.active;
+        const dc=d===null?'#64748b':d<30?'#f43f5e':d<90?'#f59e0b':'#22c55e';
+        const fqC=FREQ_COLOR[c.service_frequency]||'#64748b';
+        const val=c.value?`₹${Number(c.value).toLocaleString('en-IN')}`:'—';
+        const dataStr=JSON.stringify(c).replace(/"/g,'&quot;');
+        return`<div style="background:rgba(15,23,42,.75);border:1px solid rgba(255,255,255,.06);border-left:4px solid ${sc.color};border-radius:12px;padding:18px;transition:transform .15s,box-shadow .15s;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 20px rgba(0,0,0,.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+            <div style="flex:1;min-width:220px;">
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
+                <span style="font-family:monospace;font-size:11px;color:var(--primary);font-weight:700;">${c.contract_id||'N/A'}</span>
+                <span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:800;background:${sc.bg};color:${sc.color};border:1px solid ${sc.color}44;">${sc.label}</span>
+                ${c.service_frequency?`<span style="padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;background:${fqC}18;color:${fqC};border:1px solid ${fqC}44;">${c.service_frequency}</span>`:''}
+              </div>
+              <p style="color:white;font-weight:700;font-size:14px;margin:0 0 3px;">${c.asset_name||'Unknown Asset'}</p>
+              <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:4px;">
+                <span style="color:#64748b;font-size:12px;">🏢 ${c.vendor||'N/A'}</span>
+                <span style="color:#64748b;font-size:12px;">💰 <span style="color:#94a3b8;">${val}</span></span>
+              </div>
+              <p style="color:#475569;font-size:11px;margin:0 0 2px;">📅 ${tdFmtDate(c.start_date)} → ${tdFmtDate(c.end_date)}
+                ${d!==null?`&nbsp;·&nbsp;<span style="color:${dc};font-weight:700;">${d>0?d+'d remaining':'Expired '+Math.abs(d)+'d ago'}</span>`:''}
+              </p>
+              ${c.scope?`<p style="color:#64748b;font-size:11px;margin:4px 0 0;font-style:italic;">${c.scope}</p>`:''}
+            </div>
+            <div style="display:flex;gap:6px;flex-shrink:0;align-items:flex-start;">
+              <button onclick="tdOpenAmcEditModal(${dataStr})" style="background:rgba(139,92,246,.1);color:var(--accent);border:1px solid rgba(139,92,246,.2);border-radius:8px;padding:8px 12px;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .2s;" onmouseover="this.style.background='var(--accent)';this.style.color='white'" onmouseout="this.style.background='rgba(139,92,246,.1)';this.style.color='var(--accent)'">
+                <i data-lucide="edit" style="width:12px;height:12px;"></i> Edit
+              </button>
+              <button onclick="tdDeleteAmcContract('${c.contract_id}')" style="background:rgba(244,63,94,.08);color:#f43f5e;border:1px solid rgba(244,63,94,.2);border-radius:8px;padding:8px 10px;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .2s;" onmouseover="this.style.background='#f43f5e';this.style.color='white'" onmouseout="this.style.background='rgba(244,63,94,.08)';this.style.color='#f43f5e'">
+                <i data-lucide="trash-2" style="width:12px;height:12px;"></i>
+              </button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+    lucide.createIcons();
+}
+
+function tdOpenAmcEditModal(contract) {
+    tdCurrentAmcContract=contract;
+    const fmt=d=>{if(!d)return'';const dt=tdParseDate(d);return dt?tdToDateStr(dt):'';};
+    document.getElementById('amc-modal-title').textContent=!contract.contract_id?'Add AMC Contract':'Edit AMC Contract';
+    document.getElementById('amc-contract-id').value=contract.contract_id||'';
+    document.getElementById('amc-asset-id').value=contract.asset_id||'';
+    document.getElementById('amc-asset-name').value=contract.asset_name||'';
+    document.getElementById('amc-vendor').value=contract.vendor||'';
+    document.getElementById('amc-start-date').value=fmt(contract.start_date);
+    document.getElementById('amc-end-date').value=fmt(contract.end_date);
+    document.getElementById('amc-frequency').value=contract.service_frequency||'Quarterly';
+    document.getElementById('amc-next-service').value=fmt(contract.next_service);
+    document.getElementById('amc-value').value=contract.value||'';
+    document.getElementById('amc-status').value=contract.status||'active';
+    document.getElementById('amc-scope').value=contract.scope||'';
+    document.getElementById('amc-notes').value=contract.notes||'';
+    document.getElementById('amc-edit-modal').style.display='flex';
+    lucide.createIcons({element:document.getElementById('amc-edit-modal')});
+}
+function tdCloseAmcModal(){document.getElementById('amc-edit-modal').style.display='none';tdCurrentAmcContract=null;}
+
+async function tdSaveAmcContract() {
+    if(tdCurrentAmcContract===null)return;
+    const cid=document.getElementById('amc-contract-id').value.trim();
+    if(!cid){tdShowToast('Contract ID is required','error');return;}
+    const updated={
+        contract_id:cid,
+        asset_id:document.getElementById('amc-asset-id').value.trim(),
+        asset_name:document.getElementById('amc-asset-name').value.trim(),
+        vendor:document.getElementById('amc-vendor').value.trim(),
+        start_date:document.getElementById('amc-start-date').value,
+        end_date:document.getElementById('amc-end-date').value,
+        service_frequency:document.getElementById('amc-frequency').value,
+        next_service:document.getElementById('amc-next-service').value,
+        value:document.getElementById('amc-value').value.trim(),
+        status:document.getElementById('amc-status').value,
+        scope:document.getElementById('amc-scope').value.trim(),
+        notes:document.getElementById('amc-notes').value.trim(),
+    };
+    const idx=_tdAmcContracts.findIndex(c=>c.contract_id===tdCurrentAmcContract.contract_id);
+    if(idx!==-1)_tdAmcContracts[idx]=updated;else _tdAmcContracts.push(updated);
+    tdRenderAmcTracker();tdCloseAmcModal();
+    try{
+        const res=await fetch(TD_API.AMC_UPDATE,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(updated)});
+        const d=await res.json();
+        if(d.success)tdShowToast('✅ AMC contract saved','success');
+        else tdShowToast('Server error: '+(d.error||''),'error');
+    }catch(e){tdShowToast('Network error: '+e.message,'error');}
+}
+
+async function tdDeleteAmcContract(contractId) {
+    if(!confirm(`Delete contract ${contractId}?`))return;
+    _tdAmcContracts=_tdAmcContracts.filter(c=>c.contract_id!==contractId);
+    tdRenderAmcTracker();
+    try{
+        await fetch('/td_api/mms/amc/bulk-import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contracts:_tdAmcContracts})});
+        tdShowToast('Contract deleted','success');
+    }catch(e){tdShowToast('Delete failed: '+e.message,'error');}
+}
+
+function tdHandleAmcFileUpload(input) {
+    const file=input.files[0];if(!file)return;
+    const ext=file.name.split('.').pop().toLowerCase();
+    const reader=new FileReader();
+    reader.onload=async e=>{
+        try{
+            if(ext!=='csv'){tdShowToast('Only CSV supported for AMC import','error');return;}
+            const lines=e.target.result.split('\n');
+            const hdr=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
+            const rows=lines.slice(1).filter(l=>l.trim()).map(l=>{const v=l.split(',').map(x=>x.trim().replace(/^"|"$/g,''));const o={};hdr.forEach((h,i)=>o[h]=v[i]||'');return o;});
+            const contracts=rows.map(r=>({
+                contract_id:r['Contract ID']||r['contract_id']||'',
+                asset_id:r['Asset ID']||r['asset_id']||'',
+                asset_name:r['Asset Name']||r['asset_name']||'',
+                vendor:r['Vendor']||r['vendor']||'',
+                start_date:r['Start Date']||r['start_date']||'',
+                end_date:r['End Date']||r['end_date']||'',
+                service_frequency:r['Frequency']||r['service_frequency']||'Quarterly',
+                value:r['Value']||r['value']||'',
+                status:(r['Status']||'active').toLowerCase(),
+                scope:r['Scope']||r['scope']||'',
+                notes:r['Notes']||r['notes']||'',
+            })).filter(c=>c.asset_name||c.contract_id);
+            const res=await fetch('/td_api/mms/amc/bulk-import',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contracts:[..._tdAmcContracts,...contracts]})});
+            if(res.ok){_tdAmcContracts=[..._tdAmcContracts,...contracts];tdRenderAmcTracker();tdShowToast(`✅ Imported ${contracts.length} contracts`,'success');}
+        }catch(err){tdShowToast('Parse error: '+err.message,'error');}
+        input.value='';
+    };
+    reader.readAsText(file);
+}
+
+// ── FILE UPLOAD ──
+function tdHandleFileUpload(input) {
+    if(!input.files?.length)return;
+    const fd=new FormData();fd.append('file',input.files[0]);
+    fetch(TD_API.IMPORT_EXCEL,{method:'POST',body:fd})
+        .then(r=>r.json())
+        .then(d=>{if(d.success){tdShowToast(`✅ ${d.message}`,'success');setTimeout(tdInitDashboard,500);}else tdShowToast(`❌ ${d.message||d.error}`,'error');})
+        .catch(err=>tdShowToast(`❌ Upload failed: ${err.message}`,'error'));
+}
+
+// ── DAILY MAIL ──
+async function tdTriggerDailyMail() {
+    if(!confirm('Send today\'s The District maintenance schedule email to supervisors?'))return;
+    const btn=document.getElementById('triggerDailyEmail');
+    const orig=btn.innerHTML;btn.disabled=true;btn.innerHTML='Sending...';
+    try{
+        const res=await fetch(TD_API.DAILY_MAIL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({property:'The District'})});
+        const d=await res.json();
+        if(d.success)tdShowToast(`✅ Mail sent to ${(d.sent_to||[]).length} supervisor(s).`,'success');
+        else tdShowToast('❌ Failed: '+(d.error||''),'error');
+    }catch(err){tdShowToast('❌ '+err.message,'error');}
+    finally{btn.disabled=false;btn.innerHTML=orig;lucide.createIcons({element:btn.parentElement});}
+}
+
+// ── AUTO GENERATE WOs ──
+async function tdAutoGenerateWOs() {
+    if(!confirm('Auto-generate work orders for all TD assets due today or overdue?'))return;
+    const btn=document.getElementById('autoGenWOBtn');
+    const orig=btn.innerHTML;btn.disabled=true;btn.innerHTML='Generating...';
+    try{
+        const res=await fetch(TD_API.AUTO_GEN,{method:'POST',headers:{'Content-Type':'application/json'}});
+        const d=await res.json();
+        if(d.success){tdShowToast(`✅ ${d.generated} work order(s) generated.`,'success');await tdInitDashboard();}
+        else tdShowToast('❌ Failed: '+(d.error||''),'error');
+    }catch(err){tdShowToast('❌ '+err.message,'error');}
+    finally{btn.disabled=false;btn.innerHTML=orig;lucide.createIcons({element:btn.parentElement});}
+}
+
+// ── PDF EXPORT ──
+function tdExportPdf() {
+    window.open(TD_API.WO_PDF,'_blank');
+}
+
+// ── CALENDAR ──
+function tdRenderCalendar() {
+    const grid=document.getElementById('calendar-grid'); if(!grid)return;
+    const year=tdViewDate.getFullYear(),month=tdViewDate.getMonth();
+    const monthNames=['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+    tdSetTxt('calendar-month-year',`${monthNames[month]} ${year}`);
+    const firstDay=new Date(year,month,1).getDay();
+    const daysInMonth=new Date(year,month+1,0).getDate();
+    const today=new Date();
+    const woDateSet=new Set();
+    _tdWorkOrders.forEach(w=>{const d=(w['Due Date']||w.due_date||'');if(d)woDateSet.add(d.toString().substring(0,10));});
+    let html='';
+    for(let i=0;i<firstDay;i++)html+=`<div class="calendar-blank"></div>`;
+    for(let d=1;d<=daysInMonth;d++){
+        const dateStr=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const isToday=d===today.getDate()&&month===today.getMonth()&&year===today.getFullYear();
+        const hasTask=woDateSet.has(dateStr);
+        const cls=`calendar-day${isToday?' today':hasTask?' has-task':''}`;
+        html+=`<div class="${cls}" onclick="tdLoadDaySchedule('${dateStr}')">${d}${hasTask?'<div class="task-dot"></div>':''}</div>`;
+    }
+    grid.innerHTML=html;
+}
+function tdNavMonth(dir){tdViewDate.setMonth(tdViewDate.getMonth()+dir);tdRenderCalendar();}
+
+async function tdLoadDaySchedule(dateStr) {
+    tdSetTxt('selected-day-label',new Date(dateStr+'T00:00:00').toLocaleDateString('en-US',{weekday:'long',day:'numeric',month:'long',year:'numeric'}));
+    tdSetEl('day-schedule-container',tdLoadingHTML('Loading...'));
+    try{
+        const res=await fetch(`${TD_API.WO_BY_DATE}?date=${dateStr}`);
+        const d=await res.json();
+        const wos=d.work_orders||[];
+        if(!wos.length){tdSetEl('day-schedule-container',tdEmptyHTML('No Tasks Scheduled','No maintenance scheduled for this date'));return;}
+        tdSetEl('day-schedule-container',wos.map(wo=>{
+            const st=tdGetWOStatus(wo);const cfg=WO_STATUS_CFG[st]||WO_STATUS_CFG.open;
+            return`<div style="background:rgba(15,23,42,.75);border:1px solid ${cfg.border};border-left:3px solid ${cfg.color};border-radius:10px;padding:14px 16px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;">
+                    <div>
+                        <h4 style="color:white;font-size:14px;font-weight:700;margin:0 0 4px;">${wo['Asset Name']||wo.asset_name||''}</h4>
+                        <p style="color:#64748b;font-size:12px;margin:0 0 2px;">📍 ${wo['Location']||wo.location||''}</p>
+                        <p style="color:#64748b;font-size:11px;margin:0;">${(wo.ppm_type||'inhouse').toUpperCase()} · ${wo.frequency||''}</p>
+                    </div>
+                    <span style="padding:2px 8px;border-radius:4px;font-size:9px;font-weight:800;background:${cfg.bg};color:${cfg.color};border:1px solid ${cfg.border};">${cfg.label}</span>
+                </div>
+            </div>`;
+        }).join(''));
+    }catch(e){tdSetEl('day-schedule-container',tdEmptyHTML('Error','Failed to load schedule'));}
+}
+
+// ── TOAST ──
+function tdShowToast(msg,type) {
+    const old=document.getElementById('td-toast');if(old)old.remove();
+    const t=document.createElement('div');
+    t.id='td-toast';
+    const ok=type==='success',info=type==='info';
+    const bg=ok?'rgba(16,185,129,.15)':info?'rgba(6,182,212,.15)':'rgba(244,63,94,.15)';
+    const bc=ok?'rgba(16,185,129,.4)':info?'rgba(6,182,212,.4)':'rgba(244,63,94,.4)';
+    const tc=ok?'#10b981':info?'#06b6d4':'#f43f5e';
+    t.style.cssText=`position:fixed;bottom:24px;right:24px;z-index:9999;padding:14px 20px;border-radius:12px;font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;background:${bg};border:1px solid ${bc};color:${tc};backdrop-filter:blur(20px);max-width:320px;word-break:break-word;`;
+    t.textContent=msg;
+    document.body.appendChild(t);
+    setTimeout(()=>{if(t.parentNode)t.remove();},4000);
+}
+</script>
+<script>
+// AG-FIX: Force 3-column grid
+(function fixGrids() {
+  var selectors = ['.hm', '.stylus-btn', '.quick-card', '.mod-btn'];
+  var found = false;
+  selectors.forEach(sel => {
+    var els = document.querySelectorAll(sel);
+    if (els.length > 0) {
+      found = true;
+      var par = els[0].parentElement;
+      if (par) {
+        par.style.setProperty('display','grid','important');
+        par.style.setProperty('grid-template-columns','repeat(3,1fr)','important');
+        par.style.setProperty('gap','10px','important');
+      }
+      els.forEach(el => {
+        el.style.setProperty('display','flex','important');
+        el.style.setProperty('flex-direction','column','important');
+        el.style.setProperty('align-items','center','important');
+        el.style.setProperty('width','auto','important');
+        el.style.setProperty('grid-column','auto','important');
+      });
+    }
+  });
+  if (!found) setTimeout(fixGrids, 500);
+})();
+</script>
+</body>
+</html>
