@@ -71,7 +71,13 @@ def _read_json(path, default):
     try:
         if path.exists():
             with open(path, "r", encoding="utf-8") as f:
-                return json.load(f)
+                data = json.load(f)
+            # Guard: if the file holds a bare list but callers expect a dict,
+            # wrap it using the first key from the default dict.
+            if isinstance(data, list) and isinstance(default, dict):
+                key = next(iter(default), "data")
+                data = {key: data}
+            return data
     except Exception as e:
         print(f"[SLN MMS] JSON read error ({path.name}): {e}")
     return default
@@ -656,7 +662,7 @@ def sln_mms_update_wo():
 
         data = _read_json(WO_JSON, {"work_orders": []})
         wos  = data.get("work_orders", [])
-        idx  = next((i for i, w in enumerate(wos) if w.get("work_order_id") == wo_id), None)
+        idx  = next((i for i, w in enumerate(wos) if (w.get("work_order_id") or w.get("WO ID")) == wo_id), None)
         if idx is None:
             return jsonify({"success": False, "error": "WO not found"}), 404
 
@@ -685,7 +691,7 @@ def sln_mms_close_wo():
 
         data = _read_json(WO_JSON, {"work_orders": []})
         wos  = data.get("work_orders", [])
-        idx  = next((i for i, w in enumerate(wos) if w.get("work_order_id") == wo_id), None)
+        idx  = next((i for i, w in enumerate(wos) if (w.get("work_order_id") or w.get("WO ID")) == wo_id), None)
         if idx is None:
             return jsonify({"success": False, "error": "WO not found"}), 404
 
@@ -713,7 +719,7 @@ def sln_mms_reopen_wo():
 
         data = _read_json(WO_JSON, {"work_orders": []})
         wos  = data.get("work_orders", [])
-        idx  = next((i for i, w in enumerate(wos) if w.get("work_order_id") == wo_id), None)
+        idx  = next((i for i, w in enumerate(wos) if (w.get("work_order_id") or w.get("WO ID")) == wo_id), None)
         if idx is None:
             return jsonify({"success": False, "error": "WO not found"}), 404
 
@@ -730,6 +736,258 @@ def sln_mms_reopen_wo():
         return jsonify({"success": True, "work_order": wos[idx]})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
+
+
+# ─────────────────────────────────────────────────────────────
+# API — SUPERVISOR APPROVE / REJECT
+# ─────────────────────────────────────────────────────────────
+
+ACTIVITY_JSON = DATA_DIR / "sln_activity_log.json"
+
+def _append_activity(wo_id, action, actor, detail=""):
+    """Append an entry to the activity log for a work order."""
+    try:
+        data = _read_json(ACTIVITY_JSON, {"log": []})
+        log  = data.get("log", [])
+        if not isinstance(log, list):
+            log = []
+        log.append({
+            "wo_id":     wo_id,
+            "action":    action,
+            "actor":     actor,
+            "detail":    detail,
+            "timestamp": datetime.now().isoformat(),
+        })
+        data["log"] = log
+        _write_json(ACTIVITY_JSON, data)
+    except Exception as e:
+        print(f"[SLN MMS] Activity log write error: {e}")
+
+
+@sln_mms_bp.route("/sln_api/mms/supervisor/approve", methods=["POST"])
+def sln_mms_supervisor_approve():
+    """Supervisor approves a completed WO — sets status to 'completed' and closes it."""
+    try:
+        d = request.get_json() or {}
+        wo_id       = d.get("wo_id") or d.get("work_order_id") or ""
+        approved_by = d.get("approved_by", "Supervisor")
+        remarks     = d.get("remarks", "")
+
+        if not wo_id:
+            return jsonify({"success": False, "error": "wo_id required"}), 400
+
+        data = _read_json(WO_JSON, {"work_orders": []})
+        wos  = data.get("work_orders", [])
+        if not isinstance(wos, list):
+            wos = []
+        idx  = next((i for i, w in enumerate(wos) if (w.get("work_order_id") or w.get("WO ID")) == wo_id), None)
+        if idx is None:
+            return jsonify({"success": False, "error": "WO not found"}), 404
+
+        wos[idx].update({
+            "status":         "completed",
+            "closed_at":      datetime.now().isoformat(),
+            "approved_by":    approved_by,
+            "closed_by":      approved_by,
+            "approval_notes": remarks,
+            "remarks":        remarks,
+        })
+        data["work_orders"] = wos
+        _write_json(WO_JSON, data)
+
+        _append_activity(wo_id, "supervisor_approved", approved_by,
+                         f"WO approved and closed. Remarks: {remarks}")
+
+        print(f"[SLN MMS] WO {wo_id} approved by {approved_by}")
+
+        # Calculate next PPM date hint
+        freq   = (wos[idx].get("frequency") or "").upper()
+        due    = wos[idx].get("due_date", "")
+        next_ppm = ""
+        if due and freq:
+            try:
+                from dateutil.relativedelta import relativedelta
+                d_dt = datetime.strptime(due[:10], "%Y-%m-%d")
+                delta_map = {
+                    "MONTHLY":     relativedelta(months=1),
+                    "QUARTERLY":   relativedelta(months=3),
+                    "HALF-YEARLY": relativedelta(months=6),
+                    "HALF_YEARLY": relativedelta(months=6),
+                    "YEARLY":      relativedelta(years=1),
+                    "WEEKLY":      relativedelta(weeks=1),
+                }
+                delta = delta_map.get(freq)
+                if delta:
+                    next_ppm = (d_dt + delta).strftime("%Y-%m-%d")
+            except Exception:
+                pass
+
+        return jsonify({
+            "success": True,
+            "work_order": wos[idx],
+            "next_ppm": next_ppm,
+        })
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@sln_mms_bp.route("/sln_api/mms/supervisor/reject", methods=["POST"])
+def sln_mms_supervisor_reject():
+    """Supervisor rejects a WO — reopens it for rework by technician."""
+    try:
+        d = request.get_json() or {}
+        wo_id       = d.get("wo_id") or d.get("work_order_id") or ""
+        rejected_by = d.get("rejected_by", "Supervisor")
+        reason      = d.get("reason", "")
+
+        if not wo_id:
+            return jsonify({"success": False, "error": "wo_id required"}), 400
+
+        data = _read_json(WO_JSON, {"work_orders": []})
+        wos  = data.get("work_orders", [])
+        if not isinstance(wos, list):
+            wos = []
+        idx  = next((i for i, w in enumerate(wos) if (w.get("work_order_id") or w.get("WO ID")) == wo_id), None)
+        if idx is None:
+            return jsonify({"success": False, "error": "WO not found"}), 404
+
+        wos[idx].update({
+            "status":          "reopened",
+            "rejected_by":     rejected_by,
+            "rejection_reason": reason,
+            "rejected_at":     datetime.now().isoformat(),
+            "closed_at":       None,
+            "approved_by":     "",
+            "approval_notes":  "",
+        })
+        data["work_orders"] = wos
+        _write_json(WO_JSON, data)
+
+        _append_activity(wo_id, "supervisor_rejected", rejected_by,
+                         f"WO rejected — reason: {reason}")
+
+        print(f"[SLN MMS] WO {wo_id} rejected by {rejected_by}: {reason}")
+        return jsonify({"success": True, "work_order": wos[idx]})
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+# ─────────────────────────────────────────────────────────────
+# API — TECHNICIAN SUBMIT / CHECKLIST SAVE
+# ─────────────────────────────────────────────────────────────
+
+@sln_mms_bp.route("/sln_api/mms/technician/submit", methods=["POST"])
+def sln_mms_technician_submit():
+    """Technician submits completed work for supervisor review."""
+    try:
+        d = request.get_json() or {}
+        wo_id           = d.get("wo_id") or d.get("work_order_id") or ""
+        technician_name = d.get("technician_name", "")
+        checklist       = d.get("checklist", [])
+        notes           = d.get("notes", "")
+        images          = d.get("images", [])
+        allow_partial   = d.get("allow_partial", False)
+
+        if not wo_id:
+            return jsonify({"success": False, "error": "wo_id required"}), 400
+
+        data = _read_json(WO_JSON, {"work_orders": []})
+        wos  = data.get("work_orders", [])
+        if not isinstance(wos, list):
+            wos = []
+        idx  = next((i for i, w in enumerate(wos) if (w.get("work_order_id") or w.get("WO ID")) == wo_id), None)
+        if idx is None:
+            return jsonify({"success": False, "error": "WO not found"}), 404
+
+        total = len(checklist) if isinstance(checklist, list) else 0
+        done  = sum(1 for item in (checklist if isinstance(checklist, list) else [])
+                    if isinstance(item, dict) and (item.get("done") or item.get("completed")))
+        pct   = round(done / max(total, 1) * 100)
+
+        status = "pending-approval"
+        if allow_partial and pct < 100:
+            status = "partially-completed"
+
+        wos[idx].update({
+            "status":        status,
+            "checklist":     checklist if isinstance(checklist, list) else [],
+            "checklist_pct": pct,
+            "notes":         notes or wos[idx].get("notes", ""),
+            "completed_by":  technician_name,
+            "submitted_at":  datetime.now().isoformat(),
+        })
+        if isinstance(images, list) and images:
+            wos[idx]["images"] = images
+
+        data["work_orders"] = wos
+        _write_json(WO_JSON, data)
+
+        _append_activity(wo_id, "tech_submitted", technician_name,
+                         f"Checklist {pct}% — {done}/{total} items. Status: {status}")
+
+        print(f"[SLN MMS] WO {wo_id} submitted by {technician_name} — {pct}% ({status})")
+        return jsonify({
+            "success":  True,
+            "work_order": wos[idx],
+            "notified": False,
+        })
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@sln_mms_bp.route("/sln_api/mms/technician/checklist-save", methods=["POST"])
+def sln_mms_technician_checklist_save():
+    """Auto-save checklist progress without changing WO status."""
+    try:
+        d = request.get_json() or {}
+        wo_id     = d.get("wo_id") or d.get("work_order_id") or ""
+        checklist = d.get("checklist", [])
+
+        if not wo_id:
+            return jsonify({"success": False, "error": "wo_id required"}), 400
+
+        data = _read_json(WO_JSON, {"work_orders": []})
+        wos  = data.get("work_orders", [])
+        if not isinstance(wos, list):
+            wos = []
+        idx  = next((i for i, w in enumerate(wos) if (w.get("work_order_id") or w.get("WO ID")) == wo_id), None)
+        if idx is None:
+            return jsonify({"success": False, "error": "WO not found"}), 404
+
+        if isinstance(checklist, list):
+            wos[idx]["checklist"] = checklist
+            total = len(checklist)
+            done  = sum(1 for item in checklist
+                        if isinstance(item, dict) and (item.get("done") or item.get("completed")))
+            wos[idx]["checklist_pct"] = round(done / max(total, 1) * 100)
+
+        data["work_orders"] = wos
+        _write_json(WO_JSON, data)
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+# ─────────────────────────────────────────────────────────────
+# API — ACTIVITY LOG
+# ─────────────────────────────────────────────────────────────
+
+@sln_mms_bp.route("/sln_api/mms/activity-log")
+def sln_mms_activity_log():
+    """Return the activity log entries for a specific work order."""
+    try:
+        wo_id = request.args.get("wo_id", "")
+        data  = _read_json(ACTIVITY_JSON, {"log": []})
+        log   = data.get("log", [])
+        if not isinstance(log, list):
+            log = []
+        filtered = [entry for entry in log
+                    if isinstance(entry, dict) and entry.get("wo_id") == wo_id]
+        return jsonify({"success": True, "log": filtered})
+    except Exception as e:
+        return jsonify({"success": False, "log": [], "error": str(e)}), 500
 
 
 # ─────────────────────────────────────────────────────────────
@@ -752,7 +1010,7 @@ def sln_mms_upload_image():
         f.save(str(save_dir / fname))
         data = _read_json(WO_JSON, {"work_orders": []})
         wos  = data.get("work_orders", [])
-        idx  = next((i for i, w in enumerate(wos) if w.get("work_order_id") == wo_id), None)
+        idx  = next((i for i, w in enumerate(wos) if (w.get("work_order_id") or w.get("WO ID")) == wo_id), None)
         if idx is not None:
             wos[idx].setdefault("images", []).append(
                 {"filename": fname, "path": f"/uploads/SLN/ppm/{wo_id}/{fname}"}

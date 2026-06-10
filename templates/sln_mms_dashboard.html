@@ -2608,7 +2608,8 @@ function closeModal() {
 function renderChecklist() {
     if (!currentWO) return;
     const total = currentWO.checklist.length;
-    const done  = currentWO.checklist.filter(i=>i.completed || i.done).length;
+    // Normalize: count items where EITHER completed OR done is truthy
+    const done  = currentWO.checklist.filter(i => !!(i.completed || i.done)).length;
     const pct   = total ? Math.round(done/total*100) : 0;
     setTxt('modal-checklist-status', `${done}/${total}`);
     setTxt('checklist-progress', `${pct}%`);
@@ -2619,12 +2620,15 @@ function renderChecklist() {
     // Use fragment for performance - avoid full innerHTML reflow on each tick
     const frag = document.createDocumentFragment();
     currentWO.checklist.forEach((item, idx) => {
+        // Normalize: treat both `done` and `completed` as the checked state
+        const isChecked = !!(item.completed || item.done);
         const wrap = document.createElement('div');
-        wrap.style.cssText = `display:flex;align-items:flex-start;gap:12px;padding:12px;background:rgba(4,12,22,0.65);border-radius:10px;border:1px solid ${item.completed?'rgba(0,255,136,.2)':'rgba(0,212,255,0.07)'};transition:border-color .2s;`;
+        wrap.setAttribute('data-cl-idx', idx);
+        wrap.style.cssText = `display:flex;align-items:flex-start;gap:12px;padding:12px;background:rgba(4,12,22,0.65);border-radius:10px;border:1px solid ${isChecked?'rgba(0,255,136,.2)':'rgba(0,212,255,0.07)'};transition:border-color .2s;`;
         wrap.innerHTML = `
-            <input type="checkbox" id="chk-${idx}" ${item.completed?'checked':''} style="margin-top:2px;width:16px;height:16px;accent-color:var(--primary);cursor:pointer;flex-shrink:0;">
+            <input type="checkbox" id="chk-${idx}" ${isChecked?'checked':''} style="margin-top:2px;width:16px;height:16px;accent-color:var(--primary);cursor:pointer;flex-shrink:0;">
             <div style="flex:1;min-width:0;">
-                <label for="chk-${idx}" style="color:${item.completed?'#10b981':'white'};font-weight:600;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;">
+                <label for="chk-${idx}" style="color:${isChecked?'#10b981':'white'};font-weight:600;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;">
                     ${item.text}
                     ${item.required?'<span style="color:#f43f5e;font-size:9px;font-weight:800;letter-spacing:.08em;">REQUIRED</span>':''}
                 </label>
@@ -2638,7 +2642,35 @@ function renderChecklist() {
     cont.innerHTML = '';
     cont.appendChild(frag);
 }
-function toggleChecklist(idx) { if(!currentWO) return; currentWO.checklist[idx].completed=!currentWO.checklist[idx].completed; renderChecklist(); }
+function toggleChecklist(idx) {
+    if (!currentWO || !currentWO.checklist) return;
+    const item = currentWO.checklist[idx];
+    if (!item) return;
+    // Sync both field names so tech-modal and WO-detail modal stay consistent
+    item.completed = !!(item.completed || item.done) ? false : true;
+    item.done      = item.completed;
+    // Update checkbox visual directly (avoid full re-render flicker)
+    const chk = document.getElementById('chk-' + idx);
+    if (chk) chk.checked = item.completed;
+    const wrap = chk && chk.closest('[data-cl-idx]');
+    if (wrap) wrap.style.borderColor = item.completed ? 'rgba(0,255,136,.2)' : 'rgba(0,212,255,0.07)';
+    const lbl = chk && chk.closest('div') && chk.closest('div').querySelector('label');
+    if (lbl) lbl.style.color = item.completed ? '#10b981' : 'white';
+    // Recalculate and update progress bar directly
+    _updateChecklistProgress();
+}
+function _updateChecklistProgress() {
+    if (!currentWO || !currentWO.checklist) return;
+    const total = currentWO.checklist.length;
+    const done  = currentWO.checklist.filter(i => !!(i.completed || i.done)).length;
+    const pct   = total ? Math.round(done / total * 100) : 0;
+    const label = document.getElementById('checklist-progress');
+    const bar   = document.getElementById('checklist-progress-bar');
+    const stat  = document.getElementById('modal-checklist-status');
+    if (label) label.textContent = pct + '%';
+    if (bar)   bar.style.width   = pct + '%';
+    if (stat)  stat.textContent  = done + '/' + total;
+}
 function updateChecklistComment(idx, val) { if(!currentWO) return; currentWO.checklist[idx].comments=val; }
 
 async function saveChecklistProgress() {
