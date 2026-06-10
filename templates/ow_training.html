@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <title>ONEWEST | TRAINING MODULE</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary:      #3B9EE8;
+            --primary-glow: rgba(59,158,232,0.22);
+            --bg:           #020408;
+            --surface:      rgba(6,16,32,0.95);
+            --glass:        rgba(6,16,32,0.88);
+            --border:       rgba(59,158,232,0.11);
+            --font-display: 'Orbitron', monospace;
+            --font-body:    'Rajdhani', sans-serif;
+            --font-mono:    'JetBrains Mono', monospace;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: white;
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .ultra-glass {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 32px rgba(0,0,0,0.55), 0 1px 0 rgba(59,158,232,0.07);
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .logo-icon {
+            font-size: 20px;
+            margin-right: 12px;
+        }
+
+        .hdr-title {
+            font-family: var(--font-display);
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 0.1em;
+            margin: 0;
+        }
+        
+        .hdr-sub {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            color: #60a5fa;
+            letter-spacing: 0.15em;
+            margin: 0;
+        }
+
+        .page-wrap {
+            padding: 16px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .kpi-card {
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 16px;
+            border-left: 3px solid var(--primary);
+        }
+        
+        .kpi-lbl {
+            font-size: 10px;
+            color: #60a5fa;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin: 0 0 6px;
+        }
+        
+        .kpi-val {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 0;
+            font-family: var(--font-display);
+        }
+
+        .empty-state {
+            padding: 40px 20px;
+            text-align: center;
+            color: #4B5563;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <span class="logo-icon">🏢</span>
+        <div>
+            <h1 class="hdr-title">ONEWEST TRAINING</h1>
+            <p class="hdr-sub">SKILL DEVELOPMENT MODULE</p>
+        </div>
+    </header>
+
+    <div class="page-wrap">
+        <div class="ultra-glass kpi-card">
+            <p class="kpi-lbl">TOTAL SESSIONS</p>
+            <p class="kpi-val">0</p>
+        </div>
+
+        <div class="ultra-glass" style="border-radius:14px;padding:20px;">
+            <p class="kpi-lbl" style="margin-bottom:12px;">UPCOMING TRAINING</p>
+            <div class="empty-state">
+                <i data-lucide="book-open" style="width:48px;height:48px;margin-bottom:12px;opacity:0.5;"></i>
+                <p style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.05em;">NO SESSIONS SCHEDULED</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

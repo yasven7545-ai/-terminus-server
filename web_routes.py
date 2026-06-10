@@ -258,6 +258,13 @@ def wb_gm_tasks():
     return render_template("gm_tasks.html")
 
 
+@web_bp.route("/web/ow_training")
+@login_required
+@require_property("ONEWEST")
+def wb_ow_training():
+    return render_template("ow_training.html")
+
+
 # =====================================================================
 # HOUSEKEEPING
 # =====================================================================
